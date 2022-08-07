@@ -1,6 +1,7 @@
 import React from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Layout } from "antd";
+import { Layout, Row, Col } from "antd";
+import { UserMenu } from "../ui/UserMenu";
 
 const Header = ({ collapsed, onCollapsed }) => {
   return (
@@ -10,10 +11,25 @@ const Header = ({ collapsed, onCollapsed }) => {
         padding: 0,
       }}
     >
-      {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-        className: "trigger",
-        onClick: () => onCollapsed(),
-      })}
+      <Row
+        className="pl-4 pr-5"
+        type="flex"
+        justify="space-between"
+        align="middle"
+      >
+        <Col>
+          {React.createElement(
+            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+            {
+              className: "trigger",
+              onClick: () => onCollapsed(),
+            }
+          )}
+        </Col>
+        <Col>
+          <UserMenu />
+        </Col>
+      </Row>
     </Layout.Header>
   );
 };

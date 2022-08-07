@@ -8,7 +8,7 @@ export const VoiceToGesture = () => {
     <div>
       <h2 className="mb-0">Voice To Gesture</h2>
       <p>View gestures from speech</p>
-      <video src=""></video>
+      <video src="" controls className="block w-100p mb-6"></video>
       <Button
         type="primary"
         loading={loadings[1]}
