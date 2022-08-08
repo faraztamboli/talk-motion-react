@@ -461,6 +461,24 @@ code {
   width: 4rem;
 }
 
+.mh-100vh {
+  min-height: 100vh !important;
+}
+
+.flex-left-center {
+    display: flex;
+    align-items: center;
+    align-content: center;
+}
+
+
+.text-white {
+  color: #fff !important;
+}
+.text-black {
+  color: #000 !important;
+}
+
 .rounded-0 {
   border-radius: 0;
 }
@@ -545,4 +563,17 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
     display: flex;
     align-content: center;
     align-items: center;
+}
+
+#components-form-demo-normal-login .login-form {
+  max-width: 300px;
+}
+#components-form-demo-normal-login .login-form-forgot {
+  float: right;
+}
+#components-form-demo-normal-login .ant-col-rtl .login-form-forgot {
+  float: left;
+}
+#components-form-demo-normal-login .login-form-button {
+  width: 100%;
 }

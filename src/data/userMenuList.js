@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const userMenu = [
   {
-    key: "profile",
+    key: 'profile',
     label: (
       <Link rel="noopener noreferrer" to="/profile">
         Profile
@@ -10,7 +10,7 @@ const userMenu = [
     ),
   },
   {
-    key: "myModels",
+    key: 'myModels',
     label: (
       <Link rel="noopener noreferrer" to="/settings">
         My Models
@@ -18,7 +18,7 @@ const userMenu = [
     ),
   },
   {
-    key: "settings",
+    key: 'settings',
     label: (
       <Link rel="noopener noreferrer" to="/settings">
         Settings
@@ -26,12 +26,13 @@ const userMenu = [
     ),
   },
   {
-    key: "logout",
-    label: (
-      <Link rel="noopener noreferrer" to="/logout">
-        Logout
-      </Link>
-    ),
+    key: 'logout',
+    label: 'Logout',
+    onClick: () => {
+      localStorage.setItem('isLoggedIn', false);
+      localStorage.removeItem('token');
+      window.location.reload();
+    },
   },
 ];
 
