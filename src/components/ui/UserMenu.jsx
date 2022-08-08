@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Dropdown, Menu } from "antd";
+import { Dropdown, Menu } from "antd";
 import { userMenu } from "../../data";
 
 export const UserMenu = () => {

@@ -402,19 +402,19 @@ code {
 }
 
 .block {
-  display: block;
+  display: block !important;
 }
 .flex {
-  display: flex;
+  display: flex !important;
 }
 .inline-block {
-  display: inline-block;
+  display: inline-block !important;
 }
 .inline {
-  display: inline;
+  display: inline !important;
 }
 .table {
-  display: table;
+  display: table !important;
 }
 
 .w-10p {
@@ -483,6 +483,15 @@ code {
   border-radius: 50%;
 }
 
+.center  {
+  text-align: center;
+}
+
+.flex-center-center {
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
 
 
 #components-layout-demo-responsive .logo {

@@ -2,38 +2,34 @@ import { Link } from "react-router-dom";
 
 const userMenu = [
   {
-    key: "1",
+    key: "profile",
     label: (
-      <Link
-        target="_blank"
-        rel="noopener noreferrer"
-        to="https://www.antgroup.com"
-      >
-        1st menu item
+      <Link rel="noopener noreferrer" to="/profile">
+        Profile
       </Link>
     ),
   },
   {
-    key: "2",
+    key: "myModels",
     label: (
-      <Link
-        target="_blank"
-        rel="noopener noreferrer"
-        to="https://www.aliyun.com"
-      >
-        2nd menu item
+      <Link rel="noopener noreferrer" to="/settings">
+        My Models
       </Link>
     ),
   },
   {
-    key: "3",
+    key: "settings",
     label: (
-      <Link
-        target="_blank"
-        rel="noopener noreferrer"
-        to="https://www.luohanacademy.com"
-      >
-        3rd menu item
+      <Link rel="noopener noreferrer" to="/settings">
+        Settings
+      </Link>
+    ),
+  },
+  {
+    key: "logout",
+    label: (
+      <Link rel="noopener noreferrer" to="/logout">
+        Logout
       </Link>
     ),
   },
