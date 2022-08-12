@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from 'antd';
 import { FaRegPauseCircle, FaRegPlayCircle } from 'react-icons/fa';
+import { GestureCanvs } from './GestureCanvs';
 
 export const GestureToVoice = () => {
   const [isRecording, setIsRecording] = React.useState(false);
@@ -15,7 +16,7 @@ export const GestureToVoice = () => {
     <div>
       <h2 className="mb-0">Voice To Gesture</h2>
       <p>View gestures from speech</p>
-      <canvas src="" controls className="block w-100p mb-6"></canvas>
+      <GestureCanvs />
       {isRecording ? (
         <Button
           className="flex flex-center-center w-100p"

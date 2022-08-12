@@ -2,15 +2,24 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { store } from './app/store';
+import { Provider } from 'react-redux';
 // import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from 'react-router-dom';
+
+// import openSocket from 'socket.io-client';
+
+// const socket = openSocket('wss://talk-motion.com:8083');
+// console.log(socket);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
 );
 

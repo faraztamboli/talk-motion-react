@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import { Layout } from 'antd';
 import 'antd/dist/antd.min.css';
@@ -10,19 +10,30 @@ import Converter from './pages/Converter';
 import Trainer from './pages/Trainer';
 import Models from './pages/Models';
 import Login from './pages/Login';
+import { Statuses } from './components/ui/Statuses';
+import { useSelector, useDispatch } from 'react-redux';
+import { login, logout } from './app/features/loginSlice';
 
 const { Content } = Layout;
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(localStorage.getItem('isLoggedIn') === 'true');
+  const dispatch = useDispatch();
   const [collapsed, setCollapsed] = React.useState(false);
+  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
   const onCollapsed = () => {
     setCollapsed(!collapsed);
   };
-  const location = useLocation();
+
   const navigate = useNavigate();
+
   React.useEffect(() => {
-    if (isLoggedIn) {
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      const loginPayload = {
+        token: localStorage.getItem('token'),
+        user: localStorage.getItem('user'),
+      };
+      dispatch(login(loginPayload));
+      console.log('isLoggedIn');
       navigate('/');
     } else {
       navigate('/login');
@@ -63,6 +74,7 @@ const App = () => {
           <Route exact path="/login" element={<Login />} />
         </Routes>
       )}
+      <Statuses />
     </div>
   );
 };
