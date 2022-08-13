@@ -3,7 +3,7 @@ import { Card, Avatar } from 'antd';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 const { Meta } = Card;
 
-export const ModelsCard = ({}) => {
+export const ModelsCard = ({ model }) => {
   return (
     <Card
       style={{

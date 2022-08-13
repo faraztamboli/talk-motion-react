@@ -1,26 +1,25 @@
 import React from 'react';
-import JS2Py from '../../custom-script/remotepy.1.0.0.min';
+import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export const Statuses = () => {
-  // const [serverConn, setServerConn] = React.useState(false);
+  const location = useLocation();
+  const { serverConnected, serverStatus } = useSelector(state => state.server);
 
-  // React.useEffect(() => {
-  //   JS2Py.onopen = function (fn) {
-  //     setServerConn(true);
-  //   };
-  //   JS2Py.onclose = function () {
-  //     setServerConn(false);
-  //   };
-  // }, []);
+  React.useEffect(() => {
+    console.log(serverConnected);
+  }, [serverConnected]);
 
   return (
     <div className="statuses">
-      <div className="conn-status">
-        <p>Server Connecting...</p>
+      <div className={`conn-status`}>
+        <p className={serverConnected ? 'success' : 'danger'}>Server {serverStatus}</p>
       </div>
-      <div className="device-status">
-        <p>Device Connecting...</p>
-      </div>
+      {(location.pathname === '/trainer' || location.pathname === '/converter') && (
+        <div className="device-status">
+          <p className="warning">Device Connecting...</p>
+        </div>
+      )}
     </div>
   );
 };

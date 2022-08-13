@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Row, Col, Button, Form, Input, Checkbox } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux/es/exports';
-import { login, logout } from '../app/features/loginSlice';
+import { useDispatch } from 'react-redux/es/exports';
+import { login } from '../app/features/loginSlice';
 
 const Login = () => {
-  const [form] = Form.useForm();
   const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
   const navigate = useNavigate();
   const disptach = useDispatch();
