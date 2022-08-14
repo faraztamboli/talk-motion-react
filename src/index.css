@@ -505,6 +505,20 @@ code {
   text-align: center;
 }
 
+.warning {
+  background: #faad14;
+}
+
+.success {
+  background: green;
+  color: #fff;
+}
+
+.danger {
+  background: rgb(202, 0, 0);
+  color: #fff;
+}
+
 .flex-center-center {
   justify-content: center;
   align-content: center;
@@ -576,4 +590,18 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 }
 #components-form-demo-normal-login .login-form-button {
   width: 100%;
+}
+
+.statuses {
+    position: fixed;
+    right: 20px;
+    bottom: 10px;
+    display: flex;
+}
+
+.statuses > div > p { 
+    padding: 2px 15px;
+    margin-right: 20px;
+    border-radius: 20px;
+    font-weight: 600;
 }

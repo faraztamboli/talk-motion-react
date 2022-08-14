@@ -4,7 +4,6 @@ import { modelsData } from '../data';
 import { ModelsCard } from '../components/ui/ModelsCard';
 
 export default function Models() {
-  console.log(modelsData);
   return (
     <div>
       <h1>Models</h1>
@@ -12,7 +11,7 @@ export default function Models() {
         {modelsData.map(model => {
           return (
             <Col>
-              <ModelsCard model={model} />
+              <ModelsCard model={model} key={model.key} />
             </Col>
           );
         })}

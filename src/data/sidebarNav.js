@@ -1,8 +1,5 @@
-import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-} from "@ant-design/icons";
+import { DesktopOutlined, FileOutlined, PieChartOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 function getItem(label, key, icon, children, path) {
   return {
@@ -15,9 +12,33 @@ function getItem(label, key, icon, children, path) {
 }
 
 const items = [
-  getItem("Converter", "1", <PieChartOutlined />, null, "/converter"),
-  getItem("Trainer", "2", <DesktopOutlined />, null, "/trainer"),
-  getItem("Models", "3", <FileOutlined />, null, "/models"),
+  getItem(
+    'Converter',
+    '1',
+    <Link to="/converter">
+      <PieChartOutlined />
+    </Link>,
+    null,
+    '/converter',
+  ),
+  getItem(
+    'Trainer',
+    '2',
+    <Link to="/trainer">
+      <DesktopOutlined />
+    </Link>,
+    null,
+    '/trainer',
+  ),
+  getItem(
+    'Models',
+    '3',
+    <Link to="/models">
+      <FileOutlined />
+    </Link>,
+    null,
+    '/models',
+  ),
 ];
 
 export default items;

@@ -6,18 +6,7 @@ import { Link } from 'react-router-dom';
 const { Sider } = Layout;
 
 const Sidebar = ({ collapsed }) => (
-  <Sider
-    breakpoint="lg"
-    onBreakpoint={broken => {
-      console.log(broken);
-    }}
-    onCollapse={(collapsed, type) => {
-      console.log(collapsed, type);
-    }}
-    trigger={null}
-    collapsible
-    collapsed={collapsed}
-  >
+  <Sider trigger={null} collapsible collapsed={collapsed}>
     <div className="logo">
       {!collapsed ? (
         <img src="/logo.png" alt="logo" className="center rounded" />
@@ -29,18 +18,10 @@ const Sidebar = ({ collapsed }) => (
       theme="dark"
       mode="inline"
       defaultSelectedKeys={['']}
-      // items={items.map((item) => ({
-      //   ...item,
-      // }))}
-    >
-      {items.map(item => (
-        <Menu.Item key={item.key}>
-          <Link to={item.path}>
-            {item.icon} <span>{item.label}</span>
-          </Link>
-        </Menu.Item>
-      ))}
-    </Menu>
+      items={items.map(item => ({
+        ...item,
+      }))}
+    />
   </Sider>
 );
 
