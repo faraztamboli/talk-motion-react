@@ -1,30 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Row, Col, Button, Form, Input, Checkbox } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Row, Col, Button, Form, Input } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux/es/exports';
 import { login } from '../app/features/loginSlice';
 
-const Login = props => {
+const ForgotPassword = props => {
   const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
   const navigate = useNavigate();
   const disptach = useDispatch();
 
-  function guid() {
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  }
-
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1);
-  }
-
   const onFinish = values => {
     // set multiple values in localStorage
     localStorage.setItem('isLoggedIn', true);
-    localStorage.setItem('token', guid());
-    disptach(login({ token: guid(), user: 'admin' }));
+    localStorage.setItem('token', '12345');
+    disptach(login({ token: '12345', user: 'admin' }));
     navigate('/');
   };
   useEffect(() => {
@@ -49,7 +39,7 @@ const Login = props => {
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
               <h1>Hello Again!</h1>
-              <p>Login for Talk Motion</p>
+              <p>Reset your password</p>
               <Form
                 name="normal_login"
                 className="login-form"
@@ -59,42 +49,18 @@ const Login = props => {
                 onFinish={onFinish}
               >
                 <Form.Item
-                  name="username"
+                  name="email"
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your Username!',
+                      message: 'Please enter your email!',
                     },
                   ]}
                 >
                   <Input
                     prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="Username"
+                    placeholder="Email"
                   />
-                </Form.Item>
-                <Form.Item
-                  name="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input your Password!',
-                    },
-                  ]}
-                >
-                  <Input
-                    prefix={<LockOutlined className="site-form-item-icon" />}
-                    type="password"
-                    placeholder="Password"
-                  />
-                </Form.Item>
-                <Form.Item>
-                  <Form.Item name="remember" valuePropName="checked" noStyle>
-                    <Checkbox>Remember me</Checkbox>
-                  </Form.Item>
-
-                  <Link className="login-form-forgot" to="/forgetpassword">
-                    Forgot password
-                  </Link>
                 </Form.Item>
 
                 <Form.Item>
@@ -103,9 +69,9 @@ const Login = props => {
                     htmlType="submit"
                     className="login-form-button block w-100"
                   >
-                    Log in
+                    Continue
                   </Button>
-                  Or <Link to="/signup">register now!</Link>
+                  <br /> Or <Link to="/login">Login</Link>
                 </Form.Item>
               </Form>
             </div>
@@ -116,4 +82,4 @@ const Login = props => {
   );
 };
 
-export default Login;
+export default ForgotPassword;

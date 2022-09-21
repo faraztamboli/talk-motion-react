@@ -14,10 +14,10 @@ export const UserMenu = () => {
     dispatch(logout());
   };
 
-  const menu = <Menu items={userMenu} />;
+  const menu = <Menu style={{ width: '20vw', transformOrigin: 'right' }} items={userMenu} />;
   return (
-    <Dropdown className="circle" overlay={menu} placement="bottomRight" arrow>
-      <img src="/media/avatars/150-2.jpg" alt="" className="circle w-2rem" />
+    <Dropdown className="" overlay={menu} trigger={['click']} placement="bottomLeft" arrow>
+      <img src="/media/avatars/150-2.jpg" alt="" className=" w-2rem" />
     </Dropdown>
   );
 };

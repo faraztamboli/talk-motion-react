@@ -13,8 +13,12 @@ import Login from './pages/Login';
 import { Statuses } from './components/ui/Statuses';
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from './app/features/loginSlice';
+import JS2Py from './remotepyjs';
+// import './remotepyjs(f)/remotepy.1.0.0.min';
 import { setServerConnected, setServerStatus } from './app/features/serverSlice';
-import JS2Py from 'remotepy';
+import Profile from './pages/Profile';
+import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
 
 const { Content } = Layout;
 
@@ -30,14 +34,64 @@ const App = () => {
   // initialize remote python server
   React.useEffect(() => {
     let conn = null;
-    console.log(JS2Py);
+    // console.log(JS2Py);
     JS2Py.serverName = 'wss://talk-motion.com:8083';
 
     // Push function to onopen array of functions
     JS2Py.subOnOpen(() => {
       dispatch(setServerConnected(true));
       dispatch(setServerStatus('Connected'));
+      console.log('connected');
+      console.log('hey I am working', JS2Py);
+      // JS2Py.PythonFunctions.SessionServer.registerLogin(
+      //   '59f4ad94-3e2a-fc3e-e3ab-30b530c1c0e4',
+      //   'bernaud',
+      //   'bernaudpassword',
+      //   'bernaud',
+      //   '',
+      //   'hackwell',
+      //   'bernaud@hackwell.com',
+      //   '18th Street NW',
+      //   'US',
+      //   function (res) {
+      //     console.log(res);
+      //   },
+      // );
     });
+
+    // ------------testing ----------------------
+    JS2Py.onopen = function () {
+      // console.log(JS2Py);
+      var funcList = [];
+      for (var key in JS2Py.PythonFunctionsArgs) {
+        var argArray = JS2Py.PythonFunctionsArgs[key];
+        argArray = argArray.slice(0, argArray.length - 2);
+        var funcSignature = key + '(' + argArray.join(', ') + ')';
+        funcList.push(funcSignature);
+      }
+
+      // signatures.innerHTML = '<br/><h2>Function signatures:</h2><ul><li>' + funcList.join('</li><li>') + '</li>';
+
+      JS2Py.callPythonFunction('getPythonFunctionLibraryHelp', {}, function (PythonFunctionsHelp) {
+        //JS2PySelf.PythonFunctionsHelp = funcDict;
+        var funcLibrary = [];
+
+        for (var key in PythonFunctionsHelp) {
+          var funcHelp = '<h4>' + key + ':</h4>';
+          funcHelp += '<p>' + PythonFunctionsHelp[key] + '</p>';
+          funcLibrary.push(funcHelp);
+        }
+        // console.log(JS2Py);
+
+        // help.innerHTML = '<br/><h2>Function Help:</h2>' + funcLibrary.join('');
+      });
+    };
+
+    JS2Py.onclose = function () {
+      // divStatus.innerHTML = 'connection closed';
+    };
+
+    // ----------------end testing----------------
 
     // Push function to onclose array of functions
     JS2Py.subOnClose(() => {
@@ -52,6 +106,7 @@ const App = () => {
     return () => {
       conn.close(1000, 'Rerendered close!');
     };
+    //eslint-disable-next-line
   }, []);
 
   const navigate = useNavigate(); // use navigate hook from react-router-dom
@@ -69,6 +124,7 @@ const App = () => {
     } else {
       navigate('/login');
     }
+    //eslint-disable-next-line
   }, [isLoggedIn]);
 
   return (
@@ -95,6 +151,7 @@ const App = () => {
                   <Route path="converter" exact element={<Converter />} />
                   <Route path="trainer" exact element={<Trainer />} />
                   <Route path="models" exact element={<Models />} />
+                  <Route path="profile" exact element={<Profile />} />
                   <Route path="*" element={<h1>404</h1>} />
                 </Routes>
               </div>
@@ -104,7 +161,10 @@ const App = () => {
         </Layout>
       ) : (
         <Routes>
-          <Route exact path="login" element={<Login />} />
+          {/* --------Will be continued----------- */}
+          <Route path="/signup" exact element={<Signup />} />
+          <Route path="/login" exact element={<Login />} />
+          <Route path="/forgetpassword" exact element={<ForgotPassword />} />
         </Routes>
       )}
       <Statuses />

@@ -6,7 +6,7 @@ import { ModelsCard } from '../components/ui/ModelsCard';
 export default function Models() {
   return (
     <div>
-      <h1>Models</h1>
+      <h2 style={{ fontWeight: 'bold' }}>Models</h2>
       <Row gutter={[16, 16]}>
         {modelsData.map(model => {
           return (

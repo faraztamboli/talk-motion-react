@@ -1,9 +1,9 @@
-import React from "react";
-import { Row, Col, Card } from "antd";
-import { ModelsDropdown } from "../components/ui/ModelsDropdown";
-import { VoicesDropdown } from "../components/ui/VoicesDropdown";
-import { VoiceToGesture } from "../components/ui/VoiceToGesture";
-import { GestureToVoice } from "../components/ui/GestureToVoice";
+import React from 'react';
+import { Row, Col, Card } from 'antd';
+import { ModelsDropdown } from '../components/ui/ModelsDropdown';
+import { VoicesDropdown } from '../components/ui/VoicesDropdown';
+import { VoiceToGesture } from '../components/ui/VoiceToGesture';
+import { GestureToVoice } from '../components/ui/GestureToVoice';
 
 export default function Converter() {
   return (

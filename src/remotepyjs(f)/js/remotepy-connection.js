@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import serverConnObserver from './server-connection-observer.js';
 import JS2Py from './JS2PyCode';
+import leapmotion from './leapmotion';
 
 // Connection Open and Close Triggers
 serverConnObserver.subConOpen(init);
