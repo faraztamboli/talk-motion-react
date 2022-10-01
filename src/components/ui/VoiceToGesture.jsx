@@ -12,10 +12,12 @@ export const VoiceToGesture = () => {
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
   React.useEffect(() => {
+    console.log('inside voiceToGesture Component js2py:', JS2Py);
     if (!browserSupportsSpeechRecognition) {
       return <span>Browser doesn't support speech recognition.</span>;
     }
-    getVideo(getWords('what is your name'));
+    console.log(JS2Py);
+    getVideo(getWords('how are you'));
   }, [transcript, browserSupportsSpeechRecognition]);
   const loadings = () => {};
   const speak = () => {
@@ -40,9 +42,15 @@ export const VoiceToGesture = () => {
   };
 
   const getVideo = words => {
-    JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
-      setVideo(res);
-    });
+    // console.log('Inside getVideo', JS2Py);
+    console.log('getVideo: ', JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures);
+    try {
+      JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
+        setVideo(res);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const videoSrc = arr => {
