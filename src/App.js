@@ -43,20 +43,6 @@ const App = () => {
       dispatch(setServerStatus('Connected'));
       console.log('connected');
       console.log('hey I am working', JS2Py);
-      // JS2Py.PythonFunctions.SessionServer.registerLogin(
-      //   '59f4ad94-3e2a-fc3e-e3ab-30b530c1c0e4',
-      //   'bernaud',
-      //   'bernaudpassword',
-      //   'bernaud',
-      //   '',
-      //   'hackwell',
-      //   'bernaud@hackwell.com',
-      //   '18th Street NW',
-      //   'US',
-      //   function (res) {
-      //     console.log(res);
-      //   },
-      // );
     });
 
     // ------------testing ----------------------

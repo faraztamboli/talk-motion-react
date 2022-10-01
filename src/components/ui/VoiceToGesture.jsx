@@ -6,23 +6,29 @@ import { Button } from 'antd';
 import { FaMicrophoneAlt, FaRegStopCircle } from 'react-icons/fa';
 
 export const VoiceToGesture = () => {
+  const x = JS2Py;
   const [isRecording, setIsRecording] = React.useState(false);
   const [video, setVideo] = React.useState();
   const [count, setCount] = React.useState(0);
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
+
   React.useEffect(() => {
-    console.log('inside voiceToGesture Component js2py:', JS2Py);
+    // console.log('inside voiceToGesture Component js2py:', JS2Py);
+    // console.log('inside voiceTOGestre', JS2Py.serverName);
     if (!browserSupportsSpeechRecognition) {
       return <span>Browser doesn't support speech recognition.</span>;
     }
-    console.log(JS2Py);
-    getVideo(getWords('how are you'));
+    // console.log(JS2Py);
+    getVideo(getWords(transcript));
   }, [transcript, browserSupportsSpeechRecognition]);
+
   const loadings = () => {};
+
   const speak = () => {
     setIsRecording(!isRecording);
   };
+
   const stopSpeak = () => {
     setIsRecording(!isRecording);
   };
@@ -42,10 +48,11 @@ export const VoiceToGesture = () => {
   };
 
   const getVideo = words => {
+    console.log('Inside getVideo', x);
     // console.log('Inside getVideo', JS2Py);
-    console.log('getVideo: ', JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures);
+    // console.log('getVideo: ', JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures);
     try {
-      JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
+      x.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
         setVideo(res);
       });
     } catch (error) {
