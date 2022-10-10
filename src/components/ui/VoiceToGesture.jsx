@@ -50,9 +50,10 @@ export const VoiceToGesture = () => {
   const getVideo = words => {
     console.log('Inside getVideo', x);
     // console.log('Inside getVideo', JS2Py);
-    // console.log('getVideo: ', JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures);
+    console.log('getVideo: ', JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures);
     try {
-      x.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
+      words=['hello','how','are','you'];
+      JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
         setVideo(res);
       });
     } catch (error) {
