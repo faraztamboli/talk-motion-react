@@ -35,6 +35,8 @@
   };
 */
 
+/* eslint-disable */
+
 function JS2PyClient(serverName, clientPageId) {
   if (serverName === undefined) this.serverName = 'ws://localhost:8082';
   else this.serverName = serverName;
@@ -218,7 +220,9 @@ function JS2PyClient(serverName, clientPageId) {
       var args = this.PythonFunctionsArgs[functionName];
       args.push('...func');
       var funcBody =
-        "var paramNames = this.PythonFunctionsArgs['" + functionName + "'].slice(0, -1);\n" +
+        "var paramNames = this.PythonFunctionsArgs['" +
+        functionName +
+        "'].slice(0, -1);\n" +
         "var args = Array.prototype.slice.call(arguments);\n var inputObject = {};\n for(var i in paramNames) {\n var paramName = paramNames[i];\n if(paramName != '...func') {\n inputObject[paramName] = args[i];\n}\n }\n return this.callMultipleCallbackPythonFunction('" +
         functionName +
         "', inputObject, ...func);\n";

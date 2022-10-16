@@ -1,26 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Row, Col, Button, Input, Form } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Row, Col, Button, Input, Form, Checkbox } from 'antd';
 import { Link } from 'react-router-dom';
-// import { useNavigate } from 'react-router-dom';
+import { formItemLayout, tailFormItemLayout } from '../data/signupFormLayout';
+import { validateCountryName, getCountryCode } from '../data/countries';
+import JS2Py from '../remotepyjs';
+import { useNavigate } from 'react-router-dom';
 // import { useDispatch } from 'react-redux/es/exports';
 
 const Signup = props => {
   const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const disptach = useDispatch();
+  const [form] = Form.useForm();
 
   const onFinish = values => {
-    console.log(values);
+    JS2Py.PythonFunctions.SessionServer.registerLogin(
+      '',
+      values.username,
+      values.password,
+      values.name,
+      '',
+      '',
+      values.email,
+      values.street,
+      values.city,
+      getCountryCode(values.country),
+      res => {
+        console.log(res);
+      },
+    );
+
+    navigate('/login');
   };
+
   useEffect(() => {
     forceUpdate({});
   }, []);
 
   return (
     <Layout>
-      <Row className="mh-100vh ">
-        <Col span={12} className="mh-100vh" style={{ background: '#02086b' }}>
+      <Row
+        className="mh-100vh"
+        style={props.md === true ? { display: 'flex', flexDirection: 'column-reverse' } : null}
+      >
+        <Col span={12} xs={24} md={12} className="mh-100vh" style={{ background: '#02086b' }}>
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
               <h1 className="mb-0 text-white">Talk Motion</h1>
@@ -31,101 +54,214 @@ const Signup = props => {
             </div>
           </div>
         </Col>
-        <Col span={12}>
+        <Col span={12} xs={24} md={12}>
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
               <h1>Hello Again!</h1>
               <p>Register yourself for Talk Motion</p>
               <Form
-                name="normal_login"
-                className="login-form"
-                initialValues={{
-                  remember: true,
-                }}
+                {...formItemLayout}
+                form={form}
+                name="register"
                 onFinish={onFinish}
+                initialValues={{
+                  residence: ['zhejiang', 'hangzhou', 'xihu'],
+                  prefix: '86',
+                }}
+                scrollToFirstError
               >
                 <Form.Item
                   name="name"
+                  label="Name"
                   rules={[
                     {
+                      type: 'text',
+                      message: 'Please enter your name',
+                    },
+                    {
                       required: true,
-                      message: 'Please enter your name!',
+                      message: 'Please enter your name',
                     },
                   ]}
                 >
-                  <Input
-                    prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="Name"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="user_name"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please enter your Username!',
-                    },
-                  ]}
-                >
-                  <Input
-                    prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="Username"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="email"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please enter your email',
-                    },
-                  ]}
-                >
-                  <Input
-                    prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="Email"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input your Password!',
-                    },
-                  ]}
-                >
-                  <Input
-                    prefix={<LockOutlined className="site-form-item-icon" />}
-                    type="password"
-                    placeholder="Password"
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="confirm_password"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please cofirm your Password',
-                    },
-                  ]}
-                >
-                  <Input
-                    prefix={<LockOutlined className="site-form-item-icon" />}
-                    type="password"
-                    placeholder="ConfirmPassword"
-                  />
+                  <Input />
                 </Form.Item>
 
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="login-form-button block w-100"
-                  >
-                    Signup
+                <Form.Item
+                  name="email"
+                  label="E-mail"
+                  rules={[
+                    {
+                      type: 'email',
+                      message: 'The input is not valid E-mail!',
+                    },
+                    {
+                      required: true,
+                      message: 'Please input your E-mail!',
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  name="username"
+                  label="User-name"
+                  validate
+                  hasFeedback
+                  rules={[
+                    {
+                      type: 'text',
+                      message: 'username is already taken',
+                    },
+                    {
+                      required: true,
+                      message: 'Please enter a username',
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(rule, value) {
+                        return new Promise((resolve, reject) => {
+                          JS2Py.PythonFunctions.SessionServer.checkIfUsernameExists(
+                            getFieldValue('username'),
+                            res => {
+                              if (!value || res.userAlreadyExists !== true) {
+                                resolve();
+                              }
+                              reject('User already exists');
+                            },
+                          );
+                        });
+                      },
+                    }),
+                  ]}
+                  validateTrigger="onBlur"
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  name="password"
+                  label="Password"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please input your password!',
+                    },
+                  ]}
+                  hasFeedback
+                >
+                  <Input.Password />
+                </Form.Item>
+
+                <Form.Item
+                  name="confirm"
+                  label="Confirm Password"
+                  dependencies={['password']}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please confirm your password!',
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue('password') === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error('The two passwords that you entered do not match!'),
+                        );
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password />
+                </Form.Item>
+
+                <Form.Item
+                  name="street"
+                  label="Street"
+                  tooltip="What do you want others to call you?"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter your street name',
+                      whitespace: true,
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  name="city"
+                  label="City"
+                  tooltip="What do you want others to call you?"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter your city name',
+                      whitespace: true,
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  name="country"
+                  label="Country"
+                  tooltip="What do you want others to call you?"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter your country name',
+                      whitespace: true,
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(rule, value) {
+                        return new Promise((resolve, reject) => {
+                          if (!value || validateCountryName(getFieldValue('country')) === true) {
+                            resolve();
+                          } else {
+                            reject('Please enter a valid country name');
+                          }
+                        });
+                      },
+                    }),
+                  ]}
+                  validateTrigger="onBlur"
+                >
+                  <Input />
+                </Form.Item>
+
+                <Form.Item
+                  name="agreement"
+                  valuePropName="checked"
+                  rules={[
+                    {
+                      validator: (_, value) =>
+                        value
+                          ? Promise.resolve()
+                          : Promise.reject(new Error('Should accept agreement')),
+                    },
+                  ]}
+                  {...tailFormItemLayout}
+                >
+                  <Checkbox>
+                    I have read the <a href="...">agreement</a>
+                  </Checkbox>
+                </Form.Item>
+                <Form.Item {...tailFormItemLayout}>
+                  <Button type="primary" htmlType="submit">
+                    Register
                   </Button>
-                  Already have an account? <Link to="/login">Login</Link>
+                </Form.Item>
+
+                <Form.Item {...tailFormItemLayout}>
+                  <p>
+                    Already have an account? <Link to="/login">Login</Link>
+                  </p>
                 </Form.Item>
               </Form>
             </div>

@@ -1,85 +1,63 @@
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import Home from './pages/Home';
 import { Layout } from 'antd';
 import 'antd/dist/antd.min.css';
 import Sidebar from './components/Layout/Sidebar';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import Converter from './pages/Converter';
-import Trainer from './pages/Trainer';
-import Models from './pages/Models';
 import Login from './pages/Login';
 import { Statuses } from './components/ui/Statuses';
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from './app/features/loginSlice';
 import JS2Py from './remotepyjs';
-// import './remotepyjs(f)/remotepy.1.0.0.min';
 import { setServerConnected, setServerStatus } from './app/features/serverSlice';
-import Profile from './pages/Profile';
-import Signup from './pages/Signup';
-import ForgotPassword from './pages/ForgotPassword';
+import Spinner from './components/ui/Spinner';
+import ServerError from './components/ui/ServerError';
+import Error from './pages/404Error';
+import { JS2PyConnect } from './data/JS2PyConnectFunctions/JS2PyConnect';
+
+// React lazy components
+const Trainer = React.lazy(() => import('./pages/Trainer'));
+const Models = React.lazy(() => import('./pages/Models'));
+const Profile = React.lazy(() => import('./pages/Profile'));
+const Signup = React.lazy(() => import('./pages/Signup'));
+const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'));
 
 const { Content } = Layout;
 
 const App = () => {
-  const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
-
   const [collapsed, setCollapsed] = React.useState(false);
+  const [collapsedWidth, setCollapsedWidth] = React.useState(80);
+  const [sideBarWidth, setSideBarWidth] = React.useState(200);
+  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+  const [md, setMd] = React.useState(false);
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+  const isServerConnected = useSelector(state => state.server.serverConnected);
+  const serverStatus = useSelector(state => state.server.serverStatus);
+
   const onCollapsed = () => {
     setCollapsed(!collapsed);
   };
 
-  // initialize remote python server
+  // initialize remote python server.
   React.useEffect(() => {
     let conn = null;
-    // console.log(JS2Py);
     JS2Py.serverName = 'wss://talk-motion.com:8083';
 
     // Push function to onopen array of functions
     JS2Py.subOnOpen(() => {
       dispatch(setServerConnected(true));
       dispatch(setServerStatus('Connected'));
-      console.log('connected');
-      console.log('hey I am working', JS2Py);
     });
 
-    // ------------testing ----------------------
-    JS2Py.onopen = function () {
-      // console.log(JS2Py);
-      var funcList = [];
-      for (var key in JS2Py.PythonFunctionsArgs) {
-        var argArray = JS2Py.PythonFunctionsArgs[key];
-        argArray = argArray.slice(0, argArray.length - 2);
-        var funcSignature = key + '(' + argArray.join(', ') + ')';
-        funcList.push(funcSignature);
-      }
+    // called JS2PyConnect to get all the functions of JS2Py
+    JS2PyConnect();
 
-      // signatures.innerHTML = '<br/><h2>Function signatures:</h2><ul><li>' + funcList.join('</li><li>') + '</li>';
-
-      JS2Py.callPythonFunction('getPythonFunctionLibraryHelp', {}, function (PythonFunctionsHelp) {
-        //JS2PySelf.PythonFunctionsHelp = funcDict;
-        var funcLibrary = [];
-
-        for (var key in PythonFunctionsHelp) {
-          var funcHelp = '<h4>' + key + ':</h4>';
-          funcHelp += '<p>' + PythonFunctionsHelp[key] + '</p>';
-          funcLibrary.push(funcHelp);
-        }
-        // console.log(JS2Py);
-
-        // help.innerHTML = '<br/><h2>Function Help:</h2>' + funcLibrary.join('');
-      });
-    };
-
-    JS2Py.onclose = function () {
-      // divStatus.innerHTML = 'connection closed';
-    };
-
-    // ----------------end testing----------------
-
-    // Push function to onclose array of functions
     JS2Py.subOnClose(() => {
       dispatch(setServerConnected(false));
       dispatch(setServerStatus('Disconnected'));
@@ -94,8 +72,6 @@ const App = () => {
     };
     //eslint-disable-next-line
   }, []);
-
-  const navigate = useNavigate(); // use navigate hook from react-router-dom
 
   React.useEffect(() => {
     if (localStorage.getItem('isLoggedIn') === 'true') {
@@ -113,47 +89,141 @@ const App = () => {
     //eslint-disable-next-line
   }, [isLoggedIn]);
 
+  React.useEffect(() => {
+    setWindowWidth(window.innerWidth);
+    if (windowWidth <= 768) {
+      setMd(true);
+    } else if (windowWidth > 768) {
+      setMd(false);
+    }
+    if (windowWidth < 576) {
+      setCollapsedWidth(0);
+      setSideBarWidth(60);
+      setCollapsed(true);
+    } else if (windowWidth > 576) {
+      setCollapsedWidth(60);
+      setSideBarWidth(200);
+    }
+    window.addEventListener('resize', () => {
+      setWindowWidth(window.innerWidth);
+      if (windowWidth <= 768) {
+        setMd(true);
+      } else if (windowWidth > 768) {
+        setMd(false);
+      }
+      if (windowWidth < 576) {
+        setCollapsedWidth(0);
+        setSideBarWidth(60);
+        setCollapsed(true);
+      } else if (windowWidth > 576) {
+        setCollapsedWidth(80);
+        setSideBarWidth(200);
+      }
+    });
+  }, [windowWidth, collapsedWidth]);
+
   return (
     <div className="App">
-      {isLoggedIn ? (
-        <Layout>
-          <Sidebar collapsed={collapsed} />
+      {isServerConnected ? (
+        isLoggedIn ? (
           <Layout>
-            <Header collapsed={collapsed} onCollapsed={onCollapsed} />
-            <Content
-              style={{
-                margin: '24px 16px 0',
-              }}
-            >
-              <div
-                className="site-layout-background"
-                style={{
-                  padding: 24,
-                  minHeight: 360,
-                }}
-              >
-                <Routes>
-                  <Route index path="/" element={<Home />} />
-                  <Route path="converter" exact element={<Converter />} />
-                  <Route path="trainer" exact element={<Trainer />} />
-                  <Route path="models" exact element={<Models />} />
-                  <Route path="profile" exact element={<Profile />} />
-                  <Route path="*" element={<h1>404</h1>} />
-                </Routes>
-              </div>
-            </Content>
-            <Footer />
+            <Sidebar
+              collapsed={collapsed}
+              onCollapsed={onCollapsed}
+              sideBarWidth={sideBarWidth}
+              collapsedWidth={collapsedWidth}
+            />
+            <Layout>
+              <Header collapsed={collapsed} onCollapsed={onCollapsed} />
+              <Content>
+                <div className="site-layout-background" style={{ minHeight: 360 }}>
+                  <Routes>
+                    <Route index path="/" element={<Converter />} />
+                    <Route
+                      path="converter"
+                      exact
+                      element={<Converter collapsedWidth={collapsedWidth} />}
+                    />
+                    <Route
+                      path="trainer"
+                      exact
+                      element={
+                        <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
+                          <Trainer collapsedWidth={collapsedWidth} />
+                        </React.Suspense>
+                      }
+                    />
+                    <Route
+                      path="models"
+                      exact
+                      element={
+                        <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
+                          <Models collapsedWidth={collapsedWidth} />
+                        </React.Suspense>
+                      }
+                    />
+                    <Route
+                      path="my-models"
+                      exact
+                      element={
+                        <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
+                          <Models collapsedWidth={collapsedWidth} />
+                        </React.Suspense>
+                      }
+                    />
+                    <Route
+                      path="profile"
+                      exact
+                      element={
+                        <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
+                          <Profile collapsedWidth={collapsedWidth} />
+                        </React.Suspense>
+                      }
+                    />
+                    <Route
+                      path="settings"
+                      exact
+                      element={
+                        <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
+                          <Models collapsedWidth={collapsedWidth} />
+                        </React.Suspense>
+                      }
+                    />
+                    <Route path="*" element={<Error />} />
+                  </Routes>
+                </div>
+              </Content>
+              <Footer />
+            </Layout>
           </Layout>
-        </Layout>
+        ) : (
+          <Routes>
+            <Route
+              path="/signup"
+              exact
+              element={
+                <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
+                  <Signup md={md} />
+                </React.Suspense>
+              }
+            />
+            <Route path="/login" exact element={<Login md={md} />} />
+            <Route
+              path="/forgetpassword"
+              exact
+              element={
+                <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
+                  <ForgotPassword md={md} />
+                </React.Suspense>
+              }
+            />
+          </Routes>
+        )
       ) : (
-        <Routes>
-          {/* --------Will be continued----------- */}
-          <Route path="/signup" exact element={<Signup />} />
-          <Route path="/login" exact element={<Login />} />
-          <Route path="/forgetpassword" exact element={<ForgotPassword />} />
-        </Routes>
+        serverStatus !== 'Disconnected' && <Spinner size="large" pageSize="large" />
       )}
-      <Statuses />
+      {serverStatus === 'Disconnected' && <ServerError />}
+      <Statuses collapsedWidth={collapsedWidth} />
     </div>
   );
 };

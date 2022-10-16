@@ -14,10 +14,15 @@ export const UserMenu = () => {
     dispatch(logout());
   };
 
-  const menu = <Menu style={{ width: '20vw', transformOrigin: 'right' }} items={userMenu} />;
+  const menu = <Menu style={{ width: '20', transformOrigin: 'right' }} items={userMenu} />;
   return (
     <Dropdown className="" overlay={menu} trigger={['click']} placement="bottomLeft" arrow>
-      <img src="/media/avatars/150-2.jpg" alt="" className=" w-2rem" />
+      <img
+        src="/media/avatars/150-2.jpg"
+        alt=""
+        className=" w-2rem"
+        style={{ cursor: 'pointer' }}
+      />
     </Dropdown>
   );
 };
