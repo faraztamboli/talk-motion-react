@@ -6,12 +6,18 @@ import { Button } from 'antd';
 import { FaMicrophoneAlt, FaRegStopCircle } from 'react-icons/fa';
 
 export const VoiceToGesture = () => {
-  console.log(JS2Py);
   const [isRecording, setIsRecording] = React.useState(false);
   const [video, setVideo] = React.useState();
   const [count, setCount] = React.useState(0);
-  const { transcript, /*listening, resetTranscript,*/ browserSupportsSpeechRecognition } =
+  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
+
+  // React.useEffect(() => {
+  //   if (!browserSupportsSpeechRecognition) {
+  //     return <span>Browser doesn't support speech recognition.</span>;
+  //   }
+  //   getVideo(getWords(transcript));
+  // }, []);
 
   React.useEffect(() => {
     if (!browserSupportsSpeechRecognition) {
@@ -38,8 +44,10 @@ export const VoiceToGesture = () => {
 
   const getVideo = words => {
     try {
+      words = ['hello', 'how', 'are', 'you'];
+      console.log('inside getVideo function : ', JS2Py);
       JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
-        setVideo(() => res);
+        setVideo(res);
       });
     } catch (error) {
       console.log(error);
@@ -64,7 +72,7 @@ export const VoiceToGesture = () => {
       <p>View gestures from speech</p>
       <video
         src={video && videoSrc(objToArr(video))}
-        style={{ backgroundColor: 'black' }}
+        // style={!video ? { backgroundColor: 'black' } : null}
         // controls
         className="block w-100p mb-6"
         autoPlay

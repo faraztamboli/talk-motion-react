@@ -6,7 +6,7 @@ import { VoiceToGesture } from '../components/ui/VoiceToGesture';
 import { GestureToVoice } from '../components/ui/GestureToVoice';
 import PageHeading from '../components/Layout/PageHeading';
 
-export default function Converter(props) {
+const Converter = props => {
   return (
     <>
       <PageHeading heading="Converter" />
@@ -41,4 +41,6 @@ export default function Converter(props) {
       </div>
     </>
   );
-}
+};
+
+export default Converter;

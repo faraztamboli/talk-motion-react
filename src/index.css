@@ -605,3 +605,23 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
     border-radius: 20px;
     font-weight: 600;
 }
+
+.guide-page {
+  position: relative;
+  overflow-x: hidden;
+  overflow: hidden;
+}
+
+.guide-page::before {
+  content: '';
+  position: absolute;
+  right: -100px;
+  bottom: -15px;
+  width: 400px;
+  height: 400px;
+  background-image: url('https://www.studentvoice.ai/images/index/sitting-1-SVGOMG.svg');
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position-x: right;
+  background-position-y: bottom;
+}

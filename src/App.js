@@ -2,22 +2,23 @@ import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { Layout } from 'antd';
 import 'antd/dist/antd.min.css';
+import JS2Py from './remotepyjs';
 import Sidebar from './components/Layout/Sidebar';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
-import Converter from './pages/Converter';
 import Login from './pages/Login';
 import { Statuses } from './components/ui/Statuses';
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from './app/features/loginSlice';
-import JS2Py from './remotepyjs';
 import { setServerConnected, setServerStatus } from './app/features/serverSlice';
 import Spinner from './components/ui/Spinner';
 import ServerError from './components/ui/ServerError';
 import Error from './pages/404Error';
 import { JS2PyConnect } from './data/JS2PyConnectFunctions/JS2PyConnect';
+import GuidePage from './pages/GuidePage';
 
 // React lazy components
+const Converter = React.lazy(() => import('./pages/Converter'));
 const Trainer = React.lazy(() => import('./pages/Trainer'));
 const Models = React.lazy(() => import('./pages/Models'));
 const Profile = React.lazy(() => import('./pages/Profile'));
@@ -26,12 +27,14 @@ const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'));
 
 const { Content } = Layout;
 
-const App = () => {
+const App = props => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [collapsedWidth, setCollapsedWidth] = React.useState(80);
   const [sideBarWidth, setSideBarWidth] = React.useState(200);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
+  const [sm, setSm] = React.useState(false);
   const [md, setMd] = React.useState(false);
+  const [lg, setLg] = React.useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -81,31 +84,42 @@ const App = () => {
         user: localStorage.getItem('user'),
       };
       dispatch(login(loginPayload));
-
       navigate('/');
-    } else {
+    } /* else {
       navigate('/login');
-    }
+    } */
     //eslint-disable-next-line
   }, [isLoggedIn]);
 
   React.useEffect(() => {
     setWindowWidth(window.innerWidth);
+    if (windowWidth <= 992) {
+      setLg(true);
+    } else {
+      setLg(false);
+    }
     if (windowWidth <= 768) {
       setMd(true);
     } else if (windowWidth > 768) {
       setMd(false);
     }
     if (windowWidth < 576) {
+      setSm(true);
       setCollapsedWidth(0);
       setSideBarWidth(60);
       setCollapsed(true);
     } else if (windowWidth > 576) {
+      setSm(false);
       setCollapsedWidth(60);
       setSideBarWidth(200);
     }
     window.addEventListener('resize', () => {
       setWindowWidth(window.innerWidth);
+      if (windowWidth <= 992) {
+        setLg(true);
+      } else {
+        setLg(false);
+      }
       if (windowWidth <= 768) {
         setMd(true);
       } else if (windowWidth > 768) {
@@ -138,11 +152,23 @@ const App = () => {
               <Content>
                 <div className="site-layout-background" style={{ minHeight: 360 }}>
                   <Routes>
-                    <Route index path="/" element={<Converter />} />
+                    <Route
+                      index
+                      path="/"
+                      element={
+                        <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
+                          <Converter collapsedWidth={collapsedWidth} />
+                        </React.Suspense>
+                      }
+                    />
                     <Route
                       path="converter"
                       exact
-                      element={<Converter collapsedWidth={collapsedWidth} />}
+                      element={
+                        <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
+                          <Converter collapsedWidth={collapsedWidth} />
+                        </React.Suspense>
+                      }
                     />
                     <Route
                       path="trainer"
@@ -217,6 +243,7 @@ const App = () => {
                 </React.Suspense>
               }
             />
+            <Route path="/guide" exact element={<GuidePage sm={sm} md={md} lg={lg} />} />
           </Routes>
         )
       ) : (
