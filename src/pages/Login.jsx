@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import JS2Py from '../remotepyjs';
 import { Layout, Row, Col, Button, Form, Input, Checkbox } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,6 +8,8 @@ import { login } from '../app/features/loginSlice';
 
 const Login = props => {
   const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
+  const [loginError, setLoginError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const disptach = useDispatch();
 
@@ -21,11 +24,32 @@ const Login = props => {
   }
 
   const onFinish = values => {
-    // set multiple values in localStorage
-    localStorage.setItem('isLoggedIn', true);
-    localStorage.setItem('token', guid());
-    disptach(login({ token: guid(), user: 'admin' }));
-    navigate('/');
+    setLoading(true);
+    const handleLogin = res => {
+      console.log(res);
+      if (res && res.isValidUser === true && res.isPasswordCorrect === true) {
+        // set multiple values in localStorage
+        localStorage.setItem('isLoggedIn', true);
+        localStorage.setItem('token', guid());
+        disptach(login({ token: guid(), user: 'admin' }));
+        navigate('/');
+      } else if (res && !(res.isValidUser === true && res.isPasswordCorrect === true)) {
+        console.log('Invalid Credentials');
+        setLoading(false);
+        setLoginError(true);
+      }
+    };
+    JS2Py.PythonFunctions.SessionServer.validateLogin(
+      '',
+      values.username,
+      values.password,
+      values.remember,
+      '',
+      '',
+      res => {
+        handleLogin(res);
+      },
+    );
   };
   useEffect(() => {
     forceUpdate({});
@@ -33,8 +57,11 @@ const Login = props => {
 
   return (
     <Layout>
-      <Row className="mh-100vh ">
-        <Col span={12} className="mh-100vh" style={{ background: '#02086b' }}>
+      <Row
+        className="mh-100vh"
+        style={props.md === true ? { display: 'flex', flexDirection: 'column-reverse' } : null}
+      >
+        <Col span={12} xs={24} md={12} className="mh-100vh" style={{ background: '#02086b' }}>
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
               <h1 className="mb-0 text-white">Talk Motion</h1>
@@ -45,11 +72,12 @@ const Login = props => {
             </div>
           </div>
         </Col>
-        <Col span={12}>
+        <Col span={12} xs={24} md={12}>
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
               <h1>Hello Again!</h1>
               <p>Login for Talk Motion</p>
+              {loginError && <p style={{ color: 'red' }}>Invalid username or password</p>}
               <Form
                 name="normal_login"
                 className="login-form"
@@ -91,10 +119,6 @@ const Login = props => {
                   <Form.Item name="remember" valuePropName="checked" noStyle>
                     <Checkbox>Remember me</Checkbox>
                   </Form.Item>
-
-                  <Link className="login-form-forgot" to="/forgetpassword">
-                    Forgot password
-                  </Link>
                 </Form.Item>
 
                 <Form.Item>
@@ -102,10 +126,20 @@ const Login = props => {
                     type="primary"
                     htmlType="submit"
                     className="login-form-button block w-100"
+                    loading={loading}
                   >
                     Log in
                   </Button>
-                  Or <Link to="/signup">register now!</Link>
+                </Form.Item>
+                <Form.Item>
+                  <Link className="login-form-forgot" to="/forgetpassword">
+                    Forgot password
+                  </Link>
+                </Form.Item>
+                <Form.Item>
+                  <p>
+                    Don't have an account <Link to="/signup">Register now!</Link>
+                  </p>
                 </Form.Item>
               </Form>
             </div>

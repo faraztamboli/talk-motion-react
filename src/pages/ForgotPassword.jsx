@@ -23,8 +23,11 @@ const ForgotPassword = props => {
 
   return (
     <Layout>
-      <Row className="mh-100vh ">
-        <Col span={12} className="mh-100vh" style={{ background: '#02086b' }}>
+      <Row
+        className="mh-100vh"
+        style={props.md === true ? { display: 'flex', flexDirection: 'column-reverse' } : null}
+      >
+        <Col span={12} xs={24} md={12} className="mh-100vh" style={{ background: '#02086b' }}>
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
               <h1 className="mb-0 text-white">Talk Motion</h1>
@@ -35,7 +38,7 @@ const ForgotPassword = props => {
             </div>
           </div>
         </Col>
-        <Col span={12}>
+        <Col span={12} xs={24} md={12}>
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
               <h1>Hello Again!</h1>
@@ -71,7 +74,11 @@ const ForgotPassword = props => {
                   >
                     Continue
                   </Button>
-                  <br /> Or <Link to="/login">Login</Link>
+                </Form.Item>
+                <Form.Item>
+                  <p>
+                    Continue to <Link to="/login">Login</Link>
+                  </p>
                 </Form.Item>
               </Form>
             </div>

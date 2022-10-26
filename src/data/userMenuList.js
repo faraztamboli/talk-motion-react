@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ContainerOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import UserMenuProfileItem from '../components/ui/UserMenuProfileItem';
+import React from 'react';
 
 const userMenu = [
   {
@@ -11,15 +12,6 @@ const userMenu = [
       </Link>
     ),
   },
-  // {
-  //   key: 'profile',
-  //   label: (
-  //     <Link to="/profile" style={{ fontSize: '1.1rem  ' }}>
-  //       Profile
-  //     </Link>
-  //   ),
-  //   icon: <UserOutlined style={{ fontSize: '1.1rem' }} />,
-  // },
   {
     key: 'myModels',
     label: <Link to="/my-models">My Models</Link>,

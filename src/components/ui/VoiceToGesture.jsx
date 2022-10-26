@@ -6,40 +6,35 @@ import { Button } from 'antd';
 import { FaMicrophoneAlt, FaRegStopCircle } from 'react-icons/fa';
 
 export const VoiceToGesture = () => {
-  const x = JS2Py;
   const [isRecording, setIsRecording] = React.useState(false);
   const [video, setVideo] = React.useState();
   const [count, setCount] = React.useState(0);
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
     useSpeechRecognition();
 
+  // React.useEffect(() => {
+  //   if (!browserSupportsSpeechRecognition) {
+  //     return <span>Browser doesn't support speech recognition.</span>;
+  //   }
+  //   getVideo(getWords(transcript));
+  // }, []);
+
   React.useEffect(() => {
-    // console.log('inside voiceToGesture Component js2py:', JS2Py);
-    // console.log('inside voiceTOGestre', JS2Py.serverName);
     if (!browserSupportsSpeechRecognition) {
       return <span>Browser doesn't support speech recognition.</span>;
     }
-    // console.log(JS2Py);
     getVideo(getWords(transcript));
   }, [transcript, browserSupportsSpeechRecognition]);
 
   const loadings = () => {};
 
-  const speak = () => {
-    setIsRecording(!isRecording);
-  };
-
-  const stopSpeak = () => {
-    setIsRecording(!isRecording);
-  };
-
   const handleStopSpeak = () => {
-    stopSpeak(0);
+    setIsRecording(!isRecording);
     SpeechRecognition.stopListening();
   };
 
   const handleStartSpeak = () => {
-    speak(1);
+    setIsRecording(!isRecording);
     SpeechRecognition.startListening();
   };
 
@@ -48,11 +43,10 @@ export const VoiceToGesture = () => {
   };
 
   const getVideo = words => {
-    console.log('Inside getVideo', x);
-    // console.log('Inside getVideo', JS2Py);
-    // console.log('getVideo: ', JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures);
     try {
-      x.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
+      words = ['hello', 'how', 'are', 'you'];
+      console.log('inside getVideo function : ', JS2Py);
+      JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
         setVideo(res);
       });
     } catch (error) {
@@ -78,6 +72,7 @@ export const VoiceToGesture = () => {
       <p>View gestures from speech</p>
       <video
         src={video && videoSrc(objToArr(video))}
+        // style={!video ? { backgroundColor: 'black' } : null}
         // controls
         className="block w-100p mb-6"
         autoPlay
@@ -94,11 +89,10 @@ export const VoiceToGesture = () => {
           className="flex w-100p flex-center-center"
           type="danger"
           loading={loadings[0]}
-          // onClick={() => stopSpeak(0)}
           onClick={handleStopSpeak}
           icon={<FaRegStopCircle />}
         >
-          <span className="ml-2">Stop</span>
+          <span className="">Stop</span>
         </Button>
       ) : (
         <Button
@@ -109,7 +103,7 @@ export const VoiceToGesture = () => {
           onClick={handleStartSpeak}
           icon={<FaMicrophoneAlt />}
         >
-          <span className="ml-2">Speak</span>
+          <span className="">Speak</span>
         </Button>
       )}
 

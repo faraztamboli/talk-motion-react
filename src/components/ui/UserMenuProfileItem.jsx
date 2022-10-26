@@ -46,13 +46,13 @@ export default function UserMenuProfileItem(props) {
               pro
             </span>
           </div>
-          <a
+          <p
             href="/"
             className="fw-bold text-muted text-hover-primary fs-7"
             style={{ color: '#a1a5b7' }}
           >
             max@kt.com
-          </a>
+          </p>
         </div>
       </div>
     </>

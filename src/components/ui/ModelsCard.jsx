@@ -1,28 +1,37 @@
 import React from 'react';
 import { Card, Avatar, Divider, Tooltip, Button } from 'antd';
-import {
-  EditOutlined,
-  AntDesignOutlined,
-  UserOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from '@ant-design/icons';
-const { Meta } = Card;
+// import {
+//   EditOutlined,
+//   AntDesignOutlined,
+//   UserOutlined,
+//   EllipsisOutlined,
+//   SettingOutlined,
+// } from '@ant-design/icons';
+// const { Meta } = Card;
 
-export const ModelsCard = ({ model }) => {
+export const ModelsCard = props => {
   return (
     <Card
       bordered={false}
-      hoverable={true}
+      // hoverable={true}
       style={{ backgroundColor: '#eef1ee', borderRadius: '9px' }}
     >
       <div
-        style={{
-          display: 'flex',
-          width: '15.3rem',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
+        style={
+          props.collapsedWidth !== 0
+            ? {
+                display: 'flex',
+                width: '15.3rem',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }
+            : {
+                display: 'flex',
+                width: '10.3rem',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }
+        }
       >
         <div
           className="logo_div"
@@ -38,10 +47,10 @@ export const ModelsCard = ({ model }) => {
           <p
             className="badge"
             style={{
-              backgroundColor: '#e8fff3',
-              color: '#50cd89',
+              backgroundColor: '#50cd89',
+              color: 'white',
               fontSize: 'small',
-              marginLeft: '.4rem ',
+              // marginLeft: '.4rem ',
               padding: '3px 4px',
               verticalAlign: 'top',
               borderRadius: '10px',
@@ -87,15 +96,20 @@ export const ModelsCard = ({ model }) => {
       <Divider />
 
       <div className="card_btns" style={{ marginTop: '1rem' }}>
-        <Button type="primary" style={{ marginRight: '.4rem' }} shape="round" size={'medium'}>
+        <Button
+          type="primary"
+          style={props.collapsedWidth !== 0 ? { marginRight: '.4rem' } : null}
+          shape="round"
+          size={props.collapsedWidth !== 0 ? 'medium' : 'small'}
+        >
           View Details
         </Button>
         <Button
           type="primary"
           danger={true}
-          style={{ marginLeft: '.4rem' }}
+          style={props.collapsedWidth !== 0 ? { marginLeft: '.4rem' } : null}
           shape="round"
-          size={'medium'}
+          size={props.collapsedWidth !== 0 ? 'medium' : 'small'}
         >
           Add to List
         </Button>

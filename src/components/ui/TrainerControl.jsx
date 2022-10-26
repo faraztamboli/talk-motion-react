@@ -3,7 +3,7 @@ import { Button, Row, Col, Input } from 'antd';
 import { FaRegPauseCircle, FaRegPlayCircle } from 'react-icons/fa';
 
 export const TrainerControl = () => {
-  const [trainingText, setTrainingText] = React.useState(
+  const [trainingText /*setTrainingText*/] = React.useState(
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   );
   const [collectionText, setCollectionText] = React.useState('');
