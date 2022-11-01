@@ -5,7 +5,7 @@ import { TwitterOutlined, FacebookFilled } from '@ant-design/icons';
 
 function Footer() {
   return (
-    <footer>
+    <footer id="contact">
       <div className="container">
         <Row className="container footer-upper-div">
           <Col>

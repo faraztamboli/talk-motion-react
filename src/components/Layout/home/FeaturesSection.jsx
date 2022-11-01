@@ -4,7 +4,7 @@ import featureImage from '../../../media/images/card-logo.png';
 
 function FeaturesSection() {
   return (
-    <section className="  features-section">
+    <section id="features" className="features-section">
       <div className="container">
         <h2 className="features-heading">Features</h2>
         <div className="features-cards">

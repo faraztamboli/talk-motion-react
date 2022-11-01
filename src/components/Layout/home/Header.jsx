@@ -24,21 +24,23 @@ function Header(props) {
           />
         </div>
         <div className="home-header-links-div">
-          <Link to="/login" className="home-header-links">
+          <a href="#about" className="home-header-links">
             About
-          </Link>
-          <Link to="/login" className="home-header-links">
+          </a>
+          <a href="#features" className="home-header-links">
             Features
-          </Link>
-          <Link to="/login" className="home-header-links">
+          </a>
+          <a href="#pricing" className="home-header-links">
             Pricing
-          </Link>
-          <Link to="/login" className="home-header-links">
+          </a>
+          <a href="#contact" className="home-header-links">
             Contact Us
+          </a>
+          <Link to="/signup">
+            <Button size="large" shape="round" className="home-header-btn">
+              Signup for Free
+            </Button>
           </Link>
-          <Button size="large" shape="round" className="home-header-btn">
-            Signup for Free
-          </Button>
         </div>
 
         <div className="hambarger-icon-div">

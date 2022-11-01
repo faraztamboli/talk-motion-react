@@ -3,7 +3,7 @@ import { Button, Col, Row } from 'antd';
 
 function PricingSection() {
   return (
-    <section className=" pricing-section">
+    <section id="pricing" className="pricing-section">
       <div className="container">
         <h2 className="pricing-heading">Pricing</h2>
         <div className="pricing-cards">
