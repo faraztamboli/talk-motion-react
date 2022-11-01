@@ -15,7 +15,7 @@ const Signup = props => {
 
   const onFinish = values => {
     JS2Py.PythonFunctions.SessionServer.registerLogin(
-      '',
+      '1234567890',
       values.username,
       values.password,
       values.name,

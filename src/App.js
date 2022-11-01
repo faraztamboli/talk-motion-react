@@ -16,6 +16,7 @@ import ServerError from './components/ui/ServerError';
 import Error from './pages/404Error';
 import { JS2PyConnect } from './data/JS2PyConnectFunctions/JS2PyConnect';
 import GuidePage from './pages/GuidePage';
+import Home from './pages/Home';
 
 // React lazy components
 const Converter = React.lazy(() => import('./pages/Converter'));
@@ -244,6 +245,7 @@ const App = props => {
               }
             />
             <Route path="/guide" exact element={<GuidePage sm={sm} md={md} lg={lg} />} />
+            <Route path="/" exact element={<Home md={md} />} />
           </Routes>
         )
       ) : (
