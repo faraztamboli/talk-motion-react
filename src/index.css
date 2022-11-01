@@ -647,12 +647,12 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 }
 
 /* homepage header styling */
-.home-header {
+.home-header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 4.188rem;
-  padding: 0rem 7.563rem;
+  padding: 0rem;
 }
 
 .home-header .logo-div img {
@@ -675,12 +675,7 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
     display: block;
   }
 }
-
-@media screen and (max-width: 768px) {
-  .home-header .logo-div img {
-    width: 2.937rem;
-  }
-}
+ 
 
 .home-header .home-header-links-div .home-header-links {
   font-size: 1rem;
@@ -711,13 +706,14 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 /* homepage herosection styling  */
 .container {
-  padding: 0 10%;
+  width: 90%;
+    margin: auto;
+    max-width: 1300px;
 }
 
-.hero-section {
-  padding: 0 10%;
+.hero-section { 
   background: linear-gradient(100.34deg, #0C0433 0.91%, #171078 100%);
-  min-height: 90.3vh;
+  min-height: calc(100vh - 67px);
   overflow: hidden;
   position: relative;
 }
@@ -780,20 +776,21 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 }
 
 .hero-section .hero-img-div {
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
 }
 
 .hero-section .hero-img-div .hero-img {
-  height: 75%;
-  display: flex;
-  align-items: flex-end;
+    display: flex;
+    align-items: center;
+    padding: 3rem 0rem;
 }
 
 .hero-section .hero-img-div .hero-img img {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
+    padding-top: 40px;
 }
 
 @media screen and (max-width: 1300px) {
@@ -832,7 +829,7 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 @media screen and (max-width: 768px) {
   .hero-section .hero-img-div{
-    display: none;
+    
   }
   .hero-section::before {
     content: '';
@@ -840,8 +837,7 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
     top: 20%;
     left: 30%;
     width: 100%;
-    height: 100%;
-    background: url('/media/images/body-language-portrait-friendly-looking-positive-dark-skinned-little-boy-t-shirt-connecting-fore-finger-thumb-making-approval-gesture-showing-okay-sign-saying-everything-is-fine 1.png');
+    height: 100%; 
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -872,14 +868,17 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 /* About section Styling */
 .about-section {
-  background-color: #FBFBFB;
-  padding-top: 4.25rem;
-  padding-bottom: 3.938rem;
+    background-color: #FBFBFB;
+    padding-top: 6.25rem;
+    padding-bottom: 5.938rem;
 }
 
 .about-section .about-content {
   display: flex;
 }
+.about-heading {
+    width: -webkit-fill-available;
+} 
 
 .about-section .about-content .about-heading h3 {
   font-size: 1.75rem;
@@ -903,11 +902,10 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 /* Features section styling  */
 .features-section {
-  padding-top: 4.5rem;
-  padding-bottom: 4rem;
-  background: #140F88;
+    padding-top: 9.5rem;
+    padding-bottom: 9rem;
+    background: #140F88;
 }
-
 .features-section h2 {
   text-align: center;
   color: #FFFFFF;
@@ -947,9 +945,9 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 /* Pricing Section Styling */
 .pricing-section {
-  background-color: #F9F9F9;
-  padding-top: 3.938rem;
-  padding-bottom: 4rem;
+    background-color: #F9F9F9;
+    padding-top: 8.938rem;
+    padding-bottom: 8rem;
 }
 
 .pricing-section h2 {
@@ -967,13 +965,13 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 }
 
 .pricing-section .pricing-cards .card {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: #FFFFFF;
-  padding: 1rem 2rem;
-  box-shadow: 0px 4px 57px rgba(0, 0, 0, 0.07);
-  border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #FFFFFF;
+    padding: 2.5rem 2rem;
+    box-shadow: 0px 4px 57px rgb(0 0 0 / 7%);
+    border-radius: 10px;
 }
 
 @media screen and (max-width: 992px) {
@@ -1030,10 +1028,12 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 /* Stories Section Styling */
 .stories-section {
-  padding-top: 5.125rem;
-  padding-bottom: 6.125rem;
+    padding-top: 8.125rem;
+    padding-bottom: 9.125rem;
 }
-
+.card.stories-card h4 {
+    margin-top: 20px;
+}
 .stories-section .stories-section-heading-div {
   display: flex;
   align-items: center;
@@ -1072,9 +1072,9 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 }
 
 .stories-section .stories-card {
-  width: min-content;
+  width: fit-content;
 }
-
+.card.stories-card img { width: 100%; }
 .stories-section .stories-card h4 {
   font-weight: 600;
   font-size: 1.5rem;
@@ -1100,22 +1100,24 @@ footer {
 }
 
 footer .footer-upper-div {
-  position: relative;
-  top: -75px;
-  align-items: center;
-  justify-content: center;
-  background-color: #C4C4C4;
-  border-radius: 11px;
-  margin: 2rem 3rem;
-  padding: 3rem 0rem;
+    max-width: 1000px;
+    position: relative;
+    top: -75px;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #C4C4C4;
+    border-radius: 11px;
+    margin: auto;
+    padding: 3rem 0rem;
+    display: flex;
 }
 
 footer .footer-upper-div h2 {
-  font-family: 'Raleway', sans-serif;
-  font-weight: 600;
-  font-size: 2rem;
-  line-height: 2.75rem;
-  margin-right: 2rem;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 600;
+    font-size: 2rem;
+    line-height: 1.75rem;
+    margin: 1rem auto;
 }
 
 @media screen and (max-width: 992px) {
@@ -1164,8 +1166,9 @@ footer .footer-upper-div .footer-upper-div-input-section .footer-input-btn {
 }
 
 footer .footer-bottom-div {
-  color: #FFFFFF;
-  padding-bottom: 4rem;
+    color: #FFFFFF;
+    padding-bottom: 8rem;
+    padding-top: 2rem;
 }
 
 footer .footer-bottom-div h2 {
@@ -1214,6 +1217,11 @@ footer .footer-bottom-div .footer-bottom-div-col:not(:first-child) {
 }
 
 @media screen and (max-width: 576px) {
+  .ant-row.hero-section-row {
+    display: flex; 
+    flex-direction: column-reverse;
+    padding: 5rem .1rem;
+}
   footer .footer-upper-div .footer-upper-div-input-section .footer-input {
   padding: .3rem 1.25rem;
   outline: none;
@@ -1230,8 +1238,8 @@ footer .footer-bottom-div .footer-bottom-div-col:not(:first-child) {
     justify-content: center;
     background-color: #C4C4C4;
     border-radius: 11px;
-    margin: 2rem 0rem;
-    padding: 3rem 0rem;
+    margin: auto;
+    padding: 3rem 1rem;
   }
 }
 

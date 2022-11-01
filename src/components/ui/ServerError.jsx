@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function ServerError() {
+  const navigate = useNavigate();
   return (
     <>
       <div
@@ -25,6 +27,7 @@ function ServerError() {
         >
           Please check your internet connection or reload the page
         </p>
+        <button onClick={() => navigate(0)}>Reconnect</button>
       </div>
     </>
   );

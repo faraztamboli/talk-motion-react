@@ -1,6 +1,7 @@
 import { Layout, Menu } from 'antd';
 import React from 'react';
 import items from '../../data/sidebarNav';
+import logoImg from '../../media/images/logo.png';
 
 const { Sider } = Layout;
 
@@ -17,7 +18,7 @@ const Sidebar = props => {
         {props.sideBarWidth === 200 && !props.collapsed ? (
           <img src="/logo.png" alt="logo" className="center rounded" />
         ) : (
-          <img src="/favicon.png" alt="logo" className="center rounded" />
+          <img src={logoImg} alt="logo" className="center rounded" />
         )}
       </div>
       <Menu

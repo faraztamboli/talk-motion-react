@@ -15,76 +15,88 @@ function Header(props) {
 
   return (
     <div className="home-header">
-      <div className="logo-div">
-        <img src={props.md === true ? '/favicon.png' : '/logo.png'} alt="TalkMotion" />
-      </div>
-      <div className="home-header-links-div">
-        <Link to="/login" className="home-header-links">
-          About
-        </Link>
-        <Link to="/login" className="home-header-links">
-          Features
-        </Link>
-        <Link to="/login" className="home-header-links">
-          Pricing
-        </Link>
-        <Link to="/login" className="home-header-links">
-          Contact Us
-        </Link>
-        <Button size="large" shape="round" className="home-header-btn">
-          Get a Demo
-        </Button>
-      </div>
+      <div className="container">
+        <div className="logo-div">
+          <img
+            src={props.md === true ? '/favicon.png' : '/logo.png'}
+            width={props.md === true ? '60px' : '180px'}
+            alt="TalkMotion"
+          />
+        </div>
+        <div className="home-header-links-div">
+          <Link to="/login" className="home-header-links">
+            About
+          </Link>
+          <Link to="/login" className="home-header-links">
+            Features
+          </Link>
+          <Link to="/login" className="home-header-links">
+            Pricing
+          </Link>
+          <Link to="/login" className="home-header-links">
+            Contact Us
+          </Link>
+          <Button size="large" shape="round" className="home-header-btn">
+            Signup for Free
+          </Button>
+        </div>
 
-      <div className="hambarger-icon-div">
-        <AlignLeftOutlined onClick={showDrawer} />
-      </div>
+        <div className="hambarger-icon-div">
+          <AlignLeftOutlined onClick={showDrawer} />
+        </div>
 
-      <Drawer title="TalkMotion" placement="right" className="drawer" onClose={onClose} open={open}>
-        <ul>
-          <li style={{ listStyle: 'none', marginBottom: '1rem' }}>
-            <Link
-              to="/login"
-              className="drawer-links"
-              style={{ textDecoration: 'none', color: '#000000', fontSize: '1.1rem' }}
-            >
-              About
-            </Link>
-          </li>
-          <li style={{ listStyle: 'none', marginBottom: '1rem' }}>
-            <Link
-              to="/login"
-              className="drawer-links"
-              style={{ textDecoration: 'none', color: '#000000', fontSize: '1.1rem' }}
-            >
-              Features
-            </Link>
-          </li>
-          <li style={{ listStyle: 'none', marginBottom: '1rem' }}>
-            <Link
-              to="/login"
-              className="drawer-links"
-              style={{ textDecoration: 'none', color: '#000000', fontSize: '1.1rem' }}
-            >
-              Pricing
-            </Link>
-          </li>
-          <li style={{ listStyle: 'none', marginBottom: '1rem' }}>
-            <Link
-              to="/login"
-              className="drawer-links"
-              style={{ textDecoration: 'none', color: '#000000', fontSize: '1.1rem' }}
-            >
-              Contact Us
-            </Link>
-          </li>
-          <li style={{ listStyle: 'none', marginBottom: '1rem' }}>
-            <Button size="middle" shape="round">
-              Get a Demo
-            </Button>
-          </li>
-        </ul>
-      </Drawer>
+        <Drawer
+          title="TalkMotion"
+          placement="right"
+          className="drawer"
+          onClose={onClose}
+          open={open}
+        >
+          <ul>
+            <li style={{ listStyle: 'none', marginBottom: '1rem' }}>
+              <Link
+                to="/login"
+                className="drawer-links"
+                style={{ textDecoration: 'none', color: '#000000', fontSize: '1.1rem' }}
+              >
+                About
+              </Link>
+            </li>
+            <li style={{ listStyle: 'none', marginBottom: '1rem' }}>
+              <Link
+                to="/login"
+                className="drawer-links"
+                style={{ textDecoration: 'none', color: '#000000', fontSize: '1.1rem' }}
+              >
+                Features
+              </Link>
+            </li>
+            <li style={{ listStyle: 'none', marginBottom: '1rem' }}>
+              <Link
+                to="/login"
+                className="drawer-links"
+                style={{ textDecoration: 'none', color: '#000000', fontSize: '1.1rem' }}
+              >
+                Pricing
+              </Link>
+            </li>
+            <li style={{ listStyle: 'none', marginBottom: '1rem' }}>
+              <Link
+                to="/login"
+                className="drawer-links"
+                style={{ textDecoration: 'none', color: '#000000', fontSize: '1.1rem' }}
+              >
+                Contact Us
+              </Link>
+            </li>
+            <li style={{ listStyle: 'none', marginBottom: '1rem' }}>
+              <Button size="middle" shape="round">
+                Signup for Free
+              </Button>
+            </li>
+          </ul>
+        </Drawer>
+      </div>
     </div>
   );
 }
