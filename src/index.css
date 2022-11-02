@@ -803,7 +803,10 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
     height: 100%;
     padding-top: 40px;
 }
-
+.hero-section .hero-content .hero-section-btns a {
+    margin: auto;
+    color: #fff;
+}
 @media screen and (max-width: 1300px) {
   .hero-section .hero-content h1 {
     font-size: 4.5rem;
@@ -820,6 +823,11 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
   .hero-section .hero-content .hero-section-btns:not(:last-child) {
     margin-right: 1.538rem;
   }
+  .hero-section .hero-img-div .hero-img img {
+    width: 100%;
+    height: 100%;
+    padding-top: 40px;
+}
 }
 
 @media screen and (max-width: 992px) {
@@ -875,6 +883,11 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
   .hero-section .hero-content .hero-section-btns:not(:first-child) {
     margin-top: 1rem;
   }
+  .hero-section .hero-img-div .hero-img,
+  .hero-section .hero-img-div .hero-img img {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+  }
 }
 
 /* About section Styling */
@@ -908,6 +921,9 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 @media screen and (max-width: 576px) {
   .about-section .about-content {
     flex-direction: column;
+  }
+  .about-section .about-content .about-para p {
+    margin-left: 0rem; 
   }
 }
 
@@ -1231,7 +1247,7 @@ footer .footer-bottom-div .footer-bottom-div-col:not(:first-child) {
   .ant-row.hero-section-row {
     display: flex; 
     flex-direction: column-reverse;
-    padding: 5rem .1rem;
+    padding: 3rem .1rem;
 }
   footer .footer-upper-div .footer-upper-div-input-section .footer-input {
   padding: .3rem 1.25rem;

@@ -53,7 +53,7 @@ function Footer() {
         </div>
 
         <div className="copyright">
-          <p>All copyrights reserved © TalkMotion.</p>
+          <p>All copyrights reserved {new Date().getFullYear()} © TalkMotion.</p>
         </div>
       </div>
     </footer>

@@ -17,11 +17,12 @@ function Header(props) {
     <div className="home-header">
       <div className="container">
         <div className="logo-div">
-          <img
+          {/* <img
             src={props.md === true ? '/favicon.png' : '/logo.png'}
             width={props.md === true ? '60px' : '180px'}
             alt="TalkMotion"
-          />
+          /> */}
+          <img src="/logo.png" alt="TalkMotion" />
         </div>
         <div className="home-header-links-div">
           <a href="#about" className="home-header-links">
