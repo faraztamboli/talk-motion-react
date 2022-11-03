@@ -19,7 +19,7 @@ function Header(props) {
         <div className="logo-div">
           <img
             src={props.md === true ? '/favicon.png' : '/logo.png'}
-            width={props.md === true ? '60px' : '180px'}
+            style={props.md === true ? { width: '50px' } : { width: '180px' }}
             alt="TalkMotion"
           />
         </div>

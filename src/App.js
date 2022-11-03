@@ -139,6 +139,9 @@ const App = props => {
 
   return (
     <div className="App">
+      <Routes>
+        <Route path="/" exact element={<Home md={md} />} />
+      </Routes>
       {isServerConnected ? (
         isLoggedIn ? (
           <Layout>
@@ -245,7 +248,7 @@ const App = props => {
               }
             />
             <Route path="/guide" exact element={<GuidePage sm={sm} md={md} lg={lg} />} />
-            <Route path="/" exact element={<Home md={md} />} />
+            {/* <Route path="/" exact element={<Home md={md} />} /> */}
           </Routes>
         )
       ) : (

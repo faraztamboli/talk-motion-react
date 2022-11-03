@@ -9,7 +9,7 @@ export const VoiceToGesture = () => {
   const [isRecording, setIsRecording] = React.useState(false);
   const [video, setVideo] = React.useState();
   const [count, setCount] = React.useState(0);
-  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } =
+  const { transcript, /*  listening, resetTranscript, */ browserSupportsSpeechRecognition } =
     useSpeechRecognition();
 
   // React.useEffect(() => {

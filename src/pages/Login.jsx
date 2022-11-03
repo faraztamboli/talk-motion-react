@@ -61,12 +61,18 @@ const Login = props => {
         className="mh-100vh"
         style={props.md === true ? { display: 'flex', flexDirection: 'column-reverse' } : null}
       >
-        <Col span={12} xs={24} md={12} className="mh-100vh" style={{ background: '#02086b' }}>
+        <Col
+          span={12}
+          xs={24}
+          md={12}
+          className="mh-100vh"
+          style={{ background: '#02086B', backdropFilter: 'blur(59.5px)' }}
+        >
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
               <h1 className="mb-0 text-white">Talk Motion</h1>
               <p className="text-white">An AI-based Sign Language Translator</p>
-              <Button type="primary" className="mt-4">
+              <Button type="default" shape="round" className="mt-4">
                 Read More
               </Button>
             </div>
