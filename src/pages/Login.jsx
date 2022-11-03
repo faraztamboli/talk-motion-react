@@ -24,6 +24,7 @@ const Login = props => {
   }
 
   const onFinish = values => {
+    console.log(values);
     setLoading(true);
     const handleLogin = res => {
       console.log(res);
@@ -118,6 +119,7 @@ const Login = props => {
                   <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     type="password"
+                    autoComplete="password"
                     placeholder="Password"
                   />
                 </Form.Item>

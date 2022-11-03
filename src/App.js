@@ -7,6 +7,7 @@ import Sidebar from './components/Layout/Sidebar';
 import Header from './components/Layout/Header';
 import Footer from './components/Layout/Footer';
 import Login from './pages/Login';
+import PrivateRoute from './components/PrivateRoute';
 import { Statuses } from './components/ui/Statuses';
 import { useSelector, useDispatch } from 'react-redux';
 import { login } from './app/features/loginSlice';
@@ -165,16 +166,10 @@ const App = props => {
                         </React.Suspense>
                       }
                     />
-                    <Route
-                      path="converter"
-                      exact
-                      element={
-                        <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
-                          <Converter collapsedWidth={collapsedWidth} />
-                        </React.Suspense>
-                      }
-                    />
-                    <Route
+                    <Route exact path="/converter" element={<PrivateRoute />}>
+                      <Route path="/converter" element={<Converter />} />
+                    </Route>
+                    {/* <Route
                       path="trainer"
                       exact
                       element={
@@ -182,10 +177,10 @@ const App = props => {
                           <Trainer collapsedWidth={collapsedWidth} />
                         </React.Suspense>
                       }
-                    />
+                    /> */}
                     <Route
                       path="models"
-                      exact
+                      exact="exact"
                       element={
                         <React.Suspense fallback={<Spinner size="large" pageSize="large" />}>
                           <Models collapsedWidth={collapsedWidth} />

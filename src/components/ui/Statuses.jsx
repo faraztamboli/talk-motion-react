@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -6,8 +6,8 @@ export const Statuses = props => {
   const location = useLocation();
   const { serverConnected, serverStatus } = useSelector(state => state.server);
 
-  React.useEffect(() => {
-    console.log(serverConnected);
+  useEffect(() => {
+    // console.log(serverConnected);
   }, [serverConnected]);
 
   return (
