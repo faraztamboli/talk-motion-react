@@ -335,7 +335,7 @@ function JS2PyClient(serverName, clientPageId) {
         JS2PySelf.onmessagereceived(e);
       }
       if (typeof e.data == 'string') {
-        console.log('Message received: ' + e.data);
+        // console.log('Message received: ' + e.data);
         // debugger;
         var funcReturn = JSON.parse(e.data);
         if ('args' in funcReturn) {

@@ -107,7 +107,7 @@ const Signup = props => {
                 <Form.Item
                   name="username"
                   label="User-name"
-                  validate
+                  validate="validate"
                   hasFeedback
                   rules={[
                     {
@@ -136,7 +136,7 @@ const Signup = props => {
                   ]}
                   validateTrigger="onBlur"
                 >
-                  <Input />
+                  <Input autoComplete="new-username" />
                 </Form.Item>
 
                 <Form.Item
@@ -150,7 +150,7 @@ const Signup = props => {
                   ]}
                   hasFeedback
                 >
-                  <Input.Password />
+                  <Input.Password autoComplete="new-password" />
                 </Form.Item>
 
                 <Form.Item
@@ -175,12 +175,12 @@ const Signup = props => {
                     }),
                   ]}
                 >
-                  <Input.Password />
+                  <Input.Password autoComplete="new-password" />
                 </Form.Item>
 
                 <Form.Item
                   name="street"
-                  label="Street"
+                  label="Street Address"
                   tooltip="What do you want others to call you?"
                   rules={[
                     {
