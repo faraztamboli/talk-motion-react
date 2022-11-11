@@ -1,8 +1,8 @@
 import React from 'react';
 import { Row, Col } from 'antd';
-import modelsData from '../data/modelsData';
-import { ModelsCard } from '../components/ui/ModelsCard';
-import UserMenuProfileItem from '../components/ui/UserMenuProfileItem';
+import modelsData from '../../data/modelsData';
+import { ModelsCard } from '../../components/ui/ModelsCard';
+import UserMenuProfileItem from '../../components/ui/UserMenuProfileItem';
 
 export default function Profile(props) {
   return (

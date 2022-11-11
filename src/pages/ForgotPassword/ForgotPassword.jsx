@@ -3,7 +3,7 @@ import { Layout, Row, Col, Button, Form, Input } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux/es/exports';
-import { login } from '../app/features/loginSlice';
+import { login } from '../../app/features/loginSlice';
 
 const ForgotPassword = props => {
   const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
@@ -27,12 +27,18 @@ const ForgotPassword = props => {
         className="mh-100vh"
         style={props.md === true ? { display: 'flex', flexDirection: 'column-reverse' } : null}
       >
-        <Col span={12} xs={24} md={12} className="mh-100vh" style={{ background: '#02086b' }}>
+        <Col
+          span={12}
+          xs={24}
+          md={12}
+          className="mh-100vh"
+          style={{ background: '#02086b', background: '#02086B', backdropFilter: 'blur(59.5px)' }}
+        >
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
               <h1 className="mb-0 text-white">Talk Motion</h1>
               <p className="text-white">An AI-based Sign Language Translator</p>
-              <Button type="primary" className="mt-4">
+              <Button type="default" shape="round" className="mt-4">
                 Read More
               </Button>
             </div>
@@ -71,6 +77,7 @@ const ForgotPassword = props => {
                     type="primary"
                     htmlType="submit"
                     className="login-form-button block w-100"
+                    shape="round"
                   >
                     Continue
                   </Button>

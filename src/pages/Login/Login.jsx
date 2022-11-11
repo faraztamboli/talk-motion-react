@@ -1,60 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import JS2Py from '../remotepyjs';
+import React from 'react';
 import { Layout, Row, Col, Button, Form, Input, Checkbox } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux/es/exports';
-import { login } from '../app/features/loginSlice';
+import { Link } from 'react-router-dom';
+import LoginLogic from './LoginLogic';
 
 const Login = props => {
-  const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
-  const [loginError, setLoginError] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const disptach = useDispatch();
-
-  function guid() {
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-  }
-
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-      .toString(16)
-      .substring(1);
-  }
-
-  const onFinish = values => {
-    console.log(values);
-    setLoading(true);
-    const handleLogin = res => {
-      console.log(res);
-      if (res && res.isValidUser === true && res.isPasswordCorrect === true) {
-        // set multiple values in localStorage
-        localStorage.setItem('isLoggedIn', true);
-        localStorage.setItem('token', guid());
-        disptach(login({ token: guid(), user: 'admin' }));
-        navigate('/');
-      } else if (res && !(res.isValidUser === true && res.isPasswordCorrect === true)) {
-        console.log('Invalid Credentials');
-        setLoading(false);
-        setLoginError(true);
-      }
-    };
-    JS2Py.PythonFunctions.SessionServer.validateLogin(
-      '',
-      values.username,
-      values.password,
-      values.remember,
-      '',
-      '',
-      res => {
-        handleLogin(res);
-      },
-    );
-  };
-  useEffect(() => {
-    forceUpdate({});
-  }, []);
+  const { onFinish, loginError, loading } = LoginLogic();
 
   return (
     <Layout>
@@ -133,6 +84,7 @@ const Login = props => {
                   <Button
                     type="primary"
                     htmlType="submit"
+                    shape="round"
                     className="login-form-button block w-100"
                     loading={loading}
                   >

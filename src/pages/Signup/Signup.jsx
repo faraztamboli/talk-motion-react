@@ -1,41 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Layout, Row, Col, Button, Input, Form, Checkbox } from 'antd';
 import { Link } from 'react-router-dom';
-import { formItemLayout, tailFormItemLayout } from '../data/signupFormLayout';
-import { validateCountryName, getCountryCode } from '../data/countries';
-import JS2Py from '../remotepyjs';
-import { useNavigate } from 'react-router-dom';
-// import { useDispatch } from 'react-redux/es/exports';
+import { formItemLayout, tailFormItemLayout } from '../../data/signupFormLayout';
+import { validateCountryName } from '../../data/countries';
+import JS2Py from '../../remotepyjs';
+import SignupLogic from './SignupLogic';
 
 const Signup = props => {
-  const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
-  const navigate = useNavigate();
-  // const disptach = useDispatch();
   const [form] = Form.useForm();
-
-  const onFinish = values => {
-    JS2Py.PythonFunctions.SessionServer.registerLogin(
-      '1234567890',
-      values.username,
-      values.password,
-      values.name,
-      '',
-      '',
-      values.email,
-      values.street,
-      values.city,
-      getCountryCode(values.country),
-      res => {
-        console.log(res);
-      },
-    );
-
-    navigate('/login');
-  };
-
-  useEffect(() => {
-    forceUpdate({});
-  }, []);
+  const { onFinish } = SignupLogic();
 
   return (
     <Layout>
@@ -43,12 +16,18 @@ const Signup = props => {
         className="mh-100vh"
         style={props.md === true ? { display: 'flex', flexDirection: 'column-reverse' } : null}
       >
-        <Col span={12} xs={24} md={12} className="mh-100vh" style={{ background: '#02086b' }}>
+        <Col
+          span={12}
+          xs={24}
+          md={12}
+          className="mh-100vh"
+          style={{ background: '#02086b', background: '#02086B', backdropFilter: 'blur(59.5px)' }}
+        >
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
               <h1 className="mb-0 text-white">Talk Motion</h1>
               <p className="text-white">An AI-based Sign Language Translator</p>
-              <Button type="primary" className="mt-4">
+              <Button type="default" shape="round" className="mt-4">
                 Read More
               </Button>
             </div>
@@ -253,7 +232,7 @@ const Signup = props => {
                   </Checkbox>
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
-                  <Button type="primary" htmlType="submit">
+                  <Button type="primary" shape="round" htmlType="submit">
                     Register
                   </Button>
                 </Form.Item>

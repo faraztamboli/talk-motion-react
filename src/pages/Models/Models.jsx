@@ -1,8 +1,8 @@
 import React from 'react';
 import { Row, Col } from 'antd';
-import { modelsData } from '../data';
-import { ModelsCard } from '../components/ui/ModelsCard';
-import PageHeading from '../components/Layout/PageHeading';
+import { modelsData } from '../../data';
+import { ModelsCard } from '../../components/ui/ModelsCard';
+import PageHeading from '../../components/Layout/PageHeading';
 
 export default function Models(props) {
   return (
