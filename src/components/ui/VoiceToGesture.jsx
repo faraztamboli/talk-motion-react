@@ -46,15 +46,17 @@ export const VoiceToGesture = () => {
     try {
       words = ['hello', 'how', 'are', 'you'];
       console.log('inside getVideo function : ', JS2Py);
-      // JS2Py.PythonFunctions.SessionServer.validateLogin(
-      //   '',
-      //   'tayyab',
-      //   'password',
-      //   true,
-      //   '',
-      //   '',
-      //   res => console.log(res),
-      // );
+      // JS2Py.PythonFunctions.SessionServer.startSessionIfNotStarted('', res => console.log(res));
+      JS2Py.PythonFunctions.SessionServer.getSessionId(res => console.log(res));
+      JS2Py.PythonFunctions.SessionServer.validateLogin(
+        '', // session id
+        'tayyab',
+        'password',
+        true,
+        '',
+        '',
+        res => console.log(res),
+      );
       JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
         setVideo(res);
       });
