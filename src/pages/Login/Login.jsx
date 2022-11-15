@@ -2,10 +2,10 @@ import React from 'react';
 import { Layout, Row, Col, Button, Form, Input, Checkbox } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import LoginLogic from './LoginLogic';
+import useLogin from './useLogin';
 
 const Login = props => {
-  const { onFinish, loginError, loading } = LoginLogic();
+  const { onFinish, loginError, loading } = useLogin();
 
   return (
     <Layout>

@@ -4,12 +4,13 @@ import useAuthStatus from '../hooks/useAuthStatus';
 import Spinner from './ui/Spinner';
 
 function PrivateRoute() {
-  const { checkingStatus, isLoggedIn } = useAuthStatus();
+  const { checkingStatus, loggedIn } = useAuthStatus();
+  console.log(loggedIn, 'inside private Route');
 
   console.log('inside private route');
   if (checkingStatus) return <Spinner />;
 
-  return isLoggedIn ? <Outlet /> : <Navigate to="/login" />;
+  return loggedIn ? <Outlet /> : <Navigate to="/login" />;
 }
 
 export default PrivateRoute;

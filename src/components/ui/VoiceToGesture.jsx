@@ -1,7 +1,7 @@
 import React from 'react';
 import JS2Py from '../../remotepyjs';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-
+import useSessionId from '../../hooks/useSessionId';
 import { Button } from 'antd';
 import { FaMicrophoneAlt, FaRegStopCircle } from 'react-icons/fa';
 
@@ -9,6 +9,7 @@ export const VoiceToGesture = () => {
   const [isRecording, setIsRecording] = React.useState(false);
   const [video, setVideo] = React.useState();
   const [count, setCount] = React.useState(0);
+  const [getSessionId, newSessionId] = useSessionId();
   const { transcript, /*  listening, resetTranscript, */ browserSupportsSpeechRecognition } =
     useSpeechRecognition();
 
@@ -45,18 +46,7 @@ export const VoiceToGesture = () => {
   const getVideo = words => {
     try {
       words = ['hello', 'how', 'are', 'you'];
-      console.log('inside getVideo function : ', JS2Py);
-      // JS2Py.PythonFunctions.SessionServer.startSessionIfNotStarted('', res => console.log(res));
-      JS2Py.PythonFunctions.SessionServer.getSessionId(res => console.log(res));
-      JS2Py.PythonFunctions.SessionServer.validateLogin(
-        '', // session id
-        'tayyab',
-        'password',
-        true,
-        '',
-        '',
-        res => console.log(res),
-      );
+      // console.log('inside getVideo function : ', JS2Py);
       JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(words, res => {
         setVideo(res);
       });
@@ -75,7 +65,7 @@ export const VoiceToGesture = () => {
     return arr;
   };
 
-  console.log(video);
+  // console.log(video);
 
   return (
     <div>

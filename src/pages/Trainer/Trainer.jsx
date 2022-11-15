@@ -4,6 +4,7 @@ import { ModelsDropdown } from '../../components/ui/ModelsDropdown';
 import { TrainerControl } from '../../components/ui/TrainerControl';
 import { GestureToVoice } from '../../components/ui/GestureToVoice';
 import PageHeading from '../../components/Layout/PageHeading';
+import JS2Py from '../../remotepyjs';
 
 export default function Trainer(props) {
   return (

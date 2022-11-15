@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { JS2PyConnect } from '../data/JS2PyConnectFunctions/JS2PyConnect';
 import { setServerConnected, setServerStatus } from '../app/features/serverSlice';
 
-function connectToServer() {
+async function connectToServer() {
   const dispatch = useDispatch();
 
   return React.useEffect(() => {

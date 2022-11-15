@@ -37,11 +37,11 @@ const App = () => {
 
   // check if user is logged in
   useAuthStatus();
-
   return (
     <div className="App">
       {isServerConnected ? (
-        isLoggedIn ? (
+        // isLoggedIn ? (
+        <>
           <Layout>
             <Sidebar
               collapsed={collapsed}
@@ -111,14 +111,21 @@ const App = () => {
                         </React.Suspense>
                       }
                     />
-                    <Route path="*" element={<Error />} />
+                    <Route
+                      path="*"
+                      element={
+                        <PrivateRoute>
+                          <Error />
+                        </PrivateRoute>
+                      }
+                    />
                   </Routes>
                 </div>
               </Content>
               <Footer />
             </Layout>
           </Layout>
-        ) : (
+          {/* ) : ( */}
           <Routes>
             <Route
               path="/signup"
@@ -140,8 +147,9 @@ const App = () => {
               }
             />
           </Routes>
-        )
+        </>
       ) : (
+        // )
         serverStatus !== 'Disconnected' && <Spinner size="large" pageSize="large" />
       )}
       {serverStatus === 'Disconnected' && <ServerError />}

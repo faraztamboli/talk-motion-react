@@ -1,55 +1,47 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../app/features/loginSlice';
-// import JS2Py from '../remotepyjs';
-import { useNavigate } from 'react-router-dom';
-// function useAuthStatus() {
-//   const { getSessionId, isLoggedIn } = JS2Py.PythonFunctions.SessionServer;
-//   const [checkingStatus, setCheckingStatus] = useState(true);
-//   const [loggedIn, setLoggedIn] = useState(false);
-
-//   const dispatch = useDispatch();
-
-//   useEffect(() => {
-//     const sessionId = getSessionId();
-//     if (isLoggedIn(sessionId)) {
-//       // if user is logged in, dispatch login action
-//       const loginPayload = {
-//         token: sessionId,
-//         user: '',
-//       };
-//       dispatch(login(loginPayload));
-//       setLoggedIn(true);
-//       setCheckingStatus(false);
-//     }
-//     //eslint-disable-next-line
-//   }, [loggedIn]);
-
-//   return { loggedIn, checkingStatus };
-// }
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { login, logout } from '../app/features/loginSlice';
+import JS2Py from '../remotepyjs';
+import useLocalStorage from './useLocalStorage';
 
 function useAuthStatus() {
-  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+  const [checkingStatus, setCheckingStatus] = useState(true);
+  const [token] = useLocalStorage('token');
 
-  const [checkingStatus, setCheckingStatus] = React.useState(true);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  React.useEffect(() => {
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      // if user is logged in, dispatch login action
-      const loginPayload = {
-        token: localStorage.getItem('token'),
-        user: localStorage.getItem('user'),
-      };
-      dispatch(login(loginPayload));
-      setCheckingStatus(false);
-    } else {
-      setCheckingStatus(false);
-    }
-    //eslint-disable-next-line
-  }, [isLoggedIn]);
+  const loggedIn = useSelector(state => state.login.isLoggedIn);
 
-  return { checkingStatus, isLoggedIn };
+  const isLoggedIn = async token => {
+    try {
+      console.log(token);
+      await JS2Py.PythonFunctions.SessionServer.isLoggedIn(token, res => {
+        console.log(res);
+        if (res.isLoggedIn === true) {
+          dispatch(login({ token: token, user: 'admin' }));
+        } else if (res.isLoggedIn === false) {
+          dispatch(logout());
+        }
+        setCheckingStatus(false);
+      });
+    } catch (err) {
+      // console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    isLoggedIn(token);
+  }, [token]);
+
+  // useEffect(() => {
+  //   // const sessionId = getSessionId();
+  //   // const isLoggedIn = async () => {
+  //   isLoggedIn(token);
+  //   // };
+  //   // isLoggedIn();
+  //   //eslint-disable-next-line
+  // }, [loggedIn]);
+
+  return { loggedIn, checkingStatus };
 }
 
 export default useAuthStatus;
