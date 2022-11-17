@@ -36,13 +36,13 @@ function Footer() {
               <h5>Important Links</h5>
               <ul>
                 <li>
-                  <Link to="/">FAQs</Link>
+                  <Link to="/privacy-policy">FAQs</Link>
                 </li>
                 <li>
-                  <Link to="/">Privacy Policy</Link>
+                  <Link to="/privacy-policy">Privacy Policy</Link>
                 </li>
                 <li>
-                  <Link to="/">Terms & Conditions</Link>
+                  <Link to="/privacy-policy">Terms & Conditions</Link>
                 </li>
               </ul>
             </Col>

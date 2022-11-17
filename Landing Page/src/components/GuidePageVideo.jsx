@@ -1,4 +1,5 @@
 import React from "react";
+import TalkMotionImg from "../media/images/talk-motion.png";
 
 function GuidePageVideo(props) {
   return (
@@ -35,10 +36,11 @@ function GuidePageVideo(props) {
       >
         Easy gesture to voice and voice to gesture converter.
       </h2>
-      <video
-        src="..."
-        style={{ backgroundColor: "black", width: "100%", height: "15.125rem" }}
-      ></video>
+      <img
+        src={TalkMotionImg}
+        alt="Talk Motion"
+        style={{ width: "100%", height: "15.125rem" }}
+      ></img>
     </div>
   );
 }

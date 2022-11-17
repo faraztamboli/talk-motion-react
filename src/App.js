@@ -40,8 +40,7 @@ const App = () => {
   return (
     <div className="App">
       {isServerConnected ? (
-        // isLoggedIn ? (
-        <>
+        isLoggedIn ? (
           <Layout>
             <Sidebar
               collapsed={collapsed}
@@ -125,7 +124,7 @@ const App = () => {
               <Footer />
             </Layout>
           </Layout>
-          {/* ) : ( */}
+        ) : (
           <Routes>
             <Route
               path="/signup"
@@ -147,7 +146,7 @@ const App = () => {
               }
             />
           </Routes>
-        </>
+        )
       ) : (
         // )
         serverStatus !== 'Disconnected' && <Spinner size="large" pageSize="large" />

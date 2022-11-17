@@ -18,26 +18,28 @@ function Header(props) {
   return (
     <div className="home-header">
       <div className="container">
-        <div className="logo-div">
-          <img
-            src={props.md === true ? logoSmall : logo}
-            style={props.md === true ? { width: "50px" } : { width: "180px" }}
-            alt="TalkMotion"
-          />
-        </div>
+        <Link to="/">
+          <div className="logo-div">
+            <img
+              src={props.md === true ? logoSmall : logo}
+              style={props.md === true ? { width: "50px" } : { width: "180px" }}
+              alt="TalkMotion"
+            />
+          </div>
+        </Link>
         <div className="home-header-links-div">
-          <a href="#about" className="home-header-links">
+          <Link to="/about" className="home-header-links">
             About
-          </a>
-          <a href="#features" className="home-header-links">
+          </Link>
+          <Link to="/guide" className="home-header-links">
             Features
-          </a>
+          </Link>
           <a href="#pricing" className="home-header-links">
             Pricing
           </a>
-          <a href="#contact" className="home-header-links">
+          <Link to="/contact-us" className="home-header-links">
             Contact Us
-          </a>
+          </Link>
           <Link to="/signup">
             <Button size="large" shape="round" className="home-header-btn">
               Signup for Free
@@ -59,7 +61,7 @@ function Header(props) {
           <ul>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
               <Link
-                to="/login"
+                to="/about"
                 className="drawer-links"
                 style={{
                   textDecoration: "none",
@@ -72,7 +74,7 @@ function Header(props) {
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
               <Link
-                to="/login"
+                to="/guide"
                 className="drawer-links"
                 style={{
                   textDecoration: "none",
@@ -85,7 +87,7 @@ function Header(props) {
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
               <Link
-                to="/login"
+                to="#pricing"
                 className="drawer-links"
                 style={{
                   textDecoration: "none",
@@ -98,7 +100,7 @@ function Header(props) {
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
               <Link
-                to="/login"
+                to="/contact-us"
                 className="drawer-links"
                 style={{
                   textDecoration: "none",
