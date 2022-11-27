@@ -1,24 +1,28 @@
-import React from 'react';
-import { Layout, Row, Col, Button, Form, Input, Checkbox } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import useLogin from './useLogin';
+import React from "react";
+import { Layout, Row, Col, Button, Form, Input, Checkbox } from "antd";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import useLogin from "./useLogin";
 
-const Login = props => {
+const Login = (props) => {
   const { onFinish, loginError, loading } = useLogin();
 
   return (
     <Layout>
       <Row
         className="mh-100vh"
-        style={props.md === true ? { display: 'flex', flexDirection: 'column-reverse' } : null}
+        style={
+          props.md === true
+            ? { display: "flex", flexDirection: "column-reverse" }
+            : null
+        }
       >
         <Col
           span={12}
           xs={24}
           md={12}
-          className="mh-100vh"
-          style={{ background: '#02086B', backdropFilter: 'blur(59.5px)' }}
+          className="mh-100vh auth-pages-bg"
+          // style={{ background: "#02086B", backdropFilter: "blur(59.5px)" }}
         >
           <div className="text-center mh-100vh p-8 flex flex-left-center">
             <div className="block">
@@ -35,7 +39,11 @@ const Login = props => {
             <div className="block">
               <h1>Hello Again!</h1>
               <p>Login for Talk Motion</p>
-              {loginError && <p style={{ color: 'red' }}>Invalid username or password</p>}
+              {loginError && (
+                <p /* style={{ color: "red" }} */>
+                  Invalid username or password
+                </p>
+              )}
               <Form
                 name="normal_login"
                 className="login-form"
@@ -49,7 +57,7 @@ const Login = props => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your Username!',
+                      message: "Please input your Username!",
                     },
                   ]}
                 >
@@ -63,7 +71,7 @@ const Login = props => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your Password!',
+                      message: "Please input your Password!",
                     },
                   ]}
                 >
@@ -98,7 +106,8 @@ const Login = props => {
                 </Form.Item>
                 <Form.Item>
                   <p>
-                    Don't have an account <Link to="/signup">Register now!</Link>
+                    Don't have an account{" "}
+                    <Link to="/signup">Register now!</Link>
                   </p>
                 </Form.Item>
               </Form>

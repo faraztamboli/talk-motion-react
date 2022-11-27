@@ -1,10 +1,10 @@
-import React from 'react';
-import { Row, Col, Card } from 'antd';
-import { ModelsDropdown } from '../../components/ui/ModelsDropdown';
-import { TrainerControl } from '../../components/ui/TrainerControl';
-import { GestureToVoice } from '../../components/ui/GestureToVoice';
-import PageHeading from '../../components/Layout/PageHeading';
-import JS2Py from '../../remotepyjs';
+import React from "react";
+import { Row, Col, Card } from "antd";
+import { ModelsDropdown } from "../../components/ui/ModelsDropdown";
+import { TrainerControl } from "../../components/ui/TrainerControl";
+import { GestureToVoice } from "../../components/ui/GestureToVoice";
+import PageHeading from "../../components/Layout/PageHeading";
+import JS2Py from "../../remotepyjs";
 
 export default function Trainer(props) {
   return (
@@ -13,8 +13,8 @@ export default function Trainer(props) {
       <div
         style={
           props.collapseWidth === 0
-            ? { backgroundColor: 'white', padding: 8 }
-            : { backgroundColor: 'white', padding: 24 }
+            ? { backgroundColor: "white", padding: 8 }
+            : { backgroundColor: "white", padding: 24 }
         }
       >
         <Row gutter={[16, 16]}>

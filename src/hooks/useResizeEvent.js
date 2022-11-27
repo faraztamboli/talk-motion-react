@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 function useResizeEvent() {
   const [collapsed, setCollapsed] = React.useState(false);
@@ -25,7 +25,7 @@ function useResizeEvent() {
       setCollapsedWidth(60);
       setSideBarWidth(200);
     }
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       setWindowWidth(window.innerWidth);
       if (windowWidth <= 768) {
         setMd(true);

@@ -1,17 +1,17 @@
-import { Layout, Menu } from 'antd';
-import React from 'react';
-import items from '../../data/sidebarNav';
-import logoImg from '../../media/images/logo.png';
-import logoSmall from '../../media/images/logo-small.png';
+import { Layout, Menu } from "antd";
+import React from "react";
+import items from "../../data/sidebarNav";
+import logoImg from "../../media/images/logo.png";
+import logoSmall from "../../media/images/logo-small.png";
 
 const { Sider } = Layout;
 
-const Sidebar = props => {
+const Sidebar = (props) => {
   return (
     <Sider
       trigger={null}
       collapsible="true"
-      collapsedWidth={props.collapsedWidth}
+      // collapsedWidth={props.collapsedWidth}
       width={props.sideBarWidth}
       collapsed={props.collapsed}
     >
@@ -25,8 +25,8 @@ const Sidebar = props => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={['']}
-        items={items.map(item => ({
+        defaultSelectedKeys={[""]}
+        items={items.map((item) => ({
           ...item,
         }))}
       />
