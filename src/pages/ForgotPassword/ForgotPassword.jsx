@@ -1,57 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, Row, Col, Button, Form, Input } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux/es/exports';
-import { login } from '../../app/features/loginSlice';
+import React, { useState, useEffect } from "react";
+import { Layout, Row, Col, Button, Form, Input, Space, message } from "antd";
+import { MailFilled } from "@ant-design/icons";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux/es/exports";
+import { login } from "../../app/features/loginSlice";
+import AuthPagesCol from "../../components/ui/AuthPagesCol";
+import forgotPasswordLogic from "./forgotPasswordLogic";
 
-const ForgotPassword = props => {
-  const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
-  const navigate = useNavigate();
-  const disptach = useDispatch();
+const ForgotPassword = (props) => {
+  const [messageApi, contextHolder] = message.useMessage();
 
-  const onFinish = values => {
-    // set multiple values in localStorage
-    localStorage.setItem('isLoggedIn', true);
-    localStorage.setItem('token', '12345');
-    disptach(login({ token: '12345', user: 'admin' }));
-    navigate('/');
+  const success = () => {
+    messageApi.open({
+      type: "success",
+      content: "Link sent to your email",
+    });
   };
-  useEffect(() => {
-    forceUpdate({});
-  }, []);
+
+  const failure = () => {
+    messageApi.open({
+      type: "error",
+      content: "Cannot reset the password",
+    });
+  };
+
+  const { onFinish, isMailSent } = forgotPasswordLogic();
 
   return (
     <Layout>
+      {contextHolder}
       <Row
         className="mh-100vh"
-        style={props.md === true ? { display: 'flex', flexDirection: 'column-reverse' } : null}
+        style={
+          props.md === true
+            ? { display: "flex", flexDirection: "column-reverse" }
+            : null
+        }
       >
-        <Col
-          span={12}
-          xs={24}
-          md={12}
-          className="mh-100vh"
-          style={{ background: '#02086b', background: '#02086B', backdropFilter: 'blur(59.5px)' }}
-        >
-          <div className="text-center mh-100vh p-8 flex flex-left-center">
-            <div className="block">
-              <h1 className="mb-0 text-white">Talk Motion</h1>
-              <p className="text-white">An AI-based Sign Language Translator</p>
-              <Button type="default" shape="round" className="mt-4">
-                Read More
-              </Button>
-            </div>
-          </div>
-        </Col>
+        <AuthPagesCol />
         <Col span={12} xs={24} md={12}>
-          <div className="text-center mh-100vh p-8 flex flex-left-center">
+          <div className="text-center mh-100vh p-8 flex flex-left-center auth-pages-second-col">
             <div className="block">
-              <h1>Hello Again!</h1>
-              <p>Reset your password</p>
+              <h1 className="auth-pages-second-col-heading">
+                Forgot Password?
+              </h1>
+              <p className="auth-pages-second-col-para">
+                Don't worry, it happens to the best of us!
+              </p>
               <Form
                 name="normal_login"
                 className="login-form"
+                size="large"
                 initialValues={{
                   remember: true,
                 }}
@@ -62,25 +61,42 @@ const ForgotPassword = props => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please enter your email!',
+                      message: "Please input your Email",
                     },
                   ]}
                 >
                   <Input
-                    prefix={<UserOutlined className="site-form-item-icon" />}
+                    prefix={
+                      <MailFilled
+                        className="site-form-item-icon"
+                        style={{ marginRight: "10px", color: "#B5B5B5" }}
+                      />
+                    }
                     placeholder="Email"
+                    type="email"
+                    size="large"
+                    style={{
+                      outline: "none",
+                      border: "2px solid #EEEEEE",
+                      borderRadius: "33px",
+                    }}
                   />
                 </Form.Item>
 
                 <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    className="login-form-button block w-100"
-                    shape="round"
-                  >
-                    Continue
-                  </Button>
+                  <Space direction="vertical" style={{ width: "100%" }}>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      shape="round"
+                      size="large"
+                      style={{ width: "100%" }}
+                      onClick={isMailSent === true ? success : failure}
+                      // loading={loading}
+                    >
+                      Send Link
+                    </Button>
+                  </Space>
                 </Form.Item>
                 <Form.Item>
                   <p>

@@ -31,7 +31,8 @@ export const VoiceToGesture = () => {
       {isRecording ? (
         <Button
           className="flex w-100p flex-center-center"
-          type="danger"
+          type="primary"
+          danger
           // loading={loadings[0]}
           onClick={handleStopSpeak}
           icon={<FaRegStopCircle />}

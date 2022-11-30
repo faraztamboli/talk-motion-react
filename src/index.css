@@ -25,6 +25,12 @@ code {
     monospace;
 }
 
+.container {
+  width: 90%;
+    margin: auto;
+    max-width: 1300px;
+}
+
 .p-0 {
   padding: 0;
 }
@@ -598,7 +604,7 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
   float: left;
 }
 #components-form-demo-normal-login .login-form-button {
-  width: 100%;
+  width: 100% !important;
 }
 
 .statuses {
@@ -616,9 +622,36 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 }
 
 /* Login Page Styling */
+.auth-pages-first-col-heading {
+  font-weight: 900 !important;
+  font-size: 2.25rem !important;
+  line-height: 2.637rem !important;
+}
+
+.auth-pages-first-col-para {
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.313rem;
+}
+
+.auth-pages-second-col-heading {
+  font-weight: 900;
+  font-size: 1.5rem;
+  line-height: 1.75rem;
+}
+
+.auth-pages-second-col-para {
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.313rem;
+}
 .auth-pages-bg {
   background: var(--blue-bg) !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
   backdrop-filter: blur(59.5px) !important;
+}
+
+.auth-pages-second-col {
+  background-color: #FFFFFF;
 }

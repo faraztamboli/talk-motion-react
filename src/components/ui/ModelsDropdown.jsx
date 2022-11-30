@@ -1,7 +1,7 @@
-import { Select } from 'antd';
-import { AppstoreOutlined } from '@ant-design/icons';
-import React from 'react';
-import { modelsList } from '../../data';
+import { Select } from "antd";
+import { AppstoreOutlined } from "@ant-design/icons";
+import React from "react";
+import { modelsList } from "../../data";
 
 const { Option } = Select;
 
@@ -9,7 +9,7 @@ export const ModelsDropdown = () => {
   // const handleChange = e => e => {
   //   console.log(e.target.value);
   // };
-  const handleChange = value => {
+  const handleChange = (value) => {
     console.log(value); // here we can set a state to store the value of the select model component
   };
 
@@ -19,9 +19,10 @@ export const ModelsDropdown = () => {
         <AppstoreOutlined />
       </span>
       <Select
+        bordered="false"
         defaultValue={modelsList[0].label}
         style={{
-          width: 'calc(100% - 30px)',
+          width: "calc(100% - 30px)",
         }}
         onChange={handleChange}
       >

@@ -9,7 +9,7 @@ import JS2Py from "../../remotepyjs";
 export default function Trainer(props) {
   return (
     <>
-      <PageHeading heading="Trainer" />
+      {/* <PageHeading heading="Trainer" /> */}
       <div
         style={
           props.collapseWidth === 0

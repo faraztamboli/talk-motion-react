@@ -58,9 +58,9 @@ const App = () => {
             path="/"
             element={<Converter collapsedWidth={collapsedWidth} />}
           />
-          <Route exact path="/converter" element={<PrivateRoute />}>
-            <Route path="/converter" element={<Converter />} />
-          </Route>
+          {/* <Route exact path="/converter" element={<PrivateRoute />}> */}
+          <Route path="/converter" element={<Converter />} />
+          {/* </Route> */}
           <Route
             path="trainer"
             exact

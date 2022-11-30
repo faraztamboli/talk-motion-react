@@ -9,7 +9,7 @@ const selectLayout = (Layout) => {
     React.useEffect(() => {
       location.pathname === "/login" ||
       location.pathname === "/signup" ||
-      location.pathname === "/forgotpassword"
+      location.pathname === "/forgetpassword"
         ? setIsAuthLayout(() => true)
         : setIsAuthLayout(() => false);
     }, [isAuthLayout, location.pathname]);

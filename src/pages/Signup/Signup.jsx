@@ -1,12 +1,17 @@
-import React from 'react';
-import { Layout, Row, Col, Button, Input, Form, Checkbox } from 'antd';
-import { Link } from 'react-router-dom';
-import { formItemLayout, tailFormItemLayout } from '../../data/signupFormLayout';
-import { validateCountryName } from '../../data/countries';
-import JS2Py from '../../remotepyjs';
-import SignupLogic from './SignupLogic';
+import React from "react";
+import { Layout, Row, Col, Button, Input, Form, Space } from "antd";
+import { LockFilled, UserOutlined, MailFilled } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import {
+  formItemLayout,
+  tailFormItemLayout,
+} from "../../data/signupFormLayout";
+import { validateCountryName } from "../../data/countries";
+import JS2Py from "../../remotepyjs";
+import SignupLogic from "./SignupLogic";
+import AuthPagesCol from "../../components/ui/AuthPagesCol";
 
-const Signup = props => {
+const Signup = (props) => {
   const [form] = Form.useForm();
   const { onFinish } = SignupLogic();
 
@@ -14,230 +19,158 @@ const Signup = props => {
     <Layout>
       <Row
         className="mh-100vh"
-        style={props.md === true ? { display: 'flex', flexDirection: 'column-reverse' } : null}
+        style={
+          props.md === true
+            ? { display: "flex", flexDirection: "column-reverse" }
+            : null
+        }
       >
-        <Col
-          span={12}
-          xs={24}
-          md={12}
-          className="mh-100vh"
-          style={{ background: '#02086b', background: '#02086B', backdropFilter: 'blur(59.5px)' }}
-        >
-          <div className="text-center mh-100vh p-8 flex flex-left-center">
-            <div className="block">
-              <h1 className="mb-0 text-white">Talk Motion</h1>
-              <p className="text-white">An AI-based Sign Language Translator</p>
-              <Button type="default" shape="round" className="mt-4">
-                Read More
-              </Button>
-            </div>
-          </div>
-        </Col>
+        <AuthPagesCol />
         <Col span={12} xs={24} md={12}>
-          <div className="text-center mh-100vh p-8 flex flex-left-center">
+          <div className="text-center mh-100vh p-8 flex flex-left-center auth-pages-second-col">
             <div className="block">
-              <h1>Hello Again!</h1>
-              <p>Register yourself for Talk Motion</p>
+              <h1 className="auth-pages-second-col-heading">Hello Again!</h1>
+              <p className="auth-pages-second-col-para">
+                Register yourself for Talk Motion
+              </p>
               <Form
-                {...formItemLayout}
                 form={form}
                 name="register"
+                size="large"
                 onFinish={onFinish}
                 initialValues={{
-                  residence: ['zhejiang', 'hangzhou', 'xihu'],
-                  prefix: '86',
+                  residence: ["zhejiang", "hangzhou", "xihu"],
+                  prefix: "86",
                 }}
                 scrollToFirstError
               >
                 <Form.Item
-                  name="name"
-                  label="Name"
-                  rules={[
-                    {
-                      type: 'text',
-                      message: 'Please enter your name',
-                    },
-                    {
-                      required: true,
-                      message: 'Please enter your name',
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-
-                <Form.Item
                   name="email"
-                  label="E-mail"
                   rules={[
                     {
-                      type: 'email',
-                      message: 'The input is not valid E-mail!',
-                    },
-                    {
                       required: true,
-                      message: 'Please input your E-mail!',
+                      message: "Please input your Email",
                     },
                   ]}
                 >
-                  <Input />
+                  <Input
+                    prefix={
+                      <MailFilled
+                        className="site-form-item-icon"
+                        style={{ marginRight: "10px", color: "#B5B5B5" }}
+                      />
+                    }
+                    placeholder="Email"
+                    type="email"
+                    size="large"
+                    style={{
+                      outline: "none",
+                      border: "2px solid #EEEEEE",
+                      borderRadius: "33px",
+                    }}
+                  />
                 </Form.Item>
 
                 <Form.Item
                   name="username"
-                  label="User-name"
-                  validate="validate"
-                  hasFeedback
                   rules={[
                     {
-                      type: 'text',
-                      message: 'username is already taken',
-                    },
-                    {
                       required: true,
-                      message: 'Please enter a username',
+                      message: "Please input your Username!",
                     },
-                    ({ getFieldValue }) => ({
-                      validator(rule, value) {
-                        return new Promise((resolve, reject) => {
-                          JS2Py.PythonFunctions.SessionServer.checkIfUsernameExists(
-                            getFieldValue('username'),
-                            res => {
-                              if (!value || res.userAlreadyExists !== true) {
-                                resolve();
-                              }
-                              reject('User already exists');
-                            },
-                          );
-                        });
-                      },
-                    }),
                   ]}
-                  validateTrigger="onBlur"
                 >
-                  <Input autoComplete="new-username" />
+                  <Input
+                    prefix={
+                      <UserOutlined
+                        className="site-form-item-icon"
+                        style={{ marginRight: "10px", color: "#B5B5B5" }}
+                      />
+                    }
+                    placeholder="Username"
+                    size="large"
+                    style={{
+                      outline: "none",
+                      border: "2px solid #EEEEEE",
+                      borderRadius: "33px",
+                    }}
+                  />
                 </Form.Item>
 
                 <Form.Item
                   name="password"
-                  label="Password"
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your password!',
+                      message: "Please input your Password",
                     },
                   ]}
-                  hasFeedback
                 >
-                  <Input.Password autoComplete="new-password" />
+                  <Input
+                    prefix={
+                      <LockFilled
+                        className="site-form-item-icon"
+                        style={{ marginRight: "10px", color: "#B5B5B5" }}
+                      />
+                    }
+                    placeholder="password"
+                    size="large"
+                    type="password"
+                    autoComplete="password"
+                    style={{
+                      outline: "none",
+                      border: "2px solid #EEEEEE",
+                      borderRadius: "33px",
+                    }}
+                  />
                 </Form.Item>
 
                 <Form.Item
-                  name="confirm"
-                  label="Confirm Password"
-                  dependencies={['password']}
-                  hasFeedback
+                  name="password"
                   rules={[
                     {
                       required: true,
-                      message: 'Please confirm your password!',
-                    },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue('password') === value) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(
-                          new Error('The two passwords that you entered do not match!'),
-                        );
-                      },
-                    }),
-                  ]}
-                >
-                  <Input.Password autoComplete="new-password" />
-                </Form.Item>
-
-                <Form.Item
-                  name="street"
-                  label="Street Address"
-                  tooltip="What do you want others to call you?"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please enter your street name',
-                      whitespace: true,
+                      message: "Please input your Password",
                     },
                   ]}
                 >
-                  <Input />
+                  <Input
+                    prefix={
+                      <LockFilled
+                        className="site-form-item-icon"
+                        style={{ marginRight: "10px", color: "#B5B5B5" }}
+                      />
+                    }
+                    placeholder="confirm password"
+                    size="large"
+                    type="password"
+                    autoComplete="password"
+                    style={{
+                      outline: "none",
+                      border: "2px solid #EEEEEE",
+                      borderRadius: "33px",
+                    }}
+                  />
                 </Form.Item>
 
-                <Form.Item
-                  name="city"
-                  label="City"
-                  tooltip="What do you want others to call you?"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please enter your city name',
-                      whitespace: true,
-                    },
-                  ]}
-                >
-                  <Input />
+                <Form.Item>
+                  <Space direction="vertical" style={{ width: "100%" }}>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      shape="round"
+                      size="large"
+                      // className="login-form-button block w-100"
+                      style={{ width: "100%" }}
+                      // loading={loading}
+                      // block={true}
+                    >
+                      Sign Up
+                    </Button>
+                  </Space>
                 </Form.Item>
 
-                <Form.Item
-                  name="country"
-                  label="Country"
-                  tooltip="What do you want others to call you?"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please enter your country name',
-                      whitespace: true,
-                    },
-                    ({ getFieldValue }) => ({
-                      validator(rule, value) {
-                        return new Promise((resolve, reject) => {
-                          if (!value || validateCountryName(getFieldValue('country')) === true) {
-                            resolve();
-                          } else {
-                            reject('Please enter a valid country name');
-                          }
-                        });
-                      },
-                    }),
-                  ]}
-                  validateTrigger="onBlur"
-                >
-                  <Input />
-                </Form.Item>
-
-                <Form.Item
-                  name="agreement"
-                  valuePropName="checked"
-                  rules={[
-                    {
-                      validator: (_, value) =>
-                        value
-                          ? Promise.resolve()
-                          : Promise.reject(new Error('Should accept agreement')),
-                    },
-                  ]}
-                  {...tailFormItemLayout}
-                >
-                  <Checkbox>
-                    I have read the <a href="...">agreement</a>
-                  </Checkbox>
-                </Form.Item>
-                <Form.Item {...tailFormItemLayout}>
-                  <Button type="primary" shape="round" htmlType="submit">
-                    Register
-                  </Button>
-                </Form.Item>
-
-                <Form.Item {...tailFormItemLayout}>
+                <Form.Item>
                   <p>
                     Already have an account? <Link to="/login">Login</Link>
                   </p>
