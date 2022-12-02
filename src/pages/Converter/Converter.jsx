@@ -4,7 +4,6 @@ import { ModelsDropdown } from "../../components/ui/ModelsDropdown";
 import { VoicesDropdown } from "../../components/ui/VoicesDropdown";
 import { VoiceToGesture } from "../../components/ui/VoiceToGesture";
 import { GestureToVoice } from "../../components/ui/GestureToVoice";
-import PageHeading from "../../components/Layout/PageHeading";
 
 const Converter = (props) => {
   return (

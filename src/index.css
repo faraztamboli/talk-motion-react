@@ -621,10 +621,16 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 }
 
 .statuses > div > p { 
-    padding: 2px 15px;
+    padding: 2px 25px;
+    color: #FFFFFF;
     margin-right: 20px;
     border-radius: 20px;
     font-weight: 600;
+    font-size: 14px;
+}
+
+.statuses-success {
+  background-color: #35D399 !important;
 }
 
 /* Login Page Styling */

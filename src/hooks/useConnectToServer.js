@@ -1,20 +1,23 @@
-import React from 'react';
-import JS2Py from '../remotepyjs';
-import { useDispatch } from 'react-redux';
-import { JS2PyConnect } from '../data/JS2PyConnectFunctions/JS2PyConnect';
-import { setServerConnected, setServerStatus } from '../app/features/serverSlice';
+import React from "react";
+import JS2Py from "../remotepyjs";
+import { useDispatch } from "react-redux";
+import { JS2PyConnect } from "../data/JS2PyConnectFunctions/JS2PyConnect";
+import {
+  setServerConnected,
+  setServerStatus,
+} from "../app/features/serverSlice";
 
 async function useConnectToServer() {
   const dispatch = useDispatch();
 
   return React.useEffect(() => {
     let conn = null;
-    JS2Py.serverName = 'wss://talk-motion.com:8083';
+    JS2Py.serverName = "wss://talk-motion.com:8083";
 
     // Push function to onopen array of functions
     JS2Py.subOnOpen(() => {
       dispatch(setServerConnected(true));
-      dispatch(setServerStatus('Connected'));
+      dispatch(setServerStatus("Connected"));
     });
 
     // called JS2PyConnect to get all the functions of JS2Py
@@ -22,7 +25,7 @@ async function useConnectToServer() {
 
     JS2Py.subOnClose(() => {
       dispatch(setServerConnected(false));
-      dispatch(setServerStatus('Disconnected'));
+      dispatch(setServerStatus("Disconnected"));
     });
 
     // starting connection and taking instance to close on unmounts
@@ -30,7 +33,7 @@ async function useConnectToServer() {
 
     // stop server when component unmounts
     return () => {
-      conn.close(1000, 'Rerendered close!');
+      conn.close(1000, "Rerendered close!");
     };
     //eslint-disable-next-line
   }, []);

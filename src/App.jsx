@@ -45,118 +45,116 @@ const App = () => {
 
   return (
     <div className="App">
-      {/* {isServerConnected ? ( */}
-      <LayoutWrapper
-        collapsed={collapsed}
-        onCollapsed={onCollapsed}
-        sideBarWidth={sideBarWidth}
-        collapsedWidth={collapsedWidth}
-      >
-        <Routes>
-          <Route
-            index
-            path="/"
-            element={<Converter collapsedWidth={collapsedWidth} />}
-          />
-          {/* <Route exact path="/converter" element={<PrivateRoute />}> */}
-          <Route path="/converter" element={<Converter />} />
-          {/* </Route> */}
-          <Route
-            path="trainer"
-            exact
-            element={
-              <React.Suspense
-                fallback={<Spinner size="large" pageSize="large" />}
-              >
-                <Trainer collapsedWidth={collapsedWidth} />
-              </React.Suspense>
-            }
-          />
-          <Route
-            path="models"
-            exact="exact"
-            element={
-              <React.Suspense
-                fallback={<Spinner size="large" pageSize="large" />}
-              >
-                <Models collapsedWidth={collapsedWidth} />
-              </React.Suspense>
-            }
-          />
-          <Route
-            path="my-models"
-            exact
-            element={
-              <React.Suspense
-                fallback={<Spinner size="large" pageSize="large" />}
-              >
-                <Models collapsedWidth={collapsedWidth} />
-              </React.Suspense>
-            }
-          />
-          <Route
-            path="profile"
-            exact
-            element={
-              <React.Suspense
-                fallback={<Spinner size="large" pageSize="large" />}
-              >
-                <Profile collapsedWidth={collapsedWidth} />
-              </React.Suspense>
-            }
-          />
-          <Route
-            path="settings"
-            exact
-            element={
-              <React.Suspense
-                fallback={<Spinner size="large" pageSize="large" />}
-              >
-                <Models collapsedWidth={collapsedWidth} />
-              </React.Suspense>
-            }
-          />
-          <Route
-            path="/signup"
-            exact
-            element={
-              <React.Suspense
-                fallback={<Spinner size="large" pageSize="large" />}
-              >
-                <Signup md={md} />
-              </React.Suspense>
-            }
-          />
-          <Route path="/login" exact element={<Login md={md} />} />
-          <Route
-            path="/forgetpassword"
-            exact
-            element={
-              <React.Suspense
-                fallback={<Spinner size="large" pageSize="large" />}
-              >
-                <ForgotPassword md={md} />
-              </React.Suspense>
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <PrivateRoute>
-                <Error />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </LayoutWrapper>
-      {/* ) : (
-        // )
-        serverStatus !== "Disconnected" && (
-          <Spinner size="large" pageSize="large" />
-        )
+      {isServerConnected ? (
+        <LayoutWrapper
+          collapsed={collapsed}
+          onCollapsed={onCollapsed}
+          sideBarWidth={sideBarWidth}
+          collapsedWidth={collapsedWidth}
+        >
+          <Routes>
+            <Route
+              index
+              path="/"
+              element={<Converter collapsedWidth={collapsedWidth} />}
+            />
+            {/* <Route exact path="/converter" element={<PrivateRoute />}> */}
+            <Route path="/converter" element={<Converter />} />
+            {/* </Route> */}
+            <Route
+              path="trainer"
+              exact
+              element={
+                <React.Suspense
+                  fallback={<Spinner size="large" pageSize="large" />}
+                >
+                  <Trainer collapsedWidth={collapsedWidth} />
+                </React.Suspense>
+              }
+            />
+            <Route
+              path="models"
+              exact="exact"
+              element={
+                <React.Suspense
+                  fallback={<Spinner size="large" pageSize="large" />}
+                >
+                  <Models collapsedWidth={collapsedWidth} />
+                </React.Suspense>
+              }
+            />
+            <Route
+              path="my-models"
+              exact
+              element={
+                <React.Suspense
+                  fallback={<Spinner size="large" pageSize="large" />}
+                >
+                  <Models collapsedWidth={collapsedWidth} />
+                </React.Suspense>
+              }
+            />
+            <Route
+              path="profile"
+              exact
+              element={
+                <React.Suspense
+                  fallback={<Spinner size="large" pageSize="large" />}
+                >
+                  <Profile collapsedWidth={collapsedWidth} />
+                </React.Suspense>
+              }
+            />
+            <Route
+              path="settings"
+              exact
+              element={
+                <React.Suspense
+                  fallback={<Spinner size="large" pageSize="large" />}
+                >
+                  <Models collapsedWidth={collapsedWidth} />
+                </React.Suspense>
+              }
+            />
+            <Route
+              path="/signup"
+              exact
+              element={
+                <React.Suspense
+                  fallback={<Spinner size="large" pageSize="large" />}
+                >
+                  <Signup md={md} />
+                </React.Suspense>
+              }
+            />
+            <Route path="/login" exact element={<Login md={md} />} />
+            <Route
+              path="/forgetpassword"
+              exact
+              element={
+                <React.Suspense
+                  fallback={<Spinner size="large" pageSize="large" />}
+                >
+                  <ForgotPassword md={md} />
+                </React.Suspense>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <PrivateRoute>
+                  <Error />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </LayoutWrapper>
+      ) : serverStatus === "Connecting..." ? (
+        <Spinner size="large" pageSize="large" />
+      ) : (
+        serverStatus === "Disconnected" && <ServerError />
       )}
-      {serverStatus === "Disconnected" && <ServerError />}
-      <Statuses collapsedWidth={collapsedWidth} /> */}
+      <Statuses collapsedWidth={collapsedWidth} />
     </div>
   );
 };
