@@ -3,18 +3,15 @@ import { Row, Col, Card } from "antd";
 import { ModelsDropdown } from "../../components/ui/ModelsDropdown";
 import { TrainerControl } from "../../components/ui/TrainerControl";
 import { GestureToVoice } from "../../components/ui/GestureToVoice";
-import PageHeading from "../../components/Layout/PageHeading";
-import JS2Py from "../../remotepyjs";
 
 export default function Trainer(props) {
   return (
     <>
-      {/* <PageHeading heading="Trainer" /> */}
       <div
         style={
           props.collapseWidth === 0
-            ? { backgroundColor: "white", padding: 8 }
-            : { backgroundColor: "white", padding: 24 }
+            ? { backgroundColor: "#E5E5E5", padding: 8 }
+            : { backgroundColor: "#E5E5E5", padding: 24 }
         }
       >
         <Row gutter={[16, 16]}>
@@ -24,12 +21,12 @@ export default function Trainer(props) {
         </Row>
         <Row gutter={[16, 16]} className="mt-8">
           <Col span={12} xs={24} md={12}>
-            <Card>
-              <GestureToVoice />
+            <Card className="converter-cards">
+              <GestureToVoice from="trainer" />
             </Card>
           </Col>
           <Col span={12} xs={24} md={12}>
-            <Card>
+            <Card className="converter-cards">
               <TrainerControl />
             </Card>
           </Col>

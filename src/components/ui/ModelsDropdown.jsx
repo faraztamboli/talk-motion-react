@@ -19,11 +19,9 @@ export const ModelsDropdown = () => {
         <AppstoreOutlined />
       </span>
       <Select
-        bordered="false"
+        // bordered="false"
         defaultValue={modelsList[0].label}
-        style={{
-          width: "calc(100% - 30px)",
-        }}
+        className="dropdowns"
         onChange={handleChange}
       >
         {modelsList.map((model, index) => (

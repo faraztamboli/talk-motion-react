@@ -1,16 +1,17 @@
-import React from 'react';
-import { Button, Row, Col, Input } from 'antd';
-import { FaRegPauseCircle, FaRegPlayCircle } from 'react-icons/fa';
+import React from "react";
+import { Button, Row, Col, Input } from "antd";
+
+const { TextArea } = Input;
 
 export const TrainerControl = () => {
   const [trainingText /*setTrainingText*/] = React.useState(
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
   );
-  const [collectionText, setCollectionText] = React.useState('');
+  const [collectionText, setCollectionText] = React.useState("");
   const [isRecording, setIsRecording] = React.useState(false);
   const [isTraining, setIsTraining] = React.useState(false);
   const loadings = () => {};
-  const handleCollectionTextChange = () => e => {
+  const handleCollectionTextChange = () => (e) => {
     setCollectionText(e.target.value);
   };
   const speak = () => {
@@ -32,28 +33,30 @@ export const TrainerControl = () => {
       <div className="card-body mt-6">
         <Input
           placeholder="Enter Collection Text"
+          style={{ backgroundColor: "#E6ECF0" }}
           value={collectionText}
           onChange={handleCollectionTextChange()}
         />
-        <Row gutter={[16, 16]} className="mt-4">
+        <Row gutter={[16, 16]} className="mt-4 flex flex-center-center">
           <Col span={12}>
             {isRecording ? (
               <Button
-                className="flex flex-center-center w-100p"
-                type="danger"
+                className="trainer-btns converter-btns"
+                type="primary"
+                danger
+                shape="round"
                 loading={loadings[0]}
                 onClick={() => stopSpeak(0)}
-                icon={<FaRegPauseCircle />}
               >
                 <span className="ml-2">Pause</span>
               </Button>
             ) : (
               <Button
-                className="flex flex-center-center w-100p"
+                className="trainer-btns converter-btns"
                 type="primary"
+                shape="round"
                 loading={loadings[1]}
                 onClick={() => speak(1)}
-                icon={<FaRegPlayCircle />}
               >
                 <span className="ml-2">Collect</span>
               </Button>
@@ -62,18 +65,20 @@ export const TrainerControl = () => {
           <Col span={12}>
             {!isTraining ? (
               <Button
-                className="flex flex-center-center w-100p"
+                className="trainer-btns converter-btns"
                 type="primary"
+                shape="round"
                 onClick={() => train()}
               >
                 <span className="ml-2">Train</span>
               </Button>
             ) : (
               <Button
-                className="flex flex-center-center w-100p"
-                type="danger"
+                className="trainer-btns converter-btns"
+                type="primary"
+                shape="round"
+                danger
                 onClick={() => stopTrain()}
-                icon={<FaRegPauseCircle />}
               >
                 <span className="ml-2">Stop</span>
               </Button>
@@ -82,7 +87,11 @@ export const TrainerControl = () => {
         </Row>
         <div className="mt-6 trainer-status">
           <h3>Training Status</h3>
-          <p>{trainingText}</p>
+          <TextArea
+            rows={5}
+            placeholder="status text here"
+            style={{ backgroundColor: "#E6ECF0" }}
+          />
         </div>
       </div>
     </div>

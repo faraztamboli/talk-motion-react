@@ -1,9 +1,10 @@
-import React from 'react';
-import { Button } from 'antd';
-import { FaRegPauseCircle, FaRegPlayCircle } from 'react-icons/fa';
-import { GestureCanvs } from './GestureCanvs';
+import React from "react";
+import { Button } from "antd";
+import { FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
+import { MdPause, MdPlayArrow } from "react-icons/md";
+import { GestureCanvs } from "./GestureCanvs";
 
-export const GestureToVoice = () => {
+export const GestureToVoice = (props) => {
   const [isRecording, setIsRecording] = React.useState(false);
   const loadings = () => {};
   const speak = () => {
@@ -14,29 +15,47 @@ export const GestureToVoice = () => {
   };
   return (
     <div>
-      <h2 className="mb-0">Voice To Gesture</h2>
-      <p>View gestures from speech</p>
+      <h2 className="mb-0">Gesture to Voice</h2>
+      <p>generate speech from gestures</p>
       <GestureCanvs />
-      {isRecording ? (
-        <Button
-          className="flex flex-center-center w-100p"
-          type="danger"
-          loading={loadings[0]}
-          onClick={() => stopSpeak(0)}
-          icon={<FaRegPauseCircle />}
+      {props.from === "converter" && (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          <span className="ml-2">Pause</span>
-        </Button>
-      ) : (
-        <Button
-          className="flex flex-center-center w-100p"
-          type="primary"
-          loading={loadings[1]}
-          onClick={() => speak(1)}
-          icon={<FaRegPlayCircle />}
-        >
-          <span className="ml-2">Collect</span>
-        </Button>
+          {isRecording ? (
+            <Button
+              className="converter-btns"
+              type="primary"
+              shape="circle"
+              style={{ backgroundColor: "#DDBA00" }}
+              size="large"
+              danger
+              loading={loadings[0]}
+              onClick={() => stopSpeak(0)}
+              icon={<MdPause size={24} />}
+            ></Button>
+          ) : (
+            <Button
+              className="converter-btns"
+              type="primary"
+              shape="circle"
+              size="large"
+              loading={loadings[1]}
+              onClick={() => speak(1)}
+              icon={<MdPlayArrow size={24} />}
+            ></Button>
+          )}
+        </div>
+      )}
+      {props.from === "converter" && (
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt a quod
+          nam, dolorem atque
+        </p>
       )}
     </div>
   );

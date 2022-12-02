@@ -12,12 +12,12 @@ const Converter = (props) => {
       <div
         style={
           props.collapseWidth === 0
-            ? { backgroundColor: "white", padding: 8 }
-            : { backgroundColor: "white", padding: 24 }
+            ? { backgroundColor: "#E5E5E5", padding: 8 }
+            : { backgroundColor: "#E5E5E5", padding: 24 }
         }
       >
         <Row gutter={[16, 16]}>
-          <Col span={8} xs={24} md={8} style={{ borderRadius: "16px" }}>
+          <Col span={8} xs={24} md={8}>
             <ModelsDropdown />
           </Col>
           <Col span={8} xs={0} md={8}></Col>
@@ -27,13 +27,13 @@ const Converter = (props) => {
         </Row>
         <Row gutter={[16, 16]} className="mt-8">
           <Col span={12} xs={24} md={12}>
-            <Card>
+            <Card className="converter-cards">
               <VoiceToGesture />
             </Card>
           </Col>
           <Col span={12} xs={24} md={12}>
-            <Card>
-              <GestureToVoice />
+            <Card className="converter-cards">
+              <GestureToVoice from="converter" />
             </Card>
           </Col>
         </Row>

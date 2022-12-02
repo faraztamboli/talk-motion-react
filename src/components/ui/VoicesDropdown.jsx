@@ -1,12 +1,12 @@
-import { Select } from 'antd';
-import { SoundOutlined } from '@ant-design/icons';
-import React from 'react';
-import { voicesList } from '../../data';
+import { Select } from "antd";
+import { SoundOutlined } from "@ant-design/icons";
+import React from "react";
+import { voicesList } from "../../data";
 
 const { Option } = Select;
 
 export const VoicesDropdown = () => {
-  const handleChange = value => {
+  const handleChange = (value) => {
     console.log(value);
   };
 
@@ -17,9 +17,7 @@ export const VoicesDropdown = () => {
       </span>
       <Select
         defaultValue={voicesList[0].label}
-        style={{
-          width: 'calc(100% - 30px)',
-        }}
+        className="dropdowns"
         onChange={handleChange}
       >
         {voicesList.map((model, index) => (

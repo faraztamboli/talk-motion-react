@@ -422,6 +422,12 @@ code {
 .flex {
   display: flex !important;
 }
+.align-items-center {
+  align-items: center !important;
+}
+.justify-content-end {
+  justify-content: flex-end !important;
+}
 .inline-block {
   display: inline-block !important;
 }
@@ -654,4 +660,60 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 .auth-pages-second-col {
   background-color: #FFFFFF;
+}
+
+/* Converter Page Styling */
+.dropdowns {
+  width: calc(100% - 30px);
+  box-shadow: 0px 4px 18px -10px rgba(0, 0, 0, 0.32);
+  border-radius: 16px;
+}
+
+.converter-cards {
+  background: #FFFFFF;
+  box-shadow: 0px 4px 18px rgba(129, 123, 123, 0.32) !important;
+  border-radius: 6px;
+}
+
+.converter-btns {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
+}
+
+.trainer-btns {
+  padding: 0 4rem !important;
+}
+
+/* Models Page Styling */
+.models-card {
+  background-color: #FFFFFF !important;
+  box-shadow: 0px 4px 18px rgba(222, 231, 237, 0.46) !important;
+  border-radius: 6px !important;
+}
+
+.models-card-heading {
+  font-size: 1.125rem;
+  line-height: 1.313rem;
+  font-weight: 700;
+  color: #000000;
+}
+
+.models-card-description {
+  color: #7A7A7A;
+  font-size: 1rem;
+  line-height: 1.188rem;
+  font-weight: 500;
+}
+
+.contributors-heading {
+  font-size: 1rem;
+  line-height: 1.188rem;
+  color: #000000;
+  font-weight: 700;
+}
+
+.models-card-btn {
+  color: #000000;
+  font-size: 1rem;
+  line-height: 1.172rem;
+  font-weight: 600;
 }

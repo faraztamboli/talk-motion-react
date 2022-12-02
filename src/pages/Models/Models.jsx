@@ -11,14 +11,14 @@ export default function Models(props) {
       <div
         style={
           props.collapseWidth === 0
-            ? { backgroundColor: "white", padding: 8 }
-            : { backgroundColor: "white", padding: 24 }
+            ? { backgroundColor: "#E5E5E5", padding: 8 }
+            : { backgroundColor: "#E5E5E5", padding: 24 }
         }
       >
         <Row gutter={[16, 16]}>
           {modelsData.map((model) => {
             return (
-              <Col key={model.key}>
+              <Col key={model.key} span={8}>
                 <ModelsCard
                   model={model}
                   collapsedWidth={props.collapsedWidth}
