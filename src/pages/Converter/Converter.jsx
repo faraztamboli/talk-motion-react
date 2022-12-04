@@ -11,8 +11,8 @@ const Converter = (props) => {
       <div
         style={
           props.collapseWidth === 0
-            ? { backgroundColor: "#E5E5E5", padding: 8 }
-            : { backgroundColor: "#E5E5E5", padding: 24 }
+            ? { backgroundColor: "#E5E5E5", padding: 8, minHeight: "100vh" }
+            : { backgroundColor: "#E5E5E5", padding: 24, minHeight: "100vh" }
         }
       >
         <Row gutter={[16, 16]}>

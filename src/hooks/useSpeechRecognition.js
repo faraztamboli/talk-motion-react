@@ -73,6 +73,11 @@ function useSpeechRecognitionHook() {
     return src;
   };
 
+  const handleRepeat = () => {
+    setCount(0);
+    getVideo(getWords(transcript));
+  };
+
   // console.log(video);
 
   return {
@@ -86,6 +91,7 @@ function useSpeechRecognitionHook() {
     setIsRecording,
     handleStartSpeak,
     handleStopSpeak,
+    handleRepeat,
   };
 }
 

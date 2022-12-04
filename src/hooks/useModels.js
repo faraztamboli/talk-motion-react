@@ -8,8 +8,6 @@ function useModels() {
   const [loading, setLoading] = React.useState(true);
   const [token] = useLocalStorage("token");
 
-  console.log(token);
-
   React.useEffect(() => {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.getPublicModels((res) => {

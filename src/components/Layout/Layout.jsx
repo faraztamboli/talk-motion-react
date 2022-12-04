@@ -17,7 +17,7 @@ function AppLayout(props) {
       <Layout>
         <Header collapsed={props.collapsed} onCollapsed={props.onCollapsed} />
         <div className="site-layout-background" style={{ minHeight: 360 }}>
-          {props.children}
+          <Layout>{props.children}</Layout>
         </div>
         <Footer />
       </Layout>

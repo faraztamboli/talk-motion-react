@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Modal, Radio } from "antd";
-import { MdOutlineNewLabel } from "react-icons/md";
-import useModels from "../../hooks/useModels";
+import { InboxOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Modal, Upload } from "antd";
+import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
 
 const CollectionCreateForm = (props) => {
+  const { normFile } = useUploadGestureVideo();
   const [form] = Form.useForm();
+
   return (
     <Modal
       open={props.open}
-      title="Create a new Model"
-      okText="Create"
+      title="Upload a new video for a word"
+      okText="Upload"
       cancelText="Cancel"
       onCancel={props.onCancel}
       onOk={() => {
@@ -31,8 +33,8 @@ const CollectionCreateForm = (props) => {
         initialValues={{ modifier: "public" }}
       >
         <Form.Item
-          name="title"
-          label="Title"
+          name="word"
+          label="word"
           rules={[
             {
               required: true,
@@ -42,19 +44,20 @@ const CollectionCreateForm = (props) => {
         >
           <Input />
         </Form.Item>
-        <Form.Item name="description" label="Description">
-          <Input type="textarea" />
-        </Form.Item>
         <Form.Item
-          name="modifier"
-          className="collection-create-form_last-form-item"
+          name="dragger"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
+          noStyle
         >
-          <Radio.Group>
-            <Radio checked value="public">
-              Public
-            </Radio>
-            <Radio value="private">Private</Radio>
-          </Radio.Group>
+          <Upload.Dragger name="files" accept="video/*">
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag video to this area to upload
+            </p>
+          </Upload.Dragger>
         </Form.Item>
       </Form>
     </Modal>
@@ -63,28 +66,23 @@ const CollectionCreateForm = (props) => {
 
 const App = () => {
   const [open, setOpen] = useState(false);
-  const { createNewModel } = useModels();
+  const { uploadVideo } = useUploadGestureVideo();
 
   const onCreate = (values) => {
-    console.log("Received values of form: ", values);
-    createNewModel(values.title, values.description);
+    // console.log("Received values of form: ", values);
+    uploadVideo(values.word, values.dragger[0].name, values.dragger[0]);
     setOpen(false);
   };
 
   return (
     <div>
       <Button
-        className="flex flex-center-center converter-btns"
+        className="converter-btns"
         type="primary"
-        size="large"
         shape="round"
-        icon={<MdOutlineNewLabel size={24} />}
-        onClick={() => {
-          setOpen(true);
-        }}
-        style={{ padding: ".5rem 2rem" }}
+        onClick={() => setOpen(true)}
       >
-        Create Model
+        Upload Video
       </Button>
       <CollectionCreateForm
         open={open}

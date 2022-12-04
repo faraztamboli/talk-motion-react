@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Row, Col, Input } from "antd";
+import UploadVideo from "../../components/ui/UploadVideo";
 
 const { TextArea } = Input;
 
@@ -88,10 +89,14 @@ export const TrainerControl = () => {
         <div className="mt-6 trainer-status">
           <h3>Training Status</h3>
           <TextArea
-            rows={5}
+            rows={3}
             placeholder="status text here"
             style={{ backgroundColor: "#E6ECF0" }}
           />
+        </div>
+
+        <div className="upload-video mt-4">
+          <UploadVideo />
         </div>
       </div>
     </div>
