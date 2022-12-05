@@ -14,14 +14,17 @@ async function useConnectToServer() {
     let conn = null;
     JS2Py.serverName = "wss://talk-motion.com:8083";
 
-    // Push function to onopen array of functions
-    JS2Py.subOnOpen(() => {
-      dispatch(setServerConnected(true));
-      dispatch(setServerStatus("Connected"));
-    });
-
     // called JS2PyConnect to get all the functions of JS2Py
     JS2PyConnect();
+
+    // Push function to onopen array of functions
+    JS2Py.subOnOpen(() => {
+      // wait for the server to append all the remotepy functions
+      setTimeout(() => {
+        dispatch(setServerConnected(true)),
+          dispatch(setServerStatus("Connected"));
+      }, 2000);
+    });
 
     JS2Py.subOnClose(() => {
       dispatch(setServerConnected(false));

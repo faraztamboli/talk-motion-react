@@ -10,8 +10,8 @@ function useSpeechRecognitionHook() {
   const [count, setCount] = React.useState(0);
   const {
     transcript,
-    /* listening,
-    resetTranscript, */
+    //  listening,
+    resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
@@ -40,7 +40,13 @@ function useSpeechRecognitionHook() {
     /* resetTranscript();
     setCount(0); */
     setIsRecording(!isRecording);
-    SpeechRecognition.startListening();
+    SpeechRecognition.startListening({ continuous: true });
+  };
+
+  const handleResetTranscript = () => {
+    resetTranscript();
+    setCount(0);
+    setVideo(null);
   };
 
   const getWords = (transcript) => {
@@ -78,7 +84,7 @@ function useSpeechRecognitionHook() {
     getVideo(getWords(transcript));
   };
 
-  // console.log(video);
+  console.log(video);
 
   return {
     transcript,
@@ -92,6 +98,7 @@ function useSpeechRecognitionHook() {
     handleStartSpeak,
     handleStopSpeak,
     handleRepeat,
+    handleResetTranscript,
   };
 }
 

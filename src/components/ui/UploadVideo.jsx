@@ -69,8 +69,12 @@ const App = () => {
   const { uploadVideo } = useUploadGestureVideo();
 
   const onCreate = (values) => {
-    // console.log("Received values of form: ", values);
-    uploadVideo(values.word, values.dragger[0].name, values.dragger[0]);
+    console.log("Received values of form: ", values);
+    const blob = new Blob([values.dragger[0].originFileObj], {
+      type: "video/*",
+    });
+    console.log(blob);
+    uploadVideo(values.word, values.dragger[0].name, blob);
     setOpen(false);
   };
 

@@ -1,7 +1,7 @@
 import React from "react";
-import { Modal, Button } from "antd";
+import { Modal, Button, Tooltip } from "antd";
 import { SoundFilled } from "@ant-design/icons";
-import { MdOutlineReplay, MdFullscreenExit } from "react-icons/md";
+import { MdOutlineReplay, MdFullscreenExit, MdClear } from "react-icons/md";
 
 function VoiceToGestureVideo(props) {
   const {
@@ -18,6 +18,7 @@ function VoiceToGestureVideo(props) {
     handleStopSpeak,
     handleRepeat,
     transcript,
+    handleResetTranscript,
   } = props;
 
   // console.log(fullScreen);
@@ -42,13 +43,7 @@ function VoiceToGestureVideo(props) {
             autoPlay
             muted
             onEnded={() => {
-              if (count == video.length - 1) {
-                setCount(0);
-                setVideo(null);
-                return;
-              } else {
-                setCount((prevCount) => prevCount + 1);
-              }
+              setCount((prevCount) => prevCount + 1);
             }}
           ></video>
 
@@ -78,30 +73,43 @@ function VoiceToGestureVideo(props) {
               </Button>
             )}
 
-            <Button
-              type="primary"
-              className="mr-9 converter-btns"
-              shape="circle"
-              size="large"
-              onClick={handleRepeat}
-              icon={<MdOutlineReplay size={24} />}
-            />
+            <Tooltip title="Repeat" showArrow={false} placement="bottom">
+              <Button
+                type="primary"
+                className="mr-9 converter-btns"
+                shape="circle"
+                size="large"
+                onClick={handleRepeat}
+                icon={<MdOutlineReplay size={24} />}
+              />
+            </Tooltip>
 
-            <Button
-              type="primary"
-              className="converter-btns"
-              danger
-              shape="circle"
-              size="large"
-              onClick={toggleFullScreen}
-              icon={<MdFullscreenExit size={24} />}
-            />
+            <Tooltip title="Reset" showArrow={false} placement="bottom">
+              <Button
+                type="primary"
+                className="mr-9 converter-btns"
+                shape="circle"
+                size="large"
+                onClick={handleResetTranscript}
+                icon={<MdClear size={24} />}
+              />
+            </Tooltip>
+
+            <Tooltip title="Full Screen" showArrow={false} placement="bottom">
+              <Button
+                type="primary"
+                className="converter-btns"
+                danger
+                shape="circle"
+                size="large"
+                onClick={toggleFullScreen}
+                icon={<MdFullscreenExit size={24} />}
+              />
+            </Tooltip>
           </div>
 
           <div className="pt-4">
-            <p>
-              {transcript ? transcript : "Your Transcript will appear here"}
-            </p>
+            <p>{transcript}</p>
           </div>
         </Modal>
       ) : (
@@ -113,13 +121,7 @@ function VoiceToGestureVideo(props) {
           autoPlay
           muted
           onEnded={() => {
-            if (count == video.length - 1) {
-              setCount(0);
-              setVideo(null);
-              return;
-            } else {
-              setCount((prevCount) => prevCount + 1);
-            }
+            setCount((prevCount) => prevCount + 1);
           }}
         ></video>
       )}

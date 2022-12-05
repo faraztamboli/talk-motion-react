@@ -38,9 +38,9 @@
 /* eslint-disable */
 
 function JS2PyClient(serverName, clientPageId) {
-  if (serverName === undefined) this.serverName = 'ws://localhost:8082';
+  if (serverName === undefined) this.serverName = "ws://localhost:8082";
   else this.serverName = serverName;
-  if (clientPageId === undefined) this.clientPageId = 'Undefined';
+  if (clientPageId === undefined) this.clientPageId = "Undefined";
   else this.clientPageId = clientPageId;
 
   var JS2PySelf;
@@ -62,17 +62,17 @@ function JS2PyClient(serverName, clientPageId) {
   this.onopenFunctions = [];
   this.oncloseFunctions = [];
   this.onmsgFunctions = [];
-  this.subOnClose = fn => this.oncloseFunctions.push(fn);
-  this.subOnOpen = fn => this.onopenFunctions.push(fn);
-  this.subOnMsg = fn => this.onmsgFunctions.push(fn);
+  this.subOnClose = (fn) => this.oncloseFunctions.push(fn);
+  this.subOnOpen = (fn) => this.onopenFunctions.push(fn);
+  this.subOnMsg = (fn) => this.onmsgFunctions.push(fn);
 
   this.getServerString = function () {
-    return this.serverName + '/' + this.clientPageId;
+    return this.serverName + "/" + this.clientPageId;
   };
 
   this.readCallbackArguments = function (function_name, ...args) {
     for (var i = args.length - 1; i >= 0; --i) {
-      if (typeof args[i] !== 'function') {
+      if (typeof args[i] !== "function") {
         break;
       }
     }
@@ -83,7 +83,10 @@ function JS2PyClient(serverName, clientPageId) {
     return [function_name, parameters, callbacks];
   };
 
-  this.registerMultipleCallbackPythonFunction = function (function_name, ...callbacks) {
+  this.registerMultipleCallbackPythonFunction = function (
+    function_name,
+    ...callbacks
+  ) {
     this.pythonMultipleCallbackDict[function_name] = callbacks;
   };
 
@@ -99,13 +102,16 @@ function JS2PyClient(serverName, clientPageId) {
           funcName: function_name,
           args: parameters,
           session_id: this.getSessionId(),
-        }),
+        })
       );
       console.log(
-        'Function : ' + function_name + ' called with arguments: ' + JSON.stringify(parameters),
+        "Function : " +
+          function_name +
+          " called with arguments: " +
+          JSON.stringify(parameters)
       );
     } else {
-      console.log('Connection not open.');
+      console.log("Connection not open.");
     }
 
     if (callbacks.length > 0) {
@@ -127,7 +133,7 @@ function JS2PyClient(serverName, clientPageId) {
   };
 
   this.getSessionId = function () {
-    return sessionStorage.getItem('JS2PY_SESSION_ID');
+    return sessionStorage.getItem("JS2PY_SESSION_ID");
   };
 
   this.registerJSFunctionToBeCalledByPython = function (funcName, func) {
@@ -137,11 +143,20 @@ function JS2PyClient(serverName, clientPageId) {
   this.callFunc = function (funcName, args, callBackFunc) {
     if (this.isOpen) {
       this.socket.send(
-        JSON.stringify({ funcName: funcName, args: args, session_id: this.getSessionId() }),
+        JSON.stringify({
+          funcName: funcName,
+          args: args,
+          session_id: this.getSessionId(),
+        })
       );
-      console.log('Function : ' + funcName + ' called with arguments: ' + JSON.stringify(args));
+      console.log(
+        "Function : " +
+          funcName +
+          " called with arguments: " +
+          JSON.stringify(args)
+      );
     } else {
-      console.log('Connection not open.');
+      console.log("Connection not open.");
     }
 
     if (callBackFunc === undefined) {
@@ -155,7 +170,12 @@ function JS2PyClient(serverName, clientPageId) {
     //this.callFunc(funcName, args, func);
   };
 
-  this.callPythonFunctionBinary = function (funcName, args, file, callBackFunc) {
+  this.callPythonFunctionBinary = function (
+    funcName,
+    args,
+    file,
+    callBackFunc
+  ) {
     if (args === undefined) {
       args = {};
     }
@@ -168,7 +188,7 @@ function JS2PyClient(serverName, clientPageId) {
         this.registerCallbackToPythonFunction(funcName, callBackFunc);
       }
     } else {
-      console.log('Connection not open.');
+      console.log("Connection not open.");
     }
   };
 
@@ -185,7 +205,7 @@ function JS2PyClient(serverName, clientPageId) {
   this.sendNonImageBinary = function (src) {
     //	Prevent any image file type from being read.
     if (src.type.match(/image.*/)) {
-      console.log('The dropped file is an image: ', src.type);
+      console.log("The dropped file is an image: ", src.type);
       return;
     }
     //	Create our FileReader and run the results through the render function.
@@ -201,7 +221,7 @@ function JS2PyClient(serverName, clientPageId) {
   this.sendImageBinary = function (src) {
     //	Prevent any non-image file type from being read.
     if (!src.type.match(/image.*/)) {
-      console.log('The dropped file is not an image: ', src.type);
+      console.log("The dropped file is not an image: ", src.type);
       return;
     }
     //	Create our FileReader and run the results through the render function.
@@ -214,11 +234,11 @@ function JS2PyClient(serverName, clientPageId) {
     reader.readAsArrayBuffer(src);
   };
 
-  this.createJSProxyFunctions = namespace => {
+  this.createJSProxyFunctions = (namespace) => {
     for (var functionName in this.PythonFunctionsArgs) {
       // this.PythonFunctions
       var args = this.PythonFunctionsArgs[functionName];
-      args.push('...func');
+      args.push("...func");
       var funcBody =
         "var paramNames = this.PythonFunctionsArgs['" +
         functionName +
@@ -231,9 +251,9 @@ function JS2PyClient(serverName, clientPageId) {
       args.push(funcBody);
       JS2PySelf = this;
       // window[functionName] = Function.apply(null, args);
-      if (functionName.indexOf('.') >= 0) {
+      if (functionName.indexOf(".") >= 0) {
         // if the function has a namespace then it will be resolved as dict properties
-        var function_namespace_components = functionName.split('.');
+        var function_namespace_components = functionName.split(".");
         var namespace_object = this.PythonFunctions;
         for (var i = 0; i < function_namespace_components.length - 1; i++) {
           if (!(function_namespace_components[i] in namespace_object)) {
@@ -242,8 +262,11 @@ function JS2PyClient(serverName, clientPageId) {
           namespace_object = namespace_object[function_namespace_components[i]];
         }
 
-        namespace_object[function_namespace_components[function_namespace_components.length - 1]] =
-          Function.apply(null, args).bind(this);
+        namespace_object[
+          function_namespace_components[
+            function_namespace_components.length - 1
+          ]
+        ] = Function.apply(null, args).bind(this);
 
         /*
                 for(var i = function_namespace_components.length - 1; i >= 1; i--) {
@@ -259,7 +282,9 @@ function JS2PyClient(serverName, clientPageId) {
         // so this.PythonFunctions.test.search_markets will correctly resolve to
         // Function.apply(null, args) which is the anonymous function handler
       } else {
-        this.PythonFunctions[functionName] = Function.apply(null, args).bind(this);
+        this.PythonFunctions[functionName] = Function.apply(null, args).bind(
+          this
+        );
       }
       //window[functionName].bind(JS2PySelf);
     }
@@ -289,56 +314,56 @@ function JS2PyClient(serverName, clientPageId) {
     }
     var serverConnectionString = this.getServerString();
 
-    console.log('Connecting to : ' + serverConnectionString + ' ...');
+    console.log("Connecting to : " + serverConnectionString + " ...");
     this.socket = new WebSocket(serverConnectionString);
-    this.socket.binaryType = 'arraybuffer';
+    this.socket.binaryType = "arraybuffer";
     JS2PySelf = this;
 
     this.socket.onopen = function () {
-      console.log('Connected to Server :' + serverConnectionString);
+      console.log("Connected to Server :" + serverConnectionString);
       JS2PySelf.isOpen = true;
-      JS2PySelf.onopenFunctions.forEach(fun => fun());
+      JS2PySelf.onopenFunctions.forEach((fun) => fun());
       if (JS2PySelf.onopen !== undefined) {
         JS2PySelf.callMultipleCallbackPythonFunction(
-          'getPythonFunctionLibrary',
+          "getPythonFunctionLibrary",
           {},
           function (funcDict) {
             JS2PySelf.PythonFunctionsArgs = {};
             for (var key in funcDict) {
               funcDict[key].shift(); // remove the first argument self
-              if (funcDict[key][0] == 'session_id') {
+              if (funcDict[key][0] == "session_id") {
                 // if the second argument is session_id then remove that as well
                 funcDict[key].shift();
               }
               JS2PySelf.PythonFunctionsArgs[key] = funcDict[key]; // remove first argument (self) from the list
             }
-            JS2PySelf.createJSProxyFunctions('');
+            JS2PySelf.createJSProxyFunctions("");
             //JS2PySelf.createJS2PyProxyFunctions('');
             // debugger;
             JS2PySelf.onopen();
-          },
+          }
         );
 
         JS2PySelf.callMultipleCallbackPythonFunction(
-          'getPythonFunctionLibraryHelp',
+          "getPythonFunctionLibraryHelp",
           {},
           function (funcDict) {
             JS2PySelf.PythonFunctionsHelp = funcDict;
-          },
+          }
         );
       }
     };
 
     this.socket.onmessage = function (e) {
-      JS2PySelf.onmsgFunctions.forEach(fun => fun());
+      JS2PySelf.onmsgFunctions.forEach((fun) => fun());
       if (JS2PySelf.onmessagereceived !== undefined) {
         JS2PySelf.onmessagereceived(e);
       }
-      if (typeof e.data == 'string') {
+      if (typeof e.data == "string") {
         // console.log('Message received: ' + e.data);
         // debugger;
         var funcReturn = JSON.parse(e.data);
-        if ('args' in funcReturn) {
+        if ("args" in funcReturn) {
           var pos = JS2PySelf.jsFunctionDict
             .map(function (x) {
               return x.funcName;
@@ -346,7 +371,7 @@ function JS2PyClient(serverName, clientPageId) {
             .indexOf(funcReturn.funcName);
           if (pos >= 0) {
             var funcFound = JS2PySelf.jsFunctionDict[pos];
-            if ('isBinary' in funcReturn.args) {
+            if ("isBinary" in funcReturn.args) {
               // if binary call then next message is bringing the blob. so add to queue and get ready to retrieve the blob.
               JS2PySelf.binaryFunctionQueue.push({
                 funcName: funcReturn.funcName,
@@ -358,46 +383,75 @@ function JS2PyClient(serverName, clientPageId) {
               funcFound.func(funcReturn.args);
             }
           } else {
-            throw 'No function defined for ' + funcReturn.funcName;
+            throw "No function defined for " + funcReturn.funcName;
           }
         } else {
-          if ('streaming' in funcReturn) {
+          if ("streaming" in funcReturn) {
             if (funcReturn.funcName in JS2PySelf.pythonMultipleCallbackDict) {
-              var callbacks = JS2PySelf.pythonMultipleCallbackDict[funcReturn.funcName];
+              var callbacks =
+                JS2PySelf.pythonMultipleCallbackDict[funcReturn.funcName];
               switch (callbacks.length) {
                 case 0:
                   break; // do nothing
                 case 1:
-                  if ('error' in funcReturn) callbacks[0](funcReturn.error, false);
-                  if ('return' in funcReturn)
-                    callbacks[0](funcReturn.streaming, funcReturn.return, false);
+                  if ("error" in funcReturn)
+                    callbacks[0](funcReturn.error, false);
+                  if ("return" in funcReturn)
+                    callbacks[0](
+                      funcReturn.streaming,
+                      funcReturn.return,
+                      false
+                    );
                   break;
                 case 2:
-                  if ('error' in funcReturn) callbacks[0](funcReturn.error, false);
-                  if ('return' in funcReturn)
-                    callbacks[0](funcReturn.streaming, funcReturn.return, false);
-                  if (funcReturn.streaming == 'row')
-                    callbacks[1](funcReturn.stream_index, funcReturn.stream_item, false);
+                  if ("error" in funcReturn)
+                    callbacks[0](funcReturn.error, false);
+                  if ("return" in funcReturn)
+                    callbacks[0](
+                      funcReturn.streaming,
+                      funcReturn.return,
+                      false
+                    );
+                  if (funcReturn.streaming == "row")
+                    callbacks[1](
+                      funcReturn.stream_index,
+                      funcReturn.stream_item,
+                      false
+                    );
                   break;
                 case 3:
-                  if ('error' in funcReturn) callbacks[0](funcReturn.error, false);
-                  if (funcReturn.streaming == 'start') callbacks[0](funcReturn.return, false);
-                  if (funcReturn.streaming == 'row')
-                    callbacks[1](funcReturn.stream_index, funcReturn.stream_item, false);
-                  if (funcReturn.streaming == 'end') callbacks[2](funcReturn.stream_empty, false);
+                  if ("error" in funcReturn)
+                    callbacks[0](funcReturn.error, false);
+                  if (funcReturn.streaming == "start")
+                    callbacks[0](funcReturn.return, false);
+                  if (funcReturn.streaming == "row")
+                    callbacks[1](
+                      funcReturn.stream_index,
+                      funcReturn.stream_item,
+                      false
+                    );
+                  if (funcReturn.streaming == "end")
+                    callbacks[2](funcReturn.stream_empty, false);
                   break;
                 case 4:
-                  if ('error' in funcReturn) callbacks[4](funcReturn.error, false);
-                  if (funcReturn.streaming == 'start') callbacks[0](funcReturn.return, false);
-                  if (funcReturn.streaming == 'row')
-                    callbacks[1](funcReturn.stream_index, funcReturn.stream_item, false);
-                  if (funcReturn.streaming == 'end') callbacks[2](funcReturn.stream_empty, false);
+                  if ("error" in funcReturn)
+                    callbacks[4](funcReturn.error, false);
+                  if (funcReturn.streaming == "start")
+                    callbacks[0](funcReturn.return, false);
+                  if (funcReturn.streaming == "row")
+                    callbacks[1](
+                      funcReturn.stream_index,
+                      funcReturn.stream_item,
+                      false
+                    );
+                  if (funcReturn.streaming == "end")
+                    callbacks[2](funcReturn.stream_empty, false);
                   break;
                 default:
-                  throw 'Too many callbacks for ' + funcReturn.funcName;
+                  throw "Too many callbacks for " + funcReturn.funcName;
               }
             } else {
-              throw 'No function callback defined for ' + funcReturn.funcName;
+              throw "No function callback defined for " + funcReturn.funcName;
             }
           } else {
             // todo: old style change later to similar code as streaming, second callback would be error
@@ -405,27 +459,34 @@ function JS2PyClient(serverName, clientPageId) {
 
             // New Code
             if (funcReturn.funcName in JS2PySelf.pythonMultipleCallbackDict) {
-              var callbacks = JS2PySelf.pythonMultipleCallbackDict[funcReturn.funcName];
+              var callbacks =
+                JS2PySelf.pythonMultipleCallbackDict[funcReturn.funcName];
               switch (callbacks.length) {
                 case 0:
                   break; // do nothing
                 case 1:
-                  if ('error' in funcReturn) callbacks[0](funcReturn.error, false);
-                  if ('return' in funcReturn) callbacks[0](funcReturn.return, false);
+                  if ("error" in funcReturn)
+                    callbacks[0](funcReturn.error, false);
+                  if ("return" in funcReturn)
+                    callbacks[0](funcReturn.return, false);
                   break;
                 case 2:
-                  if ('error' in funcReturn) callbacks[1](funcReturn.error, false);
-                  if ('return' in funcReturn) callbacks[0](funcReturn.return, false);
+                  if ("error" in funcReturn)
+                    callbacks[1](funcReturn.error, false);
+                  if ("return" in funcReturn)
+                    callbacks[0](funcReturn.return, false);
                   break;
                 case 3: // this case is when we have a server function that retuns either a stream or
                   // a normal return. So this case will handle the normal non-streaming return
                   // using the same callbacks of streaming
                   // in future think about passing a flag indicating whether this streaming call.
-                  if ('error' in funcReturn) callbacks[0](funcReturn.error, false);
-                  if ('return' in funcReturn) callbacks[0](funcReturn.return, false);
+                  if ("error" in funcReturn)
+                    callbacks[0](funcReturn.error, false);
+                  if ("return" in funcReturn)
+                    callbacks[0](funcReturn.return, false);
                   break;
                 default:
-                  throw 'Too many callbacks for ' + funcReturn.funcName;
+                  throw "Too many callbacks for " + funcReturn.funcName;
               }
             } else {
               /// OLD Code start here:
@@ -446,16 +507,16 @@ function JS2PyClient(serverName, clientPageId) {
                   funcFound.callback(funcReturn.return, true);
                 }
               } else {
-                throw 'No function defined for ' + funcReturn.funcName;
+                throw "No function defined for " + funcReturn.funcName;
               }
             }
           }
         }
       } else {
         var arr = new Uint8Array(e.data);
-        var hex = ' ';
+        var hex = " ";
         for (var i = 0; i < arr.length; i++) {
-          hex += ('00 ' + arr[i].toString(16)).substr(-2);
+          hex += ("00 " + arr[i].toString(16)).substr(-2);
         }
         var arrayBuffer = e.data;
         var bytes = new Uint8Array(arrayBuffer);
@@ -464,7 +525,7 @@ function JS2PyClient(serverName, clientPageId) {
         // if previous message had args isBinary true then read the queue to figure out which javascript callback function to call.
         if (JS2PySelf.binaryFunctionQueue.length > 0) {
           var javascriptFuncToCall = JS2PySelf.binaryFunctionQueue.shift();
-          javascriptFuncToCall.args['blob'] = blob;
+          javascriptFuncToCall.args["blob"] = blob;
           javascriptFuncToCall.callback(javascriptFuncToCall.args);
         } else {
           var reader = new FileReader();
@@ -472,9 +533,10 @@ function JS2PyClient(serverName, clientPageId) {
             imgFig.src = e.target.result;
           };
           reader.readAsDataURL(blob);
-          document.getElementById('StatusBar').innerHTML = 'Chart Loading Completed ...';
+          document.getElementById("StatusBar").innerHTML =
+            "Chart Loading Completed ...";
         }
-        console.log('message(b) received : ' + hex);
+        console.log("message(b) received : " + hex);
       }
 
       if (JS2PySelf.onmessageprocessed !== undefined) {
@@ -483,8 +545,8 @@ function JS2PyClient(serverName, clientPageId) {
     };
 
     this.socket.onclose = function (e) {
-      console.log('Connection to ' + serverConnectionString + ' closed.');
-      JS2PySelf.oncloseFunctions.forEach(fun => fun());
+      console.log("Connection to " + serverConnectionString + " closed.");
+      JS2PySelf.oncloseFunctions.forEach((fun) => fun());
       JS2PySelf.isOpen = false;
       this.socket = null;
       if (JS2PySelf.onclose !== undefined) {

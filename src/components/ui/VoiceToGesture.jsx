@@ -1,7 +1,7 @@
 import React from "react";
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
 import { SoundFilled } from "@ant-design/icons";
-import { MdOutlineReplay, MdFullscreen } from "react-icons/md";
+import { MdOutlineReplay, MdFullscreen, MdClear } from "react-icons/md";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import VoiceToGestureVideo from "./VoiceToGestureVideo";
 
@@ -18,6 +18,7 @@ export const VoiceToGesture = () => {
     handleStartSpeak,
     handleStopSpeak,
     handleRepeat,
+    handleResetTranscript,
   } = useSpeechRecognition();
 
   const toggleFullScreen = () => {
@@ -47,6 +48,7 @@ export const VoiceToGesture = () => {
         toggleFullScreen={toggleFullScreen}
         transcript={transcript}
         handleRepeat={handleRepeat}
+        handleResetTranscript={handleResetTranscript}
       />
       {fullScreen !== true && (
         <>
@@ -76,30 +78,43 @@ export const VoiceToGesture = () => {
               </Button>
             )}
 
-            <Button
-              type="primary"
-              className="mr-9 converter-btns"
-              shape="circle"
-              size="large"
-              onClick={handleRepeat}
-              icon={<MdOutlineReplay size={24} />}
-            />
+            <Tooltip title="Repeat" showArrow={false} placement="bottom">
+              <Button
+                type="primary"
+                className="mr-9 converter-btns"
+                shape="circle"
+                size="large"
+                onClick={handleRepeat}
+                icon={<MdOutlineReplay size={24} />}
+              />
+            </Tooltip>
 
-            <Button
-              type="primary"
-              className="converter-btns"
-              danger
-              shape="circle"
-              size="large"
-              onClick={toggleFullScreen}
-              icon={<MdFullscreen size={24} />}
-            />
+            <Tooltip title="Reset" showArrow={false} placement="bottom">
+              <Button
+                type="primary"
+                className="mr-9 converter-btns"
+                shape="circle"
+                size="large"
+                onClick={handleResetTranscript}
+                icon={<MdClear size={24} />}
+              />
+            </Tooltip>
+
+            <Tooltip title="Full Screen" showArrow={false} placement="bottom">
+              <Button
+                type="primary"
+                className="converter-btns"
+                danger
+                shape="circle"
+                size="large"
+                onClick={toggleFullScreen}
+                icon={<MdFullscreen size={24} />}
+              />
+            </Tooltip>
           </div>
 
           <div className="pt-4">
-            <p>
-              {transcript ? transcript : "Your Transcript will appear here"}
-            </p>
+            <p>{transcript}</p>
           </div>
         </>
       )}

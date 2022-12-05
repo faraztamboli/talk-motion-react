@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import Spinner from "./components/ui/Spinner";
 import ServerError from "./components/ui/ServerError";
 import Error from "./pages/404Error/404Error";
-import connectToServer from "./hooks/useConnectToServer";
+import useConnectToServer from "./hooks/useConnectToServer";
 import useAuthStatus from "./hooks/useAuthStatus";
 import useResizeEvent from "./hooks/useResizeEvent";
 
@@ -38,7 +38,7 @@ const App = () => {
   const location = useLocation();
 
   // connect to server;
-  connectToServer();
+  useConnectToServer();
 
   // check if user is logged in
   useAuthStatus();
