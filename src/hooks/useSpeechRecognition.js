@@ -84,7 +84,7 @@ function useSpeechRecognitionHook() {
     getVideo(getWords(transcript));
   };
 
-  console.log(video);
+  // console.log(video);
 
   return {
     transcript,

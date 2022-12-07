@@ -15,9 +15,28 @@ function AppLayout(props) {
         collapsedWidth={props.collapsedWidth}
       />
       <Layout>
-        <Header collapsed={props.collapsed} onCollapsed={props.onCollapsed} />
+        <Header
+          collapsed={props.collapsed}
+          onCollapsed={props.onCollapsed}
+          sideBarWidth={props.sideBarWidth}
+          collapsedWidth={props.collapsedWidth}
+        />
         <div className="site-layout-background" style={{ minHeight: 360 }}>
-          <Layout>{props.children}</Layout>
+          <Layout
+            style={
+              props.collapsed
+                ? {
+                    marginLeft: props.collapsedWidth,
+                    transition: "all .20s ease-in-out",
+                  }
+                : {
+                    marginLeft: props.sideBarWidth,
+                    transition: "all .20s ease-in-out",
+                  }
+            }
+          >
+            {props.children}
+          </Layout>
         </div>
         <Footer />
       </Layout>

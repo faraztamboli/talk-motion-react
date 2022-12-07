@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../app/features/loginSlice";
 import JS2Py from "../remotepyjs";
 import useLocalStorage from "./useLocalStorage";
+// eslint-disable-next-line
 import regeneratorRuntime from "regenerator-runtime";
 
 function useAuthStatus() {
@@ -14,7 +15,7 @@ function useAuthStatus() {
 
   const isLoggedIn = async (token) => {
     try {
-      console.log(token);
+      // console.log(token);
 
       JS2Py.PythonFunctions.SessionServer.startSessionIfNotStarted(
         token,
@@ -38,15 +39,6 @@ function useAuthStatus() {
   useEffect(() => {
     isLoggedIn(token);
   }, [token]);
-
-  // useEffect(() => {
-  //   // const sessionId = getSessionId();
-  //   // const isLoggedIn = async () => {
-  //   isLoggedIn(token);
-  //   // };
-  //   // isLoggedIn();
-  //   //eslint-disable-next-line
-  // }, [loggedIn]);
 
   return { loggedIn, checkingStatus };
 }

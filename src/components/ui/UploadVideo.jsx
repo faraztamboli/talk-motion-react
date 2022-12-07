@@ -5,7 +5,10 @@ import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
 
 const CollectionCreateForm = (props) => {
   const { normFile } = useUploadGestureVideo();
+  // const { getVideo } = useSpeechRecognition2();
   const [form] = Form.useForm();
+
+  // getVideo("hello how are you");
 
   return (
     <Modal

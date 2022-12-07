@@ -19,9 +19,10 @@ function VoiceToGestureVideo(props) {
     handleRepeat,
     transcript,
     handleResetTranscript,
+    buttonSize,
+    buttonStyle,
+    iconSize,
   } = props;
-
-  // console.log(fullScreen);
 
   return (
     <>
@@ -33,7 +34,7 @@ function VoiceToGestureVideo(props) {
           onOk={() => setFullScreen(false)}
           onCancel={() => setFullScreen(false)}
           footer={null}
-          width={"75%"}
+          width={props.md ? "100%" : "75%"}
         >
           <video
             src={video && videoSrc(video)}
@@ -47,27 +48,29 @@ function VoiceToGestureVideo(props) {
             }}
           ></video>
 
-          <div className="flex align-items-center">
+          <div className="flex align-items-center" style={{ flexWrap: "wrap" }}>
             {isRecording ? (
               <Button
+                style={buttonStyle}
                 className="mr-10 converter-btns"
                 type="primary"
                 shape="round"
-                size="large"
+                size={buttonSize}
                 danger
                 onClick={handleStopSpeak}
-                icon={<SoundFilled size={24} />}
+                icon={<SoundFilled size={iconSize} />}
               >
                 <span className="">Stop</span>
               </Button>
             ) : (
               <Button
+                style={buttonStyle}
                 className="mr-10 converter-btns"
                 type="primary"
                 shape="round"
-                size="large"
+                size={buttonSize}
                 onClick={handleStartSpeak}
-                icon={<SoundFilled size={24} />}
+                icon={<SoundFilled size={iconSize} />}
               >
                 <span className="">Speak</span>
               </Button>
@@ -75,35 +78,38 @@ function VoiceToGestureVideo(props) {
 
             <Tooltip title="Repeat" showArrow={false} placement="bottom">
               <Button
+                style={buttonStyle}
                 type="primary"
                 className="mr-9 converter-btns"
                 shape="circle"
-                size="large"
+                size={buttonSize}
                 onClick={handleRepeat}
-                icon={<MdOutlineReplay size={24} />}
+                icon={<MdOutlineReplay size={iconSize} />}
               />
             </Tooltip>
 
             <Tooltip title="Reset" showArrow={false} placement="bottom">
               <Button
+                style={buttonStyle}
                 type="primary"
                 className="mr-9 converter-btns"
                 shape="circle"
-                size="large"
+                size={buttonSize}
                 onClick={handleResetTranscript}
-                icon={<MdClear size={24} />}
+                icon={<MdClear size={iconSize} />}
               />
             </Tooltip>
 
             <Tooltip title="Full Screen" showArrow={false} placement="bottom">
               <Button
+                style={buttonStyle}
                 type="primary"
                 className="converter-btns"
                 danger
                 shape="circle"
-                size="large"
+                size={buttonSize}
                 onClick={toggleFullScreen}
-                icon={<MdFullscreenExit size={24} />}
+                icon={<MdFullscreenExit size={iconSize} />}
               />
             </Tooltip>
           </div>

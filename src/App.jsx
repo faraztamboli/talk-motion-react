@@ -28,7 +28,7 @@ const ForgotPassword = React.lazy(() =>
 // const { Content } = Layout;
 
 const App = () => {
-  const { collapsed, collapsedWidth, onCollapsed, sideBarWidth, md } =
+  const { collapsed, collapsedWidth, onCollapsed, sideBarWidth, md, sm } =
     useResizeEvent();
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const isServerConnected = useSelector(
@@ -56,10 +56,17 @@ const App = () => {
             <Route
               index
               path="/"
-              element={<Converter collapsedWidth={collapsedWidth} />}
+              element={
+                <Converter sm={sm} md={md} collapsedWidth={collapsedWidth} />
+              }
             />
             {/* <Route exact path="/converter" element={<PrivateRoute />}> */}
-            <Route path="/converter" element={<Converter />} />
+            <Route
+              path="/converter"
+              element={
+                <Converter sm={sm} md={md} collapsedWidth={collapsedWidth} />
+              }
+            />
             {/* </Route> */}
             <Route
               path="trainer"
@@ -68,7 +75,7 @@ const App = () => {
                 <React.Suspense
                   fallback={<Spinner size="large" pageSize="large" />}
                 >
-                  <Trainer collapsedWidth={collapsedWidth} />
+                  <Trainer collapsedWidth={collapsedWidth} sm={sm} />
                 </React.Suspense>
               }
             />
@@ -79,7 +86,7 @@ const App = () => {
                 <React.Suspense
                   fallback={<Spinner size="large" pageSize="large" />}
                 >
-                  <Models collapsedWidth={collapsedWidth} />
+                  <Models collapsedWidth={collapsedWidth} sm={sm} />
                 </React.Suspense>
               }
             />

@@ -5,15 +5,14 @@ import { TrainerControl } from "../../components/ui/TrainerControl";
 import { GestureToVoice } from "../../components/ui/GestureToVoice";
 
 export default function Trainer(props) {
+  const cardBodyStyle = props.sm ? { padding: "5px" } : null;
+  const trainerStyle = props.sm
+    ? { backgroundColor: "#E5E5E5", padding: "5px", minHeight: "100vh" }
+    : { backgroundColor: "#E5E5E5", padding: "24px", minHeight: "100vh" };
+
   return (
     <>
-      <div
-        style={
-          props.collapseWidth === 0
-            ? { backgroundColor: "#E5E5E5", padding: 8, minHeight: "100vh" }
-            : { backgroundColor: "#E5E5E5", padding: 24, minHeight: "100vh" }
-        }
-      >
+      <div style={trainerStyle}>
         <Row gutter={[16, 16]}>
           <Col span={8} xs={24} md={8}>
             <ModelsDropdown />
@@ -21,12 +20,12 @@ export default function Trainer(props) {
         </Row>
         <Row gutter={[16, 16]} className="mt-8">
           <Col span={12} xs={24} md={12}>
-            <Card className="converter-cards">
+            <Card className="converter-cards" bodyStyle={cardBodyStyle}>
               <GestureToVoice from="trainer" />
             </Card>
           </Col>
           <Col span={12} xs={24} md={12}>
-            <Card className="converter-cards">
+            <Card className="converter-cards" bodyStyle={cardBodyStyle}>
               <TrainerControl />
             </Card>
           </Col>

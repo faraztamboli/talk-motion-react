@@ -61,12 +61,14 @@ const CollectionCreateForm = (props) => {
   );
 };
 
-const App = () => {
+const App = (props) => {
   const [open, setOpen] = useState(false);
   const { createNewModel } = useModels();
 
+  const btnStyle = props.sm ? "medium" : "large";
+  const iconSize = props.sm ? 20 : 24;
+
   const onCreate = (values) => {
-    console.log("Received values of form: ", values);
     createNewModel(values.title, values.description);
     setOpen(false);
   };
@@ -76,9 +78,9 @@ const App = () => {
       <Button
         className="flex flex-center-center converter-btns"
         type="primary"
-        size="large"
+        size={btnStyle}
         shape="round"
-        icon={<MdOutlineNewLabel size={24} />}
+        icon={<MdOutlineNewLabel size={iconSize} />}
         onClick={() => {
           setOpen(true);
         }}

@@ -6,15 +6,10 @@ import { VoiceToGesture } from "../../components/ui/VoiceToGesture";
 import { GestureToVoice } from "../../components/ui/GestureToVoice";
 
 const Converter = (props) => {
+  const cardBodyStyle = props.sm ? { padding: "5px" } : null;
   return (
     <>
-      <div
-        style={
-          props.collapseWidth === 0
-            ? { backgroundColor: "#E5E5E5", padding: 8, minHeight: "100vh" }
-            : { backgroundColor: "#E5E5E5", padding: 24, minHeight: "100vh" }
-        }
-      >
+      <div className="converter-content">
         <Row gutter={[16, 16]}>
           <Col span={8} xs={24} md={8}>
             <ModelsDropdown />
@@ -26,12 +21,12 @@ const Converter = (props) => {
         </Row>
         <Row gutter={[16, 16]} className="mt-8">
           <Col span={12} xs={24} md={12}>
-            <Card className="converter-cards">
-              <VoiceToGesture />
+            <Card className="converter-cards" bodyStyle={cardBodyStyle}>
+              <VoiceToGesture sm={props.sm} md={props.md} />
             </Card>
           </Col>
           <Col span={12} xs={24} md={12}>
-            <Card className="converter-cards">
+            <Card className="converter-cards" bodyStyle={cardBodyStyle}>
               <GestureToVoice from="converter" />
             </Card>
           </Col>

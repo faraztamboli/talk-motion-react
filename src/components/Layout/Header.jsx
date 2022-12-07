@@ -3,13 +3,31 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Layout, Row, Col } from "antd";
 import { UserMenu } from "../ui/UserMenu";
 
-const Header = ({ collapsed, onCollapsed }) => {
+const Header = (props) => {
   return (
     <Layout.Header
       className="site-layout-background"
-      style={{
-        padding: 0,
-      }}
+      style={
+        props.collapsed
+          ? {
+              padding: 0,
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
+              width: "auto",
+              marginLeft: props.collapsedWidth,
+              transition: "all .10s ease-in-out",
+            }
+          : {
+              padding: 0,
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
+              width: "auto",
+              marginLeft: props.sideBarWidth,
+              transition: "all .30s ease-in-out",
+            }
+      }
     >
       <Row
         className="pl-4 pr-5"
@@ -19,10 +37,10 @@ const Header = ({ collapsed, onCollapsed }) => {
       >
         <Col>
           {React.createElement(
-            collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+            props.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
             {
               className: "trigger",
-              onClick: () => onCollapsed(),
+              onClick: () => props.onCollapsed(),
             }
           )}
         </Col>

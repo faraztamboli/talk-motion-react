@@ -8,29 +8,21 @@ import useModels from "../../hooks/useModels";
 export default function Models(props) {
   const { publicModels, userModels, loading } = useModels();
 
-  console.log("public", publicModels, "user", userModels);
+  const modelStyle = props.sm
+    ? { backgroundColor: "#E5E5E5", padding: "15px", minHeight: "100vh" }
+    : { backgroundColor: "#E5E5E5", padding: "24px", minHeight: "100vh" };
 
   return (
     <>
-      <div
-        style={
-          props.collapseWidth === 0
-            ? { backgroundColor: "#E5E5E5", padding: 8, minHeight: "100vh" }
-            : { backgroundColor: "#E5E5E5", padding: 24, minHeight: "100vh" }
-        }
-      >
+      <div style={modelStyle}>
         <h2>Public Models</h2>
         <Row gutter={[16, 16]} style={{ marginBottom: "3rem" }}>
           {loading !== true
             ? publicModels
               ? publicModels.map((model) => {
                   return (
-                    <Col key={model.model_id} span={8}>
-                      <ModelsCard
-                        model={model}
-                        collapsedWidth={props.collapsedWidth}
-                        key={model.key}
-                      />
+                    <Col key={model.model_id} span={8} xs={24} md={8}>
+                      <ModelsCard model={model} key={model.key} />
                     </Col>
                   );
                 })
@@ -44,7 +36,7 @@ export default function Models(props) {
             ? userModels
               ? userModels.map((model) => {
                   return (
-                    <Col key={model.model_id} span={8}>
+                    <Col key={model.model_id} span={8} xs={24} md={8}>
                       <ModelsCard
                         model={model}
                         collapsedWidth={props.collapsedWidth}
@@ -57,7 +49,7 @@ export default function Models(props) {
             : "Loading"}
         </Row>
         <div className="flex flex-center-center mt-10">
-          <NewModel />
+          <NewModel sm={props.sm} />
         </div>
       </div>
     </>

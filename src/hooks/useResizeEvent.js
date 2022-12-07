@@ -6,6 +6,7 @@ function useResizeEvent() {
   const [sideBarWidth, setSideBarWidth] = React.useState(200);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
   const [md, setMd] = React.useState(false);
+  const [sm, setSm] = React.useState(false);
 
   const onCollapsed = () => {
     setCollapsed(!collapsed);
@@ -17,11 +18,13 @@ function useResizeEvent() {
     } else if (windowWidth > 768) {
       setMd(false);
     }
-    if (windowWidth < 576) {
+    if (windowWidth <= 576) {
+      setSm(true);
       setCollapsedWidth(0);
       setSideBarWidth(60);
       setCollapsed(true);
     } else if (windowWidth > 576) {
+      setSm(false);
       setCollapsedWidth(60);
       setSideBarWidth(200);
     }
@@ -43,7 +46,7 @@ function useResizeEvent() {
     });
   }, [windowWidth, collapsedWidth]);
 
-  return { collapsed, collapsedWidth, onCollapsed, sideBarWidth, md };
+  return { collapsed, collapsedWidth, onCollapsed, sideBarWidth, md, sm };
 }
 
 export default useResizeEvent;

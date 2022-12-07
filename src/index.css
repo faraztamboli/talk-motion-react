@@ -675,9 +675,21 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
   border-radius: 16px;
 }
 
+.converter-content {
+  background-color: #E5E5E5 !important;
+  padding: 24px !important;
+  min-height: 100vh !important;
+}
+
+@media screen and (max-width: 576px) {
+  .converter-content {
+    padding: 2px !important;
+  }
+}
+
 .converter-cards {
   background: #FFFFFF;
-  box-shadow: 0px 4px 18px rgba(129, 123, 123, 0.32) !important;
+  box-shadow: 0px 4px 18px rgba(222, 231, 237, 0.46) !important;
   border-radius: 6px;
 }
 
@@ -687,6 +699,12 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 .trainer-btns {
   padding: 0 4rem !important;
+}
+
+@media screen and (max-width: 1078px) {
+  .trainer-btns {
+    padding: 0 1.5rem !important;
+  }
 }
 
 /* Models Page Styling */

@@ -5,7 +5,7 @@ import { MdOutlineReplay, MdFullscreen, MdClear } from "react-icons/md";
 import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 import VoiceToGestureVideo from "./VoiceToGestureVideo";
 
-export const VoiceToGesture = () => {
+export const VoiceToGesture = (props) => {
   const [fullScreen, setFullScreen] = React.useState(false);
   const {
     transcript,
@@ -20,6 +20,10 @@ export const VoiceToGesture = () => {
     handleRepeat,
     handleResetTranscript,
   } = useSpeechRecognition();
+
+  const buttonSize = props.md ? "medium" : "large";
+  const iconSize = props.md ? 20 : 24;
+  const buttonStyle = props.md ? { marginBottom: "1rem" } : null;
 
   const toggleFullScreen = () => {
     setFullScreen(!fullScreen);
@@ -49,30 +53,37 @@ export const VoiceToGesture = () => {
         transcript={transcript}
         handleRepeat={handleRepeat}
         handleResetTranscript={handleResetTranscript}
+        buttonSize={buttonSize}
+        buttonStyle={buttonStyle}
+        iconSize={iconSize}
+        md={props.md}
+        sm={props.sm}
       />
       {fullScreen !== true && (
         <>
-          <div className="flex align-items-center">
+          <div className="flex align-items-center" style={{ flexWrap: "wrap" }}>
             {isRecording ? (
               <Button
-                className="mr-10 converter-btns"
+                style={buttonStyle}
+                className="mr-6 converter-btns"
                 type="primary"
                 shape="round"
-                size="large"
+                size={buttonSize}
                 danger
                 onClick={handleStopSpeak}
-                icon={<SoundFilled size={24} />}
+                icon={<SoundFilled size={iconSize} />}
               >
                 <span className="">Stop</span>
               </Button>
             ) : (
               <Button
-                className="mr-10 converter-btns"
+                style={buttonStyle}
+                className="mr-6 converter-btns"
                 type="primary"
                 shape="round"
-                size="large"
+                size={buttonSize}
                 onClick={handleStartSpeak}
-                icon={<SoundFilled size={24} />}
+                icon={<SoundFilled size={iconSize} />}
               >
                 <span className="">Speak</span>
               </Button>
@@ -80,41 +91,44 @@ export const VoiceToGesture = () => {
 
             <Tooltip title="Repeat" showArrow={false} placement="bottom">
               <Button
+                style={buttonStyle}
                 type="primary"
-                className="mr-9 converter-btns"
+                className="mr-6 converter-btns"
                 shape="circle"
-                size="large"
-                onClick={handleRepeat}
-                icon={<MdOutlineReplay size={24} />}
+                size={buttonSize}
+                onClick={video && video.length !== 0 && handleRepeat}
+                icon={<MdOutlineReplay size={iconSize} />}
               />
             </Tooltip>
 
             <Tooltip title="Reset" showArrow={false} placement="bottom">
               <Button
+                style={buttonStyle}
                 type="primary"
-                className="mr-9 converter-btns"
+                className="mr-6 converter-btns"
                 shape="circle"
-                size="large"
+                size={buttonSize}
                 onClick={handleResetTranscript}
-                icon={<MdClear size={24} />}
+                icon={<MdClear size={iconSize} />}
               />
             </Tooltip>
 
             <Tooltip title="Full Screen" showArrow={false} placement="bottom">
               <Button
+                style={buttonStyle}
                 type="primary"
                 className="converter-btns"
                 danger
                 shape="circle"
-                size="large"
+                size={buttonSize}
                 onClick={toggleFullScreen}
-                icon={<MdFullscreen size={24} />}
+                icon={<MdFullscreen size={iconSize} />}
               />
             </Tooltip>
           </div>
 
           <div className="pt-4">
-            <p>{transcript}</p>
+            <p>{transcript ? transcript : "Transcript"}</p>
           </div>
         </>
       )}
