@@ -7,6 +7,7 @@ import useResizeEvent from "./hooks/useResizeEvent";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import ContactUs from "./pages/ContactUs";
 import About from "./pages/About";
+import Payment from "./pages/Payment";
 
 function App() {
   const { sm, md, lg } = useResizeEvent();
@@ -18,6 +19,7 @@ function App() {
       <Route path="/about" element={<About md={md} />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy md={md} />} />
       <Route path="/contact-us" element={<ContactUs md={md} />} />
+      <Route path="/payment" element={<Payment md={md} />} />
     </Routes>
   );
 }

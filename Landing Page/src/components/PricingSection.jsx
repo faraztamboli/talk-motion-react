@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Col, Row } from "antd";
+import { Link } from "react-router-dom";
 
 function PricingSection() {
   return (
@@ -16,7 +17,7 @@ function PricingSection() {
                   <strong>Free</strong>
                   <p>Lorem ipsum dolor sit, amet consectetur</p>
                   <Button shape="round" size="large" className="card-btn">
-                    Order Now
+                    <Link to={"/payment"}>Order Now</Link>
                   </Button>
                 </div>
               </div>
@@ -31,7 +32,7 @@ function PricingSection() {
                   <span className="pricing-span">/month</span>
                   <p>Lorem ipsum dolor sit, amet consectetur</p>
                   <Button shape="round" size="large" className="card-btn">
-                    Order Now
+                    <Link to={"/payment"}>Order Now</Link>
                   </Button>
                 </div>
               </div>
@@ -45,7 +46,7 @@ function PricingSection() {
                   <strong>__.__</strong>
                   <p>Lorem ipsum dolor sit, amet consectetur</p>
                   <Button shape="round" size="large" className="card-btn">
-                    Contact Now
+                    <Link to={"/payment"}>Order Now</Link>
                   </Button>
                 </div>
               </div>
