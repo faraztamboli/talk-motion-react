@@ -68,17 +68,18 @@ const App = () => {
               }
             />
             {/* </Route> */}
-            <Route
-              path="trainer"
-              exact
-              element={
-                <React.Suspense
-                  fallback={<Spinner size="large" pageSize="large" />}
-                >
-                  <Trainer collapsedWidth={collapsedWidth} sm={sm} />
-                </React.Suspense>
-              }
-            />
+            <Route element={<PrivateRoute />}>
+              <Route
+                path="trainer"
+                element={
+                  <React.Suspense
+                    fallback={<Spinner size="large" pageSize="large" />}
+                  >
+                    <Trainer collapsedWidth={collapsedWidth} sm={sm} />
+                  </React.Suspense>
+                }
+              />
+            </Route>
             <Route
               path="models"
               exact="exact"

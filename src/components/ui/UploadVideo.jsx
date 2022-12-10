@@ -77,7 +77,11 @@ const App = () => {
       type: "video/*",
     });
     console.log(blob);
-    uploadVideo(values.word, values.dragger[0].name, blob);
+    uploadVideo(
+      values.word,
+      values.dragger[0].name,
+      values.dragger[0].originFileObj
+    );
     setOpen(false);
   };
 

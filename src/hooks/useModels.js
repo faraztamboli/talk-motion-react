@@ -11,6 +11,7 @@ function useModels() {
   React.useEffect(() => {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.getPublicModels((res) => {
+        console.log(res);
         setPublicModels(res);
         setLoading(false);
       });
@@ -22,6 +23,7 @@ function useModels() {
   React.useEffect(() => {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(token, (res) => {
+        console.log(res);
         setUserModels(res);
         setLoading(false);
       });

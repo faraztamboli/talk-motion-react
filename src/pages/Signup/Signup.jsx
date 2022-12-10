@@ -2,12 +2,12 @@ import React from "react";
 import { Layout, Row, Col, Button, Input, Form, Space } from "antd";
 import { LockFilled, UserOutlined, MailFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import {
-  formItemLayout,
-  tailFormItemLayout,
-} from "../../data/signupFormLayout";
-import { validateCountryName } from "../../data/countries";
-import JS2Py from "../../remotepyjs";
+// import {
+//   formItemLayout,
+//   tailFormItemLayout,
+// } from "../../data/signupFormLayout";
+// import { validateCountryName } from "../../data/countries";
+// import JS2Py from "../../remotepyjs";
 import SignupLogic from "./SignupLogic";
 import AuthPagesCol from "../../components/ui/AuthPagesCol";
 
@@ -116,7 +116,7 @@ const Signup = (props) => {
                     placeholder="password"
                     size="large"
                     type="password"
-                    autoComplete="password"
+                    // autoComplete="password"
                     style={{
                       outline: "none",
                       border: "2px solid #EEEEEE",
@@ -126,7 +126,7 @@ const Signup = (props) => {
                 </Form.Item>
 
                 <Form.Item
-                  name="password"
+                  name="confirm password"
                   rules={[
                     {
                       required: true,
@@ -144,7 +144,7 @@ const Signup = (props) => {
                     placeholder="confirm password"
                     size="large"
                     type="password"
-                    autoComplete="password"
+                    // autoComplete="password"
                     style={{
                       outline: "none",
                       border: "2px solid #EEEEEE",

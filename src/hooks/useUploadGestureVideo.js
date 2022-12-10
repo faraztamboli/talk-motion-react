@@ -14,7 +14,7 @@ function useUploadGestureVideo() {
 
   const uploadVideo = (word, video_name, video) => {
     try {
-      JS2Py.PythonFunctions.TalkMotionServer.addWordToVideoMapping(
+      JS2Py.PythonFunctions.TalkMotionServer.addWordToVideoURLMapping(
         word,
         video,
         (res) => console.log(res)
