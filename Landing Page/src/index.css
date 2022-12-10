@@ -483,11 +483,25 @@ code {
   border: 2px solid #000000;
 }
 
+.card-btn:hover {
+  border: 2px solid rgb(96 176 244) !important;
+}
+
 /* Stories Section Styling */
 .stories-section {
     padding-top: 8.125rem;
     padding-bottom: 9.125rem;
 }
+.stories-link {
+  color: rgb(96 176 244) !important;
+  text-decoration: none;
+}
+.stories-link:hover, .stories-card-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+
 .card.stories-card h4 {
     margin-top: 20px;
 }
@@ -991,6 +1005,12 @@ footer .copyright p {
   align-items: center;
   padding: 24px;
   justify-content: center;
+  position: relative;
+}
+
+.payment-container {
+  max-width: 700px !important;
+  width: 90% !important;
 }
 
 .purchase-model-list h2 {
@@ -1072,6 +1092,7 @@ footer .copyright p {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   min-height: 85vh;
 }
 

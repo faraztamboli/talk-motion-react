@@ -34,9 +34,9 @@ function Header(props) {
           <Link to="/guide" className="home-header-links">
             Features
           </Link>
-          <a href="#pricing" className="home-header-links">
+          <Link href="#pricing" className="home-header-links">
             Pricing
-          </a>
+          </Link>
           <Link to="/contact-us" className="home-header-links">
             Contact Us
           </Link>

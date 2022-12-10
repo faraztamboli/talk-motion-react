@@ -20,6 +20,7 @@ function App() {
       <Route path="/privacy-policy" element={<PrivacyPolicy md={md} />} />
       <Route path="/contact-us" element={<ContactUs md={md} />} />
       <Route path="/payment" element={<Payment md={md} />} />
+      <Route path="*" element={<h2>Page not found</h2>} />
     </Routes>
   );
 }

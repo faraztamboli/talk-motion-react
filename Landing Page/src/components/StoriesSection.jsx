@@ -12,7 +12,9 @@ function StoriesSection() {
       <div className="container">
         <div className="stories-section-heading-div">
           <h2>Our Stories</h2>
-          <Link to="/">View More Stories</Link>
+          <Link to="/" className="stories-link">
+            View More Stories
+          </Link>
         </div>
 
         <Row className="stories-card-div">
@@ -24,7 +26,7 @@ function StoriesSection() {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Cupiditate tenetur quibusdam iste.
               </p>
-              <strong>Read more &gt;</strong>
+              <strong className="stories-card-link">Read more &gt;</strong>
             </div>
           </Col>
 
@@ -36,7 +38,7 @@ function StoriesSection() {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Cupiditate tenetur quibusdam iste.
               </p>
-              <strong>Read more &gt;</strong>
+              <strong className="stories-card-link">Read more &gt;</strong>
             </div>
           </Col>
 
@@ -48,7 +50,7 @@ function StoriesSection() {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Cupiditate tenetur quibusdam iste.
               </p>
-              <strong>Read more &gt;</strong>
+              <strong className="stories-card-link">Read more &gt;</strong>
             </div>
           </Col>
         </Row>

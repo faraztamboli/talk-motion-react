@@ -16,9 +16,11 @@ function PricingSection() {
                   <h6>Personal Use</h6>
                   <strong>Free</strong>
                   <p>Lorem ipsum dolor sit, amet consectetur</p>
-                  <Button shape="round" size="large" className="card-btn">
-                    <Link to={"/payment"}>Order Now</Link>
-                  </Button>
+                  <Link to={"/payment"} className="card-btn-link">
+                    <Button shape="round" size="large" className="card-btn">
+                      Order Now
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </Col>
@@ -31,9 +33,11 @@ function PricingSection() {
                   <strong>19.95</strong>
                   <span className="pricing-span">/month</span>
                   <p>Lorem ipsum dolor sit, amet consectetur</p>
-                  <Button shape="round" size="large" className="card-btn">
-                    <Link to={"/payment"}>Order Now</Link>
-                  </Button>
+                  <Link to={"/payment"} className="card-btn-link">
+                    <Button shape="round" size="large" className="card-btn">
+                      Order Now
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </Col>
@@ -45,9 +49,11 @@ function PricingSection() {
                   <span className="pricing-span">$</span>
                   <strong>__.__</strong>
                   <p>Lorem ipsum dolor sit, amet consectetur</p>
-                  <Button shape="round" size="large" className="card-btn">
-                    <Link to={"/payment"}>Order Now</Link>
-                  </Button>
+                  <Link to={"/payment"} className="card-btn-link">
+                    <Button shape="round" size="large" className="card-btn">
+                      Order Now
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </Col>
