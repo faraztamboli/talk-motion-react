@@ -1,25 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Row, Col, Input } from "antd";
-import UploadVideo from "../../components/ui/UploadVideo";
+import { Link } from "react-router-dom";
+import useLeapMotion from "../../hooks/useLeapMotion";
 
 const { TextArea } = Input;
 
-export const TrainerControl = () => {
-  const [trainingText /*setTrainingText*/] = React.useState(
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-  );
+export const TrainerControl = (props) => {
   const [collectionText, setCollectionText] = React.useState("");
-  const [isRecording, setIsRecording] = React.useState(false);
+  const [paused, setPaused] = React.useState(false);
   const [isTraining, setIsTraining] = React.useState(false);
+  const { init, getComponentDetails } = useLeapMotion();
+
+  init();
+
   const loadings = () => {};
   const handleCollectionTextChange = () => (e) => {
     setCollectionText(e.target.value);
   };
-  const speak = () => {
-    setIsRecording(!isRecording);
-  };
-  const stopSpeak = () => {
-    setIsRecording(!isRecording);
+  const togglePause = () => {
+    setPaused(!paused);
   };
   const train = () => {
     setIsTraining(!isTraining);
@@ -27,6 +26,11 @@ export const TrainerControl = () => {
   const stopTrain = () => {
     setIsTraining(!isTraining);
   };
+
+  useEffect(() => {
+    getComponentDetails(paused, true, props.modalId, collectionText);
+  }, [paused]);
+
   return (
     <div>
       <h2 className="mb-0">Controls</h2>
@@ -40,14 +44,14 @@ export const TrainerControl = () => {
         />
         <Row gutter={[16, 16]} className="mt-4 flex flex-center-center">
           <Col span={12}>
-            {isRecording ? (
+            {paused ? (
               <Button
                 className="trainer-btns converter-btns"
                 type="primary"
                 danger
                 shape="round"
                 loading={loadings[0]}
-                onClick={() => stopSpeak(0)}
+                onClick={() => togglePause()}
               >
                 <span className="ml-2">Pause</span>
               </Button>
@@ -57,7 +61,7 @@ export const TrainerControl = () => {
                 type="primary"
                 shape="round"
                 loading={loadings[1]}
-                onClick={() => speak(1)}
+                onClick={() => togglePause()}
               >
                 <span className="ml-2">Collect</span>
               </Button>
@@ -96,7 +100,12 @@ export const TrainerControl = () => {
         </div>
 
         <div className="upload-video mt-4">
-          <UploadVideo />
+          {/* <UploadVideo /> */}
+          <Link to="/uploadvideo">
+            <Button type="primary" shape="round" className="converter-btns">
+              Upload Video
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

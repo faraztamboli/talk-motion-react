@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoggedIn: false,
@@ -8,7 +8,7 @@ const initialState = {
 
 // create login action with redux-toolkit
 export const loginSlice = createSlice({
-  name: 'login',
+  name: "login",
   initialState,
   reducers: {
     login: (state, action) => {
@@ -16,7 +16,7 @@ export const loginSlice = createSlice({
       state.token = action.payload.token;
       state.user = action.payload.user;
     },
-    logout: state => {
+    logout: (state) => {
       state.isLoggedIn = false;
       state.token = null;
       state.user = null;

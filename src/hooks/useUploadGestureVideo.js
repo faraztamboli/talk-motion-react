@@ -12,16 +12,19 @@ function useUploadGestureVideo() {
     return e?.fileList;
   };
 
-  const uploadVideo = (word, video_name, video) => {
+  const uploadGestureVideoURL = (word, url) => {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.addWordToVideoURLMapping(
         word,
-        video,
+        url,
         (res) => console.log(res)
       );
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const uploadVideo = (word, video_name, video) => {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.uploadGestureVideo(
         word,
@@ -34,7 +37,7 @@ function useUploadGestureVideo() {
     }
   };
 
-  return { normFile, uploadVideo };
+  return { normFile, uploadGestureVideoURL, uploadVideo };
 }
 
 export default useUploadGestureVideo;

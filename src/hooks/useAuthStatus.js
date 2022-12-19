@@ -13,20 +13,13 @@ function useAuthStatus() {
   const dispatch = useDispatch();
   const loggedIn = useSelector((state) => state.login.isLoggedIn);
 
-  const isLoggedIn = (token) => {
+  function isLoggedIn() {
     try {
-      console.log(token);
-
-      JS2Py.PythonFunctions.SessionServer.startSessionIfNotStarted(
-        token,
-        (res) => console.log(res)
-      );
-
-      JS2Py.PythonFunctions.SessionServer.isLoggedIn(token, (res) => {
+      JS2Py.PythonFunctions.SessionServer.isLoggedIn(token, function (res) {
         console.log(res);
-        if (res.isLoggedIn === true) {
+        if (res?.isLoggedIn === true) {
           dispatch(login({ token: token, user: "admin" }));
-        } else if (res.isLoggedIn === false) {
+        } else if (res?.isLoggedIn === false) {
           dispatch(logout());
         }
         setCheckingStatus(false);
@@ -34,11 +27,11 @@ function useAuthStatus() {
     } catch (err) {
       // console.log(err);
     }
-  };
+  }
 
   useEffect(() => {
-    isLoggedIn(token);
-  }, [token, loggedIn]);
+    isLoggedIn();
+  }, [window.location.pathname]);
 
   return { loggedIn, checkingStatus };
 }

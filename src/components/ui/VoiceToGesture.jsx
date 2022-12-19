@@ -8,6 +8,7 @@ import VoiceToGestureVideo from "./VoiceToGestureVideo";
 export const VoiceToGesture = (props) => {
   const [fullScreen, setFullScreen] = React.useState(false);
   const {
+    loading,
     transcript,
     video,
     setVideo,
@@ -39,6 +40,7 @@ export const VoiceToGesture = (props) => {
       <h2 className="mb-0">Voice To Gesture</h2>
       <p>View gestures from speech</p>
       <VoiceToGestureVideo
+        loading={loading}
         video={video}
         setVideo={setVideo}
         count={count}

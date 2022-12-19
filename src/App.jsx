@@ -1,8 +1,6 @@
 import React from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
-// import { Layout } from "antd";
+import { Routes, Route } from "react-router-dom";
 import LayoutWrapper from "./components/Layout/Layout";
-// import "antd/dist/antd.min.css";n
 import "./index.css";
 import Login from "./pages/Login/Login";
 import PrivateRoute from "./components/PrivateRoute";
@@ -15,6 +13,7 @@ import Error from "./pages/404Error/404Error";
 import useConnectToServer from "./hooks/useConnectToServer";
 import useAuthStatus from "./hooks/useAuthStatus";
 import useResizeEvent from "./hooks/useResizeEvent";
+import UploadVideo from "./components/ui/UploadVideo";
 
 // React lazy components
 const Trainer = React.lazy(() => import("./pages/Trainer/Trainer"));
@@ -30,12 +29,10 @@ const ForgotPassword = React.lazy(() =>
 const App = () => {
   const { collapsed, collapsedWidth, onCollapsed, sideBarWidth, md, sm } =
     useResizeEvent();
-  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const isServerConnected = useSelector(
     (state) => state.server.serverConnected
   );
   const serverStatus = useSelector((state) => state.server.serverStatus);
-  const location = useLocation();
 
   // connect to server;
   useConnectToServer();
@@ -53,24 +50,42 @@ const App = () => {
           collapsedWidth={collapsedWidth}
         >
           <Routes>
-            <Route
-              index
-              path="/"
-              element={
-                <Converter sm={sm} md={md} collapsedWidth={collapsedWidth} />
-              }
-            />
-            {/* <Route exact path="/converter" element={<PrivateRoute />}> */}
-            <Route
-              path="/converter"
-              element={
-                <Converter sm={sm} md={md} collapsedWidth={collapsedWidth} />
-              }
-            />
-            {/* </Route> */}
             <Route element={<PrivateRoute />}>
               <Route
-                path="trainer"
+                index
+                path="/"
+                element={
+                  <React.Suspense
+                    fallback={<Spinner size="large" pageSize="large" />}
+                  >
+                    <Converter
+                      sm={sm}
+                      md={md}
+                      collapsedWidth={collapsedWidth}
+                    />
+                  </React.Suspense>
+                }
+              />
+            </Route>
+            <Route exact path="/converter" element={<PrivateRoute />}>
+              <Route
+                path="/converter"
+                element={
+                  <React.Suspense
+                    fallback={<Spinner size="large" pageSize="large" />}
+                  >
+                    <Converter
+                      sm={sm}
+                      md={md}
+                      collapsedWidth={collapsedWidth}
+                    />
+                  </React.Suspense>
+                }
+              />
+            </Route>
+            <Route path="/trainer" element={<PrivateRoute />}>
+              <Route
+                path="/trainer"
                 element={
                   <React.Suspense
                     fallback={<Spinner size="large" pageSize="large" />}
@@ -80,17 +95,19 @@ const App = () => {
                 }
               />
             </Route>
-            <Route
-              path="models"
-              exact="exact"
-              element={
-                <React.Suspense
-                  fallback={<Spinner size="large" pageSize="large" />}
-                >
-                  <Models collapsedWidth={collapsedWidth} sm={sm} />
-                </React.Suspense>
-              }
-            />
+            <Route path="/uploadvideo" element={<UploadVideo />} />
+            <Route exact path="/models" element={<PrivateRoute />}>
+              <Route
+                path="/models"
+                element={
+                  <React.Suspense
+                    fallback={<Spinner size="large" pageSize="large" />}
+                  >
+                    <Models collapsedWidth={collapsedWidth} sm={sm} />
+                  </React.Suspense>
+                }
+              />
+            </Route>
             <Route
               path="my-models"
               exact

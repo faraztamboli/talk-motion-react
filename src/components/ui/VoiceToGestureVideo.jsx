@@ -5,6 +5,7 @@ import { MdOutlineReplay, MdFullscreenExit, MdClear } from "react-icons/md";
 
 function VoiceToGestureVideo(props) {
   const {
+    loading,
     video,
     setVideo,
     count,
@@ -121,12 +122,16 @@ function VoiceToGestureVideo(props) {
       ) : (
         <video
           src={video && videoSrc(video)}
-          // style={!video || video === null ? { backgroundColor: "black" } : null}
+          style={!video || video === null ? { backgroundColor: "black" } : null}
           controls
           className="block w-100p mb-6"
           autoPlay
           muted
           onEnded={() => {
+            if (count === video.length) {
+              setCount(0);
+              return;
+            }
             setCount((prevCount) => prevCount + 1);
           }}
         ></video>

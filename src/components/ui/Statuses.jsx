@@ -8,6 +8,9 @@ export const Statuses = (props) => {
   const { serverConnected, serverStatus } = useSelector(
     (state) => state.server
   );
+  const { deviceConnected, deviceStatus } = useSelector(
+    (state) => state.device
+  );
 
   useEffect(() => {
     // console.log(serverConnected);
@@ -32,9 +35,13 @@ export const Statuses = (props) => {
         <div className="device-status">
           <p
             style={props.collapsedWidth === 0 ? { fontSize: ".6rem" } : null}
-            className="warning converter-btns"
+            className={
+              deviceConnected
+                ? "statuses-success converter-btns"
+                : "danger converter-btns"
+            }
           >
-            Device Connecting...
+            Device {deviceStatus}
           </p>
         </div>
       )}

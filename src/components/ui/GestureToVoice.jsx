@@ -1,24 +1,28 @@
 import React from "react";
 import { Button } from "antd";
-import { FaRegPauseCircle, FaRegPlayCircle } from "react-icons/fa";
 import { MdPause, MdPlayArrow } from "react-icons/md";
 import { GestureCanvs } from "./GestureCanvs";
+import { useState } from "react";
+import useLeapMotion from "../../hooks/useLeapMotion";
+import { useEffect } from "react";
 
 export const GestureToVoice = (props) => {
-  const [isRecording, setIsRecording] = React.useState(false);
-  const loadings = () => {};
-  const speak = () => {
-    setIsRecording(!isRecording);
+  const [isPaused, setIsPaused] = React.useState(false);
+  const { getComponentDetails } = useLeapMotion();
+
+  const togglePause = () => {
+    setIsPaused(!isPaused);
   };
-  const stopSpeak = () => {
-    setIsRecording(!isRecording);
-  };
+
+  useEffect(() => {
+    getComponentDetails(isPaused, false, props.modalId, "");
+  }, [isPaused]);
+
   return (
     <div>
       <h2 className="mb-0">Gesture to Voice</h2>
       <p>generate speech from gestures</p>
       <GestureCanvs />
-      {/* {props.from === "converter" && ( */}
       <div
         style={{
           display: "flex",
@@ -26,7 +30,7 @@ export const GestureToVoice = (props) => {
           justifyContent: "center",
         }}
       >
-        {isRecording ? (
+        {isPaused ? (
           <Button
             className="converter-btns"
             type="primary"
@@ -34,8 +38,7 @@ export const GestureToVoice = (props) => {
             style={{ backgroundColor: "#DDBA00" }}
             size="large"
             danger
-            loading={loadings[0]}
-            onClick={() => stopSpeak(0)}
+            onClick={() => togglePause()}
             icon={<MdPause size={24} />}
           ></Button>
         ) : (
@@ -44,13 +47,11 @@ export const GestureToVoice = (props) => {
             type="primary"
             shape="circle"
             size="large"
-            loading={loadings[1]}
-            onClick={() => speak(1)}
+            onClick={() => togglePause()}
             icon={<MdPlayArrow size={24} />}
           ></Button>
         )}
       </div>
-      {/* )} */}
       {props.from === "converter" && <p>Lorem ipsum dolor sit</p>}
     </div>
   );

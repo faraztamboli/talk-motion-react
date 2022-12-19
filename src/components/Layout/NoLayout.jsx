@@ -15,7 +15,9 @@ const selectLayout = (Layout) => {
     }, [isAuthLayout, location.pathname]);
 
     return isAuthLayout !== true ? (
-      <Layout {...props} />
+      <>
+        <Layout {...props} />
+      </>
     ) : (
       <>{props.children}</>
     );

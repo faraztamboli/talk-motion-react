@@ -7,40 +7,42 @@ import Footer from "./Footer";
 
 function AppLayout(props) {
   return (
-    <Layout>
-      <Sidebar
-        collapsed={props.collapsed}
-        onCollapsed={props.onCollapsed}
-        sideBarWidth={props.sideBarWidth}
-        collapsedWidth={props.collapsedWidth}
-      />
+    <>
       <Layout>
-        <Header
+        <Sidebar
           collapsed={props.collapsed}
           onCollapsed={props.onCollapsed}
           sideBarWidth={props.sideBarWidth}
           collapsedWidth={props.collapsedWidth}
         />
-        <div className="site-layout-background" style={{ minHeight: 360 }}>
-          <Layout
-            style={
-              props.collapsed
-                ? {
-                    marginLeft: props.collapsedWidth,
-                    transition: "all .20s ease-in-out",
-                  }
-                : {
-                    marginLeft: props.sideBarWidth,
-                    transition: "all .20s ease-in-out",
-                  }
-            }
-          >
-            {props.children}
-          </Layout>
-        </div>
-        <Footer />
+        <Layout>
+          <Header
+            collapsed={props.collapsed}
+            onCollapsed={props.onCollapsed}
+            sideBarWidth={props.sideBarWidth}
+            collapsedWidth={props.collapsedWidth}
+          />
+          <div className="site-layout-background" style={{ minHeight: 360 }}>
+            <Layout
+              style={
+                props.collapsed
+                  ? {
+                      marginLeft: props.collapsedWidth,
+                      transition: "all .20s ease-in-out",
+                    }
+                  : {
+                      marginLeft: props.sideBarWidth,
+                      transition: "all .20s ease-in-out",
+                    }
+              }
+            >
+              {props.children}
+            </Layout>
+          </div>
+          <Footer />
+        </Layout>
       </Layout>
-    </Layout>
+    </>
   );
 }
 

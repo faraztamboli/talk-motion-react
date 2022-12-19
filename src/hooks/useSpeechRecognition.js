@@ -6,8 +6,9 @@ import SpeechRecognition, {
 
 function useSpeechRecognitionHook() {
   const [isRecording, setIsRecording] = React.useState(false);
-  const [video, setVideo] = React.useState(null);
+  const [video, setVideo] = React.useState([]);
   const [count, setCount] = React.useState(0);
+  const [loading, setLoading] = React.useState(false);
   const {
     transcript,
     //  listening,
@@ -15,21 +16,12 @@ function useSpeechRecognitionHook() {
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition();
 
-  // React.useEffect(() => {
-  //   if (!browserSupportsSpeechRecognition) {
-  //     return <span>Browser doesn't support speech recognition.</span>
-  //   }
-  //   getVideo(getWords(transcript));
-  // }, []);
-
   React.useEffect(() => {
     if (!browserSupportsSpeechRecognition) {
       return "Browser doesn't support speech recognition.";
     }
     getVideo(getWords(transcript));
   }, [transcript, browserSupportsSpeechRecognition]);
-
-  const loadings = () => {};
 
   const handleStopSpeak = () => {
     setIsRecording(!isRecording);
@@ -55,23 +47,27 @@ function useSpeechRecognitionHook() {
 
   const getVideo = (words) => {
     try {
-      // console.log('inside getVideo function : ', JS2Py);
       JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(
         words,
         (res) => {
-          setVideo(objToArr(res));
-          // setVideo(res);
-          // console.log(res);
+          console.log(res);
+          let elemArr = new Array();
+          Object.keys(res[0]).forEach((element, index) => {
+            const elemVideo =
+              res && res[0] && res[0][res[1][index]]?.is_remote === false
+                ? res[0][res[1][index]]?.video_stream
+                : res[0][res[1][index]]?.remote_url;
+            elemVideo !== undefined && elemArr.push(elemVideo);
+            console.log(res && res[0] && res[0][res[1][index]]?.is_remote);
+          });
+          setLoading(true);
+          setVideo(elemArr);
+          console.log(res);
         }
       );
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const objToArr = (obj) => {
-    const arr = obj && Object.values(obj);
-    return arr;
   };
 
   const videoSrc = (arr) => {
@@ -84,9 +80,10 @@ function useSpeechRecognitionHook() {
     getVideo(getWords(transcript));
   };
 
-  // console.log(video);
+  console.log(video);
 
   return {
+    loading,
     transcript,
     video,
     setVideo,

@@ -18,7 +18,7 @@ function useModels() {
     } catch (err) {
       console.log(err);
     }
-  }, [loading]);
+  }, []);
 
   React.useEffect(() => {
     try {
@@ -30,12 +30,12 @@ function useModels() {
     } catch (err) {
       console.log(err);
     }
-  }, [loading]);
+  }, []);
 
   const createNewModel = (title, description) => {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.createModel(
-        "",
+        token,
         title,
         description,
         (res) => console.log(res)
@@ -101,7 +101,7 @@ function useModels() {
         (res) => console.log(res)
       );
     } catch (err) {
-      console.log(res);
+      console.log(err);
     }
   };
 
