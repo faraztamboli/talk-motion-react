@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   ContainerOutlined,
@@ -5,13 +6,14 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
-import React from "react";
+
+const handleLogout = () => {};
 
 const userMenu = [
   {
     key: "user_details",
     label: (
-      <Link to="/profile">
+      <Link to="/profile" key={1}>
         <UserMenuProfileItem size="small" />
       </Link>
     ),
@@ -19,7 +21,7 @@ const userMenu = [
   {
     key: "myModels",
     label: (
-      <div className="user-menu-items">
+      <div className="user-menu-items" key={2}>
         <Link to="/my-models">My Models</Link>
       </div>
     ),
@@ -30,10 +32,10 @@ const userMenu = [
     },
   },
   {
-    key: "settings",
+    key: "setting",
     label: (
-      <div className="user-menu-items">
-        <Link to="/settings">Settings</Link>,
+      <div className="user-menu-items" key={3}>
+        <Link to="/settings">Settings</Link>
       </div>
     ),
     icon: <SettingOutlined />,
@@ -45,7 +47,11 @@ const userMenu = [
   {
     key: "logout",
     id: "logout",
-    label: <div className="user-menu-items">Logout</div>,
+    label: (
+      <div className="user-menu-items" key={4} onClick={handleLogout}>
+        Logout
+      </div>
+    ),
     icon: <LogoutOutlined />,
     style: {
       paddingTop: ".8rem",

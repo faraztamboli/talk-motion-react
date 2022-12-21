@@ -1,7 +1,6 @@
 import React from "react";
 import JS2Py from "../remotepyjs";
 import { useDispatch } from "react-redux";
-// import { JS2PyConnect } from "../data/JS2PyConnectFunctions/JS2PyConnect";
 import {
   setServerConnected,
   setServerStatus,
@@ -15,20 +14,14 @@ async function useConnectToServer() {
     JS2Py.serverName = "wss://talk-motion.com:8083";
 
     JS2Py.onopen = function () {
-      dispatch(setServerConnected(true)),
-        dispatch(setServerStatus("Connected"));
-      console.log("inside hook connected");
+      dispatch(setServerConnected(true));
+      dispatch(setServerStatus("Connected"));
     };
 
     JS2Py.onclose = function () {
       dispatch(setServerConnected(false));
       dispatch(setServerStatus("Disconnected"));
     };
-
-    // JS2Py.subOnClose(() => {
-    //   dispatch(setServerConnected(false));
-    //   dispatch(setServerStatus("Disconnected"));
-    // });
 
     // starting connection and taking instance to close on unmounts
     conn = JS2Py.start();
