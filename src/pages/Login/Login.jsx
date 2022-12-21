@@ -134,7 +134,8 @@ const Login = (props) => {
                       color: "#979797",
                     }}
                   >
-                    Don't have an account <Link to="/signup">Sign-up</Link>
+                    Don`&apos;`t have an account{" "}
+                    <Link to="/signup">Sign-up</Link>
                   </p>
                 </Form.Item>
               </Form>

@@ -6,12 +6,21 @@ const selectLayout = (Layout) => {
     const [isAuthLayout, setIsAuthLayout] = useState(false);
     const location = useLocation();
 
+    const noAuthLayoutPages = [
+      "",
+      "converter",
+      "trainer",
+      "models",
+      "profile",
+      "my-models",
+      "setting",
+      "uploadvideo",
+    ];
+
     React.useEffect(() => {
-      location.pathname === "/login" ||
-      location.pathname === "/signup" ||
-      location.pathname === "/forgetpassword"
-        ? setIsAuthLayout(() => true)
-        : setIsAuthLayout(() => false);
+      noAuthLayoutPages.includes(location.pathname.slice(1))
+        ? setIsAuthLayout(() => false)
+        : setIsAuthLayout(() => true);
     }, [isAuthLayout, location.pathname]);
 
     return isAuthLayout !== true ? (

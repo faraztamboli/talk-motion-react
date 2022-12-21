@@ -5,9 +5,9 @@ import { MdOutlineReplay, MdFullscreenExit, MdClear } from "react-icons/md";
 
 function VoiceToGestureVideo(props) {
   const {
-    loading,
+    // loading,
     video,
-    setVideo,
+    // setVideo,
     count,
     setCount,
     videoSrc,

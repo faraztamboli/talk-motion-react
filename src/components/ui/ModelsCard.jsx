@@ -4,6 +4,7 @@ import { Card, Avatar, Tooltip, Button, Dropdown } from "antd";
 import { MdOutlineArrowRightAlt, MdMoreVert } from "react-icons/md";
 import NewTrainer from "../../components/ui/NewTrainer";
 import useModels from "../../hooks/useModels";
+import plurkImg from "../../media/images/plurk.png";
 
 export const ModelsCard = (props) => {
   const { deleteModel, cloneModel, purchaseModel } = useModels();
@@ -46,11 +47,7 @@ export const ModelsCard = (props) => {
             padding: ".4rem",
           }}
         >
-          <img
-            src="https://talk-motion.com/public/images/svg/brand-logos/plurk.svg"
-            alt="model logo"
-            width={40}
-          />
+          <img src={plurkImg} alt="model logo" width={40} />
         </div>
 
         <Dropdown menu={{ items }} placement="bottomRight" trigger={["click"]}>
@@ -76,7 +73,7 @@ export const ModelsCard = (props) => {
         <Avatar.Group>
           {model.trainers.map((trainer, index) => {
             return (
-              <Tooltip key={index} title={trainer.name} placement="top">
+              <Tooltip key={index} title={trainer.fullname} placement="top">
                 <Avatar src={"media/avatars/150-26.jpg"} />
               </Tooltip>
             );

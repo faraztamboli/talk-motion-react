@@ -14,9 +14,9 @@ function useLogin() {
   const disptach = useDispatch();
 
   function handleLogin(res) {
-    console.log(res);
+    // console.log(res);
     if (res && res.isValidUser === true && res.isPasswordCorrect === true) {
-      disptach(login({ token: token, user: "admin", isLoggedIn: true }));
+      disptach(login({ token: token }));
       navigate("/");
     } else if (
       res &&
@@ -31,17 +31,17 @@ function useLogin() {
   const onFinish = (values) => {
     setLoading(true);
     JS2Py.PythonFunctions.SessionServer.getNewSessionId(function (res) {
-      console.log(res);
+      // console.log(res);
       setToken(() => res);
       JS2Py.PythonFunctions.SessionServer.validateLogin(
         res, // session id
         values.username,
         values.password,
         values.remember,
-        "http://localhost:3000", // login url
-        "http://localhost:3000/", // after login url
+        "https://talk-motion.com", // login url
+        "https://talk-motion.com", // after login url
         function (res) {
-          console.log(res);
+          // console.log(res);
           handleLogin(res);
         }
       );

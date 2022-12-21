@@ -50,7 +50,7 @@ function useSpeechRecognitionHook() {
       JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(
         words,
         (res) => {
-          console.log(res);
+          // console.log(res);
           let elemArr = new Array();
           Object.keys(res[0]).forEach((element, index) => {
             const elemVideo =
@@ -62,7 +62,7 @@ function useSpeechRecognitionHook() {
           });
           setLoading(true);
           setVideo(elemArr);
-          console.log(res);
+          // console.log(res);
         }
       );
     } catch (error) {
@@ -80,7 +80,7 @@ function useSpeechRecognitionHook() {
     getVideo(getWords(transcript));
   };
 
-  console.log(video);
+  // console.log(video);
 
   return {
     loading,

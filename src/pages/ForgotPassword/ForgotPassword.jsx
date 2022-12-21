@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Layout, Row, Col, Button, Form, Input, Space, message } from "antd";
 import { MailFilled } from "@ant-design/icons";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux/es/exports";
-import { login } from "../../app/features/loginSlice";
+import { Link } from "react-router-dom";
 import AuthPagesCol from "../../components/ui/AuthPagesCol";
 import forgotPasswordLogic from "./forgotPasswordLogic";
 
@@ -45,7 +43,7 @@ const ForgotPassword = (props) => {
                 Forgot Password?
               </h1>
               <p className="auth-pages-second-col-para">
-                Don't worry, it happens to the best of us!
+                Don`&apos;`t worry, it happens to the best of us!
               </p>
               <Form
                 name="normal_login"

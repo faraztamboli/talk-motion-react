@@ -8,7 +8,7 @@ import Footer from "./Footer";
 function AppLayout(props) {
   return (
     <>
-      <Layout>
+      <Layout style={{ minHeight: "100vh" }}>
         <Sidebar
           collapsed={props.collapsed}
           onCollapsed={props.onCollapsed}
@@ -22,7 +22,10 @@ function AppLayout(props) {
             sideBarWidth={props.sideBarWidth}
             collapsedWidth={props.collapsedWidth}
           />
-          <div className="site-layout-background" style={{ minHeight: 360 }}>
+          <div
+            className="site-layout-background"
+            style={{ minHeight: "100vh" }}
+          >
             <Layout
               style={
                 props.collapsed
@@ -36,7 +39,7 @@ function AppLayout(props) {
                     }
               }
             >
-              {props.children}
+              <>{props.children}</>
             </Layout>
           </div>
           <Footer />

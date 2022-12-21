@@ -1,16 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Row, Col, Card } from "antd";
 import { ModelsDropdown } from "../../components/ui/ModelsDropdown";
 import { TrainerControl } from "../../components/ui/TrainerControl";
 import { GestureToVoice } from "../../components/ui/GestureToVoice";
-import { useState } from "react";
 
 export default function Trainer(props) {
   const [modalId, setModalId] = useState();
   const cardBodyStyle = props.sm ? { padding: "5px" } : null;
-  const trainerStyle = props.sm
-    ? { backgroundColor: "#E5E5E5", padding: "5px", minHeight: "100vh" }
-    : { backgroundColor: "#E5E5E5", padding: "24px", minHeight: "100vh" };
+  const trainerStyle = props.sm ? { padding: "5px" } : { padding: "24px" };
 
   const getModalId = (modal_id) => {
     setModalId(modal_id);
@@ -18,7 +15,7 @@ export default function Trainer(props) {
 
   return (
     <>
-      <div style={trainerStyle}>
+      <div style={trainerStyle} className="layout-bg mh-100vh">
         <Row gutter={[16, 16]}>
           <Col span={8} xs={24} md={8}>
             <ModelsDropdown getModalId={getModalId} />

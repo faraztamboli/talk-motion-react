@@ -1,33 +1,11 @@
-import React from 'react';
-
-function Error() {
-  return (
-    <>
-      <div
-        style={{
-          width: '100%',
-          minHeight: '660',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-        }}
-      >
-        <h2 style={{ fontSize: '2.3rem', color: '#1890ff' }}>404 not Found</h2>
-        <p
-          style={{
-            fontSize: '1rem',
-            letterSpacing: '1px',
-            fontWeight: '500',
-            color: 'hsl(210deg 8% 45%)',
-          }}
-        >
-          The page you are looking is not found on TalkMotion
-        </p>
-      </div>
-    </>
-  );
-}
-
-export default Error;
+import React from "react";
+import { Button, Result } from "antd";
+const App = () => (
+  <Result
+    status="404"
+    title="404"
+    subTitle="Sorry, the page you visited does not exist."
+    extra={<Button type="primary">Back Home</Button>}
+  />
+);
+export default App;

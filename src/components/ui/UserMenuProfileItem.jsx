@@ -1,29 +1,23 @@
 import React from "react";
 import { Avatar, Image } from "antd";
+import { useSelector } from "react-redux";
 
 export default function UserMenuProfileItem(props) {
+  const username = useSelector((state) => state.user.username);
+  const name = useSelector((state) => state.user.name);
+
   return (
     <>
       <div
-        className="menu-content d-flex align-items-center px-3"
-        style={{ display: "flex", alignItems: "center" }}
+        className="menu-content d-flex align-items-center px-3 w-100p"
+        style={{ display: "flex", alignItems: "center", marginBottom: ".5rem" }}
       >
         <div
           className="symbol symbol-50px me-5"
           style={{ marginRight: "1rem" }}
         >
-          {/* <img
-            width={'50px'}
-            style={{ borderRadius: '50%' }}
-            src="media/avatars/150-2.jpg"
-            alt="user_img"
-          /> */}
           <Avatar
-            src={
-              <Image
-                src="media/avatars/150-2.jpg" /* style={{ width: 32 }} */
-              />
-            }
+            src={<Image src="media/avatars/150-2.jpg" />}
             size={
               props.size === "small"
                 ? { xs: 32, sm: 42, md: 45, lg: 48, xl: 50, xxl: 55 }
@@ -40,7 +34,7 @@ export default function UserMenuProfileItem(props) {
               color: "#a1a5b7",
             }}
           >
-            Max Smith
+            {name ? name?.toUpperCase() : "Talk Motion User"}
             <span
               className="badge badge-light-success fw-border fs-8 px-2 py-1 ms-2"
               style={{
@@ -62,7 +56,7 @@ export default function UserMenuProfileItem(props) {
             className="fw-bold text-muted text-hover-primary fs-7"
             style={{ color: "#a1a5b7", margin: 0 }}
           >
-            max@kt.com
+            {username ? username : "talkmotionuser"}
           </p>
         </div>
       </div>

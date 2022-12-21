@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "antd";
 import { MdPause, MdPlayArrow } from "react-icons/md";
 import { GestureCanvs } from "./GestureCanvs";
-import { useState } from "react";
 import useLeapMotion from "../../hooks/useLeapMotion";
-import { useEffect } from "react";
 
 export const GestureToVoice = (props) => {
   const [isPaused, setIsPaused] = React.useState(false);

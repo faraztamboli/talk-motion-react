@@ -18,7 +18,11 @@ const userMenu = [
   },
   {
     key: "myModels",
-    label: <Link to="/my-models">My Models</Link>,
+    label: (
+      <div className="user-menu-items">
+        <Link to="/my-models">My Models</Link>
+      </div>
+    ),
     icon: <ContainerOutlined />,
     style: {
       paddingTop: ".8rem",
@@ -27,7 +31,11 @@ const userMenu = [
   },
   {
     key: "settings",
-    label: <Link to="/settings">Settings</Link>,
+    label: (
+      <div className="user-menu-items">
+        <Link to="/settings">Settings</Link>,
+      </div>
+    ),
     icon: <SettingOutlined />,
     style: {
       paddingTop: ".8rem",
@@ -37,7 +45,7 @@ const userMenu = [
   {
     key: "logout",
     id: "logout",
-    label: "Logout",
+    label: <div className="user-menu-items">Logout</div>,
     icon: <LogoutOutlined />,
     style: {
       paddingTop: ".8rem",

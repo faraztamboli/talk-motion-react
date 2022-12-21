@@ -1,5 +1,5 @@
-import { Layout, Menu } from "antd";
 import React from "react";
+import { Layout, Menu } from "antd";
 import items from "../../data/sidebarNav";
 import logoImg from "../../media/images/logo.png";
 import logoSmall from "../../media/images/logo-small.png";
@@ -33,7 +33,7 @@ const Sidebar = (props) => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={[""]}
+        defaultSelectedKeys={["1"]}
         items={items.map((item) => ({
           ...item,
         }))}

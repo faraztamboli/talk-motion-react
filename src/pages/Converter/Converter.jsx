@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Row, Col, Card } from "antd";
 import { ModelsDropdown } from "../../components/ui/ModelsDropdown";
 import { VoicesDropdown } from "../../components/ui/VoicesDropdown";
@@ -6,13 +6,19 @@ import { VoiceToGesture } from "../../components/ui/VoiceToGesture";
 import { GestureToVoice } from "../../components/ui/GestureToVoice";
 
 const Converter = (props) => {
+  const [modalId, setModalId] = useState();
   const cardBodyStyle = props.sm ? { padding: "5px" } : null;
+
+  const getModalId = (modal_id) => {
+    setModalId(modal_id);
+  };
+
   return (
     <>
-      <div className="converter-content">
+      <div className="converter-content layout-bg mh-100vh">
         <Row gutter={[16, 16]}>
           <Col span={8} xs={24} md={8}>
-            <ModelsDropdown />
+            <ModelsDropdown getModalId={getModalId} />
           </Col>
           <Col span={8} xs={0} md={8}></Col>
           <Col span={8} xs={24} md={8}>
@@ -27,7 +33,7 @@ const Converter = (props) => {
           </Col>
           <Col span={12} xs={24} md={12}>
             <Card className="converter-cards" bodyStyle={cardBodyStyle}>
-              <GestureToVoice from="converter" />
+              <GestureToVoice from="converter" modalId={modalId} />
             </Card>
           </Col>
         </Row>

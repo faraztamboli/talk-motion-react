@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Modal, Radio } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import { MdPersonAdd } from "react-icons/md";
 import useModels from "../../hooks/useModels";
 
@@ -36,24 +36,12 @@ const CollectionCreateForm = (props) => {
           rules={[
             {
               required: true,
-              message: "Please input the title of collection!",
+              message: "Please input the username of trainer",
             },
           ]}
         >
           <Input />
         </Form.Item>
-        {/* <Form.Item name="description" label="Description">
-          <Input type="textarea" />
-        </Form.Item> */}
-        {/* <Form.Item
-          name="modifier"
-          className="collection-create-form_last-form-item"
-        >
-          <Radio.Group>
-            <Radio value="public">Public</Radio>
-            <Radio value="private">Private</Radio>
-          </Radio.Group>
-        </Form.Item> */}
       </Form>
     </Modal>
   );

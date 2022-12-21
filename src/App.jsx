@@ -164,14 +164,7 @@ const App = () => {
                 </React.Suspense>
               }
             />
-            <Route
-              path="*"
-              element={
-                <PrivateRoute>
-                  <Error />
-                </PrivateRoute>
-              }
-            />
+            <Route path="*" element={<Error />} />
           </Routes>
         </LayoutWrapper>
       ) : serverStatus === "Connecting..." ? (

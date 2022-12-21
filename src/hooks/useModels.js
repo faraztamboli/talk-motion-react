@@ -3,17 +3,18 @@ import JS2Py from "../remotepyjs";
 import useLocalStorage from "./useLocalStorage";
 
 function useModels() {
-  const [publicModels, setPublicModels] = React.useState();
-  const [userModels, setUserModels] = React.useState();
+  const [publicModels, setPublicModels] = React.useState([]);
+  const [userModels, setUserModels] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [token] = useLocalStorage("token");
 
   React.useEffect(() => {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.getPublicModels((res) => {
-        console.log(res);
-        setPublicModels(res);
-        setLoading(false);
+        if (res.constructor == Array) {
+          setPublicModels(res);
+          setLoading(false);
+        }
       });
     } catch (err) {
       console.log(err);
@@ -23,9 +24,10 @@ function useModels() {
   React.useEffect(() => {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(token, (res) => {
-        console.log(res);
-        setUserModels(res);
-        setLoading(false);
+        if (res.constructor == Array) {
+          setUserModels(res);
+          setLoading(false);
+        }
       });
     } catch (err) {
       console.log(err);

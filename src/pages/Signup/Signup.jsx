@@ -2,12 +2,6 @@ import React from "react";
 import { Layout, Row, Col, Button, Input, Form, Space } from "antd";
 import { LockFilled, UserOutlined, MailFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-// import {
-//   formItemLayout,
-//   tailFormItemLayout,
-// } from "../../data/signupFormLayout";
-// import { validateCountryName } from "../../data/countries";
-// import JS2Py from "../../remotepyjs";
 import SignupLogic from "./SignupLogic";
 import AuthPagesCol from "../../components/ui/AuthPagesCol";
 

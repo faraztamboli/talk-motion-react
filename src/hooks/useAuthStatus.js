@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../app/features/loginSlice";
+import { setUser } from "../app/features/userSlice";
 import JS2Py from "../remotepyjs";
 import useLocalStorage from "./useLocalStorage";
 // eslint-disable-next-line
@@ -16,9 +17,12 @@ function useAuthStatus() {
   function isLoggedIn() {
     try {
       JS2Py.PythonFunctions.SessionServer.isLoggedIn(token, function (res) {
-        console.log(res);
+        // console.log(res);
         if (res?.isLoggedIn === true) {
-          dispatch(login({ token: token, user: "admin" }));
+          dispatch(login({ token: token }));
+          dispatch(
+            setUser({ username: res.user.username, name: res.user.first })
+          );
         } else if (res?.isLoggedIn === false) {
           dispatch(logout());
         }

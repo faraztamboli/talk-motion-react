@@ -32,7 +32,7 @@ code {
 }
 
 .p-0 {
-  padding: 0;
+  padding: 0 !important;
 }
 .p-1 {
   padding: 0.25rem;
@@ -561,6 +561,10 @@ code {
   background: #fff;
 }
 
+.layout-bg {
+  background-color: #E5E5E5 !important;
+}
+
 main.ant-layout-content {
     min-height: calc(100vh - 158px);
 }
@@ -740,4 +744,25 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
   font-size: 1rem;
   line-height: 1.172rem;
   font-weight: 600;
+}
+
+.user-menu-items {
+  width: 100%;
+  padding: 1rem .5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.user-menu-items:hover {
+  background-color: rgba(0, 0, 0, 0.04);;
+}
+
+.user-menu-items, .user-menu-items a {
+  color: rgb(161, 165, 183);
+}
+
+.empty-img-shadow {
+  filter: drop-shadow(2px 2px 1px black);
 }
