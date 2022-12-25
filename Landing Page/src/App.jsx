@@ -9,6 +9,7 @@ import TermsAndConditions from "./pages/TermsAndConditions";
 import ContactUs from "./pages/ContactUs";
 import About from "./pages/About";
 import Payment from "./pages/Payment";
+import NotFound from "./pages/404NotFound";
 
 function App() {
   const { sm, md, lg } = useResizeEvent();
@@ -22,7 +23,7 @@ function App() {
       <Route path="/terms" element={<TermsAndConditions md={md} />} />
       <Route path="/contact-us" element={<ContactUs md={md} />} />
       <Route path="/payment" element={<Payment md={md} />} />
-      <Route path="*" element={<h2>Page not found</h2>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

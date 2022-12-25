@@ -27,6 +27,19 @@ code {
   margin-bottom: 4rem;
 }
 
+.mh-100vh {
+  min-height: 100vh !important;
+}
+
+.flex {
+  display: flex !important;
+}
+
+.flex-center-center {
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 /* Guide page styling */
 .guide-page-container {
   max-width: 1300px;
