@@ -8,10 +8,10 @@ function PrivacyPolicy(props) {
   return (
     <div className="page-container">
       <Header md={props.md} />
-      <PageHeader title="Privacy Policy" />
+      <PageHeader title="Terms and Conditions" />
 
       <section className="container privacy-policy-content">
-        <div>{pageContent.privacyPolicyContent}</div>
+        <div>{pageContent.termsAndConditionsContent}</div>
       </section>
       <Footer />
     </div>

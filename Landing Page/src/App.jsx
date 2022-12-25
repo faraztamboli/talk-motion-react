@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import GuidePage from "./pages/Guide";
 import useResizeEvent from "./hooks/useResizeEvent";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
 import ContactUs from "./pages/ContactUs";
 import About from "./pages/About";
 import Payment from "./pages/Payment";
@@ -18,6 +19,7 @@ function App() {
       <Route path="/guide" element={<GuidePage sm={sm} md={md} lg={lg} />} />
       <Route path="/about" element={<About md={md} />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy md={md} />} />
+      <Route path="/terms" element={<TermsAndConditions md={md} />} />
       <Route path="/contact-us" element={<ContactUs md={md} />} />
       <Route path="/payment" element={<Payment md={md} />} />
       <Route path="*" element={<h2>Page not found</h2>} />
