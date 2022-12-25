@@ -8,7 +8,7 @@ import MetaDecorator from "../components/MetaDecorator";
 import { profileDetails } from "../data/PageDetails";
 
 export default function Profile(props) {
-  const { userModels, loading } = useModels();
+  const { userModels, userLoading } = useModels();
 
   const profileStyle =
     props.collapseWidth === 0 ? { padding: 8 } : { padding: 24 };
@@ -26,7 +26,7 @@ export default function Profile(props) {
         <div className="details_section" style={{ marginTop: "2rem" }}>
           <h2>Your Models</h2>
           <Row gutter={[16, 16]}>
-            {!loading && userModels?.length > 0
+            {!userLoading && userModels?.length > 0
               ? userModels.map((model) => {
                   return (
                     <Col key={model.id} span={8} xs={24} md={8}>
@@ -38,7 +38,7 @@ export default function Profile(props) {
                     </Col>
                   );
                 })
-              : !loading && (
+              : !userLoading && (
                   <div className="w-100p m-4">
                     <Empty
                       style={{ fontWeight: 500 }}
@@ -47,7 +47,7 @@ export default function Profile(props) {
                     />
                   </div>
                 )}
-            <Skeleton active loading={loading} style={{ width: "500px" }} />
+            <Skeleton active loading={userLoading} style={{ width: "500px" }} />
           </Row>
           <div className="flex flex-center-center mt-10">
             <NewModel sm={props.sm} />

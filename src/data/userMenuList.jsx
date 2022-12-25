@@ -29,10 +29,8 @@ const userMenu = [
   {
     key: "myModels",
     label: (
-      <Link to="/my-models">
-        <div className="user-menu-items" key={2}>
-          My Models
-        </div>
+      <Link to="/my-models" key={2}>
+        <div className="user-menu-items">My Models</div>
       </Link>
     ),
     icon: <ContainerOutlined />,
@@ -44,10 +42,8 @@ const userMenu = [
   {
     key: "setting",
     label: (
-      <Link to="/setting">
-        <div className="user-menu-items" key={3}>
-          Settings
-        </div>
+      <Link to="/setting" key={3}>
+        <div className="user-menu-items">Settings</div>
       </Link>
     ),
     icon: <SettingOutlined />,
