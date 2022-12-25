@@ -23,6 +23,10 @@ code {
     monospace;
 }
 
+.mb-4 {
+  margin-bottom: 4rem;
+}
+
 /* Guide page styling */
 .guide-page-container {
   max-width: 1300px;
@@ -203,14 +207,13 @@ code {
   margin-right: 1.938rem;
 }
 
-.hero-section .hero-content .hero-section-btns:not(:first-child):hover {
-  color: rgb(96 176 244);
+.hero-section .hero-content .hero-section-btns:hover {
+  color: rgb(96 176 244) !important;
   border: 2px solid rgb(96 176 244);
 }
 
-.hero-section .hero-content .hero-section-btns:not(:last-child):hover {
-  color: rgb(96 176 244);
-  border: 2px solid rgb(96 176 244);
+.hero-section .hero-content .hero-section-btns  {
+  color: #FFFFFF !important;
 }
 
 .hero-section .hero-img-div {
@@ -379,6 +382,7 @@ code {
 
 .features-section .features-cards .card {
   display: flex;
+  height: 100% !important;
   flex-direction: column;
   justify-content: center;
   background-color: #FFFFFF;
@@ -811,7 +815,7 @@ footer .copyright p {
   font-weight: 400;
   font-size: 16px;
   line-height: 1.5rem;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .contact-us-form-first-row {

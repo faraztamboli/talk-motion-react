@@ -71,9 +71,10 @@ function GuidePageContent(props) {
                   }
             }
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
-            mollitia, molestiae quas vel sint commodi repudiandae consequuntur
-            voluptatum laborum
+            TalkMotion uses the power of AI to translate sign language to voice
+            and voice to sign language. It allows you to create and train your
+            own custom gestures. We are working with experts in ASL to map a
+            wide range of gestures.
           </p>
         </div>
       </div>
@@ -144,9 +145,10 @@ function GuidePageContent(props) {
                   }
             }
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
-            mollitia, molestiae quas vel sint commodi repudiandae consequuntur
-            voluptatum laborum
+            A hearing person can verbally respond, and TalkMotion will display
+            sign language pictures on the screen using voice recognition so that
+            the deaf or aphonic person can understand what the hearing person is
+            saying.
           </p>
         </div>
       </div>
@@ -217,9 +219,9 @@ function GuidePageContent(props) {
                   }
             }
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime
-            mollitia, molestiae quas vel sint commodi repudiandae consequuntur
-            voluptatum laborum
+            Deaf and aphonic people can sign and their movements will be picked
+            up by the gesture detector. An Artificial Intelligence algorithm
+            will convert these gestures into voice.
           </p>
         </div>
       </div>

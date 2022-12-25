@@ -2,6 +2,7 @@ import React from "react";
 import { Row, Col } from "antd";
 import { Link } from "react-router-dom";
 import { TwitterOutlined, FacebookFilled } from "@ant-design/icons";
+import { pageContent } from "../data/appContent";
 
 function Footer() {
   return (
@@ -25,11 +26,7 @@ function Footer() {
           <Row>
             <Col span={12} xs={24} lg={12} className="footer-bottom-div-col">
               <h2>TalkMotion</h2>
-              <p>
-                orem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam
-              </p>
+              {pageContent.TalkMotionDescription}
             </Col>
 
             <Col span={6} xs={24} lg={6} className="footer-bottom-div-col">
@@ -42,7 +39,7 @@ function Footer() {
                   <Link to="/privacy-policy">Privacy Policy</Link>
                 </li>
                 <li>
-                  <Link to="/privacy-policy">Terms & Conditions</Link>
+                  <Link to="/terms">Terms & Conditions</Link>
                 </li>
               </ul>
             </Col>

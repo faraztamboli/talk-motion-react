@@ -1,5 +1,6 @@
 import React from "react";
 import { Col, Form, Input, Row } from "antd";
+import { pageContent } from "../data/appContent";
 
 function ContactUsForm() {
   return (
@@ -7,10 +8,7 @@ function ContactUsForm() {
       <div className="container">
         <div className="contact-us-form-parent-div">
           <div className="contact-us-form">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
+            {pageContent.contactPageContent}
             <Form>
               <Row className="contact-us-form-first-row">
                 <Col span={11} xs={24} md={11}>

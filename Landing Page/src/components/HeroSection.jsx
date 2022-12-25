@@ -17,23 +17,16 @@ function HeroSection(props) {
                 power of artificial intelligence.
               </p>
               <div className="hero-content-btns">
-                {/* <Button
-                  shape="round"
-                  size={props.md === true ? 'middle' : 'large'}
-                  className="hero-section-btns"
-                >
-                  <Link to="#pricing" className="mr-3">
-                    Pricing
-                  </Link>
-                </Button> */}
-                <Button
-                  shape="round"
-                  size={props.md === true ? "middle" : "large"}
-                  ghost
-                  className="hero-section-btns"
-                >
-                  <Link to="/signup">Signup for Free</Link>
-                </Button>
+                <Link to="/signup">
+                  <Button
+                    shape="round"
+                    size={props.md === true ? "middle" : "large"}
+                    ghost
+                    className="hero-section-btns"
+                  >
+                    Signup for Free
+                  </Button>
+                </Link>
               </div>
             </div>
           </Col>
