@@ -2,14 +2,18 @@ import React from "react";
 import { Layout, Space, Row, Col, Button, Form, Input, Checkbox } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import useLogin from "./useLogin";
-import AuthPagesCol from "../../components/ui/AuthPagesCol";
+import useLogin from "../hooks/useLogin";
+import AuthPagesCol from "../components/ui/AuthPagesCol";
+import MetaDecorator from "../components/MetaDecorator";
+import { loginDetails } from "../data/PageDetails";
 
 const Login = (props) => {
   const { onFinish, loginError, loading } = useLogin();
+  const { title, description } = loginDetails;
 
   return (
     <Layout>
+      <MetaDecorator title={title} description={description} />
       <Row
         className="mh-100vh"
         style={
@@ -20,16 +24,14 @@ const Login = (props) => {
       >
         <AuthPagesCol />
         <Col span={12} xs={24} md={12}>
-          <div className="text-center mh-100vh p-8 flex flex-left-center auth-pages-second-col">
+          <div className="text-center mh-100vh p-8 flex flex-center-center auth-pages-second-col">
             <div className="block">
               <h1 className="auth-pages-second-col-heading">Hello Again!</h1>
               <p className="auth-pages-second-col-para">
                 Login for Talk Motion
               </p>
               {loginError && (
-                <p /* style={{ color: "red" }} */>
-                  Invalid username or password
-                </p>
+                <p style={{ color: "red" }}>Invalid username or password</p>
               )}
               <Form
                 name="normal_login"
@@ -134,8 +136,7 @@ const Login = (props) => {
                       color: "#979797",
                     }}
                   >
-                    Don`&apos;`t have an account{" "}
-                    <Link to="/signup">Sign-up</Link>
+                    Don&apos;t have an account <Link to="/signup">Sign-up</Link>
                   </p>
                 </Form.Item>
               </Form>

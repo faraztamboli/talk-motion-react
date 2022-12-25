@@ -1,9 +1,11 @@
 import React from "react";
 import { Row, Col, Skeleton, Empty } from "antd";
-import useModels from "../../hooks/useModels";
-import NewModel from "../../components/ui/NewModel";
-import { ModelsCard } from "../../components/ui/ModelsCard";
-import UserMenuProfileItem from "../../components/ui/UserMenuProfileItem";
+import useModels from "../hooks/useModels";
+import NewModel from "../components/ui/NewModel";
+import { ModelsCard } from "../components/ui/ModelsCard";
+import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
+import MetaDecorator from "../components/MetaDecorator";
+import { profileDetails } from "../data/PageDetails";
 
 export default function Profile(props) {
   const { userModels, loading } = useModels();
@@ -12,8 +14,11 @@ export default function Profile(props) {
     props.collapseWidth === 0 ? { padding: 8 } : { padding: 24 };
   const emptyImgStyle = { filter: "saturate(12)" };
 
+  const { title, description } = profileDetails;
+
   return (
     <>
+      <MetaDecorator title={title} description={description} />
       <div style={profileStyle} className="layout-bg mh-100vh">
         <div>
           <UserMenuProfileItem size="large" />

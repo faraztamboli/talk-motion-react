@@ -6,111 +6,138 @@ function useModels() {
   const [publicModels, setPublicModels] = React.useState([]);
   const [userModels, setUserModels] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [publicLoading, setPublicLoading] = React.useState(true);
+  const [userLoading, setUserLoading] = React.useState(true);
   const [token] = useLocalStorage("token");
 
   React.useEffect(() => {
+    getUserModels();
+    getPublicModels();
+  }, [userModels.length, publicModels.length, loading]);
+
+  function getPublicModels() {
     try {
-      JS2Py.PythonFunctions.TalkMotionServer.getPublicModels((res) => {
+      JS2Py.PythonFunctions.TalkMotionServer.getPublicModels(function (res) {
         if (res.constructor == Array) {
-          setPublicModels(res);
-          setLoading(false);
+          setPublicModels(() => res);
+          setPublicLoading(false);
         }
       });
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  }
 
-  React.useEffect(() => {
+  function getUserModels() {
     try {
-      JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(token, (res) => {
-        if (res.constructor == Array) {
-          setUserModels(res);
-          setLoading(false);
+      JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(
+        token,
+        function (res) {
+          if (res.constructor == Array) {
+            setUserModels(() => res);
+            setUserLoading(false);
+          }
         }
-      });
+      );
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  }
 
-  const createNewModel = (title, description) => {
+  function createNewModel(title, description) {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.createModel(
         token,
         title,
         description,
-        (res) => console.log(res)
+        function (res) {
+          console.log(res);
+          setLoading(false);
+        }
       );
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
-  const addNewTrainer = (modelid, username) => {
+  function addNewTrainer(modelid, username) {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.addTrainerToModel(
         modelid,
         username,
-        (res) => console.log(res)
+        function (res) {
+          console.log(res);
+        }
       );
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
-  const deleteModel = (modelid) => {
+  function deleteModel(modelid) {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.deleteModel(
         token,
         modelid,
-        (res) => console.log(res)
+        function (res) {
+          console.log(res);
+        }
       );
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
-  const updateModel = (modelid, title, description, is_public) => {
+  function updateModel(modelid, title, description, is_public) {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.updateModel(
         modelid,
         title,
         description,
         is_public,
-        (res) => console.log(res)
+        function (res) {
+          console.log(res);
+        }
       );
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
-  const cloneModel = (modelid) => {
+  function cloneModel(modelid) {
     try {
-      JS2Py.PythonFunctions.TalkMotionServer.cloneModel(token, modelid, (res) =>
-        console.log(res)
+      JS2Py.PythonFunctions.TalkMotionServer.cloneModel(
+        token,
+        modelid,
+        function (res) {
+          console.log(res);
+        }
       );
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
-  const purchaseModel = (modelid) => {
+  function purchaseModel(modelid) {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.purchaseModel(
         token,
         modelid,
-        (res) => console.log(res)
+        function (res) {
+          console.log(res);
+        }
       );
     } catch (err) {
       console.log(err);
     }
-  };
+  }
 
   return {
     publicModels,
     userModels,
     loading,
+    userLoading,
+    publicLoading,
     createNewModel,
     addNewTrainer,
     deleteModel,

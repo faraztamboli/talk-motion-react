@@ -6,8 +6,16 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
+import JS2Py from "../remotepyjs";
 
-const handleLogout = () => {};
+const handleLogout = () => {
+  const token = localStorage.getItem("token");
+  JS2Py.PythonFunctions.SessionServer.logOut(token, function (res) {
+    console.log(res);
+  });
+  localStorage.removeItem("token");
+  window.location.href = "/login";
+};
 
 const userMenu = [
   {
@@ -21,9 +29,11 @@ const userMenu = [
   {
     key: "myModels",
     label: (
-      <div className="user-menu-items" key={2}>
-        <Link to="/my-models">My Models</Link>
-      </div>
+      <Link to="/my-models">
+        <div className="user-menu-items" key={2}>
+          My Models
+        </div>
+      </Link>
     ),
     icon: <ContainerOutlined />,
     style: {
@@ -34,9 +44,11 @@ const userMenu = [
   {
     key: "setting",
     label: (
-      <div className="user-menu-items" key={3}>
-        <Link to="/settings">Settings</Link>
-      </div>
+      <Link to="/setting">
+        <div className="user-menu-items" key={3}>
+          Settings
+        </div>
+      </Link>
     ),
     icon: <SettingOutlined />,
     style: {

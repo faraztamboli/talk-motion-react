@@ -1,9 +1,9 @@
 import { useState } from "react";
-import JS2Py from "../../remotepyjs";
+import JS2Py from "../remotepyjs";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../app/features/loginSlice";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import { login } from "../app/features/loginSlice";
+import useLocalStorage from "./useLocalStorage";
 
 function useLogin() {
   const [loginError, setLoginError] = useState(false);

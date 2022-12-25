@@ -1,5 +1,5 @@
 import { useState } from "react";
-import JS2Py from "../../remotepyjs";
+import JS2Py from "../remotepyjs";
 
 function forgotPasswordLogic() {
   const [isMailSent, setIsMailSent] = useState(false);

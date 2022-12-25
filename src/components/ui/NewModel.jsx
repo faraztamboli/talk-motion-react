@@ -68,10 +68,10 @@ const App = (props) => {
   const btnStyle = props.sm ? "medium" : "large";
   const iconSize = props.sm ? 20 : 24;
 
-  const onCreate = (values) => {
+  function onCreate(values) {
     createNewModel(values.title, values.description);
     setOpen(false);
-  };
+  }
 
   return (
     <div>

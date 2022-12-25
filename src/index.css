@@ -637,6 +637,15 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
   background-color: #35D399 !important;
 }
 
+.side-bar {
+  overflow: hidden !important;
+  height: 100vh !important;
+  position: fixed !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+}
+
 /* Login Page Styling */
 .auth-pages-first-col-heading {
   font-weight: 900 !important;
@@ -695,6 +704,7 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
   background: #FFFFFF;
   box-shadow: 0px 4px 18px rgba(222, 231, 237, 0.46) !important;
   border-radius: 6px;
+  height: 100% !important;
 }
 
 .converter-btns {
@@ -761,8 +771,4 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 .user-menu-items, .user-menu-items a {
   color: rgb(161, 165, 183);
-}
-
-.empty-img-shadow {
-  filter: drop-shadow(2px 2px 1px black);
 }

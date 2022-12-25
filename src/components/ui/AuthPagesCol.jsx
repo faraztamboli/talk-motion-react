@@ -4,7 +4,7 @@ import { Col, Button } from "antd";
 function AuthPagesCol() {
   return (
     <Col span={12} xs={24} md={12} className="mh-100vh auth-pages-bg">
-      <div className="text-center mh-100vh p-8 flex flex-left-center">
+      <div className="text-center mh-100vh p-8 flex flex-center-center">
         <div className="block">
           <h1 className="mb-0 text-white auth-pages-first-col-heading">
             Talk Motion

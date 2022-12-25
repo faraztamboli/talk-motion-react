@@ -1,7 +1,5 @@
-import items from './sidebarNav';
-import modelsList from './modelsList';
-import voicesList from './voicesList';
-import userMenu from './userMenuList';
-import modelsData from './modelsData';
+import items from "./sidebarNav";
+import voicesList from "./voicesList";
+import userMenu from "./userMenuList";
 
-export { items, modelsList, voicesList, userMenu, modelsData };
+export { items, voicesList, userMenu };

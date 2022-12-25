@@ -9,19 +9,12 @@ const { Sider } = Layout;
 const Sidebar = (props) => {
   return (
     <Sider
+      className="side-bar"
       trigger={null}
       collapsible="true"
       collapsedWidth={props.collapsedWidth}
       width={props.sideBarWidth}
       collapsed={props.collapsed}
-      style={{
-        overflow: "auto",
-        height: "100vh",
-        position: "fixed",
-        left: 0,
-        top: 0,
-        bottom: 0,
-      }}
     >
       <div className="logo">
         {props.sideBarWidth === 200 && !props.collapsed ? (

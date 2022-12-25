@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Row, Col, Card } from "antd";
-import { ModelsDropdown } from "../../components/ui/ModelsDropdown";
-import { TrainerControl } from "../../components/ui/TrainerControl";
-import { GestureToVoice } from "../../components/ui/GestureToVoice";
+import { ModelsDropdown } from "../components/ui/ModelsDropdown";
+import { TrainerControl } from "../components/ui/TrainerControl";
+import { GestureToVoice } from "../components/ui/GestureToVoice";
+import { trainerDetails } from "../data/PageDetails";
+import MetaDecorator from "../components/MetaDecorator";
 
 export default function Trainer(props) {
   const [modalId, setModalId] = useState();
@@ -13,8 +15,11 @@ export default function Trainer(props) {
     setModalId(modal_id);
   };
 
+  const { title, description } = trainerDetails;
+
   return (
     <>
+      <MetaDecorator title={title} description={description} />
       <div style={trainerStyle} className="layout-bg mh-100vh">
         <Row gutter={[16, 16]}>
           <Col span={8} xs={24} md={8}>

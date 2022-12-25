@@ -6,8 +6,9 @@ const selectLayout = (Layout) => {
     const [isAuthLayout, setIsAuthLayout] = useState(false);
     const location = useLocation();
 
+    // Enter the pathname of the pages in which you want header and siderbar (LOWERCASE)
     const noAuthLayoutPages = [
-      "",
+      "", // home route
       "converter",
       "trainer",
       "models",

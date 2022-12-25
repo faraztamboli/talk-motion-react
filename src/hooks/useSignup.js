@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import JS2Py from "../../remotepyjs";
+import JS2Py from "../remotepyjs";
 import { useNavigate } from "react-router-dom";
 
 function SignupLogic() {

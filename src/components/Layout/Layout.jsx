@@ -2,10 +2,18 @@ import React from "react";
 import { Layout } from "antd";
 import Header from "../Layout/Header";
 import Sidebar from "../Layout/Sidebar";
-import selectLayout from "./NoLayout";
+import selectLayout from "../HOCs/SelectLayout";
 import Footer from "./Footer";
 
 function AppLayout(props) {
+  const style = {
+    marginLeft: props.collapsedWidth,
+    transition: "all .20s ease-in-out",
+  };
+  const layoutStyle = props.collapsed
+    ? style
+    : { ...style, marginLeft: props.sideBarWidth };
+
   return (
     <>
       <Layout style={{ minHeight: "100vh" }}>
@@ -26,23 +34,15 @@ function AppLayout(props) {
             className="site-layout-background"
             style={{ minHeight: "100vh" }}
           >
-            <Layout
-              style={
-                props.collapsed
-                  ? {
-                      marginLeft: props.collapsedWidth,
-                      transition: "all .20s ease-in-out",
-                    }
-                  : {
-                      marginLeft: props.sideBarWidth,
-                      transition: "all .20s ease-in-out",
-                    }
-              }
-            >
+            <Layout style={layoutStyle}>
               <>{props.children}</>
             </Layout>
           </div>
-          <Footer />
+          <Footer
+            collapsed={props.collapsed}
+            collapsedWidth={props.collapsedWidth}
+            sideBarWidth={props.sideBarWidth}
+          />
         </Layout>
       </Layout>
     </>

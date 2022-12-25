@@ -13,26 +13,23 @@ export const ModelsCard = (props) => {
   const items = [
     {
       key: "1",
-      label: <UpdateModel model_id={model.model_id} />,
+      label: <UpdateModel model_id={model.id} />,
     },
     {
       key: "2",
-      label: <div onClick={() => deleteModel(model.model_id)}>Delete</div>,
+      label: <div onClick={() => deleteModel(model.id)}>Delete</div>,
     },
     {
       key: "3",
       label: (
-        <div
-          style={{ width: "100%" }}
-          onClick={() => cloneModel(model.model_id)}
-        >
+        <div style={{ width: "100%" }} onClick={() => cloneModel(model.id)}>
           Clone
         </div>
       ),
     },
     {
       key: "4",
-      label: <div onClick={() => purchaseModel(model.model_id)}>Purchase</div>,
+      label: <div onClick={() => purchaseModel(model.id)}>Purchase</div>,
     },
   ];
 
@@ -78,7 +75,7 @@ export const ModelsCard = (props) => {
               </Tooltip>
             );
           })}
-          <NewTrainer modelid={model.model_id} />
+          <NewTrainer id={model.id} />
         </Avatar.Group>
       </div>
 
