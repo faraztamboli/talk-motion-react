@@ -58,7 +58,7 @@ function useSpeechRecognitionHook() {
                 ? res[0][res[1][index]]?.video_stream
                 : res[0][res[1][index]]?.remote_url;
             elemVideo !== undefined && elemArr.push(elemVideo);
-            console.log(res && res[0] && res[0][res[1][index]]?.is_remote);
+            // console.log(res && res[0] && res[0][res[1][index]]?.is_remote);
           });
           setLoading(true);
           setVideo(elemArr);

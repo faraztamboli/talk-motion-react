@@ -34,26 +34,32 @@ function useMediaStream() {
   }, [mediaRecorderRef, webcamRef, setCapturing]);
 
   const handleDownload = React.useCallback(() => {
-    if (recordedChunks.length) {
+    if (recordedChunks.length > 0) {
       console.log(recordedChunks);
       const blob = new Blob(recordedChunks, {
         type: "video/mp4",
       });
 
-      toBase64String(blob);
-      console.log(base64data);
+      // eslint-disable-next-line
+      const retstring = toBase64String(blob).then((finalString) => {
+        setBase64Data(finalString);
+        console.log(finalString);
+        return finalString;
+      });
 
       setRecordedChunks([]);
     }
   }, [recordedChunks]);
 
-  const toBase64String = (blob) => {
-    var reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onloadend = function () {
-      setBase64Data(() => reader.result);
-    };
-  };
+  function toBase64String(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+      console.log(new Date());
+    });
+  }
 
   return {
     webcamRef,

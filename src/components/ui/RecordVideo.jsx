@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Modal, Form, Button, Input } from "antd";
+import { Modal, Form, Button, Input, Tooltip } from "antd";
+import { MdOutlineDone } from "react-icons/md";
 import Webcam from "react-webcam";
 import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
 import useMediaStream from "../../hooks/useMediaStream";
@@ -14,6 +15,7 @@ function RecordVideo(props) {
     handleStopCaptureClick,
     handleDownload,
   } = useMediaStream();
+  props.setBase64String(base64data);
   const [form] = Form.useForm();
 
   return (
@@ -45,11 +47,7 @@ function RecordVideo(props) {
           <Input placeholder="word" type="text" />
         </Form.Item>
 
-        <Form.Item
-          name="videoRecording"
-          valuePropName="videoRecording"
-          initialValue={base64data}
-        >
+        <Form.Item name="videoRecording" valuePropName="videoRecording">
           <>
             <Webcam
               audio={false}
@@ -69,7 +67,15 @@ function RecordVideo(props) {
             )}
 
             {recordedChunks.length > 0 && (
-              <Button onClick={handleDownload}>Download</Button>
+              <Tooltip title="useVideo" placement="bottom" showArrow={false}>
+                <Button
+                  className="ml-6"
+                  type="primary"
+                  shape="circle"
+                  onClick={handleDownload}
+                  icon={<MdOutlineDone />}
+                />
+              </Tooltip>
             )}
           </>
         </Form.Item>
@@ -79,11 +85,12 @@ function RecordVideo(props) {
 }
 
 const App = () => {
+  const [base64String, setBase64String] = useState();
   const [open, setOpen] = useState(false);
   const { uploadVideo } = useUploadGestureVideo();
   const onCreate = (values) => {
-    uploadVideo(values.word, `${values.word}.mp4`, values.videoRecording);
-    console.log(values);
+    uploadVideo(values.word, `${values.word}.mp4`, base64String);
+    console.log(values, base64String);
   };
 
   return (
@@ -102,6 +109,7 @@ const App = () => {
         onCancel={() => {
           setOpen(false);
         }}
+        setBase64String={setBase64String}
       />
     </>
   );
