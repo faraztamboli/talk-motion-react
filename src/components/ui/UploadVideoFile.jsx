@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, Button, Input, Upload } from "antd";
+import { Modal, Form, Button, Input, Upload, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
 
@@ -57,8 +57,9 @@ function UploadVideoFile(props) {
 
 const App = () => {
   const [open, setOpen] = useState(false);
-
   const { uploadVideo } = useUploadGestureVideo();
+  const [messageApi, contextHolder] = message.useMessage();
+
   const onCreate = (values) => {
     let reader = new FileReader();
     reader.readAsDataURL(values.dragger[0].originFileObj);
@@ -69,11 +70,18 @@ const App = () => {
     reader.onerror = function () {
       console.log(reader.error);
     };
+
+    messageApi.open({
+      type: "success",
+      content: "Video uploaded!",
+    });
+
     setOpen(false);
   };
 
   return (
     <>
+      {contextHolder}
       <Button
         type="primary"
         shape="round"

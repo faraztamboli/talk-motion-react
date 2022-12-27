@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, Button, Input, Tooltip } from "antd";
+import { Modal, Form, Button, Input, Tooltip, message } from "antd";
 import { MdOutlineDone } from "react-icons/md";
 import Webcam from "react-webcam";
 import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
@@ -88,13 +88,20 @@ const App = () => {
   const [base64String, setBase64String] = useState();
   const [open, setOpen] = useState(false);
   const { uploadVideo } = useUploadGestureVideo();
+  const [messageApi, contextHolder] = message.useMessage();
   const onCreate = (values) => {
     uploadVideo(values.word, `${values.word}.mp4`, base64String);
     console.log(values, base64String);
+    messageApi.open({
+      type: "success",
+      content: "Video uploaded!",
+    });
+    setOpen(false);
   };
 
   return (
     <>
+      {contextHolder}
       <Button
         type="primary"
         shape="round"
