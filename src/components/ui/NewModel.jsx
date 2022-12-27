@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form, Input, Modal, Radio } from "antd";
 import { MdOutlineNewLabel } from "react-icons/md";
-import useModels from "../../hooks/useModels";
 
 const CollectionCreateForm = (props) => {
   const [form] = Form.useForm();
@@ -63,7 +62,7 @@ const CollectionCreateForm = (props) => {
 
 const App = (props) => {
   const [open, setOpen] = useState(false);
-  const { createNewModel } = useModels();
+  const { createNewModel } = props;
 
   const btnStyle = props.sm ? "medium" : "large";
   const iconSize = props.sm ? 20 : 24;

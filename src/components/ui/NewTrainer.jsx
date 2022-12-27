@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button, Form, Input, Modal } from "antd";
 import { MdPersonAdd } from "react-icons/md";
-import useModels from "../../hooks/useModels";
 
 const CollectionCreateForm = (props) => {
   const [form] = Form.useForm();
+
   return (
     <Modal
       open={props.open}
@@ -49,7 +49,7 @@ const CollectionCreateForm = (props) => {
 
 const App = (props) => {
   const [open, setOpen] = useState(false);
-  const { addNewTrainer } = useModels();
+  const { addNewTrainer } = props;
 
   const onCreate = (values) => {
     console.log("Received values of form: ", values);

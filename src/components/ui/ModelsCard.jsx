@@ -3,12 +3,11 @@ import UpdateModel from "../../components/ui/UpdateModel";
 import { Card, Avatar, Tooltip, Button, Dropdown } from "antd";
 import { MdOutlineArrowRightAlt, MdMoreVert } from "react-icons/md";
 import NewTrainer from "../../components/ui/NewTrainer";
-import useModels from "../../hooks/useModels";
 import plurkImg from "../../media/images/plurk.png";
 
 export const ModelsCard = (props) => {
-  const { deleteModel, cloneModel, purchaseModel } = useModels();
-  const { model } = props;
+  const { model, deleteModel, cloneModel, purchaseModel, addNewTrainer } =
+    props;
 
   const items = [
     {
@@ -75,7 +74,7 @@ export const ModelsCard = (props) => {
               </Tooltip>
             );
           })}
-          <NewTrainer id={model.id} />
+          <NewTrainer id={model.id} addNewTrainer={addNewTrainer} />
         </Avatar.Group>
       </div>
 

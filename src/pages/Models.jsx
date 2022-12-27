@@ -7,7 +7,17 @@ import { modelsDetails } from "../data/PageDetails";
 import MetaDecorator from "../components/MetaDecorator";
 
 export default function Models(props) {
-  const { publicModels, userModels, publicLoading, userLoading } = useModels();
+  const {
+    publicModels,
+    userModels,
+    publicLoading,
+    userLoading,
+    createNewModel,
+    deleteModel,
+    cloneModel,
+    purchaseModel,
+    addNewTrainer,
+  } = useModels();
 
   const modelStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
   const emptyImgStyle = { filter: "saturate(12)" };
@@ -24,7 +34,14 @@ export default function Models(props) {
             ? publicModels.map((model) => {
                 return (
                   <Col key={model.id} span={8} xs={24} md={8}>
-                    <ModelsCard model={model} key={model.key} />
+                    <ModelsCard
+                      model={model}
+                      deleteModel={deleteModel}
+                      cloneModel={cloneModel}
+                      purchaseModel={purchaseModel}
+                      addNewTrainer={addNewTrainer}
+                      key={model.key}
+                    />
                   </Col>
                 );
               })
@@ -48,6 +65,10 @@ export default function Models(props) {
                   <Col key={model.id} span={8} xs={24} md={8}>
                     <ModelsCard
                       model={model}
+                      deleteModel={deleteModel}
+                      cloneModel={cloneModel}
+                      purchaseModel={purchaseModel}
+                      addNewTrainer={addNewTrainer}
                       collapsedWidth={props.collapsedWidth}
                       key={model.key}
                     />
@@ -66,7 +87,7 @@ export default function Models(props) {
           <Skeleton active loading={userLoading} style={{ width: "500px" }} />
         </Row>
         <div className="flex flex-center-center mt-10">
-          <NewModel sm={props.sm} />
+          <NewModel sm={props.sm} createNewModel={createNewModel} />
         </div>
       </div>
     </>
