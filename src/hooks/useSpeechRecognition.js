@@ -42,7 +42,12 @@ function useSpeechRecognitionHook() {
   };
 
   const getWords = (transcript) => {
-    return transcript && transcript.split(" ");
+    let punctuationless = transcript.replace(
+      /[.,-/#!$%^&*;:{}=\-_`~()@+?><[\]+]/g,
+      ""
+    );
+    var finalString = punctuationless.replace(/\s{2,}/g, " ");
+    return finalString && finalString.split(" ");
   };
 
   const getVideo = (words) => {
