@@ -1,15 +1,20 @@
 import React from "react";
-import { Row, Col, Skeleton, Empty } from "antd";
+import { Row, Col, Skeleton, Empty, Pagination } from "antd";
 import NewModel from "../components/ui/NewModel";
 import { ModelsCard } from "../components/ui/ModelsCard";
 import useModels from "../hooks/useModels";
 import { modelsDetails } from "../data/PageDetails";
 import MetaDecorator from "../components/MetaDecorator";
+import JS2Py from "../remotepyjs";
 
 export default function Models(props) {
   const {
+    publicCount,
     publicModels,
+    getPublicModels,
+    userCount,
     userModels,
+    getUserModels,
     publicLoading,
     userLoading,
     createNewModel,
@@ -23,6 +28,7 @@ export default function Models(props) {
   const emptyImgStyle = { filter: "saturate(12)" };
 
   const { title, description } = modelsDetails;
+  console.log(JS2Py);
 
   return (
     <>
@@ -56,6 +62,15 @@ export default function Models(props) {
               )}
           <Skeleton active loading={publicLoading} style={{ width: "500px" }} />
         </Row>
+        {publicCount > 9 && (
+          <div className="flex flex-center-center mt-6">
+            <Pagination
+              defaultCurrent={1}
+              total={publicCount}
+              onChange={(page) => getPublicModels(page == 1 ? 1 : page * 9, 9)}
+            />
+          </div>
+        )}
 
         <h2>Your Models</h2>
         <Row gutter={[16, 16]}>
@@ -86,6 +101,15 @@ export default function Models(props) {
               )}
           <Skeleton active loading={userLoading} style={{ width: "500px" }} />
         </Row>
+        {userCount > 9 && (
+          <div className="flex flex-center-center mt-6">
+            <Pagination
+              defaultCurrent={1}
+              total={userCount}
+              onChange={(page) => getUserModels(page == 1 ? 1 : page * 9, 9)}
+            />
+          </div>
+        )}
         <div className="flex flex-center-center mt-10">
           <NewModel sm={props.sm} createNewModel={createNewModel} />
         </div>

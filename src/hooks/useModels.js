@@ -5,34 +5,48 @@ import useLocalStorage from "./useLocalStorage";
 function useModels() {
   const [publicModels, setPublicModels] = React.useState([]);
   const [userModels, setUserModels] = React.useState([]);
+  const [userCount, setUserCount] = React.useState(0);
+  const [publicCount, setPublicCount] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [publicLoading, setPublicLoading] = React.useState(true);
   const [userLoading, setUserLoading] = React.useState(true);
   const [token] = useLocalStorage("token");
 
   React.useEffect(() => {
-    getUserModels();
-    getPublicModels();
+    getUserModels(2, 9);
+    getPublicModels(1, 9);
   }, [userModels.length, publicModels.length, loading]);
 
-  function getPublicModels() {
+  function getPublicModels(offset, end) {
+    setPublicLoading(true);
     try {
-      JS2Py.PythonFunctions.TalkMotionServer.getPublicModels(function (res) {
-        if (res.constructor == Array) {
-          setPublicModels(() => res);
-          setPublicLoading(false);
+      JS2Py.PythonFunctions.TalkMotionServer.getPublicModels(
+        offset,
+        end,
+        function (res) {
+          setPublicCount(res[1][`count(*)`]);
+          res = res[0];
+          if (res.constructor == Array) {
+            setPublicModels(() => res);
+            setPublicLoading(false);
+          }
         }
-      });
+      );
     } catch (err) {
       console.log(err);
     }
   }
 
-  function getUserModels() {
+  function getUserModels(offset, end) {
+    setUserLoading(true);
     try {
       JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(
         token,
+        offset,
+        end,
         function (res) {
+          setUserCount(res[1][`count(*)`]);
+          res = res[0];
           if (res.constructor == Array) {
             setUserModels(() => res);
             setUserLoading(false);
@@ -133,8 +147,12 @@ function useModels() {
   }
 
   return {
+    publicCount,
     publicModels,
+    getPublicModels,
+    userCount,
     userModels,
+    getUserModels,
     loading,
     userLoading,
     publicLoading,

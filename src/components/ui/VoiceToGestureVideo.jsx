@@ -8,7 +8,7 @@ function VoiceToGestureVideo(props) {
     // loading,
     video,
     // setVideo,
-    count,
+    // count,
     setCount,
     videoSrc,
     fullScreen,
@@ -128,10 +128,6 @@ function VoiceToGestureVideo(props) {
           autoPlay
           muted
           onEnded={() => {
-            if (count === video.length) {
-              setCount(0);
-              return;
-            }
             setCount((prevCount) => prevCount + 1);
           }}
         ></video>

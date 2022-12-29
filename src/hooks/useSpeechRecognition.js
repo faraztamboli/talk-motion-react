@@ -46,24 +46,34 @@ function useSpeechRecognitionHook() {
       /[.,-/#!$%^&*;:{}=\-_`~()@+?><[\]+]/g,
       ""
     );
-    var finalString = punctuationless.replace(/\s{2,}/g, " ");
+    let finalString = punctuationless.replace(/\s{2,}/g, " ");
+    finalString = finalString.toLowerCase();
+    console.log(finalString);
     return finalString && finalString.split(" ");
   };
 
+  /****************************************************
+   * ToDo:
+   *  Make the video rendering process smooth.
+   *  Make sure each availabe video must be played in sequence.
+   *    *
+   */
   const getVideo = (words) => {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(
         words,
         (res) => {
-          // console.log(res);
+          console.log(res);
           let elemArr = new Array();
-          Object.keys(res[0]).forEach((element, index) => {
-            const elemVideo =
-              res && res[0] && res[0][res[1][index]]?.is_remote === false
-                ? res[0][res[1][index]]?.video_stream
-                : res[0][res[1][index]]?.remote_url;
-            elemVideo !== undefined && elemArr.push(elemVideo);
-            // console.log(res && res[0] && res[0][res[1][index]]?.is_remote);
+          Object.keys(res[1]).forEach((element, index) => {
+            const availableVideos = Object.keys(res[0]);
+            if (availableVideos.includes(res[1][index])) {
+              const videoUrl =
+                res && res[0] && res[0][res[1][index]]?.remote_url;
+              videoUrl && videoUrl !== undefined && elemArr.push(videoUrl);
+              // console.log(res && res[0] && res[0][res[1][index]]?.remote_url);
+              // console.log(elemArr);
+            }
           });
           setLoading(true);
           setVideo(elemArr);
