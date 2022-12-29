@@ -5,7 +5,6 @@ import { ModelsCard } from "../components/ui/ModelsCard";
 import useModels from "../hooks/useModels";
 import { modelsDetails } from "../data/PageDetails";
 import MetaDecorator from "../components/MetaDecorator";
-import JS2Py from "../remotepyjs";
 
 export default function Models(props) {
   const {
@@ -28,7 +27,6 @@ export default function Models(props) {
   const emptyImgStyle = { filter: "saturate(12)" };
 
   const { title, description } = modelsDetails;
-  console.log(JS2Py);
 
   return (
     <>
@@ -67,7 +65,7 @@ export default function Models(props) {
             <Pagination
               defaultCurrent={1}
               total={publicCount}
-              onChange={(page) => getPublicModels(page == 1 ? 1 : page * 9, 9)}
+              onChange={(page) => getPublicModels((page - 1) * 9, 9)}
             />
           </div>
         )}
@@ -106,7 +104,7 @@ export default function Models(props) {
             <Pagination
               defaultCurrent={1}
               total={userCount}
-              onChange={(page) => getUserModels(page == 1 ? 1 : page * 9, 9)}
+              onChange={(page) => getUserModels((page - 1) * 9, 9)}
             />
           </div>
         )}

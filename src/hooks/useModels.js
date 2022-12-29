@@ -13,8 +13,8 @@ function useModels() {
   const [token] = useLocalStorage("token");
 
   React.useEffect(() => {
-    getUserModels(1, 9);
-    getPublicModels(1, 9);
+    getUserModels(0, 9);
+    getPublicModels(0, 9);
   }, [userModels.length, publicModels.length, loading]);
 
   function getPublicModels(offset, end) {
