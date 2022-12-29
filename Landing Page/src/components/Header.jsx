@@ -2,6 +2,7 @@ import React from "react";
 import { AlignLeftOutlined } from "@ant-design/icons";
 import { Button, Drawer } from "antd";
 import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 import logo from "../media/images/logo.png";
 import logoSmall from "../media/images/logo-small.png";
 
@@ -34,17 +35,21 @@ function Header(props) {
           <Link to="/guide" className="home-header-links">
             Features
           </Link>
-          <Link href="#pricing" className="home-header-links">
+          <HashLink to="/#pricing" className="home-header-links">
             Pricing
-          </Link>
+          </HashLink>
           <Link to="/contact-us" className="home-header-links">
             Contact Us
           </Link>
-          <Link to="/signup">
+          <a
+            href="https://app.talk-motion.com/signup"
+            target="_blank"
+            rel="noreferrer"
+          >
             <Button size="large" shape="round" className="home-header-btn">
               Signup for Free
             </Button>
-          </Link>
+          </a>
         </div>
 
         <div className="hambarger-icon-div">
@@ -86,7 +91,7 @@ function Header(props) {
               </Link>
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
-              <Link
+              <HashLink
                 to="#pricing"
                 className="drawer-links"
                 style={{
@@ -96,7 +101,7 @@ function Header(props) {
                 }}
               >
                 Pricing
-              </Link>
+              </HashLink>
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
               <Link
@@ -112,9 +117,15 @@ function Header(props) {
               </Link>
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
-              <Button size="middle" shape="round">
-                Signup for Free
-              </Button>
+              <a
+                href="https://app.talk-motion.com/signup"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Button size="middle" shape="round">
+                  Signup for Free
+                </Button>
+              </a>
             </li>
           </ul>
         </Drawer>
