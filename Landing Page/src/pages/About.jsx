@@ -2,13 +2,20 @@ import { Col, Row } from "antd";
 import React from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
+import MetaDecorator from "../components/HOCs/MetaDecorator";
 import PageHeader from "../components/PageHeader";
+import { aboutPageDetails } from "../data/pageDetails";
 import TalkMotionImg from "../media/images/talk-motion.png";
 
 function About(props) {
+  const { title, description } = aboutPageDetails;
+
   return (
     <>
+      <MetaDecorator title={title} description={description} />
+
       <Header md={props.md} />
+
       <PageHeader title="About Us" />
 
       <div className="container">
