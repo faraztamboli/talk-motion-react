@@ -17,7 +17,14 @@ function useModels() {
 
   function getPublicModels() {
     try {
-      JS2Py.PythonFunctions.TalkMotionServer.getPublicModels(function (res) {
+      let offset = 0;
+      let end = 1000000000;
+      JS2Py.PythonFunctions.TalkMotionServer.getPublicModels(
+        offset,
+        end,
+      function (res) {
+        let total_count = res[1];
+        res = res[0];
         if (res.constructor == Array) {
           setPublicModels(() => res);
           setPublicLoading(false);
@@ -30,9 +37,15 @@ function useModels() {
 
   function getUserModels() {
     try {
+      let offset = 0;
+      let end = 1000000000;
       JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(
         token,
+        offset,
+        end,
         function (res) {
+          let total_count = res[1];
+          res = res[0];
           if (res.constructor == Array) {
             setUserModels(() => res);
             setUserLoading(false);
