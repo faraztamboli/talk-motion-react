@@ -1,6 +1,6 @@
 import React from "react";
 
-function useResizeEvent() {
+function useMediaQueries() {
   const [collapsed, setCollapsed] = React.useState(false);
   const [collapsedWidth, setCollapsedWidth] = React.useState(80);
   const [sideBarWidth, setSideBarWidth] = React.useState(200);
@@ -49,4 +49,4 @@ function useResizeEvent() {
   return { collapsed, collapsedWidth, onCollapsed, sideBarWidth, md, sm };
 }
 
-export default useResizeEvent;
+export default useMediaQueries;

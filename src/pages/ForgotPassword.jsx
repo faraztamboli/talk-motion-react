@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Row, Col, Button, Form, Input, Space, message } from "antd";
+import { Layout, Row, Col, Button, Form, Input, Space } from "antd";
 import { MailFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import AuthPagesCol from "../components/ui/AuthPagesCol";
@@ -8,21 +8,13 @@ import MetaDecorator from "../components/MetaDecorator";
 import { forgotPasswordDetails } from "../data/PageDetails";
 
 const ForgotPassword = (props) => {
-  const { onFinish, isMailSent } = useForgotPassword();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { onFinish, contextHolder, loading } = useForgotPassword();
 
-  const success = () => {
-    messageApi.open({
-      type: "success",
-      content: "Link sent to your email",
-    });
-  };
-
-  const failure = () => {
-    messageApi.open({
-      type: "error",
-      content: "Cannot reset the password",
-    });
+  const iconStyle = { marginRight: "10px", color: "#B5B5B5" };
+  const formInputStyle = {
+    outline: "none",
+    border: "2px solid #EEEEEE",
+    borderRadius: "33px",
   };
 
   const { title, description } = forgotPasswordDetails;
@@ -72,17 +64,13 @@ const ForgotPassword = (props) => {
                       prefix={
                         <MailFilled
                           className="site-form-item-icon"
-                          style={{ marginRight: "10px", color: "#B5B5B5" }}
+                          style={iconStyle}
                         />
                       }
                       placeholder="Email"
                       type="email"
                       size="large"
-                      style={{
-                        outline: "none",
-                        border: "2px solid #EEEEEE",
-                        borderRadius: "33px",
-                      }}
+                      style={formInputStyle}
                     />
                   </Form.Item>
 
@@ -94,8 +82,7 @@ const ForgotPassword = (props) => {
                         shape="round"
                         size="large"
                         style={{ width: "100%" }}
-                        onClick={isMailSent === true ? success : failure}
-                        // loading={loading}
+                        loading={loading}
                       >
                         Send Link
                       </Button>

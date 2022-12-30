@@ -1,22 +1,23 @@
 import React from "react";
 import { Layout, Row, Col, Button, Input, Form, Space } from "antd";
-import { LockFilled, UserOutlined, MailFilled } from "@ant-design/icons";
+import { LockFilled, MailFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import useSignup from "../hooks/useSignup";
 import AuthPagesCol from "../components/ui/AuthPagesCol";
 import MetaDecorator from "../components/MetaDecorator";
 import { signupDetails } from "../data/PageDetails";
+import useResetPassword from "../hooks/useResetPassword";
 
-const Signup = (props) => {
+const ResetPassword = (props) => {
   const [form] = Form.useForm();
-  const { onFinish } = useSignup();
+  const { onFinish, contextHolder, loading } = useResetPassword();
 
-  const iconStyle = { marginRight: "10px", color: "#B5B5B5" };
   const formInputStyle = {
     outline: "none",
     border: "2px solid #EEEEEE",
     borderRadius: "33px",
   };
+
+  const formIconStyle = { marginRight: "10px", color: "#B5B5B5" };
 
   const { title, description } = signupDetails;
 
@@ -24,6 +25,7 @@ const Signup = (props) => {
     <>
       <MetaDecorator title={title} description={description} />
       <Layout>
+        {contextHolder}
         <Row
           className="mh-100vh"
           style={
@@ -37,9 +39,7 @@ const Signup = (props) => {
             <div className="text-center mh-100vh p-8 flex flex-center-center auth-pages-second-col">
               <div className="block">
                 <h1 className="auth-pages-second-col-heading">Hello Again!</h1>
-                <p className="auth-pages-second-col-para">
-                  Register yourself for Talk Motion
-                </p>
+                <p className="auth-pages-second-col-para">Reset Password</p>
                 <Form
                   form={form}
                   name="register"
@@ -48,11 +48,11 @@ const Signup = (props) => {
                   scrollToFirstError
                 >
                   <Form.Item
-                    name="email"
+                    name="resetpasswordcode"
                     rules={[
                       {
                         required: true,
-                        message: "Please input your Email",
+                        message: "Please input your reset password code",
                       },
                     ]}
                   >
@@ -60,44 +60,22 @@ const Signup = (props) => {
                       prefix={
                         <MailFilled
                           className="site-form-item-icon"
-                          style={iconStyle}
+                          style={formIconStyle}
                         />
                       }
-                      placeholder="Email"
-                      type="email"
+                      placeholder="Reset Password Code"
+                      type="text"
                       size="large"
                       style={formInputStyle}
                     />
                   </Form.Item>
 
                   <Form.Item
-                    name="username"
+                    name="oldpassword"
                     rules={[
                       {
                         required: true,
-                        message: "Please input your Username!",
-                      },
-                    ]}
-                  >
-                    <Input
-                      prefix={
-                        <UserOutlined
-                          className="site-form-item-icon"
-                          style={iconStyle}
-                        />
-                      }
-                      placeholder="Username"
-                      size="large"
-                      style={formInputStyle}
-                    />
-                  </Form.Item>
-
-                  <Form.Item
-                    name="password"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your Password",
+                        message: "Please input your old password",
                       },
                     ]}
                   >
@@ -105,10 +83,33 @@ const Signup = (props) => {
                       prefix={
                         <LockFilled
                           className="site-form-item-icon"
-                          style={iconStyle}
+                          style={formIconStyle}
                         />
                       }
-                      placeholder="password"
+                      placeholder="Old Password"
+                      type="password"
+                      size="large"
+                      style={formInputStyle}
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    name="newpassword"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your new password",
+                      },
+                    ]}
+                  >
+                    <Input
+                      prefix={
+                        <LockFilled
+                          className="site-form-item-icon"
+                          style={formIconStyle}
+                        />
+                      }
+                      placeholder="New Password"
                       size="large"
                       type="password"
                       style={formInputStyle}
@@ -116,11 +117,11 @@ const Signup = (props) => {
                   </Form.Item>
 
                   <Form.Item
-                    name="confirm password"
+                    name="repeatnewpassword"
                     rules={[
                       {
                         required: true,
-                        message: "Please input your Password",
+                        message: "Please confirm your new password",
                       },
                     ]}
                   >
@@ -128,10 +129,10 @@ const Signup = (props) => {
                       prefix={
                         <LockFilled
                           className="site-form-item-icon"
-                          style={iconStyle}
+                          style={formIconStyle}
                         />
                       }
-                      placeholder="confirm password"
+                      placeholder="confirm new password"
                       size="large"
                       type="password"
                       style={formInputStyle}
@@ -146,8 +147,9 @@ const Signup = (props) => {
                         shape="round"
                         size="large"
                         style={{ width: "100%" }}
+                        loading={loading}
                       >
-                        Sign Up
+                        Reset Password
                       </Button>
                     </Space>
                   </Form.Item>
@@ -167,4 +169,4 @@ const Signup = (props) => {
   );
 };
 
-export default Signup;
+export default ResetPassword;

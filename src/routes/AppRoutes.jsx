@@ -5,6 +5,8 @@ import UploadVideo from "../components/ui/UploadVideo";
 import Login from "../pages/Login";
 import Error from "../pages/Errors/404Error";
 import { Skeleton } from "antd";
+import ResetPassword from "../pages/ResetPassword";
+import AuthPagesLoader from "../components/ui/AuthPagesLoader";
 
 // React lazy components
 const Converter = React.lazy(() => import("../pages/Converter"));
@@ -112,8 +114,18 @@ function AppRoutes(props) {
         path="/signup"
         exact
         element={
-          <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
+          <React.Suspense fallback={<AuthPagesLoader />}>
             <Signup md={md} />
+          </React.Suspense>
+        }
+      />
+
+      <Route
+        path="/resetpassword"
+        exact
+        element={
+          <React.Suspense fallback={<AuthPagesLoader />}>
+            <ResetPassword md={md} />
           </React.Suspense>
         }
       />
@@ -124,7 +136,7 @@ function AppRoutes(props) {
         path="/forgetpassword"
         exact
         element={
-          <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
+          <React.Suspense fallback={<AuthPagesLoader />}>
             <ForgotPassword md={md} />
           </React.Suspense>
         }

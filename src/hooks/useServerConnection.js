@@ -6,7 +6,7 @@ import {
   setServerStatus,
 } from "../app/features/serverSlice";
 
-async function useConnectToServer() {
+async function useServerConnection() {
   const dispatch = useDispatch();
 
   return React.useEffect(() => {
@@ -34,4 +34,4 @@ async function useConnectToServer() {
   }, []);
 }
 
-export default useConnectToServer;
+export default useServerConnection;

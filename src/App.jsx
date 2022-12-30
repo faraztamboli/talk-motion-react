@@ -5,20 +5,20 @@ import { useSelector } from "react-redux";
 import Spinner from "./components/ui/Spinner";
 import ServerError from "./pages/Errors/ServerError";
 import { Statuses } from "./components/ui/Statuses";
-import useConnectToServer from "./hooks/useConnectToServer";
-import useResizeEvent from "./hooks/useResizeEvent";
+import useServerConnection from "./hooks/useServerConnection";
+import useMediaQueries from "./hooks/useMediaQueries";
 import AppRoutes from "./routes/AppRoutes";
 
 const App = () => {
   const { collapsed, collapsedWidth, onCollapsed, sideBarWidth, sm, md } =
-    useResizeEvent();
+    useMediaQueries();
   const isServerConnected = useSelector(
     (state) => state.server.serverConnected
   );
   const serverStatus = useSelector((state) => state.server.serverStatus);
 
   // connect to server;
-  useConnectToServer();
+  useServerConnection();
 
   return (
     <div className="App">

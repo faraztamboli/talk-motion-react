@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-import { Button } from "antd";
-import { MdPause, MdPlayArrow } from "react-icons/md";
+import { Button, Tooltip } from "antd";
+import { MdPause, MdPlayArrow, MdFullscreen } from "react-icons/md";
 import { GestureCanvs } from "./GestureCanvs";
 import useLeapMotion from "../../hooks/useLeapMotion";
 
 export const GestureToVoice = (props) => {
+  const [fullScreen, setFullScreen] = React.useState(false);
   const [isPaused, setIsPaused] = React.useState(false);
   const { getComponentDetails } = useLeapMotion();
 
@@ -16,11 +17,29 @@ export const GestureToVoice = (props) => {
     getComponentDetails(isPaused, false, props.modalId, "");
   }, [isPaused]);
 
+  const toggleFullScreen = () => {
+    setFullScreen(!fullScreen);
+  };
+
+  const iconSize = props.md ? 20 : 24;
+  const buttonSize = props.md ? "medium" : "large";
+  const buttonStyle = props.md ? { marginBottom: "1rem" } : null;
+
   return (
     <div>
       <h2 className="mb-0">Gesture to Voice</h2>
       <p>generate speech from gestures</p>
-      <GestureCanvs />
+      <GestureCanvs
+        fullScreen={fullScreen}
+        setFullScreen={setFullScreen}
+        toggleFullScreen={toggleFullScreen}
+        isPaused={isPaused}
+        setIsPaused={setIsPaused}
+        togglePause={togglePause}
+        iconSize={iconSize}
+        buttonSize={buttonSize}
+        buttonStyle={buttonStyle}
+      />
       <div
         style={{
           display: "flex",
@@ -30,7 +49,7 @@ export const GestureToVoice = (props) => {
       >
         {isPaused ? (
           <Button
-            className="converter-btns"
+            className="mr-6 converter-btns"
             type="primary"
             shape="circle"
             style={{ backgroundColor: "#DDBA00" }}
@@ -41,7 +60,7 @@ export const GestureToVoice = (props) => {
           ></Button>
         ) : (
           <Button
-            className="converter-btns"
+            className="mr-6 converter-btns"
             type="primary"
             shape="circle"
             size="large"
@@ -49,6 +68,18 @@ export const GestureToVoice = (props) => {
             icon={<MdPlayArrow size={24} />}
           ></Button>
         )}
+        <Tooltip title="Full Screen" showArrow={false} placement="bottom">
+          <Button
+            style={buttonStyle}
+            type="primary"
+            className="converter-btns"
+            danger
+            shape="circle"
+            size={buttonSize}
+            onClick={toggleFullScreen}
+            icon={<MdFullscreen size={iconSize} />}
+          />
+        </Tooltip>
       </div>
       {props.from === "converter" && <p>Lorem ipsum dolor sit</p>}
     </div>

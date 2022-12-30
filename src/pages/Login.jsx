@@ -8,12 +8,20 @@ import MetaDecorator from "../components/MetaDecorator";
 import { loginDetails } from "../data/PageDetails";
 
 const Login = (props) => {
-  const { onFinish, loginError, loading } = useLogin();
+  const { onFinish, loading, contextHolder } = useLogin();
   const { title, description } = loginDetails;
+
+  const iconStyle = { marginRight: "10px", color: "#B5B5B5" };
+  const formInputStyle = {
+    outline: "none",
+    border: "2px solid #EEEEEE",
+    borderRadius: "33px",
+  };
 
   return (
     <Layout>
       <MetaDecorator title={title} description={description} />
+      {contextHolder}
       <Row
         className="mh-100vh"
         style={
@@ -30,9 +38,6 @@ const Login = (props) => {
               <p className="auth-pages-second-col-para">
                 Login for Talk Motion
               </p>
-              {loginError && (
-                <p style={{ color: "red" }}>Invalid username or password</p>
-              )}
               <Form
                 name="normal_login"
                 className="login-form"
@@ -55,16 +60,12 @@ const Login = (props) => {
                     prefix={
                       <UserOutlined
                         className="site-form-item-icon"
-                        style={{ marginRight: "10px", color: "#B5B5B5" }}
+                        style={iconStyle}
                       />
                     }
                     placeholder="Username"
                     size="large"
-                    style={{
-                      outline: "none",
-                      border: "2px solid #EEEEEE",
-                      borderRadius: "33px",
-                    }}
+                    style={formInputStyle}
                   />
                 </Form.Item>
                 <Form.Item
@@ -80,18 +81,14 @@ const Login = (props) => {
                     prefix={
                       <LockOutlined
                         className="site-form-item-icon"
-                        style={{ marginRight: "10px", color: "#B5B5B5" }}
+                        style={iconStyle}
                       />
                     }
                     type="password"
                     autoComplete="password"
                     placeholder="Password"
                     size="large"
-                    style={{
-                      outline: "none",
-                      border: "2px solid #EEEEEE",
-                      borderRadius: "33px",
-                    }}
+                    style={formInputStyle}
                   />
                 </Form.Item>
 
@@ -101,10 +98,8 @@ const Login = (props) => {
                       type="primary"
                       htmlType="submit"
                       shape="round"
-                      // className="login-form-button block w-100"
                       style={{ width: "100%" }}
                       loading={loading}
-                      // block={true}
                     >
                       Log in
                     </Button>
