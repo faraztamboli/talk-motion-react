@@ -18,7 +18,13 @@ function Footer() {
               placeholder="Enter email address"
               className="footer-input"
             />
-            <button className="footer-input-btn">Sign Up</button>
+            <a
+              href="https://app.talk-motion.com/signup"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <button className="footer-input-btn">Sign Up</button>
+            </a>
           </Col>
         </Row>
 
@@ -33,13 +39,19 @@ function Footer() {
               <h5>Important Links</h5>
               <ul>
                 <li>
-                  <Link to="/privacy-policy">FAQs</Link>
+                  <Link to="/privacy-policy" className="footer-links">
+                    FAQs
+                  </Link>
                 </li>
                 <li>
-                  <Link to="/privacy-policy">Privacy Policy</Link>
+                  <Link to="/privacy-policy" className="footer-links">
+                    Privacy Policy
+                  </Link>
                 </li>
                 <li>
-                  <Link to="/terms">Terms & Conditions</Link>
+                  <Link to="/terms" className="footer-links">
+                    Terms & Conditions
+                  </Link>
                 </li>
               </ul>
             </Col>

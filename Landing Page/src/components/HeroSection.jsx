@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, Col, Row } from "antd";
-import { Link } from "react-router-dom";
 import heroImage from "../media/images/hero-image.png";
 
 function HeroSection(props) {
@@ -17,7 +16,11 @@ function HeroSection(props) {
                 power of artificial intelligence.
               </p>
               <div className="hero-content-btns">
-                <Link to="/signup">
+                <a
+                  href="https://app.talk-motion.com/signup"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   <Button
                     shape="round"
                     size={props.md === true ? "middle" : "large"}
@@ -26,7 +29,7 @@ function HeroSection(props) {
                   >
                     Signup for Free
                   </Button>
-                </Link>
+                </a>
               </div>
             </div>
           </Col>

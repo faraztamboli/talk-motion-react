@@ -27,8 +27,20 @@ code {
   margin-bottom: 4rem;
 }
 
+.pt-3 {
+  padding-top: 3rem !important;
+}
+
+.mh-83vh {
+  min-height: 83vh !important;
+}
+
 .mh-100vh {
   min-height: 100vh !important;
+}
+
+.w-100p {
+  width: 100% !important;
 }
 
 .flex {
@@ -56,13 +68,40 @@ code {
   position: relative;
   overflow-x: hidden;
   overflow: hidden;
+  background-color: rgb(249 249 249);
 }
 
-/* .guide-page-container {
-  position: relative;
-  overflow-x: hidden;
-  overflow: hidden;
-} */
+.con {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.guide-page-number-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border: 1px solid black;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background-color: white;
+}
+
+.guide-page-content-h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.7rem;
+  display: inline-block;
+}
+
+.guide-page-content-p {
+  font-size: 0.875rem;
+  font-weight: 400;
+  margin-top: 1.313rem;
+}
 
 .guide-page-parent-div::before {
   content: '';
@@ -691,6 +730,10 @@ footer .footer-bottom-div ul li {
 footer .footer-bottom-div ul li a {
   text-decoration: none;
   color: #FFFFFF;
+}
+
+footer .footer-links:hover, footer .footer-links:active {
+  border-bottom: 1px solid #FFFFFF !important;
 }
 
 footer .footer-bottom-div .footer-bottom-div-col:not(:first-child) {

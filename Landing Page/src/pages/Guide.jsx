@@ -13,12 +13,9 @@ function GuidePage(props) {
     <>
       <MetaDecorator title={title} description={description} />
       <Header md={props.md} />
-      <div
-        className="guide-page-parent-div"
-        style={{ backgroundColor: "rgb(249 249 249)" }}
-      >
-        <div className="guide-page-container" style={{ paddingTop: "3rem" }}>
-          <Row style={{ minHeight: "83vh" }} className="guide-page">
+      <div className="guide-page-parent-div">
+        <div className="guide-page-container pt-3">
+          <Row className="guide-page mh-83vh">
             <Col span={12} xs={24} lg={12}>
               <GuidePageVideo lg={props.lg} />
             </Col>
