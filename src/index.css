@@ -466,7 +466,7 @@ code {
   width: 90%;
 }
 .w-100p {
-  width: 100%;
+  width: 100% !important;
 }
 
 .w-1rem {
@@ -679,6 +679,12 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 .auth-pages-second-col {
   background-color: #FFFFFF;
+}
+
+.auth-form-links {
+   font-size: 14px !important;
+   line-height: 16px !important;
+   color: #979797 !important;
 }
 
 /* Converter Page Styling */

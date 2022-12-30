@@ -23,8 +23,12 @@ export const UserMenu = () => {
         onClick={showUserMenu}
       />
       <Drawer placement="right" open={open} onClose={hideUserMenu}>
-        {userMenu.map((element) => {
-          return element.label;
+        {userMenu.map((element, index) => {
+          return (
+            <div key={index} onClick={hideUserMenu}>
+              {element.label}
+            </div>
+          );
         })}
       </Drawer>
     </>

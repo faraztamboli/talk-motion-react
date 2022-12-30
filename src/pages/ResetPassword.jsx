@@ -140,13 +140,13 @@ const ResetPassword = (props) => {
                   </Form.Item>
 
                   <Form.Item>
-                    <Space direction="vertical" style={{ width: "100%" }}>
+                    <Space direction="vertical" className="w-100p">
                       <Button
                         type="primary"
                         htmlType="submit"
                         shape="round"
                         size="large"
-                        style={{ width: "100%" }}
+                        className="w-100p"
                         loading={loading}
                       >
                         Reset Password
@@ -155,7 +155,7 @@ const ResetPassword = (props) => {
                   </Form.Item>
 
                   <Form.Item>
-                    <p>
+                    <p className="auth-form-links">
                       Already have an account? <Link to="/login">Login</Link>
                     </p>
                   </Form.Item>

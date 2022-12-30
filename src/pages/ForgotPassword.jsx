@@ -75,13 +75,13 @@ const ForgotPassword = (props) => {
                   </Form.Item>
 
                   <Form.Item>
-                    <Space direction="vertical" style={{ width: "100%" }}>
+                    <Space direction="vertical" className="w-100p">
                       <Button
                         type="primary"
                         htmlType="submit"
                         shape="round"
                         size="large"
-                        style={{ width: "100%" }}
+                        className="w-100p"
                         loading={loading}
                       >
                         Send Link
@@ -89,7 +89,7 @@ const ForgotPassword = (props) => {
                     </Space>
                   </Form.Item>
                   <Form.Item>
-                    <p>
+                    <p className="auth-form-links">
                       Continue to <Link to="/login">Login</Link>
                     </p>
                   </Form.Item>

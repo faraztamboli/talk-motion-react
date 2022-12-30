@@ -93,12 +93,12 @@ const Login = (props) => {
                 </Form.Item>
 
                 <Form.Item>
-                  <Space direction="vertical" style={{ width: "100%" }}>
+                  <Space direction="vertical" className="w-100p">
                     <Button
                       type="primary"
                       htmlType="submit"
                       shape="round"
-                      style={{ width: "100%" }}
+                      className="w-100p"
                       loading={loading}
                     >
                       Log in
@@ -112,25 +112,14 @@ const Login = (props) => {
 
                 <Form.Item noStyle>
                   <Link
-                    className="login-form-forgot"
+                    className="login-form-forgot auth-form-links"
                     to="/forgetpassword"
-                    style={{
-                      fontSize: "14px",
-                      lineHeight: "16px",
-                      color: "#979797",
-                    }}
                   >
                     Forgot password?
                   </Link>
                 </Form.Item>
                 <Form.Item>
-                  <p
-                    style={{
-                      fontSize: "14px",
-                      lineHeight: "16px",
-                      color: "#979797",
-                    }}
-                  >
+                  <p className="auth-form-links">
                     Don&apos;t have an account <Link to="/signup">Sign-up</Link>
                   </p>
                 </Form.Item>

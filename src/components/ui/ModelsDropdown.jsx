@@ -18,8 +18,7 @@ export const ModelsDropdown = (props) => {
         <AppstoreOutlined />
       </span>
       <Select
-        // bordered="false"
-        defaultValue={"Select Modal"}
+        defaultValue="Select Model"
         className="dropdowns"
         onChange={handleChange}
       >

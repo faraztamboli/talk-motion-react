@@ -9,7 +9,7 @@ import { signupDetails } from "../data/PageDetails";
 
 const Signup = (props) => {
   const [form] = Form.useForm();
-  const { onFinish } = useSignup();
+  const { onFinish, contextHolder, loading } = useSignup();
 
   const iconStyle = { marginRight: "10px", color: "#B5B5B5" };
   const formInputStyle = {
@@ -24,6 +24,7 @@ const Signup = (props) => {
     <>
       <MetaDecorator title={title} description={description} />
       <Layout>
+        {contextHolder}
         <Row
           className="mh-100vh"
           style={
@@ -139,13 +140,14 @@ const Signup = (props) => {
                   </Form.Item>
 
                   <Form.Item>
-                    <Space direction="vertical" style={{ width: "100%" }}>
+                    <Space direction="vertical" className="w-100p">
                       <Button
                         type="primary"
                         htmlType="submit"
                         shape="round"
                         size="large"
-                        style={{ width: "100%" }}
+                        className="w-100p"
+                        loading={loading}
                       >
                         Sign Up
                       </Button>
@@ -153,7 +155,7 @@ const Signup = (props) => {
                   </Form.Item>
 
                   <Form.Item>
-                    <p>
+                    <p className="auth-form-links">
                       Already have an account? <Link to="/login">Login</Link>
                     </p>
                   </Form.Item>
