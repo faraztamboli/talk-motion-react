@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Form, Button, Input, message } from "antd";
+import { Modal, Form, Button, Input } from "antd";
 import { useState } from "react";
 import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
 
@@ -11,6 +11,7 @@ function UploadVideoURL(props) {
       title="Upload a new video for a word"
       okText="Upload"
       cancelText="Cancel"
+      destroyOnClose="true"
       onCancel={props.onCancel}
       onOk={() => {
         form
@@ -43,14 +44,10 @@ function UploadVideoURL(props) {
 
 const App = () => {
   const [open, setOpen] = useState(false);
-  const { uploadGestureVideoURL } = useUploadGestureVideo();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { uploadGestureVideoURL, contextHolder, loading } =
+    useUploadGestureVideo();
   const onCreate = (values) => {
     uploadGestureVideoURL(values.word, values.videoURL);
-    messageApi.open({
-      type: "success",
-      content: "Video uploaded!",
-    });
     setOpen(false);
   };
 
@@ -61,6 +58,7 @@ const App = () => {
         type="primary"
         shape="round"
         className="converter-btns"
+        loading={loading}
         onClick={() => setOpen(true)}
       >
         Upload

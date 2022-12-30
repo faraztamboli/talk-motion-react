@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, Button, Input, Tooltip, message } from "antd";
+import { Modal, Form, Button, Input, Tooltip } from "antd";
 import { MdOutlineDone } from "react-icons/md";
 import Webcam from "react-webcam";
 import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
@@ -24,6 +24,7 @@ function RecordVideo(props) {
       title="Upload a new video for a word"
       okText="Upload"
       cancelText="Cancel"
+      destroyOnClose="true"
       onCancel={props.onCancel}
       onOk={() => {
         form
@@ -87,15 +88,11 @@ function RecordVideo(props) {
 const App = () => {
   const [base64String, setBase64String] = useState();
   const [open, setOpen] = useState(false);
-  const { uploadVideo } = useUploadGestureVideo();
-  const [messageApi, contextHolder] = message.useMessage();
+  const { uploadVideo, loading, contextHolder } = useUploadGestureVideo();
+
   const onCreate = (values) => {
     uploadVideo(values.word, `${values.word}.mp4`, base64String);
-    console.log(values, base64String);
-    messageApi.open({
-      type: "success",
-      content: "Video uploaded!",
-    });
+    // console.log(values, base64String);
     setOpen(false);
   };
 
@@ -107,6 +104,7 @@ const App = () => {
         shape="round"
         className="converter-btns"
         onClick={() => setOpen(true)}
+        loading={loading}
       >
         Upload
       </Button>
