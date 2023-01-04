@@ -10,12 +10,12 @@ export const deviceSlice = createSlice({
   initialState,
   reducers: {
     deviceConnected: (state) => {
-      state.isConnected = true;
-      state.status = "Connected";
+      state.deviceConnected = true;
+      state.deviceStatus = "Connected";
     },
     deviceDisconnected: (state) => {
-      state.isConnected = false;
-      state.status = "Disconnected";
+      state.deviceConnected = false;
+      state.deviceStatus = "Disconnected";
     },
   },
 });

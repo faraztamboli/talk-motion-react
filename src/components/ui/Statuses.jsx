@@ -1,10 +1,10 @@
 import React from "react";
-import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 export const Statuses = (props) => {
   const location = useLocation();
+
   const { serverConnected, serverStatus } = useSelector(
     (state) => state.server
   );
@@ -12,9 +12,7 @@ export const Statuses = (props) => {
     (state) => state.device
   );
 
-  useEffect(() => {
-    // console.log(serverConnected);
-  }, [serverConnected]);
+  console.log(deviceConnected, deviceStatus);
 
   return (
     <div className="statuses">

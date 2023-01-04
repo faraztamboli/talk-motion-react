@@ -31,6 +31,10 @@ code {
     max-width: 1300px;
 }
 
+.bg-black {
+  background-color: #000000 !important;
+}
+
 .p-0 {
   padding: 0 !important;
 }
@@ -467,6 +471,10 @@ code {
 }
 .w-100p {
   width: 100% !important;
+}
+
+.h-100p {
+  height: 98% !important;
 }
 
 .w-1rem {

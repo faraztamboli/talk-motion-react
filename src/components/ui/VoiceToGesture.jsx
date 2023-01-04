@@ -1,26 +1,15 @@
 import React from "react";
 import { Button, Tooltip } from "antd";
 import { SoundFilled } from "@ant-design/icons";
-import { MdOutlineReplay, MdFullscreen, MdClear } from "react-icons/md";
-import useSpeechRecognition from "../../hooks/useSpeechRecognition";
+import { MdFullscreen } from "react-icons/md";
 import VoiceToGestureVideo from "./VoiceToGestureVideo";
+import useSpeechRecognition from "../../hooks/useSpeechRecognition";
 
 export const VoiceToGesture = (props) => {
   const [fullScreen, setFullScreen] = React.useState(false);
-  const {
-    loading,
-    transcript,
-    video,
-    setVideo,
-    count,
-    setCount,
-    videoSrc,
-    isRecording,
-    handleStartSpeak,
-    handleStopSpeak,
-    handleRepeat,
-    handleResetTranscript,
-  } = useSpeechRecognition();
+
+  const { startListening, stopListening, isListening, videoRef, transcript } =
+    useSpeechRecognition();
 
   const buttonSize = props.md ? "medium" : "large";
   const iconSize = props.md ? 20 : 24;
@@ -28,11 +17,6 @@ export const VoiceToGesture = (props) => {
 
   const toggleFullScreen = () => {
     setFullScreen(!fullScreen);
-    if (count !== 0) {
-      setVideo(video);
-    } else {
-      handleRepeat();
-    }
   };
 
   return (
@@ -40,21 +24,12 @@ export const VoiceToGesture = (props) => {
       <h2 className="mb-0">Voice To Gesture</h2>
       <p>View gestures from speech</p>
       <VoiceToGestureVideo
-        loading={loading}
-        video={video}
-        setVideo={setVideo}
-        count={count}
-        setCount={setCount}
-        videoSrc={videoSrc}
+        transcript={transcript}
+        videoRef={videoRef}
+        isListening={isListening}
         fullScreen={fullScreen}
         setFullScreen={setFullScreen}
-        isRecording={isRecording}
-        handleStartSpeak={handleStartSpeak}
-        handleStopSpeak={handleStopSpeak}
         toggleFullScreen={toggleFullScreen}
-        transcript={transcript}
-        handleRepeat={handleRepeat}
-        handleResetTranscript={handleResetTranscript}
         buttonSize={buttonSize}
         buttonStyle={buttonStyle}
         iconSize={iconSize}
@@ -63,8 +38,8 @@ export const VoiceToGesture = (props) => {
       />
       {fullScreen !== true && (
         <>
-          <div className="flex align-items-center" style={{ flexWrap: "wrap" }}>
-            {isRecording ? (
+          <div className="flex flex-center-center" style={{ flexWrap: "wrap" }}>
+            {isListening ? (
               <Button
                 style={buttonStyle}
                 className="mr-6 converter-btns"
@@ -72,7 +47,7 @@ export const VoiceToGesture = (props) => {
                 shape="round"
                 size={buttonSize}
                 danger
-                onClick={handleStopSpeak}
+                onClick={stopListening}
                 icon={<SoundFilled size={iconSize} />}
               >
                 <span className="">Stop</span>
@@ -84,36 +59,12 @@ export const VoiceToGesture = (props) => {
                 type="primary"
                 shape="round"
                 size={buttonSize}
-                onClick={handleStartSpeak}
+                onClick={startListening}
                 icon={<SoundFilled size={iconSize} />}
               >
                 <span className="">Speak</span>
               </Button>
             )}
-
-            <Tooltip title="Repeat" showArrow={false} placement="bottom">
-              <Button
-                style={buttonStyle}
-                type="primary"
-                className="mr-6 converter-btns"
-                shape="circle"
-                size={buttonSize}
-                onClick={video && video.length !== 0 && handleRepeat}
-                icon={<MdOutlineReplay size={iconSize} />}
-              />
-            </Tooltip>
-
-            <Tooltip title="Reset" showArrow={false} placement="bottom">
-              <Button
-                style={buttonStyle}
-                type="primary"
-                className="mr-6 converter-btns"
-                shape="circle"
-                size={buttonSize}
-                onClick={handleResetTranscript}
-                icon={<MdClear size={iconSize} />}
-              />
-            </Tooltip>
 
             <Tooltip title="Full Screen" showArrow={false} placement="bottom">
               <Button

@@ -1,117 +1,140 @@
-import React from "react";
+import { useState, useRef, useEffect } from "react";
 import JS2Py from "../remotepyjs";
-import SpeechRecognition, {
-  useSpeechRecognition,
-} from "react-speech-recognition";
 
-function useSpeechRecognitionHook() {
-  const [isRecording, setIsRecording] = React.useState(false);
-  const [video, setVideo] = React.useState([]);
-  const [count, setCount] = React.useState(0);
-  const [loading, setLoading] = React.useState(false);
-  const {
-    transcript,
-    //  listening,
-    resetTranscript,
-    browserSupportsSpeechRecognition,
-  } = useSpeechRecognition();
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+const mic = new SpeechRecognition();
 
-  React.useEffect(() => {
-    if (!browserSupportsSpeechRecognition) {
-      return "Browser doesn't support speech recognition.";
-    }
-    getVideo(getWords(transcript));
-  }, [transcript, browserSupportsSpeechRecognition]);
+mic.continuous = true;
+mic.interimResults = true;
+mic.lang = "en-US";
 
-  const handleStopSpeak = () => {
-    setIsRecording(!isRecording);
-    SpeechRecognition.stopListening();
+function useSpeechRecognition() {
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState("");
+  const [wordsToPlay, setWordsToPlay] = useState([]);
+  const [wordVideoDictionary, setWordVideoDictionary] = useState({});
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    let word = wordsToPlay.shift();
+    playWord(word);
+  }, [wordsToPlay]);
+
+  mic.onstart = function (event) {
+    console.log("onstart", event);
+    setIsListening(true);
+  };
+  mic.onend = function (event) {
+    console.log("onend", event);
+    setIsListening(false);
+  };
+  mic.onerror = function (event) {
+    console.log("onerrror", event);
   };
 
-  const handleStartSpeak = () => {
-    /* resetTranscript();
-    setCount(0); */
-    setIsRecording(!isRecording);
-    SpeechRecognition.startListening({ continuous: true });
-  };
+  function startListening() {
+    setIsListening(true);
+    mic.start();
+  }
 
-  const handleResetTranscript = () => {
-    resetTranscript();
-    setCount(0);
-    setVideo(null);
-  };
+  function stopListening() {
+    setIsListening(false);
+    mic.stop();
+  }
 
-  const getWords = (transcript) => {
-    let punctuationless = transcript.replace(
-      /[.,-/#!$%^&*;:{}=\-_`~()@+?><[\]+]/g,
-      ""
-    );
-    let finalString = punctuationless.replace(/\s{2,}/g, " ");
-    finalString = finalString.toLowerCase();
-    console.log(finalString);
-    return finalString && finalString.split(" ");
-  };
+  mic.onresult = function (event) {
+    let finalTranscript = "";
+    let interimTranscript = "";
+    let results = event["results"];
 
-  /****************************************************
-   * ToDo:
-   *  Make the video rendering process smooth.
-   *  Make sure each availabe video must be played in sequence.
-   *    *
-   */
-  const getVideo = (words) => {
-    try {
-      JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(
-        words,
-        (res) => {
-          console.log(res);
-          let elemArr = new Array();
-          Object.keys(res[1]).forEach((element, index) => {
-            const availableVideos = Object.keys(res[0]);
-            if (availableVideos.includes(res[1][index])) {
-              const videoUrl =
-                res && res[0] && res[0][res[1][index]]?.remote_url;
-              videoUrl && videoUrl !== undefined && elemArr.push(videoUrl);
-              // console.log(res && res[0] && res[0][res[1][index]]?.remote_url);
-              // console.log(elemArr);
-            }
-          });
-          setLoading(true);
-          setVideo(elemArr);
-          // console.log(res);
+    for (let i = event.resultIndex; i < results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript;
+        finalTranscript = finalTranscript.trimStart();
+        finalTranscript = finalTranscript.toLowerCase();
+        setTranscript(finalTranscript);
+        console.log(finalTranscript);
+        if (finalTranscript !== "") {
+          let words = finalTranscript.split(" ");
+          getVideo(words);
         }
-      );
-    } catch (error) {
-      console.log(error);
+      } else {
+        interimTranscript += event.results[i][0].transcript;
+        setTranscript(interimTranscript);
+      }
     }
+
+    function getVideo(words) {
+      let short_list = [];
+      for (let i in words) {
+        if (!(words[i] in wordVideoDictionary)) {
+          short_list.push(words[i]);
+        }
+      }
+
+      if (short_list === undefined || short_list.length == 0) {
+        setWordsToPlay((prevState) => [prevState, ...words]);
+        let word = wordsToPlay.shift();
+        if (word !== undefined) {
+          playWord(word);
+        }
+      } else {
+        console.log("Dict", wordVideoDictionary);
+        JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(
+          short_list,
+          function (result) {
+            console.log(result);
+            result = result[0];
+            for (let key in result) {
+              setWordVideoDictionary((prevState) => ({
+                ...prevState,
+                [key]: result[key],
+              }));
+            }
+            setWordsToPlay((prevState) => [prevState, ...words]);
+            let word = wordsToPlay.shift();
+            console.log(word);
+            if (word !== undefined) {
+              playWord(word);
+            }
+          }
+        );
+      }
+    }
+    console.log("Final", transcript);
   };
 
-  const videoSrc = (arr) => {
-    let src = arr[count];
-    return src;
-  };
+  function playWord(word) {
+    if (word in wordVideoDictionary) {
+      videoRef.current.classList.remove("bg-black");
+      videoRef.current.src = wordVideoDictionary[word]["remote_url"];
+      videoRef.current.play();
+    } else {
+      word = wordsToPlay.shift();
+      if (word !== undefined) {
+        playWord(word);
+      }
+    }
+  }
 
-  const handleRepeat = () => {
-    setCount(0);
-    getVideo(getWords(transcript));
-  };
-
-  // console.log(video);
+  if (videoRef.current) {
+    videoRef.current.onended = (event) => {
+      console.log(event, wordsToPlay);
+      let word = wordsToPlay.shift();
+      if (word !== undefined) {
+        playWord(word);
+      }
+    };
+  }
 
   return {
-    loading,
+    startListening,
+    stopListening,
+    isListening,
+    videoRef,
     transcript,
-    video,
-    setVideo,
-    count,
-    setCount,
-    videoSrc,
-    isRecording,
-    setIsRecording,
-    handleStartSpeak,
-    handleStopSpeak,
-    handleRepeat,
-    handleResetTranscript,
   };
 }
 
-export default useSpeechRecognitionHook;
+export default useSpeechRecognition;
