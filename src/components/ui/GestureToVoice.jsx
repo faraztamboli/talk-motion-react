@@ -3,11 +3,16 @@ import { Button, Tooltip } from "antd";
 import { MdPause, MdPlayArrow, MdFullscreen } from "react-icons/md";
 import { GestureCanvs } from "./GestureCanvs";
 import useLeapMotion from "../../hooks/useLeapMotion";
+// import useHolisticModel from "../../hooks/useHolisticModel";
+import useHolisticModel1 from "../../hooks/useHolisticModel1";
 
 export const GestureToVoice = (props) => {
   const [fullScreen, setFullScreen] = React.useState(false);
   const [isPaused, setIsPaused] = React.useState(false);
+  // const { videoElement, canvasElement, controlsElement } = useHolisticModel();
   const { getComponentDetails } = useLeapMotion();
+  const { webcamRef, canvasRef, spinner, spinnerParentDiv } =
+    useHolisticModel1();
 
   const togglePause = () => {
     setIsPaused(!isPaused);
@@ -31,6 +36,13 @@ export const GestureToVoice = (props) => {
       <p>generate speech from gestures</p>
       <GestureCanvs
         fullScreen={fullScreen}
+        webcamRef={webcamRef}
+        canvasRef={canvasRef}
+        spinner={spinner}
+        spinnerParentDiv={spinnerParentDiv}
+        // videoElement={videoElement}
+        // canvasElement={canvasElement}
+        // controlsElement={controlsElement}
         setFullScreen={setFullScreen}
         toggleFullScreen={toggleFullScreen}
         isPaused={isPaused}

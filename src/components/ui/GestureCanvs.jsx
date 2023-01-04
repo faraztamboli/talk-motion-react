@@ -1,10 +1,24 @@
 import React from "react";
 import { Modal, Button, Tooltip } from "antd";
 import { MdPause, MdPlayArrow, MdFullscreenExit } from "react-icons/md";
+import { useEffect } from "react";
+import Webcam from "react-webcam";
 
 export const GestureCanvs = (props) => {
+  useEffect(() => {
+    return () => {
+      console.log("cleaned");
+    };
+  });
   const {
     fullScreen,
+    webcamRef,
+    canvasRef,
+    spinner,
+    spinnerParentDiv,
+    // videoElement,
+    // canvasElement,
+    // controlsElement,
     setFullScreen,
     toggleFullScreen,
     isPaused,
@@ -22,13 +36,22 @@ export const GestureCanvs = (props) => {
           open={fullScreen}
           onOk={() => setFullScreen(false)}
           onCancel={() => setFullScreen(false)}
+          destroyOnClose={true}
           footer={null}
           width={props.md ? "100%" : "75%"}
         >
+          <Webcam hidden ref={webcamRef} />
           <canvas
+            ref={canvasRef}
             style={{ backgroundColor: "black" }}
             className="block w-100p mb-6"
           ></canvas>
+          <div ref={spinnerParentDiv}>
+            <div ref={spinner} className="loading">
+              <div className="spinner"></div>
+              <div className="message">Loading</div>
+            </div>
+          </div>
           <div
             style={{
               display: "flex",
@@ -76,10 +99,18 @@ export const GestureCanvs = (props) => {
           </div>
         </Modal>
       )}
+      <Webcam hidden ref={webcamRef} />
       <canvas
+        ref={canvasRef}
         style={{ backgroundColor: "black" }}
-        className="block w-100p mb-6"
+        className="output-canvas block w-100p mb-6"
       ></canvas>
+      <div ref={spinnerParentDiv}>
+        <div ref={spinner} className="loading">
+          <div className="spinner"></div>
+          <div className="message">Loading</div>
+        </div>
+      </div>
     </>
   );
 };
