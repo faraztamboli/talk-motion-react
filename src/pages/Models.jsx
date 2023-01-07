@@ -5,6 +5,11 @@ import { ModelsCard } from "../components/ui/ModelsCard";
 import useModels from "../hooks/useModels";
 import { modelsDetails } from "../data/PageDetails";
 import MetaDecorator from "../components/MetaDecorator";
+import { useDispatch } from "react-redux";
+import {
+  setCurrentModelPage,
+  setModelPaginationSize,
+} from "../app/features/modelSlice";
 
 export default function Models(props) {
   const {
@@ -22,6 +27,20 @@ export default function Models(props) {
     purchaseModel,
     addNewTrainer,
   } = useModels();
+
+  const dispatch = useDispatch();
+
+  function onPublicModelsChange(page, pageSize) {
+    dispatch(setCurrentModelPage(page));
+    dispatch(setModelPaginationSize(pageSize));
+    getPublicModels((page - 1) * pageSize, pageSize);
+  }
+
+  function onUserModelsChange(page, pageSize) {
+    dispatch(setCurrentModelPage(page));
+    dispatch(setModelPaginationSize(pageSize));
+    getUserModels((page - 1) * pageSize, pageSize);
+  }
 
   const modelStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
   const emptyImgStyle = { filter: "saturate(12)" };
@@ -65,7 +84,8 @@ export default function Models(props) {
             <Pagination
               defaultCurrent={1}
               total={publicCount}
-              onChange={(page) => getPublicModels((page - 1) * 9, 9)}
+              showSizeChanger
+              onChange={onPublicModelsChange}
             />
           </div>
         )}
@@ -102,9 +122,10 @@ export default function Models(props) {
         {userCount > 9 && (
           <div className="flex flex-center-center mt-6">
             <Pagination
+              showSizeChanger
               defaultCurrent={1}
               total={userCount}
-              onChange={(page) => getUserModels((page - 1) * 9, 9)}
+              onChange={onUserModelsChange}
             />
           </div>
         )}

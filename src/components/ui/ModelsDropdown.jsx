@@ -2,14 +2,18 @@ import { Select } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
 import React from "react";
 import useModels from "../../hooks/useModels";
+import { useDispatch } from "react-redux";
+import { selectModel } from "../../app/features/modelSlice";
 
 const { Option } = Select;
 
 export const ModelsDropdown = (props) => {
   const { userModels } = useModels();
+  const dispatch = useDispatch();
 
   const handleChange = (value) => {
     props.getModalId(value);
+    dispatch(selectModel(value));
   };
 
   return (
@@ -18,7 +22,7 @@ export const ModelsDropdown = (props) => {
         <AppstoreOutlined />
       </span>
       <Select
-        defaultValue="Select Model"
+        defaultValue={userModels[0]?.id}
         className="dropdowns"
         onChange={handleChange}
       >

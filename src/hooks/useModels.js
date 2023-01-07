@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import JS2Py from "../remotepyjs";
 import useLocalStorage from "./useLocalStorage";
 
@@ -7,15 +8,23 @@ function useModels() {
   const [userModels, setUserModels] = React.useState([]);
   const [userCount, setUserCount] = React.useState(0);
   const [publicCount, setPublicCount] = React.useState(0);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const [publicLoading, setPublicLoading] = React.useState(true);
   const [userLoading, setUserLoading] = React.useState(true);
   const [token] = useLocalStorage("token");
 
+  const currentPage = useSelector((state) => state.model.currentModelPage);
+  const pageSize = useSelector((state) => state.model.modelPaginationSize);
+
   React.useEffect(() => {
-    getUserModels(0, 9);
-    getPublicModels(0, 9);
-  }, [userModels.length, publicModels.length, loading]);
+    getUserModels(0, 10);
+    getPublicModels(0, 10);
+  }, []);
+
+  React.useEffect(() => {
+    getPublicModels((currentPage - 1) * pageSize, pageSize);
+    getUserModels((currentPage - 1) * pageSize, pageSize);
+  }, [loading]);
 
   function getPublicModels(offset, end) {
     setPublicLoading(true);
@@ -58,18 +67,21 @@ function useModels() {
     }
   }
 
-  function createNewModel(title, description) {
+  function createNewModel(title, description, is_public) {
+    setLoading(true);
     try {
       JS2Py.PythonFunctions.TalkMotionServer.createModel(
         token,
         title,
         description,
+        is_public,
         function (res) {
           console.log(res);
           setLoading(false);
         }
       );
     } catch (err) {
+      setLoading(false);
       console.log(err);
     }
   }
@@ -103,6 +115,7 @@ function useModels() {
   }
 
   function updateModel(modelid, title, description, is_public) {
+    setLoading(true);
     try {
       JS2Py.PythonFunctions.TalkMotionServer.updateModel(
         modelid,
@@ -111,10 +124,12 @@ function useModels() {
         is_public,
         function (res) {
           console.log(res);
+          setLoading(false);
         }
       );
     } catch (err) {
       console.log(err);
+      setLoading(false);
     }
   }
 

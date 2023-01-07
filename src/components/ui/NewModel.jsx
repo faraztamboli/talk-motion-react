@@ -8,6 +8,7 @@ const CollectionCreateForm = (props) => {
     <Modal
       open={props.open}
       title="Create a new Model"
+      destroyOnClose
       okText="Create"
       cancelText="Cancel"
       onCancel={props.onCancel}
@@ -49,10 +50,10 @@ const CollectionCreateForm = (props) => {
           className="collection-create-form_last-form-item"
         >
           <Radio.Group>
-            <Radio checked value="public">
+            <Radio autoFocus checked value={true}>
               Public
             </Radio>
-            <Radio value="private">Private</Radio>
+            <Radio value={false}>Private</Radio>
           </Radio.Group>
         </Form.Item>
       </Form>
@@ -68,7 +69,8 @@ const App = (props) => {
   const iconSize = props.sm ? 20 : 24;
 
   function onCreate(values) {
-    createNewModel(values.title, values.description);
+    console.log(values);
+    createNewModel(values.title, values.description, values.modifier);
     setOpen(false);
   }
 

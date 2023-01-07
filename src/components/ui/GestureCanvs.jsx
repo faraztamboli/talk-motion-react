@@ -1,32 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
+import Webcam from "react-webcam";
 import { Modal, Button, Tooltip } from "antd";
 import { MdPause, MdPlayArrow, MdFullscreenExit } from "react-icons/md";
-import { useEffect } from "react";
-import Webcam from "react-webcam";
 
 export const GestureCanvs = (props) => {
-  useEffect(() => {
-    return () => {
-      console.log("cleaned");
-    };
-  });
   const {
     fullScreen,
     webcamRef,
     canvasRef,
     spinner,
     spinnerParentDiv,
-    // videoElement,
-    // canvasElement,
-    // controlsElement,
     setFullScreen,
     toggleFullScreen,
-    isPaused,
+    isPlayed,
     togglePause,
     iconSize,
     buttonSize,
     buttonStyle,
+    isPageActive,
+    setIsPageActive,
   } = props;
+
+  useEffect(() => {
+    return () => {
+      setIsPageActive(false); // to destroy the webcam when the component unmounts
+      console.log("cleaned");
+    };
+  }, []);
+
+  console.log(isPlayed);
+
   return (
     <>
       {fullScreen && (
@@ -59,7 +62,16 @@ export const GestureCanvs = (props) => {
               justifyContent: "center",
             }}
           >
-            {isPaused ? (
+            {isPlayed ? (
+              <Button
+                className="mr-6 converter-btns"
+                type="primary"
+                shape="circle"
+                size="large"
+                onClick={() => togglePause()}
+                icon={<MdPlayArrow size={24} />}
+              ></Button>
+            ) : (
               <Button
                 className="mr-6 converter-btns"
                 type="primary"
@@ -69,15 +81,6 @@ export const GestureCanvs = (props) => {
                 danger
                 onClick={() => togglePause()}
                 icon={<MdPause size={24} />}
-              ></Button>
-            ) : (
-              <Button
-                className="mr-6 converter-btns"
-                type="primary"
-                shape="circle"
-                size="large"
-                onClick={() => togglePause()}
-                icon={<MdPlayArrow size={24} />}
               ></Button>
             )}
             <Tooltip
@@ -99,18 +102,27 @@ export const GestureCanvs = (props) => {
           </div>
         </Modal>
       )}
-      <Webcam hidden ref={webcamRef} />
-      <canvas
-        ref={canvasRef}
-        style={{ backgroundColor: "black" }}
-        className="output-canvas block w-100p mb-6"
-      ></canvas>
-      <div ref={spinnerParentDiv}>
-        <div ref={spinner} className="loading">
-          <div className="spinner"></div>
-          <div className="message">Loading</div>
-        </div>
-      </div>
+      {isPageActive ? (
+        <>
+          <Webcam hidden ref={webcamRef} />
+          <canvas
+            ref={canvasRef}
+            style={{ backgroundColor: "black" }}
+            className="output-canvas block w-100p mb-6"
+          ></canvas>
+          <div ref={spinnerParentDiv}>
+            <div ref={spinner} className="loading">
+              <div className="spinner"></div>
+              <div className="message">Loading</div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <canvas
+          style={{ backgroundColor: "black" }}
+          className="output-canvas block w-100p mb-6"
+        ></canvas>
+      )}
     </>
   );
 };

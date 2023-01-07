@@ -69,7 +69,7 @@ export const ModelsCard = (props) => {
         <Avatar.Group>
           {model.trainers.map((trainer, index) => {
             return (
-              <Tooltip key={index} title={trainer.fullname} placement="top">
+              <Tooltip key={index} title={trainer.username} placement="top">
                 <Avatar src={"media/avatars/150-26.jpg"} />
               </Tooltip>
             );

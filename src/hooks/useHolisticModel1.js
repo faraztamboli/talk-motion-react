@@ -1,11 +1,27 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import * as cam from "@mediapipe/camera_utils";
+import JS2Py from "../remotepyjs";
+import { useSelector } from "react-redux";
+
+if (typeof Worker !== "undefined") {
+  console.log("web workers supported");
+} else {
+  alert("Browser doesn't support web workers");
+}
+
+if (typeof holistic_worker == "undefined") {
+  var holistic_worker = new Worker("../workers/holistic_worker.js");
+  console.log(holistic_worker);
+}
 
 function useHolisticModel1() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const spinner = useRef(null);
   const spinnerParentDiv = useRef(null);
+
+  const modelId = useSelector((state) => state.model.modelId);
+  const concept = useSelector((state) => state.model.concept);
 
   const mpHolistic = window;
   const drawingUtils = window;
@@ -22,7 +38,8 @@ function useHolisticModel1() {
   let activeEffect = "mask";
 
   function onResults(results) {
-    console.log(results);
+    // console.log(results);
+    sendToServer(results);
     if (spinnerParentDiv.current) {
       spinnerParentDiv.current.classList.add("loaded");
     }
@@ -233,30 +250,35 @@ function useHolisticModel1() {
     canvasCtx.restore();
   }
 
-  useEffect(() => {
-    const holistic = new mpHolistic.Holistic({
-      locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
-      },
-    });
-
-    holistic.setOptions({
-      selfieMode: true,
-      modelComplexity: 1,
-      smoothLandmarks: true,
-      enableSegmentation: false,
-      smoothSegmentation: true,
-      minDetectionConfidence: 0.5,
-      minTrackingConfidence: 0.5,
-      effect: "background",
-    });
-
-    holistic.onResults(onResults);
-
+  // useEffect(() => {
+  function startHolisticModel() {
     if (
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null
     ) {
+      const holistic = new mpHolistic.Holistic({
+        locateFile: (file) => {
+          return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
+        },
+      });
+
+      holistic.setOptions({
+        selfieMode: true,
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        smoothSegmentation: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+        effect: "background",
+      });
+
+      // holistic.initialize();
+
+      holistic.onResults(onResults);
+
+      console.log(holistic);
+
       camera = new cam.Camera(webcamRef.current.video, {
         onFrame: async () => {
           await holistic.send({ image: webcamRef.current.video });
@@ -266,9 +288,45 @@ function useHolisticModel1() {
       });
       camera.start();
     }
-  }, []);
+  }
 
-  return { webcamRef, canvasRef, spinner, spinnerParentDiv };
+  function sendToServer(data) {
+    console.log("send to server");
+
+    // let obj = data;
+    // let str = JSON.stringify(obj, undefined, 2);
+
+    const page = window.location.pathname;
+
+    if (page === "/trainer") {
+      JS2Py.PythonFunctions.TalkMotionServer.collectGetstureAndConcept(
+        modelId,
+        data,
+        Date.now(),
+        concept,
+        function (res) {
+          console.log(res);
+        }
+      );
+    } else if (page === "/converter") {
+      JS2Py.PythonFunctions.TalkMotionServer.translateGestureToWords(
+        data,
+        Date.now(),
+        modelId,
+        function (res) {
+          console.log(res);
+        }
+      );
+    }
+  }
+
+  return {
+    webcamRef,
+    canvasRef,
+    spinner,
+    spinnerParentDiv,
+    startHolisticModel,
+  };
 }
 
 export default useHolisticModel1;

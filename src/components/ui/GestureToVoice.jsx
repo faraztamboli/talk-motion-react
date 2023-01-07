@@ -1,26 +1,25 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Tooltip } from "antd";
 import { MdPause, MdPlayArrow, MdFullscreen } from "react-icons/md";
 import { GestureCanvs } from "./GestureCanvs";
-import useLeapMotion from "../../hooks/useLeapMotion";
-// import useHolisticModel from "../../hooks/useHolisticModel";
 import useHolisticModel1 from "../../hooks/useHolisticModel1";
 
 export const GestureToVoice = (props) => {
   const [fullScreen, setFullScreen] = React.useState(false);
-  const [isPaused, setIsPaused] = React.useState(false);
-  // const { videoElement, canvasElement, controlsElement } = useHolisticModel();
-  const { getComponentDetails } = useLeapMotion();
-  const { webcamRef, canvasRef, spinner, spinnerParentDiv } =
-    useHolisticModel1();
+  const [isPageActive, setIsPageActive] = React.useState(false);
+  const [isPlayed, setIsPlayed] = React.useState(false);
 
-  const togglePause = () => {
-    setIsPaused(!isPaused);
+  const {
+    webcamRef,
+    canvasRef,
+    spinner,
+    spinnerParentDiv,
+    startHolisticModel,
+  } = useHolisticModel1();
+
+  const togglePlayed = () => {
+    setIsPlayed(!isPlayed);
   };
-
-  useEffect(() => {
-    getComponentDetails(isPaused, false, props.modalId, "");
-  }, [isPaused]);
 
   const toggleFullScreen = () => {
     setFullScreen(!fullScreen);
@@ -40,17 +39,16 @@ export const GestureToVoice = (props) => {
         canvasRef={canvasRef}
         spinner={spinner}
         spinnerParentDiv={spinnerParentDiv}
-        // videoElement={videoElement}
-        // canvasElement={canvasElement}
-        // controlsElement={controlsElement}
         setFullScreen={setFullScreen}
         toggleFullScreen={toggleFullScreen}
-        isPaused={isPaused}
-        setIsPaused={setIsPaused}
-        togglePause={togglePause}
+        isPlayed={isPlayed}
+        setIsPlayed={setIsPlayed}
+        togglePause={togglePlayed}
         iconSize={iconSize}
         buttonSize={buttonSize}
         buttonStyle={buttonStyle}
+        isPageActive={isPageActive}
+        setIsPageActive={setIsPageActive}
       />
       <div
         style={{
@@ -59,7 +57,7 @@ export const GestureToVoice = (props) => {
           justifyContent: "center",
         }}
       >
-        {isPaused ? (
+        {isPlayed ? (
           <Button
             className="mr-6 converter-btns"
             type="primary"
@@ -67,7 +65,10 @@ export const GestureToVoice = (props) => {
             style={{ backgroundColor: "#DDBA00" }}
             size="large"
             danger
-            onClick={() => togglePause()}
+            onClick={() => {
+              togglePlayed();
+              setIsPageActive(false);
+            }}
             icon={<MdPause size={24} />}
           ></Button>
         ) : (
@@ -76,7 +77,13 @@ export const GestureToVoice = (props) => {
             type="primary"
             shape="circle"
             size="large"
-            onClick={() => togglePause()}
+            onClick={() => {
+              togglePlayed();
+              setIsPageActive(true);
+              setTimeout(() => {
+                startHolisticModel();
+              }, 2000);
+            }}
             icon={<MdPlayArrow size={24} />}
           ></Button>
         )}

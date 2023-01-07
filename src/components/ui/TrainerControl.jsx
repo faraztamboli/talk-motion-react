@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { Button, Row, Col, Input } from "antd";
 import { Link } from "react-router-dom";
 import useLeapMotion from "../../hooks/useLeapMotion";
+import { useDispatch } from "react-redux";
+import { useConcept } from "../../app/features/modelSlice";
 
 const { TextArea } = Input;
 
@@ -11,11 +13,14 @@ export const TrainerControl = (props) => {
   const [isTraining, setIsTraining] = React.useState(false);
   const { init, getComponentDetails } = useLeapMotion();
 
+  const dispatch = useDispatch();
+
   init();
 
   const loadings = () => {};
   const handleCollectionTextChange = () => (e) => {
     setCollectionText(e.target.value);
+    dispatch(useConcept(e.target.value));
   };
   const togglePause = () => {
     setPaused(!paused);
