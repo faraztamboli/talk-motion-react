@@ -298,7 +298,7 @@ function useHolisticModel1() {
 
     const page = window.location.pathname;
 
-    if (page === "/trainer") {
+    if (page === "/trainer/collect") {
       JS2Py.PythonFunctions.TalkMotionServer.collectGetstureAndConcept(
         modelId,
         data,
