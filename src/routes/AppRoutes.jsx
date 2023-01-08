@@ -1,17 +1,21 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import PrivateRoute from "../components/PrivateRoute";
-import UploadVideo from "../components/ui/UploadVideo";
 import Login from "../pages/Login";
 import Error from "../pages/Errors/404Error";
 import { Skeleton } from "antd";
 import ResetPassword from "../pages/ResetPassword";
 import AuthPagesLoader from "../components/ui/AuthPagesLoader";
+import Setting from "../pages/Setting";
 
 // React lazy components
 const Converter = React.lazy(() => import("../pages/Converter"));
 const Trainer = React.lazy(() => import("../pages/Trainer"));
+const Collector = React.lazy(() => import("../pages/Collector"));
+const ModelTrainer = React.lazy(() => import("../pages/ModelTrainer"));
+const UploadVideo = React.lazy(() => import("../components/ui/UploadVideo"));
 const Models = React.lazy(() => import("../pages/Models"));
+const MyModels = React.lazy(() => import("../pages/MyModels"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 const Signup = React.lazy(() => import("../pages/Signup"));
 const ForgotPassword = React.lazy(() => import("../pages/ForgotPassword"));
@@ -59,9 +63,33 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      <Route path="/uploadvideo" element={<PrivateRoute />}>
+      <Route path="/trainer/collect" element={<PrivateRoute />}>
         <Route
-          path="/uploadvideo"
+          path="/trainer/collect"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <Collector />
+            </React.Suspense>
+          }
+        />
+      </Route>
+      <Route path="/trainer/train" element={<PrivateRoute />}>
+        <Route
+          path="/trainer/train"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <ModelTrainer />
+            </React.Suspense>
+          }
+        />
+      </Route>
+      <Route path="/trainer/upload" element={<PrivateRoute />}>
+        <Route
+          path="/trainer/upload"
           element={
             <React.Suspense
               fallback={<Skeleton active style={skeletonStyle} />}
@@ -83,33 +111,47 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      <Route
-        path="my-models"
-        exact
-        element={
-          <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
-            <Profile collapsedWidth={collapsedWidth} />
-          </React.Suspense>
-        }
-      />
-      <Route
-        path="profile"
-        exact
-        element={
-          <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
-            <Profile collapsedWidth={collapsedWidth} />
-          </React.Suspense>
-        }
-      />
-      <Route
-        path="setting"
-        exact
-        element={
-          <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
-            <Profile collapsedWidth={collapsedWidth} />
-          </React.Suspense>
-        }
-      />
+      <Route path="/my-models" element={<PrivateRoute />}>
+        <Route
+          path="/my-models"
+          exact
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <MyModels collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/profile" element={<PrivateRoute />}>
+        <Route
+          path="/profile"
+          exact
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <Profile collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/setting" element={<PrivateRoute />}>
+        <Route
+          path="/setting"
+          exact
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <Setting collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
       <Route
         path="/signup"
         exact

@@ -108,7 +108,7 @@ export const GestureCanvs = (props) => {
           <canvas
             ref={canvasRef}
             style={{ backgroundColor: "black" }}
-            className="output-canvas block w-100p mb-6"
+            className="output_canvas block w-100p mb-6"
           ></canvas>
           <div ref={spinnerParentDiv}>
             <div ref={spinner} className="loading">
@@ -120,7 +120,7 @@ export const GestureCanvs = (props) => {
       ) : (
         <canvas
           style={{ backgroundColor: "black" }}
-          className="output-canvas block w-100p mb-6"
+          className="output_canvas block w-100p mb-6"
         ></canvas>
       )}
     </>

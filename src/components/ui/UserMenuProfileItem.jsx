@@ -1,10 +1,22 @@
 import React from "react";
-import { Avatar, Image } from "antd";
+import { Avatar, Button, Image } from "antd";
 import { useSelector } from "react-redux";
+import { MdCameraAlt } from "react-icons/md";
+import Upload from "antd/es/upload/Upload";
+import useProfile from "../../hooks/useProfile";
 
 export default function UserMenuProfileItem(props) {
+  const { uploadProfilePic } = useProfile();
   const username = useSelector((state) => state.user.username);
   const name = useSelector((state) => state.user.name);
+
+  const uploadProps = {
+    name: "uploadpic",
+    async onChange(info) {
+      console.log(info);
+      uploadProfilePic(info.fileList[0].originFileObj);
+    },
+  };
 
   return (
     <>
@@ -13,17 +25,26 @@ export default function UserMenuProfileItem(props) {
         style={{ display: "flex", alignItems: "center", marginBottom: ".5rem" }}
       >
         <div
-          className="symbol symbol-50px me-5"
+          className="symbol symbol-50px me-5 flex flex-column flex-center-center"
           style={{ marginRight: "1rem" }}
         >
           <Avatar
-            src={<Image src="media/avatars/150-2.jpg" />}
+            src={<Image src="/media/avatars/150-2.jpg" />}
             size={
               props.size === "small"
                 ? { xs: 32, sm: 42, md: 45, lg: 48, xl: 50, xxl: 55 }
                 : { xs: 42, sm: 72, md: 80, lg: 92, xl: 95, xxl: 100 }
             }
           />
+          {props.from === "drawer" ? null : (
+            <Upload {...uploadProps}>
+              <Button
+                className="mt-1 layout-bg"
+                size="small"
+                icon={<MdCameraAlt color="gray" size={20} />}
+              />
+            </Upload>
+          )}
         </div>
         <div className="d-flex flex-column">
           <div

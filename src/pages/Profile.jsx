@@ -1,57 +1,63 @@
 import React from "react";
-import { Row, Col, Skeleton, Empty } from "antd";
-import useModels from "../hooks/useModels";
-import NewModel from "../components/ui/NewModel";
-import { ModelsCard } from "../components/ui/ModelsCard";
+import { Descriptions } from "antd";
 import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
 import MetaDecorator from "../components/MetaDecorator";
 import { profileDetails } from "../data/PageDetails";
+import useProfile from "../hooks/useProfile";
+import { useEffect } from "react";
 
 export default function Profile(props) {
-  const { userModels, userLoading } = useModels();
+  const { getUserProfile, userProfile } = useProfile();
+
+  useEffect(() => {
+    getUserProfile();
+  }, []);
+
+  console.log(userProfile);
 
   const profileStyle =
     props.collapseWidth === 0 ? { padding: 8 } : { padding: 24 };
-  const emptyImgStyle = { filter: "saturate(12)" };
 
   const { title, description } = profileDetails;
 
   return (
     <>
       <MetaDecorator title={title} description={description} />
-      <div style={profileStyle} className="layout-bg mh-100vh">
+      <div
+        style={profileStyle}
+        className={
+          props.from === "setting" ? "layout-bg" : "layout-bg mh-100vh"
+        }
+      >
         <div>
           <UserMenuProfileItem size="large" />
         </div>
         <div className="details_section" style={{ marginTop: "2rem" }}>
-          <h2>Your Models</h2>
-          <Row gutter={[16, 16]}>
-            {!userLoading && userModels?.length > 0
-              ? userModels.map((model) => {
-                  return (
-                    <Col key={model.id} span={8} xs={24} md={8}>
-                      <ModelsCard
-                        model={model}
-                        collapsedWidth={props.collapsedWidth}
-                        key={model.key}
-                      />
-                    </Col>
-                  );
-                })
-              : !userLoading && (
-                  <div className="w-100p m-4">
-                    <Empty
-                      style={{ fontWeight: 500 }}
-                      imageStyle={emptyImgStyle}
-                      description={<span>No Models</span>}
-                    />
-                  </div>
-                )}
-            <Skeleton active loading={userLoading} style={{ width: "500px" }} />
-          </Row>
-          <div className="flex flex-center-center mt-10">
-            <NewModel sm={props.sm} />
-          </div>
+          <Descriptions
+            layout="horizontal"
+            column={1}
+            bordered
+            labelStyle={{ backgroundColor: "whitesmoke" }}
+          >
+            <Descriptions.Item label="Username">
+              {userProfile?.username}
+            </Descriptions.Item>
+            <Descriptions.Item label="Full Name">
+              {userProfile?.fullname}
+            </Descriptions.Item>
+            <Descriptions.Item label="Email">
+              {userProfile?.email}
+            </Descriptions.Item>
+            <Descriptions.Item label="Street">
+              {userProfile?.street}
+            </Descriptions.Item>
+            <Descriptions.Item label="City">
+              {userProfile?.city}
+            </Descriptions.Item>
+            <Descriptions.Item label="Country" span={2}>
+              {userProfile?.country}
+            </Descriptions.Item>
+          </Descriptions>
         </div>
       </div>
     </>

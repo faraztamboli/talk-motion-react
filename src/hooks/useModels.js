@@ -56,6 +56,7 @@ function useModels() {
         function (res) {
           setUserCount(res[1][`count(*)`]);
           res = res[0];
+          console.log(res);
           if (res.constructor == Array) {
             setUserModels(() => res);
             setUserLoading(false);

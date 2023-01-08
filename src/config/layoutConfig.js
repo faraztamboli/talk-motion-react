@@ -3,6 +3,9 @@ const noAuthLayoutPages = [
   "", // home route
   "converter",
   "trainer",
+  "trainer/collect",
+  "trainer/train",
+  "trainer/upload",
   "models",
   "profile",
   "my-models",

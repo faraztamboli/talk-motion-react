@@ -29,7 +29,6 @@ function useResetPassword() {
     JS2Py.PythonFunctions.SessionServer.resetPassword(
       token,
       values.resetpasswordcode,
-      values.oldpassword,
       values.newpassword,
       values.repeatnewpassword,
       function (res) {

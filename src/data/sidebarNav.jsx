@@ -1,6 +1,15 @@
-import { DesktopOutlined, FileOutlined, PieChartOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import React from 'react';
+import React from "react";
+import {
+  DesktopOutlined,
+  FileOutlined,
+  PieChartOutlined,
+} from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import {
+  MdFileUpload,
+  MdModelTraining,
+  MdOutlineCollectionsBookmark,
+} from "react-icons/md";
 
 function getItem(label, key, icon, children, path) {
   return {
@@ -14,31 +23,59 @@ function getItem(label, key, icon, children, path) {
 
 const items = [
   getItem(
-    'Converter',
-    '1',
+    "Converter",
+    "1",
     <Link to="/converter">
       <PieChartOutlined />
     </Link>,
     null,
-    '/converter',
+    "/converter"
   ),
   getItem(
-    'Trainer',
-    '2',
+    "Trainer",
+    "2",
     <Link to="/trainer">
       <DesktopOutlined />
     </Link>,
-    null,
-    '/trainer',
+    [
+      getItem(
+        "Collect",
+        "21",
+        <Link to="/trainer/collect">
+          <MdOutlineCollectionsBookmark />
+        </Link>,
+        null,
+        "/trainer/collect"
+      ),
+      getItem(
+        "Train",
+        "22",
+        <Link to="/trainer/train">
+          <MdModelTraining />
+        </Link>,
+        null,
+        "/trainer/train"
+      ),
+      getItem(
+        "Upload",
+        "23",
+        <Link to="/trainer/upload">
+          <MdFileUpload />
+        </Link>,
+        null,
+        "/trainer/upload"
+      ),
+    ],
+    "/trainer"
   ),
   getItem(
-    'Models',
-    '3',
+    "Models",
+    "3",
     <Link to="/models">
       <FileOutlined />
     </Link>,
     null,
-    '/models',
+    "/models"
   ),
 ];
 

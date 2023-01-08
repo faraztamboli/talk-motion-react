@@ -7,12 +7,11 @@ import { selectModel } from "../../app/features/modelSlice";
 
 const { Option } = Select;
 
-export const ModelsDropdown = (props) => {
+export const ModelsDropdown = () => {
   const { userModels } = useModels();
   const dispatch = useDispatch();
 
   const handleChange = (value) => {
-    props.getModalId(value);
     dispatch(selectModel(value));
   };
 

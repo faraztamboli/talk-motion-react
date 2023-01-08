@@ -71,29 +71,6 @@ const ResetPassword = (props) => {
                   </Form.Item>
 
                   <Form.Item
-                    name="oldpassword"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your old password",
-                      },
-                    ]}
-                  >
-                    <Input
-                      prefix={
-                        <LockFilled
-                          className="site-form-item-icon"
-                          style={formIconStyle}
-                        />
-                      }
-                      placeholder="Old Password"
-                      type="password"
-                      size="large"
-                      style={formInputStyle}
-                    />
-                  </Form.Item>
-
-                  <Form.Item
                     name="newpassword"
                     rules={[
                       {

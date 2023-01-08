@@ -31,6 +31,10 @@ code {
     max-width: 1300px;
 }
 
+.bg-white {
+  background-color: #FFFFFF !important;
+}
+
 .bg-black {
   background-color: #000000 !important;
 }
@@ -426,6 +430,9 @@ code {
 .flex {
   display: flex !important;
 }
+.flex-column {
+  flex-direction: column !important;
+}
 .align-items-center {
   align-items: center !important;
 }
@@ -809,18 +816,12 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
   transform: scale(-1, 1);
 }
 
-/* .output_canvas {
+.output_canvas {
   max-width: 100%;
   display: block;
   position: relative;
   left: 0;
   top: 0;
-} */
-
-.control-panel {
-  position: absolute;
-  left: 10px;
-  top: 10px;
 }
 
 .loading {
@@ -831,6 +832,7 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
   bottom: 0;
   left: 0;
   align-items: center;
+  justify-content: center;
   backface-visibility: hidden;
   justify-content: center;
   opacity: 1;

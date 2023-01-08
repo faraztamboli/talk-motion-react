@@ -22,7 +22,7 @@ const userMenu = [
     key: "user_details",
     label: (
       <Link to="/profile" key={1}>
-        <UserMenuProfileItem size="small" />
+        <UserMenuProfileItem from="drawer" size="small" />
       </Link>
     ),
   },
