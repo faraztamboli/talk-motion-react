@@ -13,22 +13,15 @@ export default function Profile(props) {
     getUserProfile();
   }, []);
 
-  console.log(userProfile);
-
   const profileStyle =
-    props.collapseWidth === 0 ? { padding: 8 } : { padding: 24 };
+    props.collapsedWidth === 0 ? { padding: 8 } : { padding: 24 };
 
   const { title, description } = profileDetails;
 
   return (
     <>
       <MetaDecorator title={title} description={description} />
-      <div
-        style={profileStyle}
-        className={
-          props.from === "setting" ? "layout-bg" : "layout-bg mh-100vh"
-        }
-      >
+      <div style={profileStyle} className="layout-bg mh-100vh">
         <div>
           <UserMenuProfileItem size="large" />
         </div>

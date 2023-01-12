@@ -16,6 +16,10 @@ const ModelTrainer = React.lazy(() => import("../pages/ModelTrainer"));
 const UploadVideo = React.lazy(() => import("../components/ui/UploadVideo"));
 const Models = React.lazy(() => import("../pages/Models"));
 const MyModels = React.lazy(() => import("../pages/MyModels"));
+const UserModel = React.lazy(() => import("../pages/UserModel"));
+const ModelFiles = React.lazy(() => import("../pages/ModelFiles"));
+const ModelConcepts = React.lazy(() => import("../pages/ModelConcepts"));
+const ConceptDetails = React.lazy(() => import("../pages/ConceptDetails"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 const Signup = React.lazy(() => import("../pages/Signup"));
 const ForgotPassword = React.lazy(() => import("../pages/ForgotPassword"));
@@ -107,6 +111,49 @@ function AppRoutes(props) {
               fallback={<Skeleton active style={skeletonStyle} />}
             >
               <Models collapsedWidth={collapsedWidth} sm={sm} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/models" element={<PrivateRoute />}>
+        <Route
+          path=":modelid"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <UserModel collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path=":modelid/files"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <ModelFiles collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path=":modelid/concepts"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <ModelConcepts collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path=":modelid/concepts/:concepttitle"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <ConceptDetails />
             </React.Suspense>
           }
         />

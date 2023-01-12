@@ -8,7 +8,12 @@ const selectLayout = (Layout) => {
     const location = useLocation();
 
     React.useEffect(() => {
-      noAuthLayoutPages.includes(location.pathname.slice(1))
+      let path = location.pathname;
+
+      // eslint-disable-next-line
+      let firstPath = path === "/" ? "" : path.match(/^\/([^\/]+)/)[1];
+
+      noAuthLayoutPages.includes(firstPath)
         ? setIsAuthLayout(() => false)
         : setIsAuthLayout(() => true);
     }, [isAuthLayout, location.pathname]);

@@ -8,11 +8,7 @@ export const Statuses = (props) => {
   const { serverConnected, serverStatus } = useSelector(
     (state) => state.server
   );
-  const { deviceConnected, deviceStatus } = useSelector(
-    (state) => state.device
-  );
-
-  console.log(deviceConnected, deviceStatus);
+  const { status, statusText } = useSelector((state) => state.trainer);
 
   return (
     <div className="statuses">
@@ -28,18 +24,17 @@ export const Statuses = (props) => {
           Server {serverStatus}
         </p>
       </div>
-      {(location.pathname === "/trainer" ||
-        location.pathname === "/converter") && (
+      {location.pathname === "/trainer/collect" && (
         <div className="device-status">
           <p
             style={props.collapsedWidth === 0 ? { fontSize: ".6rem" } : null}
             className={
-              deviceConnected
+              status
                 ? "statuses-success converter-btns"
                 : "danger converter-btns"
             }
           >
-            Device {deviceStatus}
+            {statusText}
           </p>
         </div>
       )}

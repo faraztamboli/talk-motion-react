@@ -56,7 +56,6 @@ function useModels() {
         function (res) {
           setUserCount(res[1][`count(*)`]);
           res = res[0];
-          console.log(res);
           if (res.constructor == Array) {
             setUserModels(() => res);
             setUserLoading(false);
@@ -102,36 +101,41 @@ function useModels() {
   }
 
   function deleteModel(modelid) {
-    try {
-      JS2Py.PythonFunctions.TalkMotionServer.deleteModel(
-        token,
-        modelid,
-        function (res) {
-          console.log(res);
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.deleteModel(
+          token,
+          modelid,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
   }
 
   function updateModel(modelid, title, description, is_public) {
-    setLoading(true);
-    try {
-      JS2Py.PythonFunctions.TalkMotionServer.updateModel(
-        modelid,
-        title,
-        description,
-        is_public,
-        function (res) {
-          console.log(res);
-          setLoading(false);
-        }
-      );
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.updateModel(
+          modelid,
+          title,
+          description,
+          is_public,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
   }
 
   function cloneModel(modelid) {
@@ -162,6 +166,91 @@ function useModels() {
     }
   }
 
+  function getModel(modelid) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getModel(
+          token,
+          modelid,
+          function (res) {
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  function getModelFiles(modelid) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getModelFiles(
+          modelid,
+          function (res) {
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  function getModelConcepts(modelid) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getModelConcepts(
+          modelid,
+          function (res) {
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  function getConceptDetails(modelid, concept) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getConceptDetails(
+          modelid,
+          concept,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  function deleteModelConcept(modelid, concept) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.deleteModelConcepts(
+          modelid,
+          concept,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   return {
     publicCount,
     publicModels,
@@ -178,6 +267,11 @@ function useModels() {
     updateModel,
     cloneModel,
     purchaseModel,
+    getModel,
+    getModelFiles,
+    getModelConcepts,
+    getConceptDetails,
+    deleteModelConcept,
   };
 }
 

@@ -3,6 +3,7 @@ import serverReducer from "./features/serverSlice";
 import deviceReducer from "./features/deviceSlice";
 import userReducer from "./features/userSlice";
 import modelReducer from "./features/modelSlice";
+import trainerSlice from "./features/trainerSlice";
 
 const rootReducer = {
   login: loginReducer,
@@ -10,6 +11,7 @@ const rootReducer = {
   device: deviceReducer,
   user: userReducer,
   model: modelReducer,
+  trainer: trainerSlice,
 };
 
 export default rootReducer;

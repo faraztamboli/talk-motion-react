@@ -3,12 +3,15 @@ import { Button, Col, Input } from "antd";
 import { ModelsDropdown } from "../components/ui/ModelsDropdown";
 import { MdPause, MdPlayArrow } from "react-icons/md";
 import useTrainModel from "../hooks/useTrainModel";
+import { useSelector } from "react-redux";
 
 const { TextArea } = Input;
 
 function ModelTrainer(props) {
   const [isTraining, setIsTraining] = useState(false);
   const { train } = useTrainModel();
+
+  const { trainingStatus } = useSelector((state) => state.trainer);
 
   const modelTrainerStyle = props.sm
     ? { padding: "15px" }
@@ -59,6 +62,7 @@ function ModelTrainer(props) {
               rows={6}
               placeholder="status text here"
               style={{ backgroundColor: "#E6ECF0" }}
+              value={trainingStatus}
             />
           </div>
         </div>

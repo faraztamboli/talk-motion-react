@@ -1,7 +1,12 @@
 import { useRef } from "react";
 import * as cam from "@mediapipe/camera_utils";
 import JS2Py from "../remotepyjs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setTrainingStatusOff,
+  setTrainingStatusOn,
+} from "../app/features/trainerSlice";
+import useMessageApi from "./useMessageApi";
 
 if (typeof Worker !== "undefined") {
   console.log("web workers supported");
@@ -19,6 +24,9 @@ function useHolisticModel1() {
   const canvasRef = useRef(null);
   const spinner = useRef(null);
   const spinnerParentDiv = useRef(null);
+  const { contextHolder, showMessage } = useMessageApi();
+
+  const dispatch = useDispatch();
 
   const modelId = useSelector((state) => state.model.modelId);
   const concept = useSelector((state) => state.model.concept);
@@ -306,6 +314,13 @@ function useHolisticModel1() {
         concept,
         function (res) {
           console.log(res);
+          if (res == -1) {
+            dispatch(setTrainingStatusOff());
+          } else if (res == 0) {
+            dispatch(setTrainingStatusOn());
+          } else if (res == 1) {
+            showMessage("success", "sample collected");
+          }
         }
       );
     } else if (page === "/converter") {
@@ -326,6 +341,7 @@ function useHolisticModel1() {
     spinner,
     spinnerParentDiv,
     startHolisticModel,
+    contextHolder,
   };
 }
 

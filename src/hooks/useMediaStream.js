@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import useBase64String from "./useBase64String";
 
 function useMediaStream() {
   const webcamRef = useRef(null);
@@ -6,6 +7,7 @@ function useMediaStream() {
   const [capturing, setCapturing] = useState(false);
   const [recordedChunks, setRecordedChunks] = useState([]);
   const [base64data, setBase64Data] = useState();
+  const { getBase64 } = useBase64String();
 
   const handleStartCaptureClick = React.useCallback(() => {
     setCapturing(true);
@@ -40,26 +42,16 @@ function useMediaStream() {
         type: "video/mp4",
       });
 
-      // eslint-disable-next-line
-      const retstring = toBase64String(blob).then((finalString) => {
-        setBase64Data(finalString);
-        console.log(finalString);
-        return finalString;
-      });
+      getBase64(blob)
+        .then((finalString) => {
+          setBase64Data(finalString);
+          return finalString;
+        })
+        .catch((err) => console.log(err));
 
       setRecordedChunks([]);
     }
   }, [recordedChunks]);
-
-  function toBase64String(blob) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-      console.log(new Date());
-    });
-  }
 
   return {
     webcamRef,

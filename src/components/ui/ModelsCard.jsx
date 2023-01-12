@@ -4,19 +4,53 @@ import { Card, Avatar, Tooltip, Button, Dropdown } from "antd";
 import { MdOutlineArrowRightAlt, MdMoreVert } from "react-icons/md";
 import NewTrainer from "../../components/ui/NewTrainer";
 import plurkImg from "../../media/images/plurk.png";
+import { Link } from "react-router-dom";
 
 export const ModelsCard = (props) => {
-  const { model, deleteModel, cloneModel, purchaseModel, addNewTrainer } =
-    props;
+  const {
+    model,
+    deleteModel,
+    cloneModel,
+    purchaseModel,
+    addNewTrainer,
+    loading,
+    setLoading,
+    showMessage,
+  } = props;
 
   const items = [
     {
       key: "1",
-      label: <UpdateModel model_id={model.id} />,
+      label: (
+        <UpdateModel
+          model_id={model.id}
+          loading={loading}
+          setLoading={setLoading}
+          from="modelscard"
+          showMessage={showMessage}
+        />
+      ),
     },
     {
       key: "2",
-      label: <div onClick={() => deleteModel(model.id)}>Delete</div>,
+      label: (
+        <div
+          onClick={() => {
+            setLoading(true);
+            deleteModel(model.id)
+              .then((res) => {
+                console.log(res);
+                setLoading(false);
+              })
+              .catch((err) => {
+                console.log(err);
+                setLoading(false);
+              });
+          }}
+        >
+          Delete
+        </div>
+      ),
     },
     {
       key: "3",
@@ -82,9 +116,14 @@ export const ModelsCard = (props) => {
         className="card_btns flex align-items-center justify-content-end"
         style={{ marginTop: "1rem" }}
       >
-        <Button type="link" className="models-card-btn flex flex-center-center">
-          Explore <MdOutlineArrowRightAlt size={20} />
-        </Button>
+        <Link to={`${model.id}`}>
+          <Button
+            type="link"
+            className="models-card-btn flex flex-center-center"
+          >
+            Explore <MdOutlineArrowRightAlt size={20} />
+          </Button>
+        </Link>
       </div>
     </Card>
   );

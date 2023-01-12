@@ -17,6 +17,7 @@ function Collector(props) {
     spinner,
     spinnerParentDiv,
     startHolisticModel,
+    contextHolder,
   } = useHolisticModel1();
 
   const dispatch = useDispatch();
@@ -32,83 +33,89 @@ function Collector(props) {
 
   const collectorStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
   return (
-    <div style={collectorStyle} className="mh-100vh mb-6">
-      <Col span={8} xs={24} md={8}>
-        <ModelsDropdown />
-      </Col>
+    <>
+      {contextHolder}
+      <div style={collectorStyle} className="mh-100vh mb-6">
+        <Col span={8} xs={24} md={8}>
+          <ModelsDropdown />
+        </Col>
 
-      <Row>
-        <Col span={16} className="pr-6">
-          <div className="bg-white mt-6 converter-cards p-8">
-            <h2 className="mb-0">Collect Gestures</h2>
-            <p>Collect gestures and train your model</p>
+        <Row>
+          <Col span={16} className="pr-6">
+            <div className="bg-white mt-6 converter-cards p-8">
+              <h2 className="mb-0">Collect Gestures</h2>
+              <p>Collect gestures and train your model</p>
 
-            <Input
-              className="mb-3"
-              placeholder="Enter Collection Text"
-              style={{ backgroundColor: "#E6ECF0" }}
-              value={collectionText}
-              onChange={handleCollectionTextChange()}
-            />
-            {isPageActive ? (
-              <>
-                <Webcam className="input_video" hidden ref={webcamRef} />
+              <Input
+                className="mb-3"
+                placeholder="Enter Collection Text"
+                style={{ backgroundColor: "#E6ECF0" }}
+                value={collectionText}
+                onChange={handleCollectionTextChange()}
+              />
+              {isPageActive ? (
+                <>
+                  <Webcam className="input_video" hidden ref={webcamRef} />
+                  <canvas
+                    ref={canvasRef}
+                    style={{ backgroundColor: "black" }}
+                    className="output_canvas block w-100p mb-6"
+                  ></canvas>
+                  <div
+                    ref={spinnerParentDiv}
+                    className="flex flex-center-center"
+                  >
+                    <div
+                      ref={spinner}
+                      className="loading output_canvas w-100p mb-6"
+                    >
+                      <div className="spinner"></div>
+                    </div>
+                  </div>
+                </>
+              ) : (
                 <canvas
-                  ref={canvasRef}
                   style={{ backgroundColor: "black" }}
                   className="output_canvas block w-100p mb-6"
                 ></canvas>
-                <div ref={spinnerParentDiv} className="flex flex-center-center">
-                  <div
-                    ref={spinner}
-                    className="loading output_canvas w-100p mb-6"
-                  >
-                    <div className="spinner"></div>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <canvas
-                style={{ backgroundColor: "black" }}
-                className="output_canvas block w-100p mb-6"
-              ></canvas>
-            )}
-            <div className="flex flex-center-center">
-              {isPlayed ? (
-                <Button
-                  className="mr-6 converter-btns"
-                  type="primary"
-                  shape="circle"
-                  style={{ backgroundColor: "#DDBA00" }}
-                  size="large"
-                  danger
-                  onClick={() => {
-                    togglePlayed();
-                    setIsPageActive(false);
-                  }}
-                  icon={<MdPause size={24} />}
-                ></Button>
-              ) : (
-                <Button
-                  className="mr-6 converter-btns"
-                  type="primary"
-                  shape="circle"
-                  size="large"
-                  onClick={() => {
-                    togglePlayed();
-                    setIsPageActive(true);
-                    setTimeout(() => {
-                      startHolisticModel();
-                    }, 2000);
-                  }}
-                  icon={<MdPlayArrow size={24} />}
-                ></Button>
               )}
+              <div className="flex flex-center-center">
+                {isPlayed ? (
+                  <Button
+                    className="mr-6 converter-btns"
+                    type="primary"
+                    shape="circle"
+                    style={{ backgroundColor: "#DDBA00" }}
+                    size="large"
+                    danger
+                    onClick={() => {
+                      togglePlayed();
+                      setIsPageActive(false);
+                    }}
+                    icon={<MdPause size={24} />}
+                  ></Button>
+                ) : (
+                  <Button
+                    className="mr-6 converter-btns"
+                    type="primary"
+                    shape="circle"
+                    size="large"
+                    onClick={() => {
+                      togglePlayed();
+                      setIsPageActive(true);
+                      setTimeout(() => {
+                        startHolisticModel();
+                      }, 2000);
+                    }}
+                    icon={<MdPlayArrow size={24} />}
+                  ></Button>
+                )}
+              </div>
             </div>
-          </div>
-        </Col>
-      </Row>
-    </div>
+          </Col>
+        </Row>
+      </div>
+    </>
   );
 }
 

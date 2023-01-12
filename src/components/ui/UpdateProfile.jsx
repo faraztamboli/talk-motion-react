@@ -1,16 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Modal, Form, Button, Input, Upload } from "antd";
 import { useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import useProfile from "../../hooks/useProfile";
+import useBase64String from "../../hooks/useBase64String";
 
 function UpdateProfile(props) {
-  const { getUserProfile, userProfile } = useProfile();
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    getUserProfile();
-  }, []);
+  const { userProfile } = props;
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
@@ -119,87 +117,77 @@ function UpdateProfile(props) {
   );
 }
 
-const App = () => {
+const App = (props) => {
   const [open, setOpen] = useState(false);
   const { updateUserProfile } = useProfile();
+  const { getBase64 } = useBase64String();
+
   const onCreate = (values) => {
     console.log(values);
     if (values.smallimg && !values.largeimg) {
-      const reader = new FileReader();
-      reader.readAsDataURL(values.smallimg[0].originFileObj);
-      reader.onload = function () {
-        updateUserProfile(
-          values.first,
-          values.middle,
-          values.last,
-          values.email,
-          values.street,
-          values.city,
-          values.country,
-          values.zip,
-          values.line2,
-          reader.result,
-          null
-        );
-      };
-      reader.onerror = function () {
-        console.log(reader.error);
-      };
-    }
-
-    if (!values.smallimg && values.largeimg) {
-      const reader = new FileReader();
-      reader.readAsDataURL(values.largeimg[0].originFileObj);
-      reader.onload = function () {
-        updateUserProfile(
-          values.firstname,
-          values.middlename,
-          values.lastname,
-          values.email,
-          values.street,
-          values.city,
-          values.country,
-          values.zip,
-          values.line2,
-          null,
-          reader.result
-        );
-      };
-      reader.onerror = function () {
-        console.log(reader.error);
-      };
-    }
-    if (values.smallimg && values.largeimg) {
-      const reader = new FileReader();
-      reader.readAsDataURL(values.smallimg[0].originFileObj);
-      reader.onload = function () {
-        const newReader = new FileReader();
-        newReader.readAsDataURL(values.largeimg[0].originFileObj);
-        newReader.onload = function () {
+      getBase64(values.smallimg[0].originFileObj)
+        .then((res) =>
           updateUserProfile(
-            values.firstname,
-            values.middlename,
-            values.lastname,
+            values.first,
+            values.middle,
+            values.last,
             values.email,
             values.street,
             values.city,
             values.country,
             values.zip,
             values.line2,
-            reader.result,
-            newReader.result
-          );
-        };
-        newReader.onerror = function () {
-          console.log(reader.error);
-        };
-      };
-      reader.onerror = function () {
-        console.log(reader.error);
-      };
+            res,
+            null
+          )
+        )
+        .catch((err) => console.log(err));
     }
 
-    setOpen(false);
+    if (!values.smallimg && values.largeimg) {
+      getBase64(values.largeimg[0].originFileObj)
+        .then((res) =>
+          updateUserProfile(
+            values.first,
+            values.middle,
+            values.last,
+            values.email,
+            values.street,
+            values.city,
+            values.country,
+            values.zip,
+            values.line2,
+            null,
+            res
+          )
+        )
+        .catch((err) => console.log(err));
+    }
+    if (values.smallimg && values.largeimg) {
+      getBase64(values.smallimg[0].originFileObj)
+        .then((smimg) => {
+          getBase64(values.largeimg[0].originFileObj)
+            .then((lgimg) => {
+              updateUserProfile(
+                values.first,
+                values.middle,
+                values.last,
+                values.email,
+                values.street,
+                values.city,
+                values.country,
+                values.zip,
+                values.line2,
+                smimg,
+                lgimg
+              );
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+
+      setOpen(false);
+    }
   };
 
   return (
@@ -218,6 +206,7 @@ const App = () => {
         onCancel={() => {
           setOpen(false);
         }}
+        userProfile={props.userProfile}
       />
     </>
   );

@@ -31,6 +31,15 @@ code {
     max-width: 1300px;
 }
 
+.overflow-hidden {
+  overflow: hidden !important;
+  overflow-y: hidden !important;
+}
+
+.bg-warn  {
+  background-color: #DDBA00 !important;
+}
+
 .bg-white {
   background-color: #FFFFFF !important;
 }
@@ -495,6 +504,10 @@ code {
 }
 .w-4rem {
   width: 4rem;
+}
+
+.mh-90vh {
+  min-height: 90vh !important;
 }
 
 .mh-100vh {

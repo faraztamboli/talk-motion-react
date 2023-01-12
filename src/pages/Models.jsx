@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Skeleton, Empty, Pagination } from "antd";
 import NewModel from "../components/ui/NewModel";
 import { ModelsCard } from "../components/ui/ModelsCard";
@@ -10,8 +10,14 @@ import {
   setCurrentModelPage,
   setModelPaginationSize,
 } from "../app/features/modelSlice";
+import useMessageApi from "../hooks/useMessageApi";
 
 export default function Models(props) {
+  const [loading, setLoading] = useState(false);
+  const [userPage, setUserPage] = useState(1);
+  const [userPageSize, setUserPageSize] = useState(10);
+  const [publicPage, setPublicPage] = useState(1);
+  const [publicPageSize, setPublicPageSize] = useState(10);
   const {
     publicCount,
     publicModels,
@@ -27,19 +33,33 @@ export default function Models(props) {
     purchaseModel,
     addNewTrainer,
   } = useModels();
+  const { contextHolder, showMessage } = useMessageApi();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    getUserModels((userPage - 1) * userPageSize, userPageSize);
+    getPublicModels((publicPage - 1) * publicPageSize, publicPageSize);
+  }, [loading]);
+
+  useEffect(() => {
+    getPublicModels((publicPage - 1) * publicPageSize, publicPageSize);
+  }, [publicPage, publicPageSize]);
+
+  useEffect(() => {
+    getUserModels((userPage - 1) * userPageSize, userPageSize);
+  }, [userPage, userPageSize]);
 
   function onPublicModelsChange(page, pageSize) {
     dispatch(setCurrentModelPage(page));
     dispatch(setModelPaginationSize(pageSize));
-    getPublicModels((page - 1) * pageSize, pageSize);
+    setPublicPage(page);
+    setPublicPageSize(pageSize);
   }
 
   function onUserModelsChange(page, pageSize) {
-    dispatch(setCurrentModelPage(page));
-    dispatch(setModelPaginationSize(pageSize));
-    getUserModels((page - 1) * pageSize, pageSize);
+    setUserPage(page);
+    setUserPageSize(pageSize);
   }
 
   const modelStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
@@ -49,6 +69,7 @@ export default function Models(props) {
 
   return (
     <>
+      {contextHolder}
       <MetaDecorator title={title} description={description} />
       <div style={modelStyle} className="layout-bg mh-100vh">
         <h2>Public Models</h2>
@@ -64,6 +85,7 @@ export default function Models(props) {
                       purchaseModel={purchaseModel}
                       addNewTrainer={addNewTrainer}
                       key={model.key}
+                      showMessage={showMessage}
                     />
                   </Col>
                 );
@@ -104,6 +126,8 @@ export default function Models(props) {
                       addNewTrainer={addNewTrainer}
                       collapsedWidth={props.collapsedWidth}
                       key={model.key}
+                      loading={loading}
+                      setLoading={setLoading}
                     />
                   </Col>
                 );

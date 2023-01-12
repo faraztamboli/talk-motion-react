@@ -1,34 +1,32 @@
 import { useState, useEffect } from "react";
 import JS2Py from "../remotepyjs";
+import useBase64String from "./useBase64String";
 import useLocalStorage from "./useLocalStorage";
 
 function useProfile() {
   const [userProfile, setUserProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [token] = useLocalStorage("token");
+  const { getBase64 } = useBase64String();
 
   useEffect(() => {
     getUserProfile();
   }, [Object.keys(userProfile).length]);
 
   const uploadProfilePic = (file) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = function () {
-      console.log(file.name, reader.result);
-      JS2Py.PythonFunctions.TalkMotionServer.uploadProfilePic(
-        token,
-        file.name,
-        reader.result,
-        false,
-        function (res) {
-          console.log(res);
-        }
-      );
-    };
-    reader.onerror = function () {
-      console.log(reader.error);
-    };
+    getBase64(file)
+      .then((res) =>
+        JS2Py.PythonFunctions.TalkMotionServer.uploadProfilePic(
+          token,
+          file.name,
+          res,
+          false,
+          function (res) {
+            console.log(res);
+          }
+        )
+      )
+      .catch((err) => console.log(err));
   };
 
   function getUserProfile() {

@@ -22,6 +22,8 @@
  *
  ********************************************************************************/
 
+import jsOnUpdateTrainingStatus from "../utils/jsOnUpdateTrainingStatus";
+
 /*
   const ARGUMENT_NAMES = /([^\s,]+)/g;
   const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
@@ -104,12 +106,12 @@ function JS2PyClient(serverName, clientPageId) {
           session_id: this.getSessionId(),
         })
       );
-      console.log(
-        "Function : " +
-          function_name +
-          " called with arguments: " +
-          JSON.stringify(parameters)
-      );
+      // console.log(
+      //   "Function : " +
+      //     function_name +
+      //     " called with arguments: " +
+      //     JSON.stringify(parameters)
+      // );
     } else {
       console.log("Connection not open.");
     }
@@ -353,6 +355,11 @@ function JS2PyClient(serverName, clientPageId) {
         );
       }
     };
+
+    JS2Py.registerJSFunctionToBeCalledByPython(
+      "jsOnUpdateTrainingStatus",
+      jsOnUpdateTrainingStatus
+    );
 
     this.socket.onmessage = function (e) {
       JS2PySelf.onmsgFunctions.forEach((fun) => fun());

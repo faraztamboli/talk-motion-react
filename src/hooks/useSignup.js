@@ -19,7 +19,7 @@ function SignupLogic() {
   const failure = () => {
     messageApi.open({
       type: "error",
-      content: "Cannot create your account",
+      content: "Cannot create account",
     });
   };
 

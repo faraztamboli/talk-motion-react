@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, Form, Button, Input, Upload } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
+import useBase64String from "../../hooks/useBase64String";
 
 function UploadVideoFile(props) {
   const [form] = Form.useForm();
@@ -59,17 +60,12 @@ function UploadVideoFile(props) {
 const App = () => {
   const [open, setOpen] = useState(false);
   const { uploadVideo, contextHolder, loading } = useUploadGestureVideo();
+  const { getBase64 } = useBase64String();
 
   const onCreate = (values) => {
-    let reader = new FileReader();
-    reader.readAsDataURL(values.dragger[0].originFileObj);
-    reader.onload = function () {
-      console.log(reader.result);
-      uploadVideo(values.word, values.dragger[0].name, reader.result);
-    };
-    reader.onerror = function () {
-      console.log(reader.error);
-    };
+    getBase64(values.dragger[0].originFileObj)
+      .then((res) => uploadVideo(values.word, values.dragger[0].name, res))
+      .catch((err) => console.log(err));
 
     setOpen(false);
   };
