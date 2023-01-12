@@ -1,7 +1,7 @@
 import React from "react";
-import coupleImage from "../media/images/couple-talking-using-sign-language 1.png";
-import unsplash_1 from "..//images/unmediasplash_PddcoUGPBMw.png";
-import unsplash_2 from "C:\Users\tambo\Downloads\Faraz-Headshot.jpg";
+import coupleImage from "../media/images/diversity-in-action.png";
+import unsplash_1 from "..//images/3m-young-scientist.png";
+import unsplash_2 from "../media/images/gloria-barron.png";
 
 import { Col, Row } from "antd";
 import { Link } from "react-router-dom";
