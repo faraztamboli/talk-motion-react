@@ -21,7 +21,7 @@ function StoriesSection() {
           <Col span={7} xs={24} md={12} lg={7} className="stories-card-col">
             <div className="card stories-card">
               <img src={unsplash_1} alt="example" />
-              <h4>Our Awesome story 1</h4>
+              <h4>Faraz Tamboli named America's National Top Young Scientist for inventing TalkMotion</h4>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Cupiditate tenetur quibusdam iste.
@@ -33,7 +33,7 @@ function StoriesSection() {
           <Col span={7} xs={24} md={12} lg={7} className="stories-card-col">
             <div className="card stories-card">
               <img src={unsplash_2} alt="example" />
-              <h4>Our Awesome story 2</h4>
+              <h4>Faraz Tamboli awarded Gloria Barron Prize for Young Heroes</h4>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Cupiditate tenetur quibusdam iste.
@@ -45,7 +45,7 @@ function StoriesSection() {
           <Col span={7} xs={24} md={12} lg={7} className="stories-card-col">
             <div className="card stories-card">
               <img src={coupleImage} alt="example" />
-              <h4>Our Awesome story 3</h4>
+              <h4>Faraz was named 20 Under 20 in Diversity Action Magazine</h4>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Cupiditate tenetur quibusdam iste.
