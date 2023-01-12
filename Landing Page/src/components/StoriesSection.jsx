@@ -26,7 +26,12 @@ function StoriesSection() {
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Cupiditate tenetur quibusdam iste.
               </p>
-              <strong className="stories-card-link">Read more &gt;</strong>
+              <a
+              href="https://youngscientistlab.com/alumni-center/alumni-spotlight/faraz-tamboli"
+              target="_blank"
+              rel="noreferrer"
+            >
+            <strong className="stories-card-link">Read more &gt;</strong>            </a>
             </div>
           </Col>
 
