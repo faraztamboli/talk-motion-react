@@ -58,7 +58,7 @@ function useProfile() {
   ) {
     setLoading(true);
     try {
-      JS2Py.PythonFunctions.SessionServer.updateUserProfile(
+      JS2Py.PythonFunctions.TalkMotionServer.updateUserProfileWithImages(
         token,
         first,
         middle,
