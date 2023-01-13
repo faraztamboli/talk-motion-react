@@ -63,14 +63,22 @@ const CollectionCreateForm = (props) => {
 
 const App = (props) => {
   const [open, setOpen] = useState(false);
-  const { createNewModel } = props;
+  const { createNewModel, setLoading } = props;
 
   const btnStyle = props.sm ? "medium" : "large";
   const iconSize = props.sm ? 20 : 24;
 
   function onCreate(values) {
-    console.log(values);
-    createNewModel(values.title, values.description, values.modifier);
+    setLoading(true);
+    createNewModel(values.title, values.description, values.modifier)
+      .then((res) => {
+        console.log(res);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
     setOpen(false);
   }
 

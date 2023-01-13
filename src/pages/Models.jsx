@@ -5,7 +5,7 @@ import { ModelsCard } from "../components/ui/ModelsCard";
 import useModels from "../hooks/useModels";
 import { modelsDetails } from "../data/PageDetails";
 import MetaDecorator from "../components/MetaDecorator";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentModelPage,
   setModelPaginationSize,
@@ -13,6 +13,10 @@ import {
 import useMessageApi from "../hooks/useMessageApi";
 
 export default function Models(props) {
+  const [userLoading, setUserLoading] = useState(true);
+  const [publicLoading, setPublicLoading] = useState(true);
+  const [publicModels, setPublicModels] = useState([]);
+  const [userModels, setUserModels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userPage, setUserPage] = useState(1);
   const [userPageSize, setUserPageSize] = useState(10);
@@ -20,13 +24,9 @@ export default function Models(props) {
   const [publicPageSize, setPublicPageSize] = useState(10);
   const {
     publicCount,
-    publicModels,
     getPublicModels,
     userCount,
-    userModels,
     getUserModels,
-    publicLoading,
-    userLoading,
     createNewModel,
     deleteModel,
     cloneModel,
@@ -37,18 +37,79 @@ export default function Models(props) {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    getUserModels((userPage - 1) * userPageSize, userPageSize);
-    getPublicModels((publicPage - 1) * publicPageSize, publicPageSize);
-  }, [loading]);
+  const currentPage = useSelector((state) => state.model.currentModelPage);
+  const pageSize = useSelector((state) => state.model.modelPaginationSize);
 
   useEffect(() => {
-    getPublicModels((publicPage - 1) * publicPageSize, publicPageSize);
+    getUserModels((userPage - 1) * userPageSize, userPageSize)
+      .then((res) => {
+        console.log(res);
+        setUserLoading(false);
+        setUserModels(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        setUserLoading(false);
+      });
+    getPublicModels((publicPage - 1) * publicPageSize, publicPageSize)
+      .then((res) => {
+        setPublicLoading(false);
+        setPublicModels(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        setPublicLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    setPublicLoading(true);
+    getPublicModels((publicPage - 1) * publicPageSize, publicPageSize)
+      .then((res) => {
+        setPublicModels(res);
+        setPublicLoading(false);
+      })
+      .catch((err) => {
+        setPublicLoading(false);
+        console.log(err);
+      });
   }, [publicPage, publicPageSize]);
 
   useEffect(() => {
-    getUserModels((userPage - 1) * userPageSize, userPageSize);
+    setUserLoading(true);
+    getUserModels((userPage - 1) * userPageSize, userPageSize)
+      .then((res) => {
+        setUserLoading(false);
+        setUserModels(res);
+      })
+      .catch((err) => {
+        setUserLoading(false);
+        console.log(err);
+      });
   }, [userPage, userPageSize]);
+
+  useEffect(() => {
+    setUserLoading(true);
+    setPublicLoading(true);
+    getUserModels((userPage - 1) * userPageSize, userPageSize)
+      .then((res) => {
+        setUserModels(res);
+        setUserLoading(false);
+      })
+      .catch((err) => {
+        setUserLoading(false);
+        console.log(err);
+      });
+    getPublicModels((publicPage - 1) * publicPageSize, publicPageSize)
+      .then((res) => {
+        setPublicModels(res);
+        setPublicLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setPublicLoading(false);
+      });
+  }, [loading]);
 
   function onPublicModelsChange(page, pageSize) {
     dispatch(setCurrentModelPage(page));
@@ -154,7 +215,11 @@ export default function Models(props) {
           </div>
         )}
         <div className="flex flex-center-center mt-10">
-          <NewModel sm={props.sm} createNewModel={createNewModel} />
+          <NewModel
+            sm={props.sm}
+            createNewModel={createNewModel}
+            setLoading={setLoading}
+          />
         </div>
       </div>
     </>

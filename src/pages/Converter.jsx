@@ -18,7 +18,7 @@ const Converter = (props) => {
       <div className="converter-content layout-bg mh-100vh">
         <Row gutter={[16, 16]}>
           <Col span={8} xs={24} md={8}>
-            <ModelsDropdown />
+            <ModelsDropdown from="converter" />
           </Col>
           <Col span={8} xs={0} md={8}></Col>
           <Col span={8} xs={24} md={8}>

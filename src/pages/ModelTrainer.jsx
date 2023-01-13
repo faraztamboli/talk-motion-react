@@ -24,7 +24,7 @@ function ModelTrainer(props) {
   return (
     <div className="mh-100vh mb-6" style={modelTrainerStyle}>
       <Col span={8} xs={24} md={8}>
-        <ModelsDropdown />
+        <ModelsDropdown from="trainer" />
       </Col>
 
       <Col span={16}>

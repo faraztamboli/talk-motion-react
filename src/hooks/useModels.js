@@ -1,5 +1,4 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import JS2Py from "../remotepyjs";
 import useLocalStorage from "./useLocalStorage";
 
@@ -8,96 +7,94 @@ function useModels() {
   const [userModels, setUserModels] = React.useState([]);
   const [userCount, setUserCount] = React.useState(0);
   const [publicCount, setPublicCount] = React.useState(0);
-  const [loading, setLoading] = React.useState(false);
-  const [publicLoading, setPublicLoading] = React.useState(true);
-  const [userLoading, setUserLoading] = React.useState(true);
   const [token] = useLocalStorage("token");
-
-  const currentPage = useSelector((state) => state.model.currentModelPage);
-  const pageSize = useSelector((state) => state.model.modelPaginationSize);
 
   React.useEffect(() => {
     getUserModels(0, 10);
     getPublicModels(0, 10);
   }, []);
 
-  React.useEffect(() => {
-    getPublicModels((currentPage - 1) * pageSize, pageSize);
-    getUserModels((currentPage - 1) * pageSize, pageSize);
-  }, [loading]);
-
   function getPublicModels(offset, end) {
-    setPublicLoading(true);
-    try {
-      JS2Py.PythonFunctions.TalkMotionServer.getPublicModels(
-        offset,
-        end,
-        function (res) {
-          setPublicCount(res[1][`count(*)`]);
-          res = res[0];
-          if (res.constructor == Array) {
-            setPublicModels(() => res);
-            setPublicLoading(false);
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getPublicModels(
+          offset,
+          end,
+          function (res) {
+            setPublicCount(res[1][`count(*)`]);
+            res = res[0];
+            if (res.constructor == Array) {
+              setPublicModels(() => res);
+              resolve(res);
+            }
           }
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
   }
 
   function getUserModels(offset, end) {
-    setUserLoading(true);
-    try {
-      JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(
-        token,
-        offset,
-        end,
-        function (res) {
-          setUserCount(res[1][`count(*)`]);
-          res = res[0];
-          if (res.constructor == Array) {
-            setUserModels(() => res);
-            setUserLoading(false);
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(
+          token,
+          offset,
+          end,
+          function (res) {
+            setUserCount(res[1][`count(*)`]);
+            res = res[0];
+            if (res.constructor == Array) {
+              setUserModels(() => res);
+              resolve(res);
+            }
           }
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
   }
 
   function createNewModel(title, description, is_public) {
-    setLoading(true);
-    try {
-      JS2Py.PythonFunctions.TalkMotionServer.createModel(
-        token,
-        title,
-        description,
-        is_public,
-        function (res) {
-          console.log(res);
-          setLoading(false);
-        }
-      );
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-    }
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.createModel(
+          token,
+          title,
+          description,
+          is_public,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        reject(err);
+        console.log(err);
+      }
+    });
   }
 
   function addNewTrainer(modelid, username) {
-    try {
-      JS2Py.PythonFunctions.TalkMotionServer.addTrainerToModel(
-        modelid,
-        username,
-        function (res) {
-          console.log(res);
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.addTrainerToModel(
+          modelid,
+          username,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
   }
 
   function deleteModel(modelid) {
@@ -251,6 +248,48 @@ function useModels() {
     });
   }
 
+  function getModelsUserCanTrain() {
+    let offset = 0;
+    let end = 9999999;
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getModelsUserCanTrain(
+          token,
+          offset,
+          end,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  function getModelsUserCanUse() {
+    let offset = 0;
+    let end = 9999999;
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getModelsUserCanUse(
+          token,
+          offset,
+          end,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   return {
     publicCount,
     publicModels,
@@ -258,9 +297,6 @@ function useModels() {
     userCount,
     userModels,
     getUserModels,
-    loading,
-    userLoading,
-    publicLoading,
     createNewModel,
     addNewTrainer,
     deleteModel,
@@ -272,6 +308,8 @@ function useModels() {
     getModelConcepts,
     getConceptDetails,
     deleteModelConcept,
+    getModelsUserCanTrain,
+    getModelsUserCanUse,
   };
 }
 

@@ -37,7 +37,7 @@ function Collector(props) {
       {contextHolder}
       <div style={collectorStyle} className="mh-100vh mb-6">
         <Col span={8} xs={24} md={8}>
-          <ModelsDropdown />
+          <ModelsDropdown from="trainer" />
         </Col>
 
         <Row>
