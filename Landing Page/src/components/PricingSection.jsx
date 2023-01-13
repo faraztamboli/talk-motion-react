@@ -13,9 +13,9 @@ function PricingSection() {
               <div className="card card-1">
                 <div className="card-content">
                   <h4>Basic</h4>
-                  <h6>Personal Use</h6>
+                  <h6>Voice to Gesture</h6>
                   <strong>Free</strong>
-                  <p>Lorem ipsum dolor sit, amet consectetur</p>
+                  <p>With this package you can convert voice into sign language.</p>
                   <Link to={"/payment"} className="card-btn-link">
                     <Button shape="round" size="large" className="card-btn">
                       Order Now
@@ -28,11 +28,11 @@ function PricingSection() {
               <div className="card card-1">
                 <div className="card-content">
                   <h4>Pro</h4>
-                  <h6>Multiple People</h6>
+                  <h6>Full Package</h6>
                   <span className="pricing-span">$</span>
-                  <strong>19.95</strong>
+                  <strong>9.95</strong>
                   <span className="pricing-span">/month</span>
-                  <p>Lorem ipsum dolor sit, amet consectetur</p>
+                  <p>With this package you can convert voice -> gesture & vice versa; build custom gestures</p>
                   <Link to={"/payment"} className="card-btn-link">
                     <Button shape="round" size="large" className="card-btn">
                       Order Now
@@ -48,7 +48,7 @@ function PricingSection() {
                   <h6>Custom</h6>
                   <span className="pricing-span">$</span>
                   <strong>__.__</strong>
-                  <p>Lorem ipsum dolor sit, amet consectetur</p>
+                  <p>For schools and companies. <br/>Please <Link to="/contact-us" className="footer-links">contact us</Link> for pricing.</p>
                   <Link to={"/payment"} className="card-btn-link">
                     <Button shape="round" size="large" className="card-btn">
                       Order Now
