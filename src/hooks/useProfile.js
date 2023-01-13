@@ -64,7 +64,6 @@ function useProfile() {
         middle,
         last,
         email,
-        Date.now(),
         street,
         city,
         country,
