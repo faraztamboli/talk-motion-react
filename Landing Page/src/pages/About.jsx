@@ -75,7 +75,7 @@ function About(props) {
                   <p>2</p>
                 </div>
                 <div className="content">
-                  <h2>Convert your gustures to voice</h2>
+                  <h2>Convert your gestures to voice</h2>
                   <p>
                     Deaf and aphonic people can sign and their movements will be
                     picked up by the gesture detector. An Artificial
@@ -97,7 +97,7 @@ function About(props) {
                   <p>3</p>
                 </div>
                 <div className="content">
-                  <h2>Convert your voice to gusters</h2>
+                  <h2>Convert your voice to gestures</h2>
                   <p>
                     A hearing person can verbally respond, and TalkMotion will
                     display sign language pictures on the screen using voice

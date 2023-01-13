@@ -1,6 +1,9 @@
 import React from "react";
 import { Col, Row } from "antd";
 import featureImage from "../media/images/card-logo.png";
+import featureImage1 from "../media/images/gesture-to-voice.png";
+import featureImage2 from "../media/images/voice-to-gesture.png";
+import featureImage3 from "../media/images/artificial-intelligence.png";
 
 function FeaturesSection() {
   return (
@@ -55,7 +58,7 @@ function FeaturesSection() {
               <div className="card card-1">
                 <div className="card-img">
                   <img
-                    src={featureImage}
+                    src={featureImage3}
                     width={100}
                     height={100}
                     alt="card logo"

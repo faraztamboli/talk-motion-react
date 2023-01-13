@@ -26,15 +26,12 @@ function StoriesSection() {
               Faraz invented TalkMotion, a talking device for deaf and 
               aphonic children, that turns a sign language gesture into 
               verbal language, or verbal language into sign language gestures.
-              alkMotion turns a sign language gesture into verbal language 
+              TalkMotion turns a sign language gesture into verbal language
               or verbal language into sign language gestures. 
               Translating between sign language and voice can make it 
               easier for people who are deaf or hard of hearing to 
               communicate with those who do not know sign language and 
-              vice versa. This technology has the potential to break down 
-              barriers and facilitate greater understanding and 
-              communication between people of different backgrounds 
-              and abilities.
+              vice versa.
               </p>
               <a
               href="https://youngscientistlab.com/alumni-center/alumni-spotlight/faraz-tamboli"
@@ -54,7 +51,10 @@ function StoriesSection() {
               Faraz Tamboli invented TalkMotion, a device that helps people 
               who are deaf and aphonic (voiceless) communicate with people 
               who can hear. His device translates sign language into verbal 
-              language and verbal language back into sign language.
+              language and verbal language back into sign language. Faraz
+              hopes his invention will help expand the limited world of the
+              deaf and aphonic, allowing them to communicate in everyday life,
+              talk with their families, and work in jobs they previously couldn’t.
               </p>
               <a
               href="https://barronprize.org/meet-the-winners/2021-winners/#TalkMotion"
