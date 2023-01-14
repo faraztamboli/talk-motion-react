@@ -16,11 +16,10 @@ function useProfile() {
   const uploadProfilePic = (file) => {
     getBase64(file)
       .then((res) =>
-        JS2Py.PythonFunctions.TalkMotionServer.uploadProfilePic(
+        JS2Py.PythonFunctions.TalkMotionServer.uploadProfilePicture(
           token,
-          file.name,
           res,
-          false,
+          true,
           function (res) {
             console.log(res);
           }
