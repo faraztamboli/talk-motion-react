@@ -22,7 +22,7 @@
  *
  ********************************************************************************/
 
-import jsOnUpdateTrainingStatus from "../utils/jsOnUpdateTrainingStatus";
+// import jsOnUpdateTrainingStatus from "../utils/jsOnUpdateTrainingStatus";
 
 /*
   const ARGUMENT_NAMES = /([^\s,]+)/g;
@@ -356,10 +356,10 @@ function JS2PyClient(serverName, clientPageId) {
       }
     };
 
-    JS2Py.registerJSFunctionToBeCalledByPython(
-      "jsOnUpdateTrainingStatus",
-      jsOnUpdateTrainingStatus
-    );
+    // JS2Py.registerJSFunctionToBeCalledByPython(
+    //   "jsOnUpdateTrainingStatus",
+    //   jsOnUpdateTrainingStatus
+    // );
 
     this.socket.onmessage = function (e) {
       JS2PySelf.onmsgFunctions.forEach((fun) => fun());
@@ -565,7 +565,6 @@ function JS2PyClient(serverName, clientPageId) {
 }
 
 var JS2Py = new JS2PyClient();
-
 // window.onload = function () {
 //   JS2Py.serverName = 'ws://calcurithm.com:8082';
 //   JS2Py.start();

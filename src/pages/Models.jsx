@@ -5,7 +5,7 @@ import { ModelsCard } from "../components/ui/ModelsCard";
 import useModels from "../hooks/useModels";
 import { modelsDetails } from "../data/PageDetails";
 import MetaDecorator from "../components/MetaDecorator";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   setCurrentModelPage,
   setModelPaginationSize,
@@ -36,9 +36,6 @@ export default function Models(props) {
   const { contextHolder, showMessage } = useMessageApi();
 
   const dispatch = useDispatch();
-
-  const currentPage = useSelector((state) => state.model.currentModelPage);
-  const pageSize = useSelector((state) => state.model.modelPaginationSize);
 
   useEffect(() => {
     getUserModels((userPage - 1) * userPageSize, userPageSize)

@@ -14,7 +14,22 @@ function useTrainModel() {
     }
   }
 
-  return { train };
+  function getTotalNumberOfLogMessages() {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getTotalNumberOfLogMessages(
+          function (res) {
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  return { train, getTotalNumberOfLogMessages };
 }
 
 export default useTrainModel;

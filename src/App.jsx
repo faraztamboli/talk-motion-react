@@ -8,6 +8,7 @@ import { Statuses } from "./components/ui/Statuses";
 import useServerConnection from "./hooks/useServerConnection";
 import useMediaQueries from "./hooks/useMediaQueries";
 import AppRoutes from "./routes/AppRoutes";
+import jsOnUpdateTrainingStatus from "./utils/jsOnUpdateTrainingStatus";
 
 const App = () => {
   const { collapsed, collapsedWidth, onCollapsed, sideBarWidth, sm, md } =
@@ -19,6 +20,8 @@ const App = () => {
 
   // connect to server;
   useServerConnection();
+
+  jsOnUpdateTrainingStatus();
 
   return (
     <div className="App">

@@ -1,13 +1,17 @@
 import React from "react";
-import { Button, Tooltip } from "antd";
+import { Button, Slider, Tooltip } from "antd";
 import { MdPause, MdPlayArrow, MdFullscreen } from "react-icons/md";
 import { GestureCanvs } from "./GestureCanvs";
 import useHolisticModel1 from "../../hooks/useHolisticModel1";
+import { useDispatch } from "react-redux";
+import { setVolume } from "../../app/features/speechSlice";
 
 export const GestureToVoice = (props) => {
   const [fullScreen, setFullScreen] = React.useState(false);
   const [isPageActive, setIsPageActive] = React.useState(false);
   const [isPlayed, setIsPlayed] = React.useState(false);
+
+  const dispatch = useDispatch();
 
   const {
     webcamRef,
@@ -23,6 +27,12 @@ export const GestureToVoice = (props) => {
 
   const toggleFullScreen = () => {
     setFullScreen(!fullScreen);
+  };
+
+  const onVolumeChange = (value) => {
+    value = (value / 20) * 1;
+    console.log(value);
+    dispatch(setVolume(value));
   };
 
   const iconSize = props.md ? 20 : 24;
@@ -50,6 +60,7 @@ export const GestureToVoice = (props) => {
         isPageActive={isPageActive}
         setIsPageActive={setIsPageActive}
       />
+      <Slider defaultValue={10} max={20} onChange={onVolumeChange} />
       <div
         style={{
           display: "flex",

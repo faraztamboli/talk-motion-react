@@ -36,7 +36,7 @@ export default function MyModels(props) {
           <UserMenuProfileItem size="large" />
         </div>
         <div className="details_section" style={{ marginTop: "2rem" }}>
-          <h2>Your Models</h2>
+          <h2>My Models</h2>
           <Row gutter={[16, 16]}>
             {!userLoading && userModels?.length > 0
               ? userModels.map((model) => {

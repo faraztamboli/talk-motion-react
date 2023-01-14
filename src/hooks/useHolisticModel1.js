@@ -7,6 +7,7 @@ import {
   setTrainingStatusOn,
 } from "../app/features/trainerSlice";
 import useMessageApi from "./useMessageApi";
+import useSpeechSynthesis from "./useSpeechSynthesis";
 
 if (typeof Worker !== "undefined") {
   console.log("web workers supported");
@@ -24,7 +25,9 @@ function useHolisticModel1() {
   const canvasRef = useRef(null);
   const spinner = useRef(null);
   const spinnerParentDiv = useRef(null);
+  const audioRef = useRef(null);
   const { contextHolder, showMessage } = useMessageApi();
+  const { speak, onVolumeChange } = useSpeechSynthesis();
 
   const dispatch = useDispatch();
 
@@ -298,17 +301,6 @@ function useHolisticModel1() {
     }
   }
 
-//  function speak(text) {
-//     var msg = new SpeechSynthesisUtterance();
-//     var voices = window.speechSynthesis.getVoices();
-//     msg.voice = voices[$('#voicelist').val()];
-//     msg.text = text;
-//     msg.onend = function(e) {
-//       console.log('Finished in ' + event.elapsedTime + ' seconds.');
-//     };
-//     speechSynthesis.speak(msg);
-//  }
-
   function sendToServer(data) {
     console.log("send to server");
 
@@ -344,15 +336,14 @@ function useHolisticModel1() {
           if (res.status == -1) {
             // means gesture is still not complete and there was no hand in the frame and we wait for a few frames (gesture is about to be complete)
             // TODO: show a red light led indicating recording
-          }
-          else if (res.status == -1) {
+          } else if (res.status == 0) {
             // means hand is still moving in-front of the camera and a good gesture frame was captured, but the sequence is still not complete or not recording
             // TODO: show a green light led indicating not recording
-          }
-          else {
+          } else {
+            console.log(audioRef.current);
             // mean gesture sequence is complete and the return value has following attributes: a) prediction b) prediction_indices. In this case we want to be printing the prediction on the screen and speak the words.
             // TODO: 1) display res.prediction below video 2) use speech library to speak the word
-            // speak(res.prediction)
+            speak(res.prediction);
             // also lets have a button that mutes or un-mutes, and slider like control that increases or decreases the volume
           }
         }
@@ -362,11 +353,13 @@ function useHolisticModel1() {
 
   return {
     webcamRef,
+    audioRef,
     canvasRef,
     spinner,
     spinnerParentDiv,
     startHolisticModel,
     contextHolder,
+    onVolumeChange,
   };
 }
 
