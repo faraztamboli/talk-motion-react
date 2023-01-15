@@ -12,9 +12,11 @@ const handleLogout = () => {
   const token = localStorage.getItem("token");
   JS2Py.PythonFunctions.SessionServer.logOut(token, function (res) {
     console.log(res);
+    window.localStorage.removeItem("token");
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 1000);
   });
-  localStorage.removeItem("token");
-  window.location.href = "/login";
 };
 
 const userMenu = [

@@ -37,7 +37,9 @@ function ModelConcepts(props) {
               <Col key={index} span={8} xs={24} md={8}>
                 <ConceptCard
                   concept={concept?.concept}
-                  frames_count={concept?.frame_count}
+                  sample_count={concept?.sample_count}
+                  which_hand={Math.round(concept?.which_hand_mean)}
+                  sample_recording_time={concept?.sample_recording_time}
                 />
               </Col>
             );

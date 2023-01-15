@@ -53,7 +53,7 @@ const App = (props) => {
 
   const onCreate = (values) => {
     console.log("Received values of form: ", values);
-    addNewTrainer(props.id, values.username);
+    addNewTrainer(props.id, values.username).then((res) => console.log(res));
     setOpen(false);
   };
 

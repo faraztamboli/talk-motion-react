@@ -1,10 +1,17 @@
 import React from "react";
 import { Button, Card } from "antd";
 import plurkImg from "../../media/images/plurk.png";
+import capitalize from "../../utils/capitalizeWord";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 function ConceptCard(props) {
+  const { concept, sample_count, which_hand, sample_recording_time } = props;
+
+  const date = new Date(sample_recording_time);
+  const minutes = date.getUTCMinutes();
+  const seconds = date.getUTCSeconds();
+
   return (
     <Card bordered={false} className="models-card" style={{ minWidth: 200 }}>
       <div className="flex" style={{ justifyContent: "space-between" }}>
@@ -21,8 +28,18 @@ function ConceptCard(props) {
       </div>
 
       <div className="card_content" style={{ marginTop: "1.5rem" }}>
-        <h2 className="models-card-heading">{props.concept}</h2>
-        <h3 className="models-card-description">{`Frames : ${props.frames_count}`}</h3>
+        <h2 className="models-card-heading">{capitalize(concept)}</h2>
+        <h3 className="models-card-description">{`Samples : ${sample_count}`}</h3>
+        <h3 className="models-card-description">{`Hand : ${
+          which_hand == 1
+            ? "Left"
+            : which_hand == 2
+            ? "Right"
+            : which_hand == 3
+            ? "Both"
+            : "None"
+        }`}</h3>
+        <h3 className="models-card-description">{`Recording Time : ${minutes}:${seconds}`}</h3>
       </div>
 
       <div

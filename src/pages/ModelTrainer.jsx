@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Badge, Button, Col, Input, Progress } from "antd";
+import { Button, Col, Input, Progress } from "antd";
 import { ModelsDropdown } from "../components/ui/ModelsDropdown";
 import { MdPause, MdPlayArrow } from "react-icons/md";
 import useTrainModel from "../hooks/useTrainModel";
@@ -9,6 +9,7 @@ import {
   setIsTrainingComplete,
   setTrainingStatus,
 } from "../app/features/trainerSlice";
+import useMessageApi from "../hooks/useMessageApi";
 
 const { TextArea } = Input;
 
@@ -16,6 +17,7 @@ function ModelTrainer(props) {
   const [isTraining, setIsTraining] = useState(false);
   const [totalProgress, setTotalProgress] = useState();
   const { train, getTotalNumberOfLogMessages } = useTrainModel();
+  const { contextHolder, showMessage } = useMessageApi();
 
   const dispatch = useDispatch();
 
@@ -25,18 +27,18 @@ function ModelTrainer(props) {
   const { showProgress } = useSelector((state) => state.trainer);
   const { testAccuracy } = useSelector((state) => state.trainer);
   const { validationAccuracy } = useSelector((state) => state.trainer);
+  const { modelId } = useSelector((state) => state.model);
 
   const trainingTextArea = document.getElementById("trainingTextArea");
   useEffect(() => {
-    if (trainingTextArea) {
-      trainingTextArea.scrollTop = trainingTextArea.scrollHeight;
-    }
     getTotalNumberOfLogMessages()
       .then((res) => {
-        console.log(res);
         setTotalProgress(res);
       })
       .catch((err) => console.log(err));
+    if (trainingTextArea) {
+      trainingTextArea.scrollTop = trainingTextArea.scrollHeight;
+    }
   }, []);
 
   useEffect(() => {
@@ -68,65 +70,72 @@ function ModelTrainer(props) {
 
   return (
     <>
+      {contextHolder}
       <div className="mh-100vh mb-6" style={modelTrainerStyle}>
         <Col span={8} xs={24} md={8}>
           <ModelsDropdown from="trainer" />
         </Col>
 
         <Col span={16}>
-          <Badge.Ribbon text={testAccuracy} placement="start">
-            <Badge.Ribbon text={validationAccuracy} placement="end">
-              <div className="bg-white mt-6 converter-cards p-8">
-                <h2 className="mb-0">Train Model</h2>
-                <p>Select a model and train it</p>
+          <div className="bg-white mt-6 converter-cards p-8">
+            <h2 className="mb-0">Train Model</h2>
+            <p>Select a model and train it</p>
 
-                <div className="flex flex-center-center">
-                  {isTraining ? (
-                    <Button
-                      type="primary"
-                      size="large"
-                      shape="circle"
-                      onClick={toggleTraining}
-                      style={{ backgroundColor: "#DDBA00" }}
-                      icon={<MdPause size={24} />}
-                    ></Button>
-                  ) : (
-                    <Button
-                      type="primary"
-                      size="large"
-                      shape="circle"
-                      onClick={() => {
-                        toggleTraining();
-                        train();
-                      }}
-                      icon={<MdPlayArrow size={24} />}
-                    ></Button>
-                  )}
-                </div>
-
-                {showProgress && (
-                  <Progress
-                    className="mt-5"
-                    percent={
-                      Math.ceil((currentProgress / totalProgress) * 100) + 5
+            <div className="flex flex-center-center">
+              {isTraining ? (
+                <Button
+                  type="primary"
+                  size="large"
+                  shape="circle"
+                  onClick={toggleTraining}
+                  style={{ backgroundColor: "#DDBA00" }}
+                  icon={<MdPause size={24} />}
+                ></Button>
+              ) : (
+                <Button
+                  type="primary"
+                  size="large"
+                  shape="circle"
+                  onClick={() => {
+                    if (modelId == null) {
+                      showMessage("error", "Please select a model");
+                    } else {
+                      toggleTraining();
+                      train();
                     }
-                    status={isTrainingComplete ? "success" : "active"}
-                  />
-                )}
+                  }}
+                  icon={<MdPlayArrow size={24} />}
+                ></Button>
+              )}
+            </div>
 
-                <div className="mt-6 trainer-status">
-                  <h3>Training Status</h3>
-                  <TextArea
-                    id="trainingTextArea"
-                    rows={6}
-                    placeholder="status text here"
-                    style={{ backgroundColor: "#E6ECF0" }}
-                    value={trainingStatus}
-                  />
-                </div>
-              </div>
-            </Badge.Ribbon>
-          </Badge.Ribbon>
+            {showProgress && (
+              <Progress
+                className="mt-5"
+                percent={
+                  isTrainingComplete
+                    ? 100
+                    : Math.ceil((currentProgress / totalProgress) * 100)
+                }
+                status={isTrainingComplete ? "success" : "active"}
+              />
+            )}
+
+            <div className="mt-6 trainer-status">
+              <h3>Training Status</h3>
+              <TextArea
+                id="trainingTextArea"
+                rows={6}
+                placeholder="status text here"
+                style={{ backgroundColor: "#E6ECF0" }}
+                value={trainingStatus}
+              />
+            </div>
+            <div className="mt-3">
+              <h4>{testAccuracy}</h4>
+              <h4>{validationAccuracy}</h4>
+            </div>
+          </div>
         </Col>
       </div>
     </>

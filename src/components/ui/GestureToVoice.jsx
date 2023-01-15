@@ -1,17 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Slider, Tooltip } from "antd";
-import { MdPause, MdPlayArrow, MdFullscreen } from "react-icons/md";
+import {
+  MdPause,
+  MdPlayArrow,
+  MdFullscreen,
+  MdVolumeUp,
+  MdVolumeMute,
+} from "react-icons/md";
 import { GestureCanvs } from "./GestureCanvs";
 import useHolisticModel1 from "../../hooks/useHolisticModel1";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setVolume } from "../../app/features/speechSlice";
+import useSpeechSynthesis from "../../hooks/useSpeechSynthesis";
 
 export const GestureToVoice = (props) => {
   const [fullScreen, setFullScreen] = React.useState(false);
   const [isPageActive, setIsPageActive] = React.useState(false);
   const [isPlayed, setIsPlayed] = React.useState(false);
+  const [mute, setMute] = React.useState(false);
+
+  const { speak } = useSpeechSynthesis();
+
+  const { volume } = useSelector((state) => state.speech);
+  const { isSpeaking } = useSelector((state) => state.speech);
+  const { speakText } = useSelector((state) => state.speech);
+  const { isRecording } = useSelector((state) => state.converter);
 
   const dispatch = useDispatch();
+
+  // const speechsynthesis = window.speechSynthesis;
+  // console.log(speechsynthesis.getVoices());
 
   const {
     webcamRef,
@@ -21,12 +39,28 @@ export const GestureToVoice = (props) => {
     startHolisticModel,
   } = useHolisticModel1();
 
+  useEffect(() => {
+    speak(speakText, volume);
+  }, [isSpeaking]);
+
+  useEffect(() => {
+    if (mute) {
+      dispatch(setVolume(0));
+    } else {
+      dispatch(setVolume(0.5));
+    }
+  }, [mute]);
+
   const togglePlayed = () => {
     setIsPlayed(!isPlayed);
   };
 
   const toggleFullScreen = () => {
     setFullScreen(!fullScreen);
+  };
+
+  const toggleMute = () => {
+    setMute(!mute);
   };
 
   const onVolumeChange = (value) => {
@@ -42,7 +76,19 @@ export const GestureToVoice = (props) => {
   return (
     <div>
       <h2 className="mb-0">Gesture to Voice</h2>
-      <p>generate speech from gestures</p>
+      <div className="flex flex-between-center">
+        <p>generate speech from gestures</p>
+        {isPlayed && (
+          <div
+            className={isRecording ? "bg-danger" : "bg-success"}
+            style={{
+              width: "30px",
+              height: "30px",
+              borderRadius: "50%",
+            }}
+          ></div>
+        )}
+      </div>
       <GestureCanvs
         fullScreen={fullScreen}
         webcamRef={webcamRef}
@@ -60,7 +106,29 @@ export const GestureToVoice = (props) => {
         isPageActive={isPageActive}
         setIsPageActive={setIsPageActive}
       />
-      <Slider defaultValue={10} max={20} onChange={onVolumeChange} />
+      {isPlayed && (
+        <Slider
+          disabled={mute}
+          defaultValue={10}
+          max={20}
+          onChange={onVolumeChange}
+        />
+      )}
+      {isPlayed && (
+        <div className="flex flex-center-center mb-3">
+          {!mute ? (
+            <Button
+              icon={<MdVolumeUp size={24} color="#1677ff" />}
+              onClick={toggleMute}
+            />
+          ) : (
+            <Button
+              icon={<MdVolumeMute size={24} color="#1677ff" />}
+              onClick={toggleMute}
+            />
+          )}
+        </div>
+      )}
       <div
         style={{
           display: "flex",
@@ -111,7 +179,7 @@ export const GestureToVoice = (props) => {
           />
         </Tooltip>
       </div>
-      {props.from === "converter" && <p>Lorem ipsum dolor sit</p>}
+      {props.from === "converter" && <p>{speakText}</p>}
     </div>
   );
 };

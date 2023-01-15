@@ -1,4 +1,4 @@
-import { Button, Descriptions, Skeleton } from "antd";
+import { Button, Popconfirm, Table } from "antd";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useMessageApi from "../hooks/useMessageApi";
@@ -48,61 +48,103 @@ function ConceptDetails(props) {
       });
   }, []);
 
+  const columns = [
+    {
+      title: "Sample Id",
+      dataIndex: "sampleid",
+      key: "sampleid",
+    },
+    {
+      title: "Frames",
+      dataIndex: "frames",
+      key: "frames",
+    },
+    {
+      title: "Min Timestamp (sec)",
+      dataIndex: "mintimestamp",
+      key: "mintimestamp",
+    },
+    {
+      title: "Max Timestamp (sec)",
+      dataIndex: "maxtimestamp",
+      key: "maxtimestamp",
+    },
+    {
+      title: "Number of Hands",
+      dataIndex: "numberofhands",
+      key: "numberofhands",
+    },
+    {
+      title: "Max Frames Id",
+      dataIndex: "maxframeid",
+      key: "maxframeid",
+    },
+    {
+      title: "Which Hand",
+      dataIndex: "whichhand",
+      key: "whichhand",
+    },
+    {
+      title: "Elapsed Time (sec)",
+      dataIndex: "elapsedtime",
+      key: "elapsedtime",
+    },
+  ];
+
+  const data =
+    !loading &&
+    concept?.length > 0 &&
+    concept.map((conceptElem) => {
+      return {
+        sampleid: conceptElem?.sample_id,
+        frames: conceptElem?.frame_count,
+        mintimestamp: new Date(
+          conceptElem?.client_js_timestamp_min
+        ).getUTCSeconds(),
+        maxtimestamp: new Date(
+          conceptElem?.client_js_timestamp_max
+        ).getUTCSeconds(),
+        numberofhands: Math.round(conceptElem?.hand_count_mean),
+        maxframeid: conceptElem?.frame_id_max,
+        whichhand:
+          Math.round(conceptElem?.which_hand_mean) == 1
+            ? "Left"
+            : Math.round(conceptElem?.which_hand_mean) == 2
+            ? "Right"
+            : Math.round(conceptElem?.which_hand_mean) == 3
+            ? "Both"
+            : "None",
+        elapsedtime: new Date(
+          conceptElem?.client_js_time_elapsed
+        ).getUTCSeconds(),
+      };
+    });
+
   return (
     <>
       {contextHolder}
       <div style={style} className="layout-bg mh-100vh">
         <h2>Concept Details</h2>
-        {!loading &&
-          concept?.length > 0 &&
-          concept.map((conceptElem) => {
-            return (
-              <div key={conceptElem?.sample_id} className="mt-4">
-                <Descriptions
-                  layout="horizontal"
-                  column={1}
-                  bordered
-                  labelStyle={{ backgroundColor: "whitesmoke" }}
-                >
-                  <Descriptions.Item label="Concept">
-                    {concepttitle}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Sample Id">
-                    {conceptElem?.sample_id}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Frames">
-                    {conceptElem?.frame_count}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Min Timestamp">
-                    {conceptElem?.client_js_timestamp_min}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Max Timestamp">
-                    {conceptElem?.client_js_timestamp_max}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Hands">
-                    {conceptElem?.hand_count_mean}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Max Frame">
-                    {conceptElem?.frame_id_max}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Which Hand">
-                    {conceptElem?.which_hand_mean}
-                  </Descriptions.Item>
-                </Descriptions>
-                <Button
-                  className="mt-4 mb-6 converter-btns"
-                  shape="round"
-                  loading={buttonLoading}
-                  type="primary"
-                  onClick={handleDeleteConcept}
-                >
-                  Delete Concept
-                </Button>
-              </div>
-            );
-          })}
+        <Table
+          loading={loading}
+          columns={columns}
+          dataSource={data}
+          pagination={false}
+        />
 
-        {loading && <Skeleton active />}
+        <Popconfirm
+          title="Are you sure to delete this concept?"
+          onConfirm={handleDeleteConcept}
+        >
+          <Button
+            className="mt-4 mb-6 converter-btns"
+            shape="round"
+            loading={buttonLoading}
+            type="primary"
+          >
+            Delete Concept
+          </Button>
+        </Popconfirm>
       </div>
     </>
   );

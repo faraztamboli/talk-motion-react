@@ -1,9 +1,12 @@
 import React from "react";
 import { Drawer } from "antd";
 import { userMenu } from "../../data";
+import { useSelector } from "react-redux";
+import userIcon from "../../media/images/user-icon.jpg";
 
 export const UserMenu = () => {
   const [open, setOpen] = React.useState(false);
+  const { profileImg } = useSelector((state) => state.user);
 
   const showUserMenu = () => {
     setOpen(true);
@@ -16,8 +19,8 @@ export const UserMenu = () => {
   return (
     <>
       <img
-        src="/media/avatars/150-2.jpg"
-        alt=""
+        src={profileImg ? profileImg : userIcon}
+        alt="user image"
         className=" w-2rem"
         style={{ cursor: "pointer" }}
         onClick={showUserMenu}

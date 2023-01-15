@@ -5,8 +5,11 @@ import {
   setServerConnected,
   setServerStatus,
 } from "../app/features/serverSlice";
+import { setProfileImg } from "../app/features/userSlice";
+import useProfile from "./useProfile";
 
 async function useServerConnection() {
+  const { getUserProfile } = useProfile();
   const dispatch = useDispatch();
 
   return React.useEffect(() => {
@@ -16,6 +19,13 @@ async function useServerConnection() {
     JS2Py.onopen = function () {
       dispatch(setServerConnected(true));
       dispatch(setServerStatus("Connected"));
+      setTimeout(() => {
+        getUserProfile()
+          .then((res) => {
+            dispatch(setProfileImg(res.sm_img));
+          })
+          .catch((err) => console.log(err));
+      }, 2000);
     };
 
     JS2Py.onclose = function () {

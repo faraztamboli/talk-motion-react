@@ -18,7 +18,7 @@ const App = () => {
   );
   const serverStatus = useSelector((state) => state.server.serverStatus);
 
-  // connect to server;
+  // connect to server
   useServerConnection();
 
   jsOnUpdateTrainingStatus();

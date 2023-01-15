@@ -2,21 +2,28 @@ import React, { useState, useEffect } from "react";
 import { Select } from "antd";
 import { AppstoreOutlined } from "@ant-design/icons";
 import useModels from "../../hooks/useModels";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectModel } from "../../app/features/modelSlice";
 
 const { Option } = Select;
 
 export const ModelsDropdown = (props) => {
   const [models, setModels] = useState([]);
-  const { getModelsUserCanTrain, getModelsUserCanUse } = useModels();
+  const [defaultSelectedModelTitle, setDefaultSelectedModelTitle] = useState();
+  const { getModelsUserCanTrain, getModel, getModelsUserCanUse } = useModels();
+  const { modelId } = useSelector((state) => state.model);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
+    getModel(modelId)
+      .then((res) => {
+        setDefaultSelectedModelTitle(res[0]?.title);
+      })
+      .catch((err) => console.log(err));
     props.from === "trainer" &&
       getModelsUserCanTrain()
         .then((res) => {
-          console.log(res);
           setModels(res[0]);
         })
         .catch((err) => console.log(err));
@@ -32,6 +39,9 @@ export const ModelsDropdown = (props) => {
 
   const handleChange = (value) => {
     dispatch(selectModel(value));
+    getModel(value)
+      .then((res) => setDefaultSelectedModelTitle(res[0].title))
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -40,14 +50,15 @@ export const ModelsDropdown = (props) => {
         <AppstoreOutlined />
       </span>
       <Select
-        defaultValue={models[0]?.id}
+        defaultValue={defaultSelectedModelTitle}
+        value={defaultSelectedModelTitle}
         className="dropdowns"
         onChange={handleChange}
       >
         {models?.length !== undefined &&
           models.map((model) => (
             <Option key={model.id} value={model.id}>
-              {model.title}
+              {model.title ? model.title : defaultSelectedModelTitle}
             </Option>
           ))}
       </Select>

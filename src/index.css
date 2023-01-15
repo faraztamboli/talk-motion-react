@@ -36,6 +36,14 @@ code {
   overflow-y: hidden !important;
 }
 
+.bg-danger {
+  background-color: red !important;
+}
+
+.bg-success {
+  background-color: green !important;
+}
+
 .bg-warn  {
   background-color: #DDBA00 !important;
 }
@@ -574,6 +582,10 @@ code {
   align-items: center;
 }
 
+.flex-between-center {
+  justify-content: space-between !important;
+  align-items: center !important;
+}
 
 #components-layout-demo-responsive .logo {
   height: 32px;

@@ -17,7 +17,7 @@ function useLogin() {
   const success = () => {
     messageApi.open({
       type: "success",
-      content: "Login Successfull!, Redirecting...",
+      content: "Login Successfull!",
     });
   };
 
@@ -29,6 +29,7 @@ function useLogin() {
   };
 
   function handleLogin(res) {
+    console.log(res);
     if (res && res.isValidUser === true && res.isPasswordCorrect === true) {
       disptach(login({ token: token }));
       success();
@@ -47,14 +48,16 @@ function useLogin() {
   const onFinish = (values) => {
     setLoading(true);
     JS2Py.PythonFunctions.SessionServer.getNewSessionId(function (res) {
-      setToken(() => res);
+      setToken(res);
+      console.log(res);
+      console.log(token);
       JS2Py.PythonFunctions.SessionServer.validateLogin(
         res, // session id
         values.username,
         values.password,
         values.remember,
-        "https://talk-motion.com", // login url
-        "https://talk-motion.com", // after login url
+        "https://app.talk-motion.com/login", // login url
+        "https://app.talk-motion.com", // after login url
         function (res) {
           handleLogin(res);
         }

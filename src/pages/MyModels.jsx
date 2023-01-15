@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Skeleton, Empty, Pagination } from "antd";
 import useModels from "../hooks/useModels";
 import NewModel from "../components/ui/NewModel";
@@ -13,13 +13,46 @@ import {
 } from "../app/features/modelSlice";
 
 export default function MyModels(props) {
-  const { userModels, getUserModels, userCount, userLoading } = useModels();
+  const [userModels, setUserModels] = useState([]);
+  const [totalUserModels, setTotalUserModels] = useState();
+  const [userLoading, setUserLoading] = useState(true);
+  const [userPage, setUserPage] = useState(1);
+  const [userPageSize, setUserPageSize] = useState(10);
+  const { getUserModels, addNewTrainer } = useModels();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    getUserModels((userPage - 1) * userPageSize, userPageSize)
+      .then((res) => {
+        setUserLoading(false);
+        setUserModels(res[0]);
+        setTotalUserModels(res[1]["count(*)"]);
+      })
+      .catch((err) => {
+        setUserLoading(false);
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    setUserLoading(true);
+    getUserModels((userPage - 1) * userPageSize, userPageSize)
+      .then((res) => {
+        setUserModels(res[0]);
+        setTotalUserModels(res[1]["count(*)"]);
+        setUserLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setUserLoading(false);
+      });
+  }, [userPage, userPageSize]);
 
   function onUserModelsChange(page, pageSize) {
     dispatch(setCurrentModelPage(page));
     dispatch(setModelPaginationSize(pageSize));
-    getUserModels((page - 1) * pageSize, pageSize);
+    setUserPage(page);
+    setUserPageSize(pageSize);
   }
 
   const profileStyle =
@@ -46,6 +79,7 @@ export default function MyModels(props) {
                         model={model}
                         collapsedWidth={props.collapsedWidth}
                         key={model.key}
+                        addNewTrainer={addNewTrainer}
                       />
                     </Col>
                   );
@@ -61,12 +95,12 @@ export default function MyModels(props) {
                 )}
             <Skeleton active loading={userLoading} style={{ width: "500px" }} />
           </Row>
-          {userCount > 9 && (
+          {totalUserModels > 9 && (
             <div className="flex flex-center-center mt-6">
               <Pagination
                 showSizeChanger
                 defaultCurrent={1}
-                total={userCount}
+                total={totalUserModels}
                 onChange={onUserModelsChange}
               />
             </div>

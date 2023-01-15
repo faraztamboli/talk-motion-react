@@ -22,8 +22,6 @@
  *
  ********************************************************************************/
 
-// import jsOnUpdateTrainingStatus from "../utils/jsOnUpdateTrainingStatus";
-
 /*
   const ARGUMENT_NAMES = /([^\s,]+)/g;
   const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
@@ -355,11 +353,6 @@ function JS2PyClient(serverName, clientPageId) {
         );
       }
     };
-
-    // JS2Py.registerJSFunctionToBeCalledByPython(
-    //   "jsOnUpdateTrainingStatus",
-    //   jsOnUpdateTrainingStatus
-    // );
 
     this.socket.onmessage = function (e) {
       JS2PySelf.onmsgFunctions.forEach((fun) => fun());

@@ -1,14 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Descriptions } from "antd";
 import UpdateProfile from "../components/ui/UpdateProfile";
 import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
 import useProfile from "../hooks/useProfile";
 
 function Setting(props) {
-  const { getUserProfile, userProfile } = useProfile();
+  const [userProfile, setUserProfile] = useState();
+  const { getUserProfile } = useProfile();
 
   useEffect(() => {
-    getUserProfile();
+    getUserProfile()
+      .then((res) => setUserProfile(res))
+      .catch((err) => console.log(err));
   }, []);
 
   const style = props.collapseWidth === 0 ? { padding: 8 } : { padding: 24 };

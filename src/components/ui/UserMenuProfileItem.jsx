@@ -1,20 +1,44 @@
 import React from "react";
 import { Avatar, Button, Image } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdCameraAlt } from "react-icons/md";
 import Upload from "antd/es/upload/Upload";
 import useProfile from "../../hooks/useProfile";
+import userIcon from "../../media/images/user-icon.jpg";
+import { setProfileImg } from "../../app/features/userSlice";
 
 export default function UserMenuProfileItem(props) {
-  const { uploadProfilePic } = useProfile();
+  const { uploadProfilePic, getUserProfile } = useProfile();
   const username = useSelector((state) => state.user.username);
   const name = useSelector((state) => state.user.name);
+  const { profileImg } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
+  const { showMessage, setUserProfile } = props;
 
   const uploadProps = {
     name: "uploadpic",
+    showUploadList: false,
+    accept: "image/*",
     async onChange(info) {
       console.log(info);
-      uploadProfilePic(info.fileList[0].originFileObj);
+      uploadProfilePic(info.fileList[0].originFileObj)
+        .then((res) => {
+          console.log(res);
+          showMessage("success", "Profile Picture Updated!");
+          getUserProfile()
+            .then((res) => {
+              console.log(res);
+              dispatch(setProfileImg(res.sm_img));
+              setUserProfile(res);
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => {
+          console.log(err);
+          showMessage("error", "Cannot Update Profile");
+        });
     },
   };
 
@@ -29,7 +53,7 @@ export default function UserMenuProfileItem(props) {
           style={{ marginRight: "1rem" }}
         >
           <Avatar
-            src={<Image src="/media/avatars/150-2.jpg" />}
+            src={<Image src={profileImg ? profileImg : userIcon} />}
             size={
               props.size === "small"
                 ? { xs: 32, sm: 42, md: 45, lg: 48, xl: 50, xxl: 55 }

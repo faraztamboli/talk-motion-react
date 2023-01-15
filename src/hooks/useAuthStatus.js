@@ -17,7 +17,6 @@ function useAuthStatus() {
   function isLoggedIn() {
     try {
       JS2Py.PythonFunctions.SessionServer.isLoggedIn(token, function (res) {
-        // console.log(res);
         if (res?.isLoggedIn === true) {
           dispatch(login({ token: token }));
           dispatch(
@@ -29,7 +28,7 @@ function useAuthStatus() {
         setCheckingStatus(false);
       });
     } catch (err) {
-      // console.log(err);
+      console.log(err);
     }
   }
 

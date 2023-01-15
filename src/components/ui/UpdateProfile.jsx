@@ -1,12 +1,27 @@
 import React from "react";
 import { Modal, Form, Button, Input, Upload } from "antd";
 import { useState } from "react";
-import { InboxOutlined } from "@ant-design/icons";
+import { InboxOutlined, PlusOutlined } from "@ant-design/icons";
 import useProfile from "../../hooks/useProfile";
 import useBase64String from "../../hooks/useBase64String";
+import { useSelector } from "react-redux";
+
+const uploadButton = (
+  <div>
+    <PlusOutlined />
+    <div
+      style={{
+        marginTop: 8,
+      }}
+    >
+      Upload
+    </div>
+  </div>
+);
 
 function UpdateProfile(props) {
   const [form] = Form.useForm();
+  const { profileImg } = useSelector((state) => state.user);
 
   const { userProfile } = props;
 
@@ -87,14 +102,33 @@ function UpdateProfile(props) {
           label="Profile Image (small) : "
           getValueFromEvent={normFile}
         >
-          <Upload.Dragger name="files" accept="image/*">
+          {/* <Upload.Dragger name="files" accept="image/*">
             <p className="ant-upload-drag-icon">
               <InboxOutlined />
             </p>
             <p className="ant-upload-text">
               Click or drag image to this area to upload
             </p>
-          </Upload.Dragger>
+          </Upload.Dragger> */}
+          <Upload
+            name="avatar"
+            listType="picture-card"
+            className="avatar-uploader"
+            showUploadList={false}
+            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+          >
+            {profileImg ? (
+              <img
+                src={profileImg}
+                alt="avatar"
+                style={{
+                  width: "100%",
+                }}
+              />
+            ) : (
+              uploadButton
+            )}
+          </Upload>
         </Form.Item>
 
         <Form.Item

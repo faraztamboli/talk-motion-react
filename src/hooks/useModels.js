@@ -3,10 +3,6 @@ import JS2Py from "../remotepyjs";
 import useLocalStorage from "./useLocalStorage";
 
 function useModels() {
-  const [publicModels, setPublicModels] = React.useState([]);
-  const [userModels, setUserModels] = React.useState([]);
-  const [userCount, setUserCount] = React.useState(0);
-  const [publicCount, setPublicCount] = React.useState(0);
   const [token] = useLocalStorage("token");
 
   React.useEffect(() => {
@@ -21,10 +17,7 @@ function useModels() {
           offset,
           end,
           function (res) {
-            setPublicCount(res[1][`count(*)`]);
-            res = res[0];
             if (res.constructor == Array) {
-              setPublicModels(() => res);
               resolve(res);
             }
           }
@@ -44,10 +37,7 @@ function useModels() {
           offset,
           end,
           function (res) {
-            setUserCount(res[1][`count(*)`]);
-            res = res[0];
             if (res.constructor == Array) {
-              setUserModels(() => res);
               resolve(res);
             }
           }
@@ -291,11 +281,7 @@ function useModels() {
   }
 
   return {
-    publicCount,
-    publicModels,
     getPublicModels,
-    userCount,
-    userModels,
     getUserModels,
     createNewModel,
     addNewTrainer,

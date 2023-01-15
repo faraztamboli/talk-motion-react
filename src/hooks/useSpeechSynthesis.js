@@ -1,19 +1,12 @@
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-
 function useSpeechSynthesis() {
-  const { volume } = useSelector((state) => state.speech);
-  useEffect(() => {
-    msg.volume = volume;
-  }, [volume]);
+  // const { volume } = useSelector((state) => state.speech);
 
-  var msg = new SpeechSynthesisUtterance();
-
-  function speak(text) {
+  function speak(text, volume) {
+    var msg = new SpeechSynthesisUtterance();
     // var voices = window.speechSynthesis.getVoices();
     // msg.voice = voices[$('#voicelist').val()];
-    msg.text = text;
-    console.log(msg.volume, volume);
+    msg.volume = volume;
+    msg.text = text !== null ? text : "";
     // eslint-disable-next-line
     msg.onend = function (e) {
       console.log("Finished in " + event.elapsedTime + " seconds.");

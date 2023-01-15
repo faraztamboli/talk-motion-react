@@ -18,6 +18,7 @@ function App() {
   );
 
   function jsOnUpdateTrainingStatus(result) {
+    console.log(result);
     dispatch(setShowProgress(true));
     dispatch(setTrainingStatus(result?.result));
     dispatch(setCurrentProgress(result?.index));

@@ -5,6 +5,7 @@ import { MdOutlineArrowRightAlt, MdMoreVert } from "react-icons/md";
 import NewTrainer from "../../components/ui/NewTrainer";
 import plurkImg from "../../media/images/plurk.png";
 import { Link } from "react-router-dom";
+import { UserOutlined } from "@ant-design/icons";
 
 export const ModelsCard = (props) => {
   const {
@@ -55,7 +56,10 @@ export const ModelsCard = (props) => {
     {
       key: "3",
       label: (
-        <div style={{ width: "100%" }} onClick={() => cloneModel(model.id)}>
+        <div
+          style={{ width: "100%" }}
+          onClick={() => cloneModel(model.id, model.is_public)}
+        >
           Clone
         </div>
       ),
@@ -104,7 +108,10 @@ export const ModelsCard = (props) => {
           {model.trainers.map((trainer, index) => {
             return (
               <Tooltip key={index} title={trainer.username} placement="top">
-                <Avatar src={"media/avatars/150-26.jpg"} />
+                <Avatar
+                  src={trainer.sm_img ? trainer.sm_img : null}
+                  icon={<UserOutlined />}
+                />
               </Tooltip>
             );
           })}
@@ -116,7 +123,7 @@ export const ModelsCard = (props) => {
         className="card_btns flex align-items-center justify-content-end"
         style={{ marginTop: "1rem" }}
       >
-        <Link to={`${model.id}`}>
+        <Link to={`/models/${model.id}`}>
           <Button
             type="link"
             className="models-card-btn flex flex-center-center"

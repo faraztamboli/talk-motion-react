@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Descriptions, Skeleton } from "antd";
+import { Button, Descriptions, Popconfirm, Skeleton } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useModels from "../hooks/useModels";
 import useMessageApi from "../hooks/useMessageApi";
@@ -115,16 +115,20 @@ function UserModel(props) {
           setUpdateButtonLoading={setUpdateButtonLoading}
         />
 
-        <Button
-          type="primary"
-          danger
-          loading={deleteButtonLoading}
-          shape="round"
-          className="mt-5 converter-btns"
-          onClick={handleDeleteModel}
+        <Popconfirm
+          title="Are you sure to delete this model?"
+          onConfirm={handleDeleteModel}
         >
-          Delete Model
-        </Button>
+          <Button
+            type="primary"
+            danger
+            loading={deleteButtonLoading}
+            shape="round"
+            className="mt-5 converter-btns"
+          >
+            Delete Model
+          </Button>
+        </Popconfirm>
       </div>
     </>
   );
