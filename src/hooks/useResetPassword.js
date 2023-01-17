@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
 import { message } from "antd";
 import JS2Py from "../remotepyjs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import useLocalStorage from "./useLocalStorage";
 
 function useResetPassword() {
   const [loading, setLoading] = useState(false);
   const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [token] = useLocalStorage("token");
   const [messageApi, contextHolder] = message.useMessage();
+
+  const resetPasswordCode = searchParams.get("code");
+
   const success = () => {
     messageApi.open({
       type: "success",
@@ -28,7 +32,7 @@ function useResetPassword() {
     setLoading(true);
     JS2Py.PythonFunctions.SessionServer.resetPassword(
       token,
-      values.resetpasswordcode,
+      resetPasswordCode,
       values.newpassword,
       values.repeatnewpassword,
       function (res) {

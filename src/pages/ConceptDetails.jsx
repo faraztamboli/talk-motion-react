@@ -1,14 +1,16 @@
-import { Button, Popconfirm, Table } from "antd";
 import React, { useState, useEffect } from "react";
+import { Button, Popconfirm, Table } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import useMessageApi from "../hooks/useMessageApi";
 import useModels from "../hooks/useModels";
+import { MdDelete } from "react-icons/md";
 
 function ConceptDetails(props) {
   const [concept, setConcept] = useState();
   const [loading, setLoading] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
-  const { getConceptDetails, deleteModelConcept } = useModels();
+  const { getConceptDetails, deleteModelConcept, deleteModelConceptSample } =
+    useModels();
   const { showMessage, contextHolder } = useMessageApi();
 
   const { modelid, concepttitle } = useParams();
@@ -47,6 +49,18 @@ function ConceptDetails(props) {
         setLoading(false);
       });
   }, []);
+
+  function handleSampleDeletion(sampleId) {
+    deleteModelConceptSample(modelid, concepttitle, sampleId)
+      .then((res) => {
+        console.log(res);
+        showMessage("success", "Sample Deleted!");
+      })
+      .catch((err) => {
+        console.log(err);
+        showMessage("error", "unable to delete sample");
+      });
+  }
 
   const columns = [
     {
@@ -89,6 +103,11 @@ function ConceptDetails(props) {
       dataIndex: "elapsedtime",
       key: "elapsedtime",
     },
+    {
+      title: "Delete",
+      dataIndex: "delete",
+      key: "delete",
+    },
   ];
 
   const data =
@@ -117,8 +136,28 @@ function ConceptDetails(props) {
         elapsedtime: new Date(
           conceptElem?.client_js_time_elapsed
         ).getUTCSeconds(),
+        zScore:
+          (conceptElem?.frame_count_zscore +
+            conceptElem?.which_hand_zscore +
+            conceptElem?.client_js_time_elapsed_zscore) /
+          3,
+        delete: (
+          <Button
+            className="no-border"
+            icon={<MdDelete />}
+            onClick={() => handleSampleDeletion(conceptElem.sample_id)}
+          />
+        ),
       };
     });
+
+  const rowClassName = (record) => {
+    if (record.zScore > 1 && record.zScore < 2) {
+      return "bg-orange";
+    } else if (record.zScore > 2) {
+      return "bg-red";
+    }
+  };
 
   return (
     <>
@@ -126,6 +165,7 @@ function ConceptDetails(props) {
       <div style={style} className="layout-bg mh-100vh">
         <h2>Concept Details</h2>
         <Table
+          rowClassName={rowClassName}
           loading={loading}
           columns={columns}
           dataSource={data}

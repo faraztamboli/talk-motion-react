@@ -36,6 +36,14 @@ code {
   overflow-y: hidden !important;
 }
 
+.bg-orange {
+  background-color: #FFA07A !important;
+}
+
+.bg-red {
+  background-color: #FFB6C1 !important;
+}
+
 .bg-danger {
   background-color: red !important;
 }
@@ -534,6 +542,10 @@ code {
 }
 .text-black {
   color: #000 !important;
+}
+
+.no-border {
+  border: none !important;
 }
 
 .rounded-0 {

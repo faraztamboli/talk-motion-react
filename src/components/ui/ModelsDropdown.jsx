@@ -31,7 +31,6 @@ export const ModelsDropdown = (props) => {
     props.from === "converter" &&
       getModelsUserCanUse()
         .then((res) => {
-          console.log(res);
           setModels(res[0]);
         })
         .catch((err) => console.log(err));
@@ -50,7 +49,9 @@ export const ModelsDropdown = (props) => {
         <AppstoreOutlined />
       </span>
       <Select
-        defaultValue={defaultSelectedModelTitle}
+        defaultValue={
+          defaultSelectedModelTitle ? defaultSelectedModelTitle : "Select Model"
+        }
         value={defaultSelectedModelTitle}
         className="dropdowns"
         onChange={handleChange}
@@ -58,7 +59,7 @@ export const ModelsDropdown = (props) => {
         {models?.length !== undefined &&
           models.map((model) => (
             <Option key={model.id} value={model.id}>
-              {model.title ? model.title : defaultSelectedModelTitle}
+              {model.title}
             </Option>
           ))}
       </Select>

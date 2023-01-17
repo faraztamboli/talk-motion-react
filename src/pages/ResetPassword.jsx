@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout, Row, Col, Button, Input, Form, Space } from "antd";
-import { LockFilled, MailFilled } from "@ant-design/icons";
+import { LockFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import AuthPagesCol from "../components/ui/AuthPagesCol";
 import MetaDecorator from "../components/MetaDecorator";
@@ -47,29 +47,6 @@ const ResetPassword = (props) => {
                   onFinish={onFinish}
                   scrollToFirstError
                 >
-                  <Form.Item
-                    name="resetpasswordcode"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your reset password code",
-                      },
-                    ]}
-                  >
-                    <Input
-                      prefix={
-                        <MailFilled
-                          className="site-form-item-icon"
-                          style={formIconStyle}
-                        />
-                      }
-                      placeholder="Reset Password Code"
-                      type="text"
-                      size="large"
-                      style={formInputStyle}
-                    />
-                  </Form.Item>
-
                   <Form.Item
                     name="newpassword"
                     rules={[

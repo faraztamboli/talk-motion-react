@@ -1,20 +1,14 @@
 import React, { useEffect } from "react";
-import { Button, Slider, Tooltip } from "antd";
-import {
-  MdPause,
-  MdPlayArrow,
-  MdFullscreen,
-  MdVolumeUp,
-  MdVolumeMute,
-} from "react-icons/md";
+import { Button, Slider } from "antd";
+import { MdPause, MdPlayArrow, MdVolumeUp, MdVolumeMute } from "react-icons/md";
 import { GestureCanvs } from "./GestureCanvs";
-import useHolisticModel1 from "../../hooks/useHolisticModel1";
+import useHolisticModel from "../../hooks/useHolisticModel";
 import { useDispatch, useSelector } from "react-redux";
 import { setVolume } from "../../app/features/speechSlice";
 import useSpeechSynthesis from "../../hooks/useSpeechSynthesis";
+import { setIsModelLoading } from "../../app/features/converterSlice";
 
 export const GestureToVoice = (props) => {
-  const [fullScreen, setFullScreen] = React.useState(false);
   const [isPageActive, setIsPageActive] = React.useState(false);
   const [isPlayed, setIsPlayed] = React.useState(false);
   const [mute, setMute] = React.useState(false);
@@ -25,19 +19,11 @@ export const GestureToVoice = (props) => {
   const { isSpeaking } = useSelector((state) => state.speech);
   const { speakText } = useSelector((state) => state.speech);
   const { isRecording } = useSelector((state) => state.converter);
+  const { isModelLoading } = useSelector((state) => state.converter);
 
   const dispatch = useDispatch();
 
-  // const speechsynthesis = window.speechSynthesis;
-  // console.log(speechsynthesis.getVoices());
-
-  const {
-    webcamRef,
-    canvasRef,
-    spinner,
-    spinnerParentDiv,
-    startHolisticModel,
-  } = useHolisticModel1();
+  const { webcamRef, canvasRef, startHolisticModel } = useHolisticModel();
 
   useEffect(() => {
     speak(speakText, volume);
@@ -55,10 +41,6 @@ export const GestureToVoice = (props) => {
     setIsPlayed(!isPlayed);
   };
 
-  const toggleFullScreen = () => {
-    setFullScreen(!fullScreen);
-  };
-
   const toggleMute = () => {
     setMute(!mute);
   };
@@ -68,10 +50,6 @@ export const GestureToVoice = (props) => {
     console.log(value);
     dispatch(setVolume(value));
   };
-
-  const iconSize = props.md ? 20 : 24;
-  const buttonSize = props.md ? "medium" : "large";
-  const buttonStyle = props.md ? { marginBottom: "1rem" } : null;
 
   return (
     <div>
@@ -90,43 +68,34 @@ export const GestureToVoice = (props) => {
         )}
       </div>
       <GestureCanvs
-        fullScreen={fullScreen}
         webcamRef={webcamRef}
         canvasRef={canvasRef}
-        spinner={spinner}
-        spinnerParentDiv={spinnerParentDiv}
-        setFullScreen={setFullScreen}
-        toggleFullScreen={toggleFullScreen}
-        isPlayed={isPlayed}
         setIsPlayed={setIsPlayed}
-        togglePause={togglePlayed}
-        iconSize={iconSize}
-        buttonSize={buttonSize}
-        buttonStyle={buttonStyle}
         isPageActive={isPageActive}
         setIsPageActive={setIsPageActive}
       />
       {isPlayed && (
-        <Slider
-          disabled={mute}
-          defaultValue={10}
-          max={20}
-          onChange={onVolumeChange}
-        />
-      )}
-      {isPlayed && (
-        <div className="flex flex-center-center mb-3">
+        <div className="flex flex-center-center w-100p mb-3">
           {!mute ? (
             <Button
+              className="no-border"
               icon={<MdVolumeUp size={24} color="#1677ff" />}
               onClick={toggleMute}
             />
           ) : (
             <Button
+              className="no-border"
               icon={<MdVolumeMute size={24} color="#1677ff" />}
               onClick={toggleMute}
             />
           )}
+          <Slider
+            className="w-100p"
+            disabled={mute}
+            defaultValue={10}
+            max={20}
+            onChange={onVolumeChange}
+          />
         </div>
       )}
       <div
@@ -137,19 +106,22 @@ export const GestureToVoice = (props) => {
         }}
       >
         {isPlayed ? (
-          <Button
-            className="mr-6 converter-btns"
-            type="primary"
-            shape="circle"
-            style={{ backgroundColor: "#DDBA00" }}
-            size="large"
-            danger
-            onClick={() => {
-              togglePlayed();
-              setIsPageActive(false);
-            }}
-            icon={<MdPause size={24} />}
-          ></Button>
+          <>
+            <Button
+              loading={isModelLoading}
+              className="mr-6 converter-btns"
+              type="primary"
+              shape="circle"
+              style={{ backgroundColor: "#DDBA00" }}
+              size="large"
+              danger
+              onClick={() => {
+                togglePlayed();
+                setIsPageActive(false);
+              }}
+              icon={<MdPause size={24} />}
+            ></Button>
+          </>
         ) : (
           <Button
             className="mr-6 converter-btns"
@@ -159,6 +131,7 @@ export const GestureToVoice = (props) => {
             onClick={() => {
               togglePlayed();
               setIsPageActive(true);
+              dispatch(setIsModelLoading(true));
               setTimeout(() => {
                 startHolisticModel();
               }, 2000);
@@ -166,18 +139,6 @@ export const GestureToVoice = (props) => {
             icon={<MdPlayArrow size={24} />}
           ></Button>
         )}
-        <Tooltip title="Full Screen" showArrow={false} placement="bottom">
-          <Button
-            style={buttonStyle}
-            type="primary"
-            className="converter-btns"
-            danger
-            shape="circle"
-            size={buttonSize}
-            onClick={toggleFullScreen}
-            icon={<MdFullscreen size={iconSize} />}
-          />
-        </Tooltip>
       </div>
       {props.from === "converter" && <p>{speakText}</p>}
     </div>

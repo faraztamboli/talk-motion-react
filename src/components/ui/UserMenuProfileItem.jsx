@@ -63,7 +63,7 @@ export default function UserMenuProfileItem(props) {
           {props.from === "drawer" ? null : (
             <Upload {...uploadProps}>
               <Button
-                className="mt-1 layout-bg"
+                className="mt-1 layout-bg no-border"
                 size="small"
                 icon={<MdCameraAlt color="gray" size={20} />}
               />

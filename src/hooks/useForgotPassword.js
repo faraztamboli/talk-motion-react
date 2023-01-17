@@ -1,11 +1,9 @@
-import { message } from "antd";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 import JS2Py from "../remotepyjs";
 
 function forgotPasswordLogic() {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const success = () => {
     messageApi.open({
@@ -29,9 +27,6 @@ function forgotPasswordLogic() {
         if (res.isValidUser === true) {
           success();
           setLoading(false);
-          setTimeout(() => {
-            navigate("/resetpassword");
-          }, [2000]);
         } else {
           failure();
           setLoading(false);

@@ -13,9 +13,7 @@ const handleLogout = () => {
   JS2Py.PythonFunctions.SessionServer.logOut(token, function (res) {
     console.log(res);
     window.localStorage.removeItem("token");
-    setTimeout(() => {
-      window.location.href = "/login";
-    }, 1000);
+    window.location.href = "/login";
   });
 };
 

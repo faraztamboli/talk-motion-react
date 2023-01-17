@@ -1,26 +1,23 @@
 import React, { useState } from "react";
 import { Col, Row, Input, Button } from "antd";
 import { MdPause, MdPlayArrow } from "react-icons/md";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Webcam from "react-webcam";
 import { useConcept } from "../app/features/modelSlice";
-import useHolisticModel1 from "../hooks/useHolisticModel1";
+import useHolisticModel from "../hooks/useHolisticModel";
 import { ModelsDropdown } from "../components/ui/ModelsDropdown";
+import { setIsModelLoading } from "../app/features/converterSlice";
 
 function Collector(props) {
   const [isPageActive, setIsPageActive] = useState(false);
   const [isPlayed, setIsPlayed] = useState(false);
   const [collectionText, setCollectionText] = React.useState("");
-  const {
-    webcamRef,
-    canvasRef,
-    spinner,
-    spinnerParentDiv,
-    startHolisticModel,
-    contextHolder,
-  } = useHolisticModel1();
+  const { webcamRef, canvasRef, startHolisticModel, contextHolder } =
+    useHolisticModel();
 
   const dispatch = useDispatch();
+
+  const { isModelLoading } = useSelector((state) => state.converter);
 
   const handleCollectionTextChange = () => (e) => {
     setCollectionText(e.target.value);
@@ -61,17 +58,6 @@ function Collector(props) {
                     style={{ backgroundColor: "black" }}
                     className="output_canvas block w-100p mb-6"
                   ></canvas>
-                  <div
-                    ref={spinnerParentDiv}
-                    className="flex flex-center-center"
-                  >
-                    <div
-                      ref={spinner}
-                      className="loading output_canvas w-100p mb-6"
-                    >
-                      <div className="spinner"></div>
-                    </div>
-                  </div>
                 </>
               ) : (
                 <canvas
@@ -82,6 +68,7 @@ function Collector(props) {
               <div className="flex flex-center-center">
                 {isPlayed ? (
                   <Button
+                    loading={isModelLoading}
                     className="mr-6 converter-btns"
                     type="primary"
                     shape="circle"
@@ -103,6 +90,7 @@ function Collector(props) {
                     onClick={() => {
                       togglePlayed();
                       setIsPageActive(true);
+                      dispatch(setIsModelLoading(true));
                       setTimeout(() => {
                         startHolisticModel();
                       }, 2000);

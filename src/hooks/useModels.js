@@ -209,7 +209,6 @@ function useModels() {
           modelid,
           concept,
           function (res) {
-            console.log(res);
             resolve(res);
           }
         );
@@ -248,7 +247,6 @@ function useModels() {
           offset,
           end,
           function (res) {
-            console.log(res);
             resolve(res);
           }
         );
@@ -269,7 +267,24 @@ function useModels() {
           offset,
           end,
           function (res) {
-            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  function deleteModelConceptSample(modelid, concept, sampleid) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.deleteModelConceptSample(
+          modelid,
+          concept,
+          sampleid,
+          function (res) {
             resolve(res);
           }
         );
@@ -296,6 +311,7 @@ function useModels() {
     deleteModelConcept,
     getModelsUserCanTrain,
     getModelsUserCanUse,
+    deleteModelConceptSample,
   };
 }
 

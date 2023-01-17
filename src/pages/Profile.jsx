@@ -19,7 +19,6 @@ export default function Profile(props) {
   useEffect(() => {
     getUserProfile()
       .then((res) => {
-        console.log(res);
         setUserProfile(res);
         dispatch(setProfileImg(res.sm_img));
       })
