@@ -71,8 +71,10 @@ function useSpeechRecognition() {
     function getVideo(words) {
       let short_list = [];
       for (let i in words) {
-        if (!(words[i] in wordVideoDictionary[modelId])) {
-          console.log(words[i], wordVideoDictionary[modelId]);
+        if (
+          wordVideoDictionary[modelId] === undefined ||
+          !(words[i] in wordVideoDictionary[modelId])
+        ) {
           short_list.push(words[i]);
         }
       }
@@ -111,9 +113,8 @@ function useSpeechRecognition() {
   };
 
   function playWord(word) {
-    if (modelId && word !== undefined) {
+    if (wordVideoDictionary[modelId] !== undefined) {
       if (word in wordVideoDictionary[modelId]) {
-        console.log(wordVideoDictionary);
         videoRef.current.classList.remove("bg-black");
         videoRef.current.src = wordVideoDictionary[modelId][word]["remote_url"];
         videoRef.current.play();
