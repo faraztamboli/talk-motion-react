@@ -5,6 +5,7 @@ const initialState = {
   concept: null,
   modelPaginationSize: 10,
   currentModelPage: 1,
+  totalModels: null,
 };
 
 export const modelSlice = createSlice({

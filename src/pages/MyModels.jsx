@@ -6,20 +6,34 @@ import { ModelsCard } from "../components/ui/ModelsCard";
 import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
 import MetaDecorator from "../components/MetaDecorator";
 import { profileDetails } from "../data/PageDetails";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentModelPage,
   setModelPaginationSize,
 } from "../app/features/modelSlice";
+import useMessageApi from "../hooks/useMessageApi";
 
 export default function MyModels(props) {
+  const [loading, setLoading] = useState(false);
   const [userModels, setUserModels] = useState([]);
   const [totalUserModels, setTotalUserModels] = useState();
   const [userLoading, setUserLoading] = useState(true);
   const [userPage, setUserPage] = useState(1);
   const [userPageSize, setUserPageSize] = useState(10);
-  const { getUserModels, addNewTrainer } = useModels();
+  const {
+    getUserModels,
+    addNewTrainer,
+    createNewModel,
+    deleteModel,
+    purchaseModel,
+    cloneModel,
+  } = useModels();
+  const { contextHolder, showMessage } = useMessageApi();
+
   const dispatch = useDispatch();
+
+  const { modelPaginationSize } = useSelector((state) => state.model);
+  const { currentModelPage } = useSelector((state) => state.model);
 
   useEffect(() => {
     getUserModels((userPage - 1) * userPageSize, userPageSize)
@@ -48,6 +62,23 @@ export default function MyModels(props) {
       });
   }, [userPage, userPageSize]);
 
+  useEffect(() => {
+    setUserLoading(true);
+    getUserModels(
+      (currentModelPage - 1) * modelPaginationSize,
+      modelPaginationSize
+    )
+      .then((res) => {
+        setUserModels(res[0]);
+        setTotalUserModels(res[1]["count(*)"]);
+        setUserLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setUserLoading(false);
+      });
+  }, [loading]);
+
   function onUserModelsChange(page, pageSize) {
     dispatch(setCurrentModelPage(page));
     dispatch(setModelPaginationSize(pageSize));
@@ -63,6 +94,7 @@ export default function MyModels(props) {
 
   return (
     <>
+      {contextHolder}
       <MetaDecorator title={title} description={description} />
       <div style={profileStyle} className="layout-bg mh-100vh">
         <div>
@@ -80,6 +112,12 @@ export default function MyModels(props) {
                         collapsedWidth={props.collapsedWidth}
                         key={model.key}
                         addNewTrainer={addNewTrainer}
+                        loading={loading}
+                        setLoading={setLoading}
+                        deleteModel={deleteModel}
+                        showMessage={showMessage}
+                        purchaseModel={purchaseModel}
+                        cloneModel={cloneModel}
                       />
                     </Col>
                   );
@@ -106,7 +144,11 @@ export default function MyModels(props) {
             </div>
           )}
           <div className="flex flex-center-center mt-10">
-            <NewModel sm={props.sm} />
+            <NewModel
+              sm={props.sm}
+              createNewModel={createNewModel}
+              setLoading={setLoading}
+            />
           </div>
         </div>
       </div>

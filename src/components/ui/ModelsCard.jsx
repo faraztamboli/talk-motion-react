@@ -40,10 +40,12 @@ export const ModelsCard = (props) => {
             setLoading(true);
             deleteModel(model.id)
               .then((res) => {
+                showMessage("success", "Model deleted");
                 console.log(res);
                 setLoading(false);
               })
               .catch((err) => {
+                showMessage("error", "Unable to delete the model");
                 console.log(err);
                 setLoading(false);
               });
@@ -109,9 +111,7 @@ export const ModelsCard = (props) => {
             return (
               <Tooltip key={index} title={trainer.username} placement="top">
                 <Avatar
-                  src={
-                    trainer.sm_img ? `${trainer.sm_img}?${Date.now()}` : null
-                  }
+                  src={trainer.sm_img ? trainer.sm_img : null}
                   icon={<UserOutlined />}
                 />
               </Tooltip>
