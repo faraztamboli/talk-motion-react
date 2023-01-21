@@ -19,7 +19,7 @@ export const userSlice = createSlice({
       state.username = null;
     },
     setProfileImg: (state, action) => {
-      state.profileImg = action.payload;
+      state.profileImg = `${action.payload}?${Date.now()}`;
     },
   },
 });

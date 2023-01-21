@@ -109,7 +109,9 @@ export const ModelsCard = (props) => {
             return (
               <Tooltip key={index} title={trainer.username} placement="top">
                 <Avatar
-                  src={trainer.sm_img ? trainer.sm_img : null}
+                  src={
+                    trainer.sm_img ? `${trainer.sm_img}?${Date.now()}` : null
+                  }
                   icon={<UserOutlined />}
                 />
               </Tooltip>

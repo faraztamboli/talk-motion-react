@@ -63,7 +63,7 @@ export default function Profile(props) {
             <Descriptions.Item label="City">
               {userProfile?.city}
             </Descriptions.Item>
-            <Descriptions.Item label="Country" span={2}>
+            <Descriptions.Item label="Country">
               {userProfile?.country}
             </Descriptions.Item>
           </Descriptions>

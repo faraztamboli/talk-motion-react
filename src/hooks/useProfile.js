@@ -58,6 +58,7 @@ function useProfile() {
     lg_img
   ) {
     return new Promise((resolve, reject) => {
+      console.log(first, middle, last);
       try {
         JS2Py.PythonFunctions.TalkMotionServer.updateUserProfileWithImages(
           token,

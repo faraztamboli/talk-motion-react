@@ -311,6 +311,7 @@ function useHolisticModel1() {
         Date.now(),
         modelId,
         function (res) {
+          console.log(res);
           if (res.status == -1) {
             dispatch(setIsRecording(false));
             dispatch(setIsSpeaking(false));

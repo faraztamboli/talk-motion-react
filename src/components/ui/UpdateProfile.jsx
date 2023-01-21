@@ -102,16 +102,9 @@ function UpdateProfile(props) {
           label="Profile Image (small) : "
           getValueFromEvent={normFile}
         >
-          {/* <Upload.Dragger name="files" accept="image/*">
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag image to this area to upload
-            </p>
-          </Upload.Dragger> */}
           <Upload
             name="avatar"
+            accept="image/*"
             listType="picture-card"
             className="avatar-uploader"
             showUploadList={false}
@@ -156,15 +149,41 @@ const App = (props) => {
   const { updateUserProfile } = useProfile();
   const { getBase64 } = useBase64String();
 
+  const { profileImg } = useSelector((state) => state.user);
+
   const onCreate = (values) => {
     console.log(values);
+    if (!values.smallimg && !values.largeimg) {
+      if (profileImg) {
+        console.log(profileImg);
+        updateUserProfile(
+          values.firstname,
+          values.middlename,
+          values.lastname,
+          values.email,
+          values.street,
+          values.city,
+          values.country,
+          values.zip,
+          values.line2,
+          profileImg,
+          null
+        )
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    }
     if (values.smallimg && !values.largeimg) {
       getBase64(values.smallimg[0].originFileObj)
         .then((res) =>
           updateUserProfile(
-            values.first,
-            values.middle,
-            values.last,
+            values.firstname,
+            values.middlename,
+            values.lastname,
             values.email,
             values.street,
             values.city,
@@ -182,9 +201,9 @@ const App = (props) => {
       getBase64(values.largeimg[0].originFileObj)
         .then((res) =>
           updateUserProfile(
-            values.first,
-            values.middle,
-            values.last,
+            values.firstname,
+            values.middlename,
+            values.lastname,
             values.email,
             values.street,
             values.city,
@@ -203,9 +222,9 @@ const App = (props) => {
           getBase64(values.largeimg[0].originFileObj)
             .then((lgimg) => {
               updateUserProfile(
-                values.first,
-                values.middle,
-                values.last,
+                values.firstname,
+                values.middlename,
+                values.lastname,
                 values.email,
                 values.street,
                 values.city,

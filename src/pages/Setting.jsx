@@ -10,7 +10,10 @@ function Setting(props) {
 
   useEffect(() => {
     getUserProfile()
-      .then((res) => setUserProfile(res))
+      .then((res) => {
+        console.log(res);
+        setUserProfile(res);
+      })
       .catch((err) => console.log(err));
   }, []);
 
@@ -44,7 +47,7 @@ function Setting(props) {
             <Descriptions.Item label="City">
               {userProfile?.city}
             </Descriptions.Item>
-            <Descriptions.Item label="Country" span={2}>
+            <Descriptions.Item label="Country">
               {userProfile?.country}
             </Descriptions.Item>
           </Descriptions>
