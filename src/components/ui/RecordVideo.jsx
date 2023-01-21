@@ -4,6 +4,7 @@ import { MdOutlineDone } from "react-icons/md";
 import Webcam from "react-webcam";
 import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
 import useMediaStream from "../../hooks/useMediaStream";
+import { useSelector } from "react-redux";
 
 function RecordVideo(props) {
   const {
@@ -85,14 +86,16 @@ function RecordVideo(props) {
   );
 }
 
-const App = () => {
+const App = (props) => {
   const [base64String, setBase64String] = useState();
   const [open, setOpen] = useState(false);
   const { uploadVideo, loading, contextHolder } = useUploadGestureVideo();
+  const { modelId } = useSelector((state) => state.model);
+
+  const { showMessage } = props;
 
   const onCreate = (values) => {
     uploadVideo(values.word, `${values.word}.mp4`, base64String);
-    // console.log(values, base64String);
     setOpen(false);
   };
 
@@ -103,7 +106,9 @@ const App = () => {
         type="primary"
         shape="round"
         className="converter-btns"
-        onClick={() => setOpen(true)}
+        onClick={() =>
+          modelId ? setOpen(true) : showMessage("info", "please select a model")
+        }
         loading={loading}
       >
         Upload

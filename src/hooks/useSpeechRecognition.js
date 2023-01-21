@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import JS2Py from "../remotepyjs";
 
 const SpeechRecognition =
@@ -15,6 +16,8 @@ function useSpeechRecognition() {
   const [wordsToPlay, setWordsToPlay] = useState([]);
   const [wordVideoDictionary, setWordVideoDictionary] = useState({});
   const videoRef = useRef(null);
+
+  const { modelId } = useSelector((state) => state.model);
 
   useEffect(() => {
     let word = wordsToPlay.shift();
@@ -54,7 +57,7 @@ function useSpeechRecognition() {
         finalTranscript = finalTranscript.trimStart();
         finalTranscript = finalTranscript.toLowerCase();
         setTranscript(finalTranscript);
-        console.log(finalTranscript);
+        // console.log(finalTranscript);
         if (finalTranscript !== "") {
           let words = finalTranscript.split(" ");
           getVideo(words);
@@ -68,7 +71,8 @@ function useSpeechRecognition() {
     function getVideo(words) {
       let short_list = [];
       for (let i in words) {
-        if (!(words[i] in wordVideoDictionary)) {
+        if (!(words[i] in wordVideoDictionary[modelId])) {
+          console.log(words[i], wordVideoDictionary[modelId]);
           short_list.push(words[i]);
         }
       }
@@ -80,21 +84,22 @@ function useSpeechRecognition() {
           playWord(word);
         }
       } else {
-        console.log("Dict", wordVideoDictionary);
+        // console.log("Dict", wordVideoDictionary);
         JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(
+          modelId,
           short_list,
           function (result) {
-            console.log(result);
+            // console.log(result);
             result = result[0];
             for (let key in result) {
               setWordVideoDictionary((prevState) => ({
                 ...prevState,
-                [key]: result[key],
+                [modelId]: { ...prevState[modelId], [key]: result[key] },
               }));
             }
             setWordsToPlay((prevState) => [prevState, ...words]);
             let word = wordsToPlay.shift();
-            console.log(word);
+            // console.log(word);
             if (word !== undefined) {
               playWord(word);
             }
@@ -102,25 +107,29 @@ function useSpeechRecognition() {
         );
       }
     }
-    console.log("Final", transcript);
+    // console.log("Final", transcript);
   };
 
   function playWord(word) {
-    if (word in wordVideoDictionary) {
-      videoRef.current.classList.remove("bg-black");
-      videoRef.current.src = wordVideoDictionary[word]["remote_url"];
-      videoRef.current.play();
-    } else {
-      word = wordsToPlay.shift();
-      if (word !== undefined) {
-        playWord(word);
+    if (modelId && word !== undefined) {
+      if (word in wordVideoDictionary[modelId]) {
+        console.log(wordVideoDictionary);
+        videoRef.current.classList.remove("bg-black");
+        videoRef.current.src = wordVideoDictionary[modelId][word]["remote_url"];
+        videoRef.current.play();
+      } else {
+        word = wordsToPlay.shift();
+        if (word !== undefined) {
+          playWord(word);
+        }
       }
     }
   }
 
   if (videoRef.current) {
+    // eslint-disable-next-line
     videoRef.current.onended = (event) => {
-      console.log(event, wordsToPlay);
+      // console.log(event, wordsToPlay);
       let word = wordsToPlay.shift();
       if (word !== undefined) {
         playWord(word);

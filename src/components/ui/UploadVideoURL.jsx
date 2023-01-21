@@ -2,6 +2,7 @@ import React from "react";
 import { Modal, Form, Button, Input } from "antd";
 import { useState } from "react";
 import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
+import { useSelector } from "react-redux";
 
 function UploadVideoURL(props) {
   const [form] = Form.useForm();
@@ -42,10 +43,12 @@ function UploadVideoURL(props) {
   );
 }
 
-const App = () => {
+const App = (props) => {
   const [open, setOpen] = useState(false);
   const { uploadGestureVideoURL, contextHolder, loading } =
     useUploadGestureVideo();
+  const { modelId } = useSelector((state) => state.model);
+  const { showMessage } = props;
   const onCreate = (values) => {
     uploadGestureVideoURL(values.word, values.videoURL);
     setOpen(false);
@@ -59,7 +62,9 @@ const App = () => {
         shape="round"
         className="converter-btns"
         loading={loading}
-        onClick={() => setOpen(true)}
+        onClick={() =>
+          modelId ? setOpen(true) : showMessage("info", "please select a model")
+        }
       >
         Upload
       </Button>

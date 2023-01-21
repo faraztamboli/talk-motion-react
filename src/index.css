@@ -893,3 +893,17 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 .loaded .loading {
   opacity: 0;
 }
+
+.concept-card-delete-icon {
+  cursor: pointer;
+}
+
+.concept-card-delete-icon:hover {
+  color: #1677ff;
+}
+
+.card-logo {
+  background-color: lightgray;
+  display: inline-block;
+  padding: .4rem; 
+}

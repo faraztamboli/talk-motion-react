@@ -47,6 +47,8 @@ function ModelTrainer(props) {
     }
   }, [currentProgress]);
 
+  useEffect(() => {}, [isTraining]);
+
   useEffect(() => {
     if (isTrainingComplete) {
       setIsTraining(false);
@@ -65,6 +67,8 @@ function ModelTrainer(props) {
       setIsTraining(true);
     } else {
       setIsTraining(false);
+      dispatch(setTrainingStatus(false));
+      dispatch(setCurrentProgress(0));
     }
   }
 
@@ -98,7 +102,7 @@ function ModelTrainer(props) {
                   shape="circle"
                   onClick={() => {
                     if (modelId == null) {
-                      showMessage("error", "Please select a model");
+                      showMessage("info", "Please select a model");
                     } else {
                       toggleTraining();
                       train();

@@ -104,12 +104,12 @@ function JS2PyClient(serverName, clientPageId) {
           session_id: this.getSessionId(),
         })
       );
-      // console.log(
-      //   "Function : " +
-      //     function_name +
-      //     " called with arguments: " +
-      //     JSON.stringify(parameters)
-      // );
+      console.log(
+        "Function : " +
+          function_name +
+          " called with arguments: " +
+          JSON.stringify(parameters)
+      );
     } else {
       console.log("Connection not open.");
     }

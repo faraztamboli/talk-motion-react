@@ -12,14 +12,22 @@ function Collector(props) {
   const [isPageActive, setIsPageActive] = useState(false);
   const [isPlayed, setIsPlayed] = useState(false);
   const [collectionText, setCollectionText] = React.useState("");
-  const { webcamRef, canvasRef, startHolisticModel, contextHolder } =
-    useHolisticModel();
+  const {
+    webcamRef,
+    canvasRef,
+    startHolisticModel,
+    contextHolder,
+    showMessage,
+  } = useHolisticModel();
 
   const dispatch = useDispatch();
 
   const { isModelLoading } = useSelector((state) => state.converter);
+  const { modelId } = useSelector((state) => state.model);
+  const { concept } = useSelector((state) => state.model);
 
   const handleCollectionTextChange = () => (e) => {
+    console.log(e.target.value);
     setCollectionText(e.target.value);
     dispatch(useConcept(e.target.value));
   };
@@ -88,12 +96,20 @@ function Collector(props) {
                     shape="circle"
                     size="large"
                     onClick={() => {
-                      togglePlayed();
-                      setIsPageActive(true);
-                      dispatch(setIsModelLoading(true));
-                      setTimeout(() => {
-                        startHolisticModel();
-                      }, 2000);
+                      console.log(modelId, concept);
+                      if (modelId && concept !== null && concept !== "") {
+                        togglePlayed();
+                        setIsPageActive(true);
+                        dispatch(setIsModelLoading(true));
+                        setTimeout(() => {
+                          startHolisticModel();
+                        }, 2000);
+                      } else {
+                        showMessage(
+                          "info",
+                          "please select a model and enter collection text"
+                        );
+                      }
                     }}
                     icon={<MdPlayArrow size={24} />}
                   ></Button>

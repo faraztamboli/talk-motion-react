@@ -1,12 +1,19 @@
 import React from "react";
-import { Button, Card } from "antd";
+import { Button, Card, Popconfirm } from "antd";
 import plurkImg from "../../media/images/plurk.png";
 import capitalize from "../../utils/capitalizeWord";
-import { MdOutlineArrowRightAlt } from "react-icons/md";
+import { MdDelete, MdOutlineArrowRightAlt } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 function ConceptCard(props) {
-  const { concept, sample_count, which_hand, sample_recording_time } = props;
+  const {
+    concept,
+    sample_count,
+    which_hand,
+    sample_recording_time,
+    concept_quality,
+    handleDeleteConcept,
+  } = props;
 
   const date = new Date(sample_recording_time);
   const minutes = date.getUTCMinutes();
@@ -14,16 +21,18 @@ function ConceptCard(props) {
 
   return (
     <Card bordered={false} className="models-card" style={{ minWidth: 200 }}>
-      <div className="flex" style={{ justifyContent: "space-between" }}>
-        <div
-          className="logo_div"
-          style={{
-            backgroundColor: "lightgray",
-            display: "inline-block",
-            padding: ".4rem",
-          }}
-        >
+      <div className="flex flex-between-center">
+        <div className="card-logo">
           <img src={plurkImg} alt="model logo" width={40} />
+        </div>
+
+        <div className="concept-card-delete-icon">
+          <Popconfirm
+            title="Are you sure to delete this concept?"
+            onConfirm={() => handleDeleteConcept(concept)}
+          >
+            <MdDelete size={18} />
+          </Popconfirm>
         </div>
       </div>
 
@@ -40,6 +49,9 @@ function ConceptCard(props) {
             : "None"
         }`}</h3>
         <h3 className="models-card-description">{`Recording Time : ${minutes}:${seconds}`}</h3>
+        <h3 className="models-card-description">{`Quality: ${(
+          100 - concept_quality
+        ).toFixed(1)}%`}</h3>
       </div>
 
       <div

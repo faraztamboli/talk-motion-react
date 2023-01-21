@@ -3,6 +3,7 @@ import { Modal, Form, Button, Input, Upload } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import useUploadGestureVideo from "../../hooks/useUploadGestureVideo";
 import useBase64String from "../../hooks/useBase64String";
+import { useSelector } from "react-redux";
 
 function UploadVideoFile(props) {
   const [form] = Form.useForm();
@@ -57,10 +58,13 @@ function UploadVideoFile(props) {
   );
 }
 
-const App = () => {
+const App = (props) => {
   const [open, setOpen] = useState(false);
   const { uploadVideo, contextHolder, loading } = useUploadGestureVideo();
   const { getBase64 } = useBase64String();
+  const { modelId } = useSelector((state) => state.model);
+
+  const { showMessage } = props;
 
   const onCreate = (values) => {
     getBase64(values.dragger[0].originFileObj)
@@ -78,7 +82,9 @@ const App = () => {
         shape="round"
         loading={loading}
         className="converter-btns"
-        onClick={() => setOpen(true)}
+        onClick={() =>
+          modelId ? setOpen(true) : showMessage("info", "please select a model")
+        }
       >
         Upload
       </Button>

@@ -192,7 +192,11 @@ function useModels() {
         JS2Py.PythonFunctions.TalkMotionServer.getModelConcepts(
           modelid,
           function (res) {
-            resolve(res);
+            if (res.constructor == Array) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
           }
         );
       } catch (err) {

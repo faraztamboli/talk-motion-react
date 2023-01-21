@@ -21,6 +21,7 @@ function useSpeechSynthesis() {
     // eslint-disable-next-line
     msg.onend = function (e) {
       console.log("Finished in " + event.elapsedTime + " seconds.");
+      console.log(text);
     };
     speechSynthesis.speak(msg);
   }
