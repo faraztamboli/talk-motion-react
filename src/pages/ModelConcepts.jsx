@@ -65,6 +65,7 @@ function ModelConcepts(props) {
                         )) /
                       3
                     }
+                    video_url={concept?.video_url}
                     handleDeleteConcept={handleDeleteConcept}
                   />
                 </Col>

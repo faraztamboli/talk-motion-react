@@ -55,6 +55,17 @@ function ConceptCard(props) {
       </div>
 
       <div
+        className="flex align-items-center justify-content-end"
+        style={{ marginTop: "1rem" }}
+      >
+        <video width="267" height="200" controls>
+          <source src={`${props.video_url}`} type="video/mp4" />
+          <source src="movie.ogg" type="video/ogg" />
+        Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <div
         className="card_btns flex align-items-center justify-content-end"
         style={{ marginTop: "1rem" }}
       >
