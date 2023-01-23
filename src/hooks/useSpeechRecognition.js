@@ -164,6 +164,8 @@ function useSpeechRecognition() {
         videoRef.current.src = wordVideoDictionary[modelId][word]["remote_url"];
         videoRef.current.play();
       } else {
+        //TODO: if word is not in the dictionary then try fingerspelling it
+        // for this you need to get all alphabets in initial call
         word = wordsToPlay.shift();
         if (word !== undefined) {
           playWord(word);
