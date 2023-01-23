@@ -114,6 +114,7 @@ function useSpeechRecognition() {
 
     function getVideo(words) {
       let short_list = [];
+      let locally_available_words = [];
       for (let i in words) {
         if (
           wordVideoDictionary[modelId] === undefined ||
@@ -121,14 +122,25 @@ function useSpeechRecognition() {
         ) {
           short_list.push(words[i]);
         }
+        else {
+            locally_available_words.push(words[i]);
+        }
       }
 
-      if (short_list === undefined || short_list.length == 0) {
-        setWordsToPlay((prevState) => [prevState, ...words]);
+      if(locally_available_words.length > 0) {
+        setWordsToPlay((prevState) => [prevState, ...locally_available_words]);
         let word = wordsToPlay.shift();
         if (word !== undefined) {
           playWord(word);
         }
+      }
+
+      if (short_list === undefined || short_list.length == 0) {
+        /*setWordsToPlay((prevState) => [prevState, ...words]);
+        let word = wordsToPlay.shift();
+        if (word !== undefined) {
+          playWord(word);
+        }*/
       } else {
         // console.log("Dict", wordVideoDictionary);
         JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(
