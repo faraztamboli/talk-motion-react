@@ -96,7 +96,7 @@ function useSpeechRecognition() {
 
     // override array shift with a special shift
     Array.prototype.shift = function() {
-        console.log(this);
+        // console.log(this);
         let output = special_shift(this);
         let phrase = output[0];
         let remaining = output[1];
