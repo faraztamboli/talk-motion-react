@@ -68,6 +68,50 @@ function useSpeechRecognition() {
       }
     }
 
+    // special shift looks at the word dictionary and if it finds the bigger string it returns it
+    // otherwise it returns the individual words
+    // function returns word to remove and remaining word array after removal
+    // in case of phrases found in dictionary it remove multiple words making the phrase
+    function special_shift(words) {
+        let i = 0;
+        let j = 0;
+        while (j < words.length) {
+            let phrase_to_remove = j>0? words.slice(i, -j).join(' ') : words.join(' ');
+            if (wordVideoDictionary[modelId] === undefined) {
+                let word_to_remove = words[0];
+                words = words.length>0? words.slice(1) : null;
+                return [word_to_remove, words];
+            }
+            if (phrase_to_remove in wordVideoDictionary[modelId]) {
+                // remove selected phrase
+                words = j>0? words.slice(-j) : null;
+                return [phrase_to_remove, words];
+            }
+            j++;
+        }
+        let word_to_remove = words[0];
+        words = words.length>0? words.slice(1) : null;
+        return [word_to_remove, words];
+    }
+
+    // override array shift with a special shift
+    Array.prototype.shift = function() {
+        console.log(this);
+        let output = special_shift(this);
+        let phrase = output[0];
+        let remaining = output[1];
+        // pop out all elements from existing array
+        while(this.length > 0) {
+            this.pop();
+        }
+        // copy remaining elements after special shifting to this array
+        for(let i in remaining){
+            this.push(remaining[i]);
+        }
+        // return the popped word or phrase
+        return phrase;
+    }
+
     function getVideo(words) {
       let short_list = [];
       for (let i in words) {
