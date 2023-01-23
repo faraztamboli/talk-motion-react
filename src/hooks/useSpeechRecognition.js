@@ -127,20 +127,12 @@ function useSpeechRecognition() {
         }
       }
 
-      if(locally_available_words.length > 0) {
-        setWordsToPlay((prevState) => [prevState, ...locally_available_words]);
+      if (short_list === undefined || short_list.length == 0) {
+        setWordsToPlay((prevState) => [prevState, ...words]);
         let word = wordsToPlay.shift();
         if (word !== undefined) {
           playWord(word);
         }
-      }
-
-      if (short_list === undefined || short_list.length == 0) {
-        /*setWordsToPlay((prevState) => [prevState, ...words]);
-        let word = wordsToPlay.shift();
-        if (word !== undefined) {
-          playWord(word);
-        }*/
       } else {
         // console.log("Dict", wordVideoDictionary);
         JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(
@@ -155,6 +147,9 @@ function useSpeechRecognition() {
                 ...prevState,
                 [modelId]: { ...prevState[modelId], [key]: result[key] },
               }));
+            }
+            if(locally_available_words.length > 0) {
+                words = locally_available_words.concat(words);
             }
             setWordsToPlay((prevState) => [prevState, ...words]);
             let word = wordsToPlay.shift();
