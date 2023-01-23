@@ -92,6 +92,7 @@ function useSpeechRecognition() {
           short_list,
           function (result) {
             // console.log(result);
+            words = result[1];
             result = result[0];
             for (let key in result) {
               setWordVideoDictionary((prevState) => ({
