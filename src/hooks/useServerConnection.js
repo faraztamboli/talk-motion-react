@@ -19,13 +19,15 @@ async function useServerConnection() {
     JS2Py.onopen = function () {
       dispatch(setServerConnected(true));
       dispatch(setServerStatus("Connected"));
-      setTimeout(() => {
-        getUserProfile()
-          .then((res) => {
-            dispatch(setProfileImg(res.sm_img));
-          })
-          .catch((err) => console.log(err));
-      }, 2000);
+//      setTimeout(() => {
+//        getUserProfile()
+//          .then((res) => {
+//            console.log('on result of: getUserProfile');
+//            console.log(res);
+//            dispatch(setProfileImg(res.sm_img));
+//          })
+//          .catch((err) => console.log(err));
+//      }, 2000);
     };
 
     JS2Py.onclose = function () {

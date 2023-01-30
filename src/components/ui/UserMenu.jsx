@@ -1,12 +1,16 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { Drawer } from "antd";
 import { userMenu } from "../../data";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import userIcon from "../../media/images/user-icon.jpg";
+import useProfile from "../../hooks/useProfile";
+import { setProfileImg } from "../../app/features/userSlice";
 
 export const UserMenu = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const { profileImg } = useSelector((state) => state.user);
+  const { getUserProfile } = useProfile();
+  const dispatch = useDispatch();
 
   const showUserMenu = () => {
     setOpen(true);
@@ -15,6 +19,17 @@ export const UserMenu = () => {
   const hideUserMenu = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+      getUserProfile()
+        .then((res) => {
+          console.log(res);
+          dispatch(setProfileImg(res.sm_img));
+        })
+        .catch((err) => console.log(err));
+      // destructor for the component
+      // return () => {};
+  }, []);
 
   return (
     <>

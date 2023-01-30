@@ -30,7 +30,7 @@ function VoiceToGestureVideo(props) {
           footer={null}
           width={props.md ? "100%" : "75%"}
         >
-          <video ref={videoRef} className="block w-100p mb-6 bg-black"></video>
+          <video ref={videoRef} className="block w-100p mb-6 bg-black" autoPlay playsInline muted controls></video>
 
           <div className="flex align-items-center" style={{ flexWrap: "wrap" }}>
             {isListening ? (

@@ -109,6 +109,7 @@ function useModels() {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.updateModel(
+          token,
           modelid,
           title,
           description,
@@ -174,6 +175,7 @@ function useModels() {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getModelFiles(
+          token,
           modelid,
           function (res) {
             resolve(res);
@@ -190,6 +192,7 @@ function useModels() {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getModelConcepts(
+          token,
           modelid,
           function (res) {
             if (res.constructor == Array) {
@@ -210,6 +213,7 @@ function useModels() {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getConceptDetails(
+          token,
           modelid,
           concept,
           function (res) {
@@ -227,6 +231,7 @@ function useModels() {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.deleteModelConcepts(
+          token,
           modelid,
           concept,
           function (res) {
@@ -281,13 +286,14 @@ function useModels() {
     });
   }
 
-  function deleteModelConceptSample(modelid, concept, sampleid) {
+  function deleteModelConceptSample(modelid, concept, sampleids) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.deleteModelConceptSample(
+          token,
           modelid,
           concept,
-          sampleid,
+          sampleids,
           function (res) {
             resolve(res);
           }

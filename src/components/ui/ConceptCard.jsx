@@ -35,34 +35,35 @@ function ConceptCard(props) {
           </Popconfirm>
         </div>
       </div>
+      <div className="flex ">
+          <div className="card_content" style={{ marginTop: "1.5rem" }}>
+            <h2 className="models-card-heading">{capitalize(concept)}</h2>
+            <h3 className="models-card-description">{`Samples : ${sample_count}`}</h3>
+            <h3 className="models-card-description">{`Hand : ${
+              which_hand == 1
+                ? "Left"
+                : which_hand == 2
+                ? "Right"
+                : which_hand == 3
+                ? "Both"
+                : "None"
+            }`}</h3>
+            <h3 className="models-card-description">{`Recording Time : ${minutes}:${seconds}`}</h3>
+            <h3 className="models-card-description">{`Quality: ${(
+              100 - concept_quality
+            ).toFixed(1)}%`}</h3>
+          </div>
 
-      <div className="card_content" style={{ marginTop: "1.5rem" }}>
-        <h2 className="models-card-heading">{capitalize(concept)}</h2>
-        <h3 className="models-card-description">{`Samples : ${sample_count}`}</h3>
-        <h3 className="models-card-description">{`Hand : ${
-          which_hand == 1
-            ? "Left"
-            : which_hand == 2
-            ? "Right"
-            : which_hand == 3
-            ? "Both"
-            : "None"
-        }`}</h3>
-        <h3 className="models-card-description">{`Recording Time : ${minutes}:${seconds}`}</h3>
-        <h3 className="models-card-description">{`Quality: ${(
-          100 - concept_quality
-        ).toFixed(1)}%`}</h3>
-      </div>
-
-      <div
-        className="flex align-items-center justify-content-end"
-        style={{ marginTop: "1rem" }}
-      >
-        <video width="267" height="200" controls>
-          <source src={`${props.video_url}`} type="video/mp4" />
-          <source src="movie.ogg" type="video/ogg" />
-        Your browser does not support the video tag.
-        </video>
+          <div
+            className="flex align-items-center justify-content-end"
+            style={{ marginTop: "1rem" }}
+          >
+            <video width="267" height="200" controls>
+              <source src={`${props.video_url}`} type="video/mp4" />
+              <source src="movie.ogg" type="video/ogg" />
+            Your browser does not support the video tag.
+            </video>
+          </div>
       </div>
 
       <div

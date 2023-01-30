@@ -31,7 +31,7 @@ function useProfile() {
   function getUserProfile() {
     return new Promise((resolve, reject) => {
       try {
-        JS2Py.PythonFunctions.SessionServer.getUserProfile(
+        JS2Py.PythonFunctions.TalkMotionServer.getUserProfileNew(
           token,
           function (res) {
             resolve(res);

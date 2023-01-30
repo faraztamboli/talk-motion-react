@@ -29,18 +29,20 @@ function ConceptDetails(props) {
   }, []);
 
   function handleSampleDeletion() {
+    let sample_ids = [];
     for (let sample of selectedRows) {
       console.log(sample);
-      deleteModelConceptSample(modelid, concepttitle, sample)
-        .then((res) => {
-          console.log(res);
-          showMessage("success", "Sample Deleted!");
-        })
-        .catch((err) => {
-          console.log(err);
-          showMessage("error", "unable to delete sample");
-        });
+      sample_ids.push(sample);
     }
+    deleteModelConceptSample(modelid, concepttitle, sample_ids)
+      .then((res) => {
+        console.log(res);
+        showMessage("success", "Sample Deleted!");
+      })
+      .catch((err) => {
+        console.log(err);
+        showMessage("error", "unable to delete sample");
+      });
   }
 
   const columns = [

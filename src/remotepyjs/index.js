@@ -40,10 +40,10 @@
 function JS2PyClient(serverName, clientPageId) {
   if (serverName === undefined) this.serverName = "ws://localhost:8082";
   else this.serverName = serverName;
-  if (clientPageId === undefined) this.clientPageId = "Undefined";
+  if (clientPageId === undefined) this.clientPageId = "";
   else this.clientPageId = clientPageId;
 
-  var JS2PySelf;
+  let JS2PySelf = null;
   var parameters;
   var callbacks;
   var imgFig;
@@ -61,10 +61,12 @@ function JS2PyClient(serverName, clientPageId) {
 
   this.onopenFunctions = [];
   this.oncloseFunctions = [];
+  this.onerrorFunctions = [];
   this.onmsgFunctions = [];
   this.subOnClose = (fn) => this.oncloseFunctions.push(fn);
   this.subOnOpen = (fn) => this.onopenFunctions.push(fn);
   this.subOnMsg = (fn) => this.onmsgFunctions.push(fn);
+  this.subOnError = (fn) => this.onerrorFunction.push(fn);
 
   this.getServerString = function () {
     return this.serverName + "/" + this.clientPageId;
@@ -93,8 +95,8 @@ function JS2PyClient(serverName, clientPageId) {
   this.callMultipleCallbackPythonFunction = function (function_name, ...args) {
     var rets = this.readCallbackArguments(function_name, ...args);
     function_name = rets[0];
-    parameters = rets[1][0];
-    callbacks = rets[2];
+    let parameters = rets[1][0];
+    let callbacks = rets[2];
 
     if (this.isOpen) {
       this.socket.send(
@@ -316,7 +318,7 @@ function JS2PyClient(serverName, clientPageId) {
 
     console.log("Connecting to : " + serverConnectionString + " ...");
     this.socket = new WebSocket(serverConnectionString);
-    this.socket.binaryType = "arraybuffer";
+    //this.socket.binaryType = "arraybuffer";
     JS2PySelf = this;
 
     this.socket.onopen = function () {
@@ -355,6 +357,9 @@ function JS2PyClient(serverName, clientPageId) {
     };
 
     this.socket.onmessage = function (e) {
+      console.log(e);
+      setTimeout(function() {
+
       JS2PySelf.onmsgFunctions.forEach((fun) => fun());
       if (JS2PySelf.onmessagereceived !== undefined) {
         JS2PySelf.onmessagereceived(e);
@@ -383,7 +388,12 @@ function JS2PyClient(serverName, clientPageId) {
               funcFound.func(funcReturn.args);
             }
           } else {
-            throw "No function defined for " + funcReturn.funcName;
+            if(funcReturn.funcName === 'getPythonFunctionLibrary') {
+                return;
+            }
+            else {
+                throw "No function defined for " + funcReturn.funcName;
+            }
           }
         } else {
           if ("streaming" in funcReturn) {
@@ -542,15 +552,27 @@ function JS2PyClient(serverName, clientPageId) {
       if (JS2PySelf.onmessageprocessed !== undefined) {
         JS2PySelf.onmessageprocessed();
       }
+
+      }, 0); // end of settimeout
     };
 
     this.socket.onclose = function (e) {
       console.log("Connection to " + serverConnectionString + " closed.");
+      console.log(e);
       JS2PySelf.oncloseFunctions.forEach((fun) => fun());
       JS2PySelf.isOpen = false;
       this.socket = null;
       if (JS2PySelf.onclose !== undefined) {
         JS2PySelf.onclose();
+      }
+    };
+
+    this.socket.onerror = function (e) {
+      console.log("Connection to " + serverConnectionString + " failed.");
+      console.log(e);
+      JS2PySelf.onerrorFunctions.forEach((fun) => fun());
+      if (JS2PySelf.onerror !== undefined) {
+        JS2PySelf.onerror();
       }
     };
     return this.socket;

@@ -73,10 +73,11 @@ function useSpeechRecognition() {
     // function returns word to remove and remaining word array after removal
     // in case of phrases found in dictionary it remove multiple words making the phrase
     function special_shift(words) {
+        let separator = ' ';
         let i = 0;
         let j = 0;
         while (j < words.length) {
-            let phrase_to_remove = j>0? words.slice(i, -j).join(' ') : words.join(' ');
+            let phrase_to_remove = j>0? words.slice(i, -j).join(separator) : words.join(separator);
             if (wordVideoDictionary[modelId] === undefined) {
                 let word_to_remove = words[0];
                 words = words.length>0? words.slice(1) : null;
@@ -138,6 +139,7 @@ function useSpeechRecognition() {
         JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(
           modelId,
           short_list,
+          mic.lang,
           function (result) {
             // console.log(result);
             words = result[1];
@@ -169,7 +171,17 @@ function useSpeechRecognition() {
       if (word in wordVideoDictionary[modelId]) {
         videoRef.current.classList.remove("bg-black");
         videoRef.current.src = wordVideoDictionary[modelId][word]["remote_url"];
-        videoRef.current.play();
+        let promise = videoRef.current.play();
+        if (promise !== undefined) {
+            promise.catch(error => {
+                // Auto-play was prevented
+                // Show a UI element to let the user manually start playback
+                videoRef.current.muted = true;
+                videoRef.current.play();
+            }).then(() => {
+                // Auto-play started
+            });
+        }
       } else {
         //TODO: if word is not in the dictionary then try fingerspelling it
         // for this you need to get all alphabets in initial call
