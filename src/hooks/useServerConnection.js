@@ -37,10 +37,14 @@ async function useServerConnection() {
 
     // starting connection and taking instance to close on unmounts
     conn = JS2Py.start();
+    console.log(conn.readyState);
 
     // stop server when component unmounts
     return () => {
-      conn.close(1000, "Rerendered close!");
+      console.log(conn.readyState);
+      conn.addEventListener('open', (event) => {
+        conn.close(1000, 're-rendered page');
+      });
     };
     //eslint-disable-next-line
   }, []);

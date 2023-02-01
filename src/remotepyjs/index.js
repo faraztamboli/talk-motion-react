@@ -324,6 +324,8 @@ function JS2PyClient(serverName, clientPageId) {
     this.socket.onopen = function () {
       console.log("Connected to Server :" + serverConnectionString);
       JS2PySelf.isOpen = true;
+      console.log(JS2PySelf.isOpen);
+      console.log(this.socket.readyState);
       JS2PySelf.onopenFunctions.forEach((fun) => fun());
       if (JS2PySelf.onopen !== undefined) {
         JS2PySelf.callMultipleCallbackPythonFunction(

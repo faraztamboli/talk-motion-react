@@ -2,11 +2,13 @@ import React from "react";
 import { message } from "antd";
 import JS2Py from "../remotepyjs/index";
 import { useSelector } from "react-redux";
+import useLocalStorage from "./useLocalStorage";
 
 function useUploadGestureVideo() {
   const [loading, setLoading] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const { modelId } = useSelector((state) => state.model);
+  const [token] = useLocalStorage("token");
 
   const success = () => {
     messageApi.open({
@@ -33,6 +35,7 @@ function useUploadGestureVideo() {
     setLoading(true);
     try {
       JS2Py.PythonFunctions.TalkMotionServer.addWordToVideoURLMapping(
+        token,
         modelId,
         word,
         url,
@@ -53,6 +56,7 @@ function useUploadGestureVideo() {
     setLoading(true);
     try {
       JS2Py.PythonFunctions.TalkMotionServer.uploadGestureVideo(
+        token,
         modelId,
         word,
         video_name,
