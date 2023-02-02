@@ -14,7 +14,7 @@ async function useServerConnection() {
 
   return React.useEffect(() => {
     let conn = null;
-    JS2Py.serverName = "wss://talk-motion.com:8083";
+    JS2Py.serverName = "wss://app.talk-motion.com:8083";
 
     JS2Py.onopen = function () {
       dispatch(setServerConnected(true));
