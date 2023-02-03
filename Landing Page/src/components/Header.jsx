@@ -108,6 +108,19 @@ function Header(props) {
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
               <Link
+                to="/leadership"
+                className="drawer-links"
+                style={{
+                  textDecoration: "none",
+                  color: "#000000",
+                  fontSize: "1.1rem",
+                }}
+              >
+                Our Team
+              </Link>
+            </li>
+            <li style={{ listStyle: "none", marginBottom: "1rem" }}>
+              <Link
                 to="/contact-us"
                 className="drawer-links"
                 style={{
