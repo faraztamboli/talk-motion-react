@@ -16,6 +16,12 @@ function useAuthStatus() {
 
   function isLoggedIn() {
     try {
+
+        JS2Py.PythonFunctions.SessionServer.startSessionIfNotStarted(token, function() {
+          // HERE: enable login button. this is only after session starts
+          // update status that session started
+        });
+
       JS2Py.PythonFunctions.SessionServer.isLoggedIn(token, function (res) {
         if (res?.isLoggedIn === true) {
           dispatch(login({ token: token }));

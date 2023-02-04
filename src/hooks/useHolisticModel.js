@@ -295,13 +295,15 @@ function useHolisticModel1() {
         Date.now(),
         concept,
         function (res) {
-          console.log(res);
-          if (res == -1) {
+          let sample_count = res[1];
+          let status = res[0];
+          console.log(status);
+          if (status == -1) {
             dispatch(setTrainingStatusOff());
-          } else if (res == 0) {
+          } else if (status == 0) {
             dispatch(setTrainingStatusOn());
-          } else if (res == 1) {
-            showMessage("success", "sample collected");
+          } else if (status == 1) {
+            showMessage("success", "sample collected: " + sample_count);
           }
         }
       );

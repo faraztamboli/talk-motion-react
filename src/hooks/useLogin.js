@@ -28,17 +28,17 @@ function useLogin() {
     });
   };
 
-  function handleLogin(res) {
-    console.log(res);
-    if (res && res.isValidUser === true && res.isPasswordCorrect === true) {
-      disptach(login({ token: token }));
+  function handleLogin(login_info, token_input) {
+    console.log(login_info);
+    if (login_info && login_info.isValidUser === true && login_info.isPasswordCorrect === true) {
+      disptach(login({ token: token_input }));
       success();
       setTimeout(() => {
         navigate("/");
       }, [1000]);
     } else if (
-      res &&
-      !(res.isValidUser === true && res.isPasswordCorrect === true)
+      login_info &&
+      !(login_info.isValidUser === true && login_info.isPasswordCorrect === true)
     ) {
       failure();
       setLoading(false);
@@ -58,8 +58,8 @@ function useLogin() {
         values.remember,
         "https://app.talk-motion.com/login", // login url
         "https://app.talk-motion.com", // after login url
-        function (res) {
-          handleLogin(res);
+        function (login_info) {
+          handleLogin(login_info, res);
         }
       );
     });

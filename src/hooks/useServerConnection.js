@@ -14,18 +14,20 @@ async function useServerConnection() {
 
   return React.useEffect(() => {
     let conn = null;
-    JS2Py.serverName = "wss://talk-motion.com:8083";
+    JS2Py.serverName = "wss://app.talk-motion.com:8083";
 
     JS2Py.onopen = function () {
       dispatch(setServerConnected(true));
       dispatch(setServerStatus("Connected"));
-      setTimeout(() => {
-        getUserProfile()
-          .then((res) => {
-            dispatch(setProfileImg(res.sm_img));
-          })
-          .catch((err) => console.log(err));
-      }, 2000);
+//      setTimeout(() => {
+//        getUserProfile()
+//          .then((res) => {
+//            console.log('on result of: getUserProfile');
+//            console.log(res);
+//            dispatch(setProfileImg(res.sm_img));
+//          })
+//          .catch((err) => console.log(err));
+//      }, 2000);
     };
 
     JS2Py.onclose = function () {
@@ -35,10 +37,14 @@ async function useServerConnection() {
 
     // starting connection and taking instance to close on unmounts
     conn = JS2Py.start();
+    console.log(conn.readyState);
 
     // stop server when component unmounts
     return () => {
-      conn.close(1000, "Rerendered close!");
+      console.log(conn.readyState);
+      conn.addEventListener('open', (event) => {
+        conn.close(1000, 're-rendered page');
+      });
     };
     //eslint-disable-next-line
   }, []);

@@ -39,6 +39,15 @@ const items = [
     </Link>,
     [
       getItem(
+        "Upload",
+        "23",
+        <Link to="/trainer/upload">
+          <MdFileUpload />
+        </Link>,
+        null,
+        "/trainer/upload"
+      ),
+      getItem(
         "Collect",
         "21",
         <Link to="/trainer/collect">
@@ -55,15 +64,6 @@ const items = [
         </Link>,
         null,
         "/trainer/train"
-      ),
-      getItem(
-        "Upload",
-        "23",
-        <Link to="/trainer/upload">
-          <MdFileUpload />
-        </Link>,
-        null,
-        "/trainer/upload"
       ),
     ],
     "/trainer"

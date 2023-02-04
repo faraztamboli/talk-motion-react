@@ -38,6 +38,9 @@ function Header(props) {
           <HashLink to="/#pricing" className="home-header-links">
             Pricing
           </HashLink>
+          <Link to="/leadership" className="home-header-links">
+            Our Team
+          </Link>
           <Link to="/contact-us" className="home-header-links">
             Contact Us
           </Link>
@@ -102,6 +105,19 @@ function Header(props) {
               >
                 Pricing
               </HashLink>
+            </li>
+            <li style={{ listStyle: "none", marginBottom: "1rem" }}>
+              <Link
+                to="/leadership"
+                className="drawer-links"
+                style={{
+                  textDecoration: "none",
+                  color: "#000000",
+                  fontSize: "1.1rem",
+                }}
+              >
+                Our Team
+              </Link>
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
               <Link
