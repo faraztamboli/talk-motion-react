@@ -907,3 +907,145 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
   display: inline-block;
   padding: .4rem; 
 }
+
+/* Payment Page Styling */
+
+.purchase-model-list {
+  min-height: 100%;
+}
+
+.purchase-model-list h2 {
+  font-weight: 900;
+  font-size: 1.5rem;
+  line-height: 1.75rem;
+}
+
+.payment-first-col {
+  padding-bottom: 9rem !important;
+  background-color: #E5E5E5;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  justify-content: center;
+  position: relative;
+}
+
+.payment-container {
+  max-width: 700px !important;
+  width: 90% !important;
+}
+
+.purchase-model-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #FFFFFF;
+  box-shadow: 4px 4px 20px -10px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  padding: 15px 24px;
+}
+
+.purchase-model-list-item:not(:last-child) {
+  margin-bottom: 2rem;
+}
+
+.purchase-model-list-item .purchase-model-list-item-content {
+  display: flex;
+  align-items: center;
+}
+
+.purchase-model-list-item-content .model-logo {
+  margin-right: 2rem;
+}
+
+.purchase-model-list-item-content h3 {
+  font-weight: 600;
+  font-size: 1.125rem;
+  line-height: 1.313rem;
+  margin: 0;
+}
+
+.purchase-model-list-item-content p {
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.188rem;
+  color: #7A7A7A;
+  margin: 0;
+}
+
+.purchase-model-list-item-price p {
+  color: #00CFC3;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.313rem;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.total h2 {
+  font-weight: 900;
+  font-size: 1.5rem;
+  line-height: 1.75rem;
+}
+
+.total p {
+  color: #00CFC3;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.313rem;
+}
+
+.payment-second-col {
+  min-height: 100%;
+  padding-bottom: 9rem !important;
+} 
+
+.payment-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 85vh;
+}
+
+.payment-details h2 {
+  font-weight: 900;
+  font-size: 1.5rem;
+  line-height: 1.75rem;
+}
+
+.payment-details p {
+  font-weight: 400;
+  font-size: 1.125rem;
+  line-height: 1.313rem;
+}
+
+.payment-form-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.payment-form-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.payment-form-inputs {
+  outline: none;
+  border: 2px solid #EEEEEE;
+  border-radius: 33px;
+  padding-left: 20px;
+}
+
+.payment-form-icons {
+  color: #B5B5B5;
+}
+
+.payment-form-btn {
+  border-radius: 4.563rem !important;
+}

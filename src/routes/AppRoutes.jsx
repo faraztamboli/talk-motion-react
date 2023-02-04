@@ -22,6 +22,7 @@ const ModelConcepts = React.lazy(() => import("../pages/ModelConcepts"));
 const ConceptDetails = React.lazy(() => import("../pages/ConceptDetails"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 const Signup = React.lazy(() => import("../pages/Signup"));
+const Payment = React.lazy(() => import("../pages/Payment"));
 const ForgotPassword = React.lazy(() => import("../pages/ForgotPassword"));
 
 function AppRoutes(props) {
@@ -199,6 +200,20 @@ function AppRoutes(props) {
           }
         />
       </Route>
+
+      <Route path="/payment" element={<PrivateRoute />}>
+        <Route
+          path="/payment"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <Payment />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
       <Route
         path="/signup"
         exact

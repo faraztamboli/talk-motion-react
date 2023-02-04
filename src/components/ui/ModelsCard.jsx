@@ -122,7 +122,7 @@ export const ModelsCard = (props) => {
       </div>
 
       <div
-        className="card_btns flex align-items-center justify-content-end"
+        className="card_btns flex flex-between-center"
         style={{ marginTop: "1rem" }}
       >
         <Link to={`/models/${model.id}`}>
