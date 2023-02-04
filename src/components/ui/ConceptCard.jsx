@@ -20,7 +20,11 @@ function ConceptCard(props) {
   const seconds = date.getUTCSeconds();
 
   return (
-    <Card bordered={false} className="models-card" style={{ minWidth: 200 }}>
+    <Card
+      bordered={false}
+      className="models-card"
+      style={{ minWidth: 200, height: "100%" }}
+    >
       <div className="flex flex-between-center">
         <div className="card-logo">
           <img src={plurkImg} alt="model logo" width={40} />
@@ -35,35 +39,43 @@ function ConceptCard(props) {
           </Popconfirm>
         </div>
       </div>
-      <div className="flex ">
-          <div className="card_content" style={{ marginTop: "1.5rem" }}>
-            <h2 className="models-card-heading">{capitalize(concept)}</h2>
-            <h3 className="models-card-description">{`Samples : ${sample_count}`}</h3>
-            <h3 className="models-card-description">{`Hand : ${
-              which_hand == 1
-                ? "Left"
-                : which_hand == 2
-                ? "Right"
-                : which_hand == 3
-                ? "Both"
-                : "None"
-            }`}</h3>
-            <h3 className="models-card-description">{`Recording Time : ${minutes}:${seconds}`}</h3>
-            <h3 className="models-card-description">{`Quality: ${(
-              100 - concept_quality
-            ).toFixed(1)}%`}</h3>
-          </div>
 
-          <div
-            className="flex align-items-center justify-content-end"
-            style={{ marginTop: "1rem" }}
-          >
-            <video width="267" height="200" controls>
-              <source src={`${props.video_url}`} type="video/mp4" />
-              <source src="movie.ogg" type="video/ogg" />
-            Your browser does not support the video tag.
-            </video>
-          </div>
+      <div className="flex align-items-center mt-6">
+        <video
+          // width="267"
+          // height="200"
+          controls
+          style={{
+            borderRadius: "5px",
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        >
+          <source src={`${props.video_url}`} type="video/mp4" />
+          <source src="movie.ogg" type="video/ogg" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <div className="flex align-items-center">
+        <div className="card_content" style={{ marginTop: "1.5rem" }}>
+          <h2 className="models-card-heading">{capitalize(concept)}</h2>
+          <h3 className="models-card-description">{`Samples : ${sample_count}`}</h3>
+          <h3 className="models-card-description">{`Hand : ${
+            which_hand == 1
+              ? "Left"
+              : which_hand == 2
+              ? "Right"
+              : which_hand == 3
+              ? "Both"
+              : "None"
+          }`}</h3>
+          <h3 className="models-card-description">{`Recording Time : ${minutes}:${seconds}`}</h3>
+          <h3 className="models-card-description">{`Quality: ${(
+            100 - concept_quality
+          ).toFixed(1)}%`}</h3>
+        </div>
       </div>
 
       <div
