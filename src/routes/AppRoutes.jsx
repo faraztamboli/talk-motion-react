@@ -16,6 +16,7 @@ const ModelTrainer = React.lazy(() => import("../pages/ModelTrainer"));
 const UploadVideo = React.lazy(() => import("../components/ui/UploadVideo"));
 const Models = React.lazy(() => import("../pages/Models"));
 const MyModels = React.lazy(() => import("../pages/MyModels"));
+const TrainingModels = React.lazy(() => import("../pages/TrainingModels"));
 const UserModel = React.lazy(() => import("../pages/UserModel"));
 const ModelFiles = React.lazy(() => import("../pages/ModelFiles"));
 const ModelConcepts = React.lazy(() => import("../pages/ModelConcepts"));
@@ -168,6 +169,19 @@ function AppRoutes(props) {
               fallback={<Skeleton active style={skeletonStyle} />}
             >
               <MyModels collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+      <Route path="/models/training-models" element={<PrivateRoute />}>
+        <Route
+          path="/models/training-models"
+          exact
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <TrainingModels collapsedWidth={collapsedWidth} />
             </React.Suspense>
           }
         />

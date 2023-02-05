@@ -6,14 +6,16 @@ function useModels() {
   const [token] = useLocalStorage("token");
 
   React.useEffect(() => {
-    getUserModels(0, 10);
-    getPublicModels(0, 10);
+    getUserModels('', 0, 10);
+    getPublicModels('', 0, 10);
   }, []);
 
-  function getPublicModels(offset, end) {
+  function getPublicModels(search_text, offset, end) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getPublicModels(
+          token,
+          search_text,
           offset,
           end,
           function (res) {
@@ -29,11 +31,12 @@ function useModels() {
     });
   }
 
-  function getUserModels(offset, end) {
+  function getUserModels(search_text, offset, end) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(
           token,
+          search_text,
           offset,
           end,
           function (res) {
@@ -209,6 +212,28 @@ function useModels() {
     });
   }
 
+  function getModelVideos(modelid, search_text, offset, end) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getModelVideos(
+          token,
+          modelid,
+          search_text, false, offset, end,
+          function (res) {
+            if (res.constructor == Array) {
+              resolve(res);
+            } else {
+              reject(res);
+            }
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   function getConceptDetails(modelid, concept) {
     return new Promise((resolve, reject) => {
       try {
@@ -249,10 +274,12 @@ function useModels() {
   function getModelsUserCanTrain() {
     let offset = 0;
     let end = 9999999;
+    let search_text = '';
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getModelsUserCanTrain(
           token,
+          search_text,
           offset,
           end,
           function (res) {
@@ -269,10 +296,12 @@ function useModels() {
   function getModelsUserCanUse() {
     let offset = 0;
     let end = 9999999;
+    let search_text = '';
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getModelsUserCanUse(
           token,
+          search_text,
           offset,
           end,
           function (res) {
@@ -317,6 +346,7 @@ function useModels() {
     getModel,
     getModelFiles,
     getModelConcepts,
+    getModelVideos,
     getConceptDetails,
     deleteModelConcept,
     getModelsUserCanTrain,

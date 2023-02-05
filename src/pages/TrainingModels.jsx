@@ -11,15 +11,15 @@ import {
 } from "../app/features/modelSlice";
 import useMessageApi from "../hooks/useMessageApi";
 
-export default function Models(props) {
-  const [publicLoading, setPublicLoading] = useState(true);
-  const [publicModels, setPublicModels] = useState([]);
-  const [totalPublicModels, setTotalPublicModels] = useState();
-  const [publicPage, setPublicPage] = useState(1);
-  const [publicPageSize, setPublicPageSize] = useState(10);
+export default function TrainingModels(props) {
+  const [trainingLoading, setTrainingLoading] = useState(true);
+  const [trainingModels, setTrainingModels] = useState([]);
+  const [totalTrainingModels, setTotalTrainingModels] = useState();
+  const [trainingPage, setTrainingPage] = useState(1);
+  const [trainingPageSize, setTrainingPageSize] = useState(10);
   const { contextHolder, showMessage } = useMessageApi();
   const {
-    getPublicModels,
+    getModelsUserCanTrain,
     deleteModel,
     cloneModel,
     purchaseModel,
@@ -29,38 +29,38 @@ export default function Models(props) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setPublicLoading(true);
-    getPublicModels('', (publicPage - 1) * publicPageSize, publicPageSize)
+    setTrainingLoading(true);
+    getModelsUserCanTrain('', (trainingPage - 1) * trainingPageSize, trainingPageSize)
       .then((res) => {
-        setPublicModels(res[0]);
-        setTotalPublicModels(res[1]["count(*)"]);
-        setPublicLoading(false);
+        setTrainingModels(res[0]);
+        setTotalTrainingModels(res[1]["count(*)"]);
+        setTrainingLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setPublicLoading(false);
+        setTrainingLoading(false);
       });
   }, []);
 
   useEffect(() => {
-    setPublicLoading(true);
-    getPublicModels('', (publicPage - 1) * publicPageSize, publicPageSize)
+    setTrainingLoading(true);
+    getModelsUserCanTrain('', (trainingPage - 1) * trainingPageSize, trainingPageSize)
       .then((res) => {
-        setPublicModels(res[0]);
-        setTotalPublicModels(res[1]["count(*)"]);
-        setPublicLoading(false);
+        setTrainingModels(res[0]);
+        setTotalTrainingModels(res[1]["count(*)"]);
+        setTrainingLoading(false);
       })
       .catch((err) => {
-        setPublicLoading(false);
+        setTrainingLoading(false);
         console.log(err);
       });
-  }, [publicPage, publicPageSize]);
+  }, [trainingPage, trainingPageSize]);
 
-  function onPublicModelsChange(page, pageSize) {
+  function onTrainingModelsChange(page, pageSize) {
     dispatch(setCurrentModelPage(page));
     dispatch(setModelPaginationSize(pageSize));
-    setPublicPage(page);
-    setPublicPageSize(pageSize);
+    setTrainingPage(page);
+    setTrainingPageSize(pageSize);
   }
 
   const modelStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
@@ -73,10 +73,10 @@ export default function Models(props) {
       {contextHolder}
       <MetaDecorator title={title} description={description} />
       <div style={modelStyle} className="layout-bg mh-100vh">
-        <h2>Models Available for Purchase</h2>
+        <h2>Training Models</h2>
         <Row gutter={[16, 16]} style={{ marginBottom: "3rem" }}>
-          {!publicLoading && publicModels?.length > 0
-            ? publicModels.map((model) => {
+          {!trainingLoading && trainingModels?.length > 0
+            ? trainingModels.map((model) => {
                 return (
                   <Col key={model.id} span={8} xs={24} md={8}>
                     <ModelsCard
@@ -91,7 +91,7 @@ export default function Models(props) {
                   </Col>
                 );
               })
-            : !publicLoading && (
+            : !trainingLoading && (
                 <div className="w-100p m-4">
                   <Empty
                     style={{ fontWeight: 500 }}
@@ -100,15 +100,15 @@ export default function Models(props) {
                   />
                 </div>
               )}
-          <Skeleton active loading={publicLoading} style={{ width: "500px" }} />
+          <Skeleton active loading={trainingLoading} style={{ width: "500px" }} />
         </Row>
-        {totalPublicModels > 9 && (
+        {totalTrainingModels > 9 && (
           <div className="flex flex-center-center mt-6">
             <Pagination
               defaultCurrent={1}
-              total={totalPublicModels}
+              total={totalTrainingModels}
               showSizeChanger
-              onChange={onPublicModelsChange}
+              onChange={onTrainingModelsChange}
             />
           </div>
         )}

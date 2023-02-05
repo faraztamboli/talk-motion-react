@@ -36,7 +36,7 @@ export default function MyModels(props) {
   const { currentModelPage } = useSelector((state) => state.model);
 
   useEffect(() => {
-    getUserModels((userPage - 1) * userPageSize, userPageSize)
+    getUserModels('', (userPage - 1) * userPageSize, userPageSize)
       .then((res) => {
         setUserLoading(false);
         setUserModels(res[0]);
@@ -50,7 +50,7 @@ export default function MyModels(props) {
 
   useEffect(() => {
     setUserLoading(true);
-    getUserModels((userPage - 1) * userPageSize, userPageSize)
+    getUserModels('', (userPage - 1) * userPageSize, userPageSize)
       .then((res) => {
         setUserModels(res[0]);
         setTotalUserModels(res[1]["count(*)"]);
@@ -65,6 +65,7 @@ export default function MyModels(props) {
   useEffect(() => {
     setUserLoading(true);
     getUserModels(
+      '',
       (currentModelPage - 1) * modelPaginationSize,
       modelPaginationSize
     )
@@ -101,6 +102,13 @@ export default function MyModels(props) {
           <UserMenuProfileItem size="large" />
         </div>
         <div className="details_section" style={{ marginTop: "2rem" }}>
+          <div className="flex flex-center-center mt-10">
+            <NewModel
+              sm={props.sm}
+              createNewModel={createNewModel}
+              setLoading={setLoading}
+            />
+          </div>
           <h2>My Models</h2>
           <Row gutter={[16, 16]}>
             {!userLoading && userModels?.length > 0
@@ -143,13 +151,6 @@ export default function MyModels(props) {
               />
             </div>
           )}
-          <div className="flex flex-center-center mt-10">
-            <NewModel
-              sm={props.sm}
-              createNewModel={createNewModel}
-              setLoading={setLoading}
-            />
-          </div>
         </div>
       </div>
     </>

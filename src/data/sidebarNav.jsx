@@ -74,7 +74,35 @@ const items = [
     <Link to="/models">
       <FileOutlined />
     </Link>,
-    null,
+    [
+      getItem(
+        "Store",
+        "31",
+        <Link to="/models">
+          <FileOutlined />
+        </Link>,
+        null,
+        "/models"
+      ),
+      getItem(
+        "My Models",
+        "32",
+        <Link to="/my-models">
+          <MdOutlineCollectionsBookmark />
+        </Link>,
+        null,
+        "/my-models"
+      ),
+      getItem(
+        "I'm Training",
+        "33",
+        <Link to="/models/training-models">
+          <FileOutlined />
+        </Link>,
+        null,
+        "/models/training-models"
+      ),
+    ],
     "/models"
   ),
 ];
