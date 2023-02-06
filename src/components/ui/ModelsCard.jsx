@@ -73,7 +73,11 @@ export const ModelsCard = (props) => {
   ];
 
   return (
-    <Card bordered={false} className="models-card" style={{ minWidth: 200 }}>
+    <Card
+      bordered={false}
+      className="models-card"
+      style={{ minWidth: 200, height: "100%" }}
+    >
       <div className="flex" style={{ justifyContent: "space-between" }}>
         <div
           className="logo_div"

@@ -22,7 +22,7 @@ export const ModelsDropdown = (props) => {
       })
       .catch((err) => console.log(err));
     props.from === "trainer" &&
-      getModelsUserCanTrain()
+      getModelsUserCanTrain("", 0, 999999)
         .then((res) => {
           setModels(res[0]);
         })
