@@ -134,7 +134,7 @@ function ConceptDetails(props) {
 
   const rowClassName = (record) => {
     if (record.zScore > 2 && record.zScore < 3) {
-      return "bg-orange";
+      return "bg-yellow";
     } else if (record.zScore > 3) {
       return "bg-red";
     }
