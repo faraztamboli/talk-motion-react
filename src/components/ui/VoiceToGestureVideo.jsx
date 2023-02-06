@@ -2,8 +2,11 @@ import React from "react";
 import { Modal, Button, Tooltip } from "antd";
 import { SoundFilled } from "@ant-design/icons";
 import { MdFullscreenExit } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 function VoiceToGestureVideo(props) {
+  const { modelId } = useSelector((state) => state.model);
+
   const {
     fullScreen,
     setFullScreen,
@@ -16,6 +19,7 @@ function VoiceToGestureVideo(props) {
     startListening,
     stopListening,
     isListening,
+    showMessage,
   } = props;
 
   return (
@@ -30,7 +34,14 @@ function VoiceToGestureVideo(props) {
           footer={null}
           width={props.md ? "100%" : "75%"}
         >
-          <video ref={videoRef} className="block w-100p mb-6 bg-black" autoPlay playsInline muted controls></video>
+          <video
+            ref={videoRef}
+            className="block w-100p mb-6 bg-black"
+            autoPlay
+            playsInline
+            muted
+            controls
+          ></video>
 
           <div className="flex align-items-center" style={{ flexWrap: "wrap" }}>
             {isListening ? (
@@ -53,7 +64,13 @@ function VoiceToGestureVideo(props) {
                 type="primary"
                 shape="round"
                 size={buttonSize}
-                onClick={startListening}
+                onClick={() => {
+                  if (modelId) {
+                    startListening();
+                  } else {
+                    showMessage("info", "please select a model");
+                  }
+                }}
                 icon={<SoundFilled size={iconSize} />}
               >
                 <span className="">Speak</span>

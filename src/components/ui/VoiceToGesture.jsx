@@ -33,6 +33,9 @@ export const VoiceToGesture = (props) => {
         <VoiceToGestureVideo
           transcript={transcript}
           videoRef={videoRef}
+          startListening={startListening}
+          stopListening={stopListening}
+          showMessage={showMessage}
           isListening={isListening}
           fullScreen={fullScreen}
           setFullScreen={setFullScreen}
