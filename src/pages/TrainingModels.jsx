@@ -19,7 +19,7 @@ export default function TrainingModels(props) {
   const [trainingPageSize, setTrainingPageSize] = useState(10);
   const { contextHolder, showMessage } = useMessageApi();
   const {
-    getModelsUserCanTrain,
+    getModelsUserCanTrain, // parameters: getModelsUserCanTrain(searchText, offset, end);
     deleteModel,
     cloneModel,
     purchaseModel,
@@ -30,8 +30,14 @@ export default function TrainingModels(props) {
 
   useEffect(() => {
     setTrainingLoading(true);
-    getModelsUserCanTrain('', (trainingPage - 1) * trainingPageSize, trainingPageSize)
+    console.log(trainingPage, trainingPageSize);
+    getModelsUserCanTrain(
+      "",
+      (trainingPage - 1) * trainingPageSize,
+      trainingPageSize
+    )
       .then((res) => {
+        console.log(res);
         setTrainingModels(res[0]);
         setTotalTrainingModels(res[1]["count(*)"]);
         setTrainingLoading(false);
@@ -44,7 +50,11 @@ export default function TrainingModels(props) {
 
   useEffect(() => {
     setTrainingLoading(true);
-    getModelsUserCanTrain('', (trainingPage - 1) * trainingPageSize, trainingPageSize)
+    getModelsUserCanTrain(
+      "",
+      (trainingPage - 1) * trainingPageSize,
+      trainingPageSize
+    )
       .then((res) => {
         setTrainingModels(res[0]);
         setTotalTrainingModels(res[1]["count(*)"]);
@@ -100,7 +110,11 @@ export default function TrainingModels(props) {
                   />
                 </div>
               )}
-          <Skeleton active loading={trainingLoading} style={{ width: "500px" }} />
+          <Skeleton
+            active
+            loading={trainingLoading}
+            style={{ width: "500px" }}
+          />
         </Row>
         {totalTrainingModels > 9 && (
           <div className="flex flex-center-center mt-6">

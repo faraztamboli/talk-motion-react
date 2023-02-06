@@ -6,8 +6,8 @@ function useModels() {
   const [token] = useLocalStorage("token");
 
   React.useEffect(() => {
-    getUserModels('', 0, 10);
-    getPublicModels('', 0, 10);
+    getUserModels("", 0, 10);
+    getPublicModels("", 0, 10);
   }, []);
 
   function getPublicModels(search_text, offset, end) {
@@ -218,7 +218,10 @@ function useModels() {
         JS2Py.PythonFunctions.TalkMotionServer.getModelVideos(
           token,
           modelid,
-          search_text, false, offset, end,
+          search_text,
+          false,
+          offset,
+          end,
           function (res) {
             if (res.constructor == Array) {
               resolve(res);
@@ -271,15 +274,12 @@ function useModels() {
     });
   }
 
-  function getModelsUserCanTrain() {
-    let offset = 0;
-    let end = 9999999;
-    let search_text = '';
+  function getModelsUserCanTrain(searchText, offset, end) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getModelsUserCanTrain(
           token,
-          search_text,
+          searchText,
           offset,
           end,
           function (res) {
@@ -296,7 +296,7 @@ function useModels() {
   function getModelsUserCanUse() {
     let offset = 0;
     let end = 9999999;
-    let search_text = '';
+    let search_text = "";
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getModelsUserCanUse(
