@@ -1,9 +1,11 @@
 import React from "react";
 import JS2Py from "../remotepyjs";
 import useLocalStorage from "./useLocalStorage";
+import usePayment from "./usePayment";
 
 function useModels() {
   const [token] = useLocalStorage("token");
+  const { getCart } = usePayment();
 
   React.useEffect(() => {
     getUserModels("", 0, 10);
@@ -20,6 +22,7 @@ function useModels() {
           end,
           function (res) {
             if (res.constructor == Array) {
+              console.log(res);
               resolve(res);
             }
           }
@@ -32,6 +35,8 @@ function useModels() {
   }
 
   function getUserModels(search_text, offset, end) {
+    offset = 0;
+    end = 99999;
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(
@@ -41,6 +46,7 @@ function useModels() {
           end,
           function (res) {
             if (res.constructor == Array) {
+              console.log(res);
               resolve(res);
             }
           }
@@ -275,6 +281,8 @@ function useModels() {
   }
 
   function getModelsUserCanTrain(searchText, offset, end) {
+    offset = 0;
+    end = 9999;
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getModelsUserCanTrain(
@@ -283,6 +291,7 @@ function useModels() {
           offset,
           end,
           function (res) {
+            console.log(res);
             resolve(res);
           }
         );
@@ -334,6 +343,71 @@ function useModels() {
     });
   }
 
+  function setModelPrice(modelid, unitamount, tiers, currency, recurring) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.setModelPrice(
+          token,
+          modelid,
+          unitamount,
+          tiers,
+          currency,
+          recurring,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  function addOrRemoveCartProduct(product_id, quantity) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.addOrRemoveCartProduct(
+          token,
+          product_id,
+          quantity,
+          function (res) {
+            console.log(res);
+            resolve(res);
+            setTimeout(() => {
+              getCart()
+                .then((res) => console.log(res))
+                .catch((err) => console.log(err));
+            }, 1000);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  function setCartProductQuantity(product_id, quantity) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.setCartProductQuantity(
+          token,
+          product_id,
+          quantity,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   return {
     getPublicModels,
     getUserModels,
@@ -352,6 +426,9 @@ function useModels() {
     getModelsUserCanTrain,
     getModelsUserCanUse,
     deleteModelConceptSample,
+    setModelPrice,
+    addOrRemoveCartProduct,
+    setCartProductQuantity,
   };
 }
 

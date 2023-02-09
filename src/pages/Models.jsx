@@ -24,13 +24,14 @@ export default function Models(props) {
     cloneModel,
     purchaseModel,
     addNewTrainer,
+    addOrRemoveCartProduct,
   } = useModels();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     setPublicLoading(true);
-    getPublicModels('', (publicPage - 1) * publicPageSize, publicPageSize)
+    getPublicModels("", (publicPage - 1) * publicPageSize, publicPageSize)
       .then((res) => {
         setPublicModels(res[0]);
         setTotalPublicModels(res[1]["count(*)"]);
@@ -44,7 +45,7 @@ export default function Models(props) {
 
   useEffect(() => {
     setPublicLoading(true);
-    getPublicModels('', (publicPage - 1) * publicPageSize, publicPageSize)
+    getPublicModels("", (publicPage - 1) * publicPageSize, publicPageSize)
       .then((res) => {
         setPublicModels(res[0]);
         setTotalPublicModels(res[1]["count(*)"]);
@@ -85,6 +86,7 @@ export default function Models(props) {
                       cloneModel={cloneModel}
                       purchaseModel={purchaseModel}
                       addNewTrainer={addNewTrainer}
+                      addOrRemoveCartProduct={addOrRemoveCartProduct}
                       key={model.key}
                       showMessage={showMessage}
                     />

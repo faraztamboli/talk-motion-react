@@ -6,6 +6,7 @@ import modelReducer from "./features/modelSlice";
 import trainerSlice from "./features/trainerSlice";
 import speechSlice from "./features/speechSlice";
 import converterSlice from "./features/converterSlice";
+import cartSlice from "./features/cartSlice";
 
 const rootReducer = {
   login: loginReducer,
@@ -16,6 +17,7 @@ const rootReducer = {
   trainer: trainerSlice,
   speech: speechSlice,
   converter: converterSlice,
+  cart: cartSlice,
 };
 
 export default rootReducer;

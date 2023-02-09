@@ -1,23 +1,46 @@
-import React from "react";
-import UpdateModel from "../../components/ui/UpdateModel";
-import { Card, Avatar, Tooltip, Button, Dropdown } from "antd";
+import React, { useState } from "react";
+import {
+  Card,
+  Avatar,
+  Tooltip,
+  Button,
+  Dropdown,
+  Space,
+  InputNumber,
+} from "antd";
 import { MdOutlineArrowRightAlt, MdMoreVert } from "react-icons/md";
-import NewTrainer from "../../components/ui/NewTrainer";
-import plurkImg from "../../media/images/plurk.png";
 import { Link } from "react-router-dom";
 import { UserOutlined } from "@ant-design/icons";
+import UpdateModel from "../../components/ui/UpdateModel";
+import NewTrainer from "../../components/ui/NewTrainer";
+import ModelPrice from "../../components/ui/ModelPrice";
+import plurkImg from "../../media/images/plurk.png";
 
 export const ModelsCard = (props) => {
+  const [quantity, setQuantity] = useState(1);
   const {
     model,
     deleteModel,
     cloneModel,
     purchaseModel,
     addNewTrainer,
+    addOrRemoveCartProduct,
     loading,
     setLoading,
     showMessage,
   } = props;
+
+  const handleAddToCart = () => {
+    addOrRemoveCartProduct(model.product_id, quantity)
+      .then((res) => {
+        console.log(res);
+        showMessage("success", "Added to cart");
+      })
+      .catch((err) => {
+        console.log(err);
+        showMessage("error", "unable to add the model to the cart");
+      });
+  };
 
   const items = [
     {
@@ -69,6 +92,11 @@ export const ModelsCard = (props) => {
     {
       key: "4",
       label: <div onClick={() => purchaseModel(model.id)}>Purchase</div>,
+    },
+
+    {
+      key: "5",
+      label: <ModelPrice model_id={model.id} />,
     },
   ];
 
@@ -125,8 +153,21 @@ export const ModelsCard = (props) => {
         </Avatar.Group>
       </div>
 
+      {window.location.pathname == "/models" && (
+        <Space className="mt-4">
+          <InputNumber
+            min={1}
+            defaultValue={1}
+            onChange={(value) => setQuantity(value)}
+          />
+          <Button type="primary" onClick={handleAddToCart}>
+            Add to Cart
+          </Button>
+        </Space>
+      )}
+
       <div
-        className="card_btns flex flex-between-center"
+        className="card_btns flex align-items-center justify-content-end"
         style={{ marginTop: "1rem" }}
       >
         <Link to={`/models/${model.id}`}>

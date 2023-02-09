@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Layout, Row, Col } from "antd";
+import { Layout, Row, Col, Button, Badge } from "antd";
 import { UserMenu } from "../ui/UserMenu";
+import usePayment from "../../hooks/usePayment";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Header = (props) => {
+  const { getCart } = usePayment();
+  const { cartCount } = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    getCart()
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  }, []);
+
   const style = {
     padding: 0,
     position: "sticky",
@@ -40,6 +52,15 @@ const Header = (props) => {
           )}
         </Col>
         <Col className="flex flex-center-center">
+          <div className="mr-8">
+            <Badge count={cartCount}>
+              <Link to="/payment">
+                <Button type="primary" className="px-5">
+                  Cart
+                </Button>
+              </Link>
+            </Badge>
+          </div>
           <UserMenu />
         </Col>
       </Row>
