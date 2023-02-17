@@ -7,6 +7,8 @@ import { Skeleton } from "antd";
 import ResetPassword from "../pages/ResetPassword";
 import AuthPagesLoader from "../components/ui/AuthPagesLoader";
 import Setting from "../pages/Setting";
+import Payment from "../components/ui/Payment";
+// import Payment from "../components/ui/TestCheckoutForm";
 
 // React lazy components
 const Converter = React.lazy(() => import("../pages/Converter"));
@@ -23,7 +25,9 @@ const ModelConcepts = React.lazy(() => import("../pages/ModelConcepts"));
 const ConceptDetails = React.lazy(() => import("../pages/ConceptDetails"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 const Signup = React.lazy(() => import("../pages/Signup"));
-const Payment = React.lazy(() => import("../pages/Payment"));
+const Cart = React.lazy(() => import("../components/ui/Cart"));
+// const Payment = React.lazy(() => import("../pages/Payment"));
+// const Payment = React.lazy(() => import("../components/ui/Payment"));
 const ForgotPassword = React.lazy(() => import("../pages/ForgotPassword"));
 
 function AppRoutes(props) {
@@ -219,10 +223,23 @@ function AppRoutes(props) {
         <Route
           path="/payment"
           element={
+            // <React.Suspense
+            //   fallback={<Skeleton active style={skeletonStyle} />}
+            // >
+            <Payment />
+            // </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/cart" element={<PrivateRoute />}>
+        <Route
+          path="/cart"
+          element={
             <React.Suspense
               fallback={<Skeleton active style={skeletonStyle} />}
             >
-              <Payment />
+              <Cart />
             </React.Suspense>
           }
         />

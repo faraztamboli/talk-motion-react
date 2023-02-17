@@ -4,6 +4,7 @@ import { MinusCircleOutlined } from "@ant-design/icons";
 import { PlusOutlined } from "@ant-design/icons/lib/icons";
 import usePayment from "../../hooks/usePayment";
 import useModels from "../../hooks/useModels";
+import useMessageApi from "../../hooks/useMessageApi";
 
 function ModelPrice(props) {
   const [supportedCurrencies, setSupportedCurrencies] = useState([]);
@@ -20,6 +21,7 @@ function ModelPrice(props) {
   return (
     <Modal
       open={props.open}
+      confirmLoading={props.loading}
       title="Set Model Price"
       okText="Update"
       cancelText="Cancel"
@@ -179,7 +181,10 @@ function ModelPrice(props) {
                               style={{
                                 maxWidth: 600,
                               }}
-                              initialValues={{ currency: "usd" }}
+                              initialValues={{
+                                currency: "usd",
+                                metered: [{ up_to: "inf" }],
+                              }}
                               autoComplete="off"
                             >
                               <Form.Item name="currency" className="flex">
@@ -199,6 +204,7 @@ function ModelPrice(props) {
                               <Form.List name="metered">
                                 {(fields, { add, remove }) => (
                                   <>
+                                    {console.log(fields)}
                                     {fields.map(
                                       ({ key, name, ...restField }) => (
                                         <Space
@@ -245,7 +251,7 @@ function ModelPrice(props) {
                                     <Form.Item>
                                       <Button
                                         type="dashed"
-                                        onClick={() => add()}
+                                        onClick={() => add("", 0)}
                                         block
                                         icon={<PlusOutlined />}
                                       >
@@ -271,17 +277,31 @@ function ModelPrice(props) {
 
 function App(props) {
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { setModelPrice } = useModels();
+  const { contextHolder, showMessage } = useMessageApi();
   const { model_id } = props;
+
   const onCreate = (values) => {
+    setLoading(true);
     console.log(values);
 
     // For OneTime
     if (values.usagetype === undefined && values.metered === undefined) {
       console.log(values);
       setModelPrice(model_id, values.unitprice, null, values.currency, null)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res);
+          setLoading(false);
+          setOpen(false);
+          showMessage("success", "Model Price Updated");
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+          setOpen(false);
+          showMessage("error", "Unable to update model price");
+        });
     }
 
     // For Recurring (Fixed)
@@ -296,15 +316,27 @@ function App(props) {
         usage_type: values.usage_type,
         interval_count: values.interval_count,
       })
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          console.log(res);
+          setLoading(false);
+          setOpen(false);
+          showMessage("success", "Model Price Updated");
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+          setOpen(false);
+          showMessage("error", "Unable to update model price");
+        });
     }
 
+    // For recurring (metered)
     if (values.metered !== undefined) {
       console.log("metered", values);
       let tiers_arr = [];
       values.metered.length > 0 &&
         values.metered.map((elem, index) => {
+          console.log(index);
           tiers_arr = [...tiers_arr, elem];
         });
       let lastInd = tiers_arr.length;
@@ -312,19 +344,31 @@ function App(props) {
 
       console.log(tiers_arr);
       values.metered.map((value, index) => {
+        console.log(value, index);
         setModelPrice(model_id, null, tiers_arr, values.currency, null)
-          .then((res) => console.log(res))
-          .catch((err) => console.log(err));
+          .then((res) => {
+            console.log(res);
+            setLoading(false);
+            setOpen(false);
+            showMessage("success", "Model Price Updated");
+          })
+          .catch((err) => {
+            console.log(err);
+            setLoading(false);
+            setOpen(false);
+            showMessage("error", "Unable to update model price");
+          });
       });
     }
-    // setOpen(false);
   };
 
   return (
     <>
+      {contextHolder}
       <div onClick={() => setOpen(true)}>Set Price</div>
 
       <ModelPrice
+        loading={loading}
         open={open}
         onCreate={onCreate}
         onCancel={() => setOpen(false)}

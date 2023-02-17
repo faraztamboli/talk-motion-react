@@ -67,7 +67,6 @@ const App = (props) => {
   const { contextHolder, showMessage } = useMessageApi();
   const { createNewModel, setLoading } = props;
 
-  const btnStyle = props.sm ? "medium" : "large";
   const iconSize = props.sm ? 20 : 24;
 
   function onCreate(values) {
@@ -93,13 +92,11 @@ const App = (props) => {
         <Button
           className="flex flex-center-center converter-btns"
           type="primary"
-          size={btnStyle}
-          shape="round"
+          size="middle"
           icon={<MdOutlineNewLabel size={iconSize} />}
           onClick={() => {
             setOpen(true);
           }}
-          style={{ padding: ".5rem 2rem" }}
         >
           Create Model
         </Button>

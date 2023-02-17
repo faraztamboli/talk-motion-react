@@ -12,6 +12,7 @@ const selectLayout = (Layout) => {
 
       // eslint-disable-next-line
       let firstPath = path === "/" ? "" : path.match(/^\/([^\/]+)/)[1];
+      console.log(firstPath);
 
       noAuthLayoutPages.includes(firstPath)
         ? setIsAuthLayout(() => false)

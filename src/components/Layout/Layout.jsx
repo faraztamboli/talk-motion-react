@@ -4,6 +4,7 @@ import Header from "../Layout/Header";
 import Sidebar from "../Layout/Sidebar";
 import selectLayout from "../HOCs/SelectLayout";
 import Footer from "./Footer";
+import { Content } from "antd/es/layout/layout";
 
 function AppLayout(props) {
   const style = {
@@ -12,40 +13,38 @@ function AppLayout(props) {
   };
   const layoutStyle = props.collapsed
     ? style
-    : { ...style, marginLeft: props.sideBarWidth };
+    : { ...style, marginLeft: props.sideBarWidth, paddingTop: "8rem" };
 
   return (
-    <>
-      <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh" }}>
+      <Header
+        collapsed={props.collapsed}
+        onCollapsed={props.onCollapsed}
+        sideBarWidth={props.sideBarWidth}
+        collapsedWidth={props.collapsedWidth}
+      />
+      <Layout hasSider>
         <Sidebar
           collapsed={props.collapsed}
           onCollapsed={props.onCollapsed}
           sideBarWidth={props.sideBarWidth}
           collapsedWidth={props.collapsedWidth}
         />
-        <Layout>
-          <Header
-            collapsed={props.collapsed}
-            onCollapsed={props.onCollapsed}
-            sideBarWidth={props.sideBarWidth}
-            collapsedWidth={props.collapsedWidth}
-          />
-          <div
-            className="site-layout-background"
-            style={{ minHeight: "100vh" }}
-          >
-            <Layout style={layoutStyle}>
-              <>{props.children}</>
-            </Layout>
-          </div>
-          <Footer
-            collapsed={props.collapsed}
-            collapsedWidth={props.collapsedWidth}
-            sideBarWidth={props.sideBarWidth}
-          />
-        </Layout>
+        <Content
+          className="site-layout-background"
+          style={{ minHeight: "100vh" }}
+        >
+          <Layout className="site-layout" style={layoutStyle}>
+            <>{props.children}</>
+          </Layout>
+        </Content>
       </Layout>
-    </>
+      <Footer
+        collapsed={props.collapsed}
+        collapsedWidth={props.collapsedWidth}
+        sideBarWidth={props.sideBarWidth}
+      />
+    </Layout>
   );
 }
 

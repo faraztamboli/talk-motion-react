@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Skeleton, Empty, Pagination } from "antd";
+import { Row, Col, Skeleton, Empty, Pagination, Input } from "antd";
 import { ModelsCard } from "../components/ui/ModelsCard";
 import useModels from "../hooks/useModels";
 import { modelsDetails } from "../data/PageDetails";
@@ -13,6 +13,8 @@ import useMessageApi from "../hooks/useMessageApi";
 
 export default function Models(props) {
   const [publicLoading, setPublicLoading] = useState(true);
+  const [searchBtnLoading, setSearchBtnLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [publicModels, setPublicModels] = useState([]);
   const [totalPublicModels, setTotalPublicModels] = useState();
   const [publicPage, setPublicPage] = useState(1);
@@ -28,6 +30,8 @@ export default function Models(props) {
   } = useModels();
 
   const dispatch = useDispatch();
+
+  const { Search } = Input;
 
   useEffect(() => {
     setPublicLoading(true);
@@ -45,8 +49,13 @@ export default function Models(props) {
 
   useEffect(() => {
     setPublicLoading(true);
-    getPublicModels("", (publicPage - 1) * publicPageSize, publicPageSize)
+    getPublicModels(
+      searchValue,
+      (publicPage - 1) * publicPageSize,
+      publicPageSize
+    )
       .then((res) => {
+        console.log(res[1]["count(*)"]);
         setPublicModels(res[0]);
         setTotalPublicModels(res[1]["count(*)"]);
         setPublicLoading(false);
@@ -64,7 +73,27 @@ export default function Models(props) {
     setPublicPageSize(pageSize);
   }
 
-  const modelStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
+  function onPublicModelsSearch(searchText) {
+    setSearchValue(searchText);
+    setSearchBtnLoading(true);
+    setPublicLoading(true);
+    getPublicModels(searchText, 0, 10)
+      .then((res) => {
+        setPublicModels(res[0]);
+        setTotalPublicModels(res[1]["count(*)"]);
+        setPublicLoading(false);
+        setSearchBtnLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setSearchBtnLoading(false);
+        setPublicLoading(false);
+      });
+  }
+
+  const modelStyle = props.sm
+    ? { padding: "15px", paddingTop: "70rem" }
+    : { padding: "24px", paddingTop: "70rem" };
   const emptyImgStyle = { filter: "saturate(12)" };
 
   const { title, description } = modelsDetails;
@@ -73,8 +102,18 @@ export default function Models(props) {
     <>
       {contextHolder}
       <MetaDecorator title={title} description={description} />
-      <div style={modelStyle} className="layout-bg mh-100vh">
-        <h2>Models Available for Purchase</h2>
+      <div style={modelStyle} className="layout-bg">
+        <div className="flex flex-between-center mb-4">
+          <h2>Models Available for Purchase</h2>
+          <Search
+            style={{ width: 300 }}
+            placeholder="search"
+            enterButton="Search"
+            size="middle"
+            loading={searchBtnLoading}
+            onSearch={onPublicModelsSearch}
+          />
+        </div>
         <Row gutter={[16, 16]} style={{ marginBottom: "3rem" }}>
           {!publicLoading && publicModels?.length > 0
             ? publicModels.map((model) => {

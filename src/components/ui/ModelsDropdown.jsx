@@ -29,7 +29,7 @@ export const ModelsDropdown = (props) => {
         .catch((err) => console.log(err));
 
     props.from === "converter" &&
-      getModelsUserCanUse()
+      getModelsUserCanUse("", 0, 999999)
         .then((res) => {
           setModels(res[0]);
         })

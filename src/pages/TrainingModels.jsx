@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Skeleton, Empty, Pagination } from "antd";
+import { Row, Col, Skeleton, Empty, Pagination, Input } from "antd";
 import { ModelsCard } from "../components/ui/ModelsCard";
 import useModels from "../hooks/useModels";
 import { modelsDetails } from "../data/PageDetails";
@@ -13,6 +13,8 @@ import useMessageApi from "../hooks/useMessageApi";
 
 export default function TrainingModels(props) {
   const [trainingLoading, setTrainingLoading] = useState(true);
+  const [searchBtnLoading, setSearchBtnLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [trainingModels, setTrainingModels] = useState([]);
   const [totalTrainingModels, setTotalTrainingModels] = useState();
   const [trainingPage, setTrainingPage] = useState(1);
@@ -28,11 +30,13 @@ export default function TrainingModels(props) {
 
   const dispatch = useDispatch();
 
+  const { Search } = Input;
+
   useEffect(() => {
     setTrainingLoading(true);
     console.log(trainingPage, trainingPageSize);
     getModelsUserCanTrain(
-      "",
+      searchValue,
       (trainingPage - 1) * trainingPageSize,
       trainingPageSize
     )
@@ -51,7 +55,7 @@ export default function TrainingModels(props) {
   useEffect(() => {
     setTrainingLoading(true);
     getModelsUserCanTrain(
-      "",
+      searchValue,
       (trainingPage - 1) * trainingPageSize,
       trainingPageSize
     )
@@ -73,7 +77,27 @@ export default function TrainingModels(props) {
     setTrainingPageSize(pageSize);
   }
 
-  const modelStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
+  function onUserModelsSearch(searchText) {
+    setSearchValue(searchText);
+    setSearchBtnLoading(true);
+    setTrainingLoading(true);
+    getModelsUserCanTrain(searchText, 0, 10)
+      .then((res) => {
+        setTrainingModels(res[0]);
+        setTotalTrainingModels(res[1]["count(*)"]);
+        setTrainingLoading(false);
+        setSearchBtnLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setSearchBtnLoading(false);
+        setTrainingLoading(false);
+      });
+  }
+
+  const modelStyle = props.sm
+    ? { padding: "15px", paddingTop: "50rem" }
+    : { padding: "24px", paddingTop: "50rem" };
   const emptyImgStyle = { filter: "saturate(12)" };
 
   const { title, description } = modelsDetails;
@@ -83,7 +107,17 @@ export default function TrainingModels(props) {
       {contextHolder}
       <MetaDecorator title={title} description={description} />
       <div style={modelStyle} className="layout-bg mh-100vh">
-        <h2>Training Models</h2>
+        <div className="flex flex-between-center">
+          <h2>Training Models</h2>
+          <Search
+            style={{ width: 300 }}
+            placeholder="search"
+            enterButton="Search"
+            size="middle"
+            loading={searchBtnLoading}
+            onSearch={onUserModelsSearch}
+          />
+        </div>
         <Row gutter={[16, 16]} style={{ marginBottom: "3rem" }}>
           {!trainingLoading && trainingModels?.length > 0
             ? trainingModels.map((model) => {

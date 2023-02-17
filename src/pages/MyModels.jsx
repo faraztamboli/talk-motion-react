@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Skeleton, Empty, Pagination } from "antd";
+import { Row, Col, Skeleton, Empty, Pagination, Input } from "antd";
 import useModels from "../hooks/useModels";
 import NewModel from "../components/ui/NewModel";
 import { ModelsCard } from "../components/ui/ModelsCard";
-import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
 import MetaDecorator from "../components/MetaDecorator";
 import { profileDetails } from "../data/PageDetails";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +14,8 @@ import useMessageApi from "../hooks/useMessageApi";
 
 export default function MyModels(props) {
   const [loading, setLoading] = useState(false);
+  const [searchBtnLoading, setSearchBtnLoading] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [userModels, setUserModels] = useState([]);
   const [totalUserModels, setTotalUserModels] = useState();
   const [userLoading, setUserLoading] = useState(true);
@@ -32,11 +33,13 @@ export default function MyModels(props) {
 
   const dispatch = useDispatch();
 
+  const { Search } = Input;
+
   const { modelPaginationSize } = useSelector((state) => state.model);
   const { currentModelPage } = useSelector((state) => state.model);
 
   useEffect(() => {
-    getUserModels('', (userPage - 1) * userPageSize, userPageSize)
+    getUserModels(searchValue, (userPage - 1) * userPageSize, userPageSize)
       .then((res) => {
         setUserLoading(false);
         setUserModels(res[0]);
@@ -50,7 +53,7 @@ export default function MyModels(props) {
 
   useEffect(() => {
     setUserLoading(true);
-    getUserModels('', (userPage - 1) * userPageSize, userPageSize)
+    getUserModels(searchValue, (userPage - 1) * userPageSize, userPageSize)
       .then((res) => {
         setUserModels(res[0]);
         setTotalUserModels(res[1]["count(*)"]);
@@ -65,7 +68,7 @@ export default function MyModels(props) {
   useEffect(() => {
     setUserLoading(true);
     getUserModels(
-      '',
+      searchValue,
       (currentModelPage - 1) * modelPaginationSize,
       modelPaginationSize
     )
@@ -87,8 +90,28 @@ export default function MyModels(props) {
     setUserPageSize(pageSize);
   }
 
+  function onUserModelsSearch(searchText) {
+    setSearchValue(searchText);
+    setSearchBtnLoading(true);
+    setUserLoading(true);
+    getUserModels(searchText, 0, 10)
+      .then((res) => {
+        setUserModels(res[0]);
+        setTotalUserModels(res[1]["count(*)"]);
+        setUserLoading(false);
+        setSearchBtnLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setSearchBtnLoading(false);
+        setUserLoading(false);
+      });
+  }
+
   const profileStyle =
-    props.collapseWidth === 0 ? { padding: 8 } : { padding: 24 };
+    props.collapseWidth === 0
+      ? { padding: 8, paddingTop: "55rem" }
+      : { padding: 24, paddingTop: "55rem" };
   const emptyImgStyle = { filter: "saturate(12)" };
 
   const { title, description } = profileDetails;
@@ -98,18 +121,23 @@ export default function MyModels(props) {
       {contextHolder}
       <MetaDecorator title={title} description={description} />
       <div style={profileStyle} className="layout-bg mh-100vh">
-        <div>
-          <UserMenuProfileItem size="large" />
-        </div>
-        <div className="details_section" style={{ marginTop: "2rem" }}>
-          <div className="flex flex-center-center mt-10">
+        <div className="details_section">
+          <div className="flex flex-between-center mb-5">
+            <h2>My Models</h2>
+            <Search
+              style={{ width: 300 }}
+              placeholder="search"
+              enterButton="Search"
+              size="middle"
+              loading={searchBtnLoading}
+              onSearch={onUserModelsSearch}
+            />
             <NewModel
               sm={props.sm}
               createNewModel={createNewModel}
               setLoading={setLoading}
             />
           </div>
-          <h2>My Models</h2>
           <Row gutter={[16, 16]}>
             {!userLoading && userModels?.length > 0
               ? userModels.map((model) => {

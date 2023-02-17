@@ -36,6 +36,13 @@ function UserModel(props) {
   };
 
   useEffect(() => {
+    console.log("inside useeffect");
+    getModel(1)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
     getModel(modelid)
       .then((res) => {
         setModelDetails(res);

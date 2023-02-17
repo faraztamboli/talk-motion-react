@@ -3,7 +3,7 @@ import { Button, Tooltip } from "antd";
 import { SoundFilled } from "@ant-design/icons";
 import { MdFullscreen } from "react-icons/md";
 import VoiceToGestureVideo from "./VoiceToGestureVideo";
-import useSpeechRecognition from "../../hooks/useSpeechRecognition";
+import useVoiceToGesture from "../../hooks/useVoiceToGesture";
 import { useSelector } from "react-redux";
 import useMessageApi from "../../hooks/useMessageApi";
 
@@ -11,7 +11,7 @@ export const VoiceToGesture = (props) => {
   const [fullScreen, setFullScreen] = React.useState(false);
 
   const { startListening, stopListening, isListening, videoRef, transcript } =
-    useSpeechRecognition();
+    useVoiceToGesture();
   const { contextHolder, showMessage } = useMessageApi();
 
   const { modelId } = useSelector((state) => state.model);

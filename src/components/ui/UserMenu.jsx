@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Drawer } from "antd";
 import { userMenu } from "../../data";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,20 +21,24 @@ export const UserMenu = () => {
   };
 
   useEffect(() => {
-      getUserProfile()
-        .then((res) => {
-          console.log(res);
-          dispatch(setProfileImg(res.sm_img));
-        })
-        .catch((err) => console.log(err));
-      // destructor for the component
-      // return () => {};
+    getUserProfile()
+      .then((res) => {
+        console.log(res);
+        dispatch(setProfileImg(res.sm_img));
+      })
+      .catch((err) => console.log(err));
+    // destructor for the component
+    // return () => {};
   }, []);
+
+  // check if the profile img is empty
+  let pattern = /^null/;
+  let isProfileImg = !pattern.test(profileImg);
 
   return (
     <>
       <img
-        src={profileImg ? profileImg : userIcon}
+        src={isProfileImg ? profileImg : userIcon}
         alt="user image"
         className=" w-2rem"
         style={{ cursor: "pointer" }}

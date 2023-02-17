@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Col, Form, Row, Input, Button } from "antd";
-import { MdCode, MdCreditCard, MdLock } from "react-icons/md";
+// import { Col, Form, Row, Input, Button } from "antd";
+// import { MdCode, MdCreditCard, MdLock } from "react-icons/md";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx");
 
 function PaymentForm() {
-  const [error, setError] = useState(null);
+  const [, /* error */ setError] = useState(null);
   const [stripe, setStripe] = useState(null);
   const [cardElement, setCardElement] = useState(null);
 

@@ -35,8 +35,6 @@ function useModels() {
   }
 
   function getUserModels(search_text, offset, end) {
-    offset = 0;
-    end = 99999;
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getUsersModels(
@@ -281,8 +279,6 @@ function useModels() {
   }
 
   function getModelsUserCanTrain(searchText, offset, end) {
-    offset = 0;
-    end = 9999;
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getModelsUserCanTrain(
@@ -302,15 +298,12 @@ function useModels() {
     });
   }
 
-  function getModelsUserCanUse() {
-    let offset = 0;
-    let end = 9999999;
-    let search_text = "";
+  function getModelsUserCanUse(searchText, offset, end) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getModelsUserCanUse(
           token,
-          search_text,
+          searchText,
           offset,
           end,
           function (res) {
@@ -370,16 +363,15 @@ function useModels() {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.addOrRemoveCartProduct(
           token,
-          product_id,
-          quantity,
+          Number(product_id),
+          Number(quantity),
           function (res) {
-            console.log(res);
             resolve(res);
             setTimeout(() => {
               getCart()
                 .then((res) => console.log(res))
                 .catch((err) => console.log(err));
-            }, 1000);
+            }, 100);
           }
         );
       } catch (err) {
@@ -392,6 +384,7 @@ function useModels() {
   function setCartProductQuantity(product_id, quantity) {
     return new Promise((resolve, reject) => {
       try {
+        console.log(product_id, quantity, "line 400");
         JS2Py.PythonFunctions.TalkMotionServer.setCartProductQuantity(
           token,
           product_id,

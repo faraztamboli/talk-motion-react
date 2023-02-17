@@ -19,7 +19,7 @@ const Header = (props) => {
   const style = {
     padding: 0,
     position: "sticky",
-    top: 0,
+    top: -2,
     zIndex: 1,
     width: "auto",
     marginLeft: props.collapsedWidth,
@@ -54,7 +54,7 @@ const Header = (props) => {
         <Col className="flex flex-center-center">
           <div className="mr-8">
             <Badge count={cartCount}>
-              <Link to="/payment">
+              <Link to="/cart">
                 <Button type="primary" className="px-5">
                   Cart
                 </Button>

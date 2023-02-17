@@ -7,7 +7,7 @@ import useModels from "../hooks/useModels";
 
 function Payment() {
   const { getCart } = usePayment();
-  const { setCartProductQuantity } = useModels();
+  const { addOrRemoveCartProduct } = useModels();
   return (
     <>
       <div className="purchase-model-list ">
@@ -15,7 +15,7 @@ function Payment() {
           <Col span={12} xs={24} lg={12} className="payment-first-col">
             <Cart
               getCart={getCart}
-              setCartProductQuantity={setCartProductQuantity}
+              addOrRemoveCartProduct={addOrRemoveCartProduct}
             />
           </Col>
           <Col span={12} xs={24} lg={12} className="payment-second-col">
