@@ -106,7 +106,7 @@ export const ModelsCard = (props) => {
       text={
         model?.badge.includes("purchased")
           ? model?.recurring
-            ? `$${model?.price}/${JSON.parse(model?.recurring)?.interval}`
+            ? `$${model?.price/100}/${JSON.parse(model?.recurring)?.interval}`
             : model?.badge
           : model?.badge
       }
