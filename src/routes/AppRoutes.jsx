@@ -7,8 +7,8 @@ import { Skeleton } from "antd";
 import ResetPassword from "../pages/ResetPassword";
 import AuthPagesLoader from "../components/ui/AuthPagesLoader";
 import Setting from "../pages/Setting";
-import Payment from "../components/ui/Payment";
-// import Payment from "../components/ui/TestCheckoutForm";
+// import Payment from "../components/ui/Payment";
+import Payment from "../components/ui/TestCheckoutForm";
 
 // React lazy components
 const Converter = React.lazy(() => import("../pages/Converter"));

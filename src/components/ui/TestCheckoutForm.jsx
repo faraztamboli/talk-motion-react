@@ -7,10 +7,10 @@ import usePayment from "../../hooks/usePayment";
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
 const stripePromise = loadStripe(
-  "pk_test_51MTjNdFiKYZ3UHA3O5m6HW7KBuN8wfvbfgqpzXqrzK4iJW4JpDDRxt1sYynYHS7dk5B1AmbB3q4TQtxb0TTcEZw500WO7YxCZI",
-  {
-    stripeAccount: "acct_1MTjNdFiKYZ3UHA3",
-  }
+  "pk_test_51MTjNdFiKYZ3UHA3O5m6HW7KBuN8wfvbfgqpzXqrzK4iJW4JpDDRxt1sYynYHS7dk5B1AmbB3q4TQtxb0TTcEZw500WO7YxCZI"
+  // {
+  //   stripeAccount: "acct_1MTjNdFiKYZ3UHA3",
+  // }
 );
 
 class CheckoutForm extends React.Component {
@@ -73,8 +73,9 @@ export default function App() {
   const { purchaseCart } = usePayment();
   React.useEffect(() => {
     purchaseCart().then((res) => {
-      console.log(res[7].subscription.client_secret);
-      setClientSecret(res[7].subscription.client_secret);
+      console.log(res);
+      console.log(res[24]?.subscription.client_secret);
+      setClientSecret(res[24]?.subscription.client_secret);
     });
   }, []);
   const options = {

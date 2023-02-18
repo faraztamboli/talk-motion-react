@@ -19,9 +19,9 @@ const Header = (props) => {
   const style = {
     padding: 0,
     position: "sticky",
-    top: -2,
+    top: 0,
     zIndex: 1,
-    width: "auto",
+    width: "100%",
     marginLeft: props.collapsedWidth,
     transition: "all .10s ease-in-out",
   };

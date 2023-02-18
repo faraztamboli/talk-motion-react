@@ -109,9 +109,7 @@ export default function MyModels(props) {
   }
 
   const profileStyle =
-    props.collapseWidth === 0
-      ? { padding: 8, paddingTop: "55rem" }
-      : { padding: 24, paddingTop: "55rem" };
+    props.collapseWidth === 0 ? { padding: 8 } : { padding: 24 };
   const emptyImgStyle = { filter: "saturate(12)" };
 
   const { title, description } = profileDetails;

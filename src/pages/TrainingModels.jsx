@@ -95,9 +95,7 @@ export default function TrainingModels(props) {
       });
   }
 
-  const modelStyle = props.sm
-    ? { padding: "15px", paddingTop: "50rem" }
-    : { padding: "24px", paddingTop: "50rem" };
+  const modelStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
   const emptyImgStyle = { filter: "saturate(12)" };
 
   const { title, description } = modelsDetails;

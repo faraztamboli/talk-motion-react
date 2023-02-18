@@ -91,9 +91,7 @@ export default function Models(props) {
       });
   }
 
-  const modelStyle = props.sm
-    ? { padding: "15px", paddingTop: "70rem" }
-    : { padding: "24px", paddingTop: "70rem" };
+  const modelStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
   const emptyImgStyle = { filter: "saturate(12)" };
 
   const { title, description } = modelsDetails;
@@ -102,7 +100,7 @@ export default function Models(props) {
     <>
       {contextHolder}
       <MetaDecorator title={title} description={description} />
-      <div style={modelStyle} className="layout-bg">
+      <div style={modelStyle} className="layout-bg mh-100vh">
         <div className="flex flex-between-center mb-4">
           <h2>Models Available for Purchase</h2>
           <Search

@@ -13,10 +13,10 @@ function AppLayout(props) {
   };
   const layoutStyle = props.collapsed
     ? style
-    : { ...style, marginLeft: props.sideBarWidth, paddingTop: "8rem" };
+    : { ...style, marginLeft: props.sideBarWidth };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout className="mh-100vh">
       <Header
         collapsed={props.collapsed}
         onCollapsed={props.onCollapsed}
@@ -30,11 +30,8 @@ function AppLayout(props) {
           sideBarWidth={props.sideBarWidth}
           collapsedWidth={props.collapsedWidth}
         />
-        <Content
-          className="site-layout-background"
-          style={{ minHeight: "100vh" }}
-        >
-          <Layout className="site-layout" style={layoutStyle}>
+        <Content className="site-layout-background mh-100vh">
+          <Layout className="site-layout mh-100vh" style={layoutStyle}>
             <>{props.children}</>
           </Layout>
         </Content>

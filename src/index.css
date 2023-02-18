@@ -1062,13 +1062,13 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 
 
 
-.App {
+/* .App {
   font-family: sans-serif;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 
 .StripeElement {
   margin: 15px auto;
