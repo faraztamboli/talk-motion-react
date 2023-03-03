@@ -7,8 +7,8 @@ import { Skeleton } from "antd";
 import ResetPassword from "../pages/ResetPassword";
 import AuthPagesLoader from "../components/ui/AuthPagesLoader";
 import Setting from "../pages/Setting";
-// import Payment from "../components/ui/Payment";
-import Payment from "../components/ui/TestCheckoutForm";
+import Payment from "../components/ui/Payment";
+// import Payment from "../components/ui/TestCheckoutForm";
 
 // React lazy components
 const Converter = React.lazy(() => import("../pages/Converter"));
@@ -19,6 +19,16 @@ const UploadVideo = React.lazy(() => import("../components/ui/UploadVideo"));
 const Models = React.lazy(() => import("../pages/Models"));
 const MyModels = React.lazy(() => import("../pages/MyModels"));
 const TrainingModels = React.lazy(() => import("../pages/TrainingModels"));
+const VideoSubtitlesDesigner = React.lazy(() =>
+  import("../pages/VideoSubtitlesDesigner")
+);
+const VideoSubtitlesLibrary = React.lazy(() =>
+  import("../pages/VideoSubtitlesLibrary")
+);
+const VideoWithSubtitles = React.lazy(() =>
+  import("../pages/VideoWithSubtitles")
+);
+const FolderManager = React.lazy(() => import("../pages/FolderManager"));
 const UserModel = React.lazy(() => import("../pages/UserModel"));
 const ModelFiles = React.lazy(() => import("../pages/ModelFiles"));
 const ModelConcepts = React.lazy(() => import("../pages/ModelConcepts"));
@@ -191,6 +201,77 @@ function AppRoutes(props) {
         />
       </Route>
 
+      <Route path="/video-subtitles/designer" element={<PrivateRoute />}>
+        <Route
+          path="/video-subtitles/designer"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <VideoSubtitlesDesigner />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/video-subtitles/library" element={<PrivateRoute />}>
+        <Route
+          path="/video-subtitles/library"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <VideoSubtitlesLibrary />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route
+        path="/video-subtitles/library/:recordingId"
+        element={<PrivateRoute />}
+      >
+        <Route
+          path="/video-subtitles/library/:recordingId"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <VideoWithSubtitles />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/video-subtitles/folder-manager" element={<PrivateRoute />}>
+        <Route
+          path="/video-subtitles/folder-manager"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <FolderManager />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route
+        path="/video-subtitles/folder-manager/:folderId"
+        element={<PrivateRoute />}
+      >
+        <Route
+          path="/video-subtitles/folder-manager/:folderId"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <FolderManager />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
       <Route path="/profile" element={<PrivateRoute />}>
         <Route
           path="/profile"
@@ -227,7 +308,7 @@ function AppRoutes(props) {
             //   fallback={<Skeleton active style={skeletonStyle} />}
             // >
             <Payment />
-            // </React.Suspense>
+            // {/* </React.Suspense> */}
           }
         />
       </Route>

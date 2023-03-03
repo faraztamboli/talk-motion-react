@@ -7,6 +7,8 @@ import trainerSlice from "./features/trainerSlice";
 import speechSlice from "./features/speechSlice";
 import converterSlice from "./features/converterSlice";
 import cartSlice from "./features/cartSlice";
+import subtitleRecordingSlice from "./features/subtitleRecordingSlice";
+import subtitleRecordingButtonSlice from "./features/subtitleRecordingButtonSlice";
 
 const rootReducer = {
   login: loginReducer,
@@ -18,6 +20,8 @@ const rootReducer = {
   speech: speechSlice,
   converter: converterSlice,
   cart: cartSlice,
+  subtitleRecording: subtitleRecordingSlice,
+  subtitleRecordingButton: subtitleRecordingButtonSlice,
 };
 
 export default rootReducer;

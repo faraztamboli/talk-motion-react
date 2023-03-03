@@ -103,14 +103,8 @@ export const ModelsCard = (props) => {
 
   return (
     <Badge.Ribbon
-      text={
-        model?.badge.includes("purchased")
-          ? model?.recurring
-            ? `$${model?.price/100}/${JSON.parse(model?.recurring)?.interval}`
-            : model?.badge
-          : model?.badge
-      }
-      color={model?.badge === "purchased" ? "purple" : "green"}
+      text={model?.badge}
+      color={model?.badge === "purchased" ? "green" : "purple"}
     >
       <Card
         bordered={false}
@@ -150,6 +144,17 @@ export const ModelsCard = (props) => {
           <h2 className="models-card-heading">{model.title}</h2>
           <h3 className="models-card-description">{model.description}</h3>
         </div>
+
+        {model.price && (
+          <div>
+            <h2>
+              ${model.price / 100} /{" "}
+              {model.recurring
+                ? JSON.parse(model?.recurring).interval
+                : "lifetime"}
+            </h2>
+          </div>
+        )}
 
         <div className="trainer_div" style={{ marginTop: "1rem" }}>
           <h2 className="contributors-heading">Trainers</h2>

@@ -9,6 +9,10 @@ import {
   MdFileUpload,
   MdModelTraining,
   MdOutlineCollectionsBookmark,
+  MdOutlineDesignServices,
+  MdOutlineFolderSpecial,
+  MdOutlineSubtitles,
+  MdOutlineVideoLibrary,
 } from "react-icons/md";
 
 function getItem(label, key, icon, children, path) {
@@ -104,6 +108,43 @@ const items = [
       ),
     ],
     "/models"
+  ),
+  getItem(
+    "Video Subtitles",
+    "4",
+    <Link to="/video-subtitles">
+      <MdOutlineSubtitles />
+    </Link>,
+    [
+      getItem(
+        "Subtitles Library",
+        "41",
+        <Link to="/video-subtitles/library">
+          <MdOutlineVideoLibrary />
+        </Link>,
+        null,
+        "/video-subtitles/library"
+      ),
+      getItem(
+        "Subtitles Designer",
+        "42",
+        <Link to="/video-subtitles/designer">
+          <MdOutlineDesignServices />
+        </Link>,
+        null,
+        "/video-subtitles/designer"
+      ),
+      getItem(
+        "Folder Manager",
+        "43",
+        <Link to="/video-subtitles/folder-manager">
+          <MdOutlineFolderSpecial />
+        </Link>,
+        null,
+        "/video-subtitles/folder-manager"
+      ),
+    ],
+    "/video-subtitles"
   ),
 ];
 
