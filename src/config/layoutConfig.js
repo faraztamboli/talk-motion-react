@@ -7,12 +7,11 @@ const noAuthLayoutPages = [
   "trainer/train",
   "trainer/upload",
   "models",
-  // "models/my-models",
-  // "models/training-models",
   "profile",
   "my-models",
   "setting",
   "uploadvideo",
+  "video-subtitles",
 ];
 
 export { noAuthLayoutPages };
