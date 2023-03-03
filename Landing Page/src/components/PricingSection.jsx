@@ -30,7 +30,7 @@ function PricingSection() {
                   <h4>Pro</h4>
                   <h6>Full Package</h6>
                   <span className="pricing-span">$</span>
-                  <strong>9.95</strong>
+                  <strong>14.95</strong>
                   <span className="pricing-span">/month</span>
                   <p>With this package you can convert voice -> gesture & vice versa; build custom gestures</p>
                   <Link to={"/payment"} className="card-btn-link">

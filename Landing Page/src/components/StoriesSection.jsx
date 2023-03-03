@@ -21,7 +21,7 @@ function StoriesSection() {
           <Col span={7} xs={24} md={12} lg={7} className="stories-card-col">
             <div className="card stories-card">
               <img src={unsplash_1} alt="example" />
-              <h4>Faraz named America's National Top Young Scientist for inventing TalkMotion</h4>
+              <h4>Faraz named finalist for America's National Top Young Scientist for inventing TalkMotion</h4>
               <p>
               Faraz invented TalkMotion, a talking device for deaf and 
               aphonic children, that turns a sign language gesture into 
