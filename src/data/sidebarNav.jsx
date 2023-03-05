@@ -36,61 +36,43 @@ const items = [
     "/converter"
   ),
   getItem(
-    "Trainer",
-    "2",
-    <Link to="/trainer">
-      <DesktopOutlined />
+    "Signed Videos",
+    "4",
+    <Link to="/video-subtitles">
+      <MdOutlineSubtitles />
     </Link>,
     [
       getItem(
-        "Upload",
-        "23",
-        <Link to="/trainer/upload">
-          <MdFileUpload />
+        "My Videos",
+        "41",
+        <Link to="/video-subtitles/mylibrary">
+          <MdOutlineVideoLibrary />
         </Link>,
         null,
-        "/trainer/upload"
+        "/video-subtitles/mylibrary"
       ),
       getItem(
-        "Collect",
-        "21",
-        <Link to="/trainer/collect">
-          <MdOutlineCollectionsBookmark />
+        "My Courses",
+        "43",
+        <Link to="/video-subtitles/folder-manager">
+          <MdOutlineFolderSpecial />
         </Link>,
         null,
-        "/trainer/collect"
-      ),
-      getItem(
-        "Train",
-        "22",
-        <Link to="/trainer/train">
-          <MdModelTraining />
-        </Link>,
-        null,
-        "/trainer/train"
+        "/video-subtitles/folder-manager"
       ),
     ],
-    "/trainer"
+    "/video-subtitles"
   ),
   getItem(
     "Models",
-    "3",
+    "2",
     <Link to="/models">
       <FileOutlined />
     </Link>,
     [
       getItem(
-        "Store",
-        "31",
-        <Link to="/models">
-          <FileOutlined />
-        </Link>,
-        null,
-        "/models"
-      ),
-      getItem(
         "My Models",
-        "32",
+        "21",
         <Link to="/my-models">
           <MdOutlineCollectionsBookmark />
         </Link>,
@@ -99,7 +81,7 @@ const items = [
       ),
       getItem(
         "I'm Training",
-        "33",
+        "22",
         <Link to="/models/training-models">
           <FileOutlined />
         </Link>,
@@ -110,15 +92,24 @@ const items = [
     "/models"
   ),
   getItem(
-    "Video Subtitles",
-    "4",
-    <Link to="/video-subtitles">
-      <MdOutlineSubtitles />
+    "Store",
+    "5",
+    <Link to="/models">
+      <FileOutlined />
     </Link>,
     [
       getItem(
-        "Subtitles Library",
-        "41",
+        "Models",
+        "61",
+        <Link to="/models">
+          <FileOutlined />
+        </Link>,
+        null,
+        "/models"
+      ),
+      getItem(
+        "Videos",
+        "62",
         <Link to="/video-subtitles/library">
           <MdOutlineVideoLibrary />
         </Link>,
@@ -126,17 +117,17 @@ const items = [
         "/video-subtitles/library"
       ),
       getItem(
-        "Subtitles Designer",
-        "42",
-        <Link to="/video-subtitles/designer">
-          <MdOutlineDesignServices />
+        "Classrooms",
+        "63",
+        <Link to="/my-models">
+          <MdOutlineCollectionsBookmark />
         </Link>,
         null,
-        "/video-subtitles/designer"
+        "/my-models"
       ),
       getItem(
-        "Folder Manager",
-        "43",
+        "Courses",
+        "64",
         <Link to="/video-subtitles/folder-manager">
           <MdOutlineFolderSpecial />
         </Link>,
@@ -145,6 +136,52 @@ const items = [
       ),
     ],
     "/video-subtitles"
+  ),
+  getItem(
+    "Trainer",
+    "3",
+    <Link to="/trainer">
+      <DesktopOutlined />
+    </Link>,
+    [
+      getItem(
+        "Upload",
+        "31",
+        <Link to="/trainer/upload">
+          <MdFileUpload />
+        </Link>,
+        null,
+        "/trainer/upload"
+      ),
+      getItem(
+        "Collect",
+        "32",
+        <Link to="/trainer/collect">
+          <MdOutlineCollectionsBookmark />
+        </Link>,
+        null,
+        "/trainer/collect"
+      ),
+      getItem(
+        "Train",
+        "33",
+        <Link to="/trainer/train">
+          <MdModelTraining />
+        </Link>,
+        null,
+        "/trainer/train"
+      ),
+      getItem(
+        "Subtitle Designer",
+        "42",
+        <Link to="/video-subtitles/designer">
+          <MdOutlineDesignServices />
+        </Link>,
+        null,
+        "/video-subtitles/designer"
+      ),
+    ],
+    "/trainer"
   ),
 ];
 

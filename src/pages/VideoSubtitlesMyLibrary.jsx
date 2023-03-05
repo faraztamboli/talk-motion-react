@@ -3,7 +3,7 @@ import { Card, Col, Empty, Input, Row, Skeleton } from "antd";
 import useSubtitleVideos from "../hooks/useSubtitleVideos";
 import { Link } from "react-router-dom";
 
-function VideoSubtitlesLibrary() {
+function VideoSubtitlesMyLibrary() {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [videoRecordings, setVideoRecordings] = useState([]);
@@ -21,7 +21,7 @@ function VideoSubtitlesLibrary() {
 
   useEffect(() => {
     setLoading(true);
-    getPublicVideoRecordings(searchText)
+    getMyVideoRecordings(searchText)
       .then((res) => {
         setVideoRecordings(res);
         setLoading(false);
@@ -77,4 +77,4 @@ function VideoSubtitlesLibrary() {
   );
 }
 
-export default VideoSubtitlesLibrary;
+export default VideoSubtitlesMyLibrary;

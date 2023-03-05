@@ -25,6 +25,9 @@ const VideoSubtitlesDesigner = React.lazy(() =>
 const VideoSubtitlesLibrary = React.lazy(() =>
   import("../pages/VideoSubtitlesLibrary")
 );
+const VideoSubtitlesMyLibrary = React.lazy(() =>
+  import("../pages/VideoSubtitlesMyLibrary")
+);
 const VideoWithSubtitles = React.lazy(() =>
   import("../pages/VideoWithSubtitles")
 );
@@ -222,6 +225,19 @@ function AppRoutes(props) {
               fallback={<Skeleton active style={skeletonStyle} />}
             >
               <VideoSubtitlesLibrary />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/video-subtitles/mylibrary" element={<PrivateRoute />}>
+        <Route
+          path="/video-subtitles/mylibrary"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <VideoSubtitlesMyLibrary />
             </React.Suspense>
           }
         />

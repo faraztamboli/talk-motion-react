@@ -15,7 +15,7 @@ function FolderManager() {
   const emptyImgStyle = { filter: "saturate(12)" };
 
   useEffect(() => {
-    getChildFolders(4)
+    getChildFolders(null)
       .then((res) => {
         console.log(res);
         setFolders(res);
