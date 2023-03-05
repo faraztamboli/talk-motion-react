@@ -10,6 +10,8 @@ function useSubtitleVideos() {
         JS2Py.PythonFunctions.TalkMotionServer.getPublicVideoRecordings(
           token,
           searchText,
+          0,
+          -1,
           function (res) {
             console.log(res);
             resolve(res);
@@ -25,9 +27,11 @@ function useSubtitleVideos() {
   function getMyVideoRecordings(searchText) {
     return new Promise((resolve, reject) => {
       try {
-        JS2Py.PythonFunctions.TalkMotionServer.getMyVideoRecordings(
+        JS2Py.PythonFunctions.TalkMotionServer.getVideoRecordingsICanUse(
           token,
           searchText,
+          0,
+          -1,
           function (res) {
             console.log(res);
             resolve(res);
