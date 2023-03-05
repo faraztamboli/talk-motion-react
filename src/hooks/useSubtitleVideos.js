@@ -11,7 +11,7 @@ function useSubtitleVideos() {
           token,
           searchText,
           0,
-          -1,
+          100000,
           function (res) {
             console.log(res);
             resolve(res);
@@ -31,7 +31,7 @@ function useSubtitleVideos() {
           token,
           searchText,
           0,
-          -1,
+          100000,
           function (res) {
             console.log(res);
             resolve(res);
