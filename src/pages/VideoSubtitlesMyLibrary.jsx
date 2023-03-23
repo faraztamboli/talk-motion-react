@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Card, Col, Empty, Input, Row, Skeleton } from "antd";
 import useSubtitleVideos from "../hooks/useSubtitleVideos";
 import { Link } from "react-router-dom";
-import UserInfoImage from "../components/ui/UserInfoImg";
 
-function VideoSubtitlesLibrary() {
+function VideoSubtitlesMyLibrary() {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [videoRecordings, setVideoRecordings] = useState([]);
@@ -22,11 +21,7 @@ function VideoSubtitlesLibrary() {
 
   useEffect(() => {
     setLoading(true);
-<<<<<<< HEAD
-    getVideoRecordings(searchText, 0, 9999)
-=======
-    getPublicVideoRecordings(searchText)
->>>>>>> 504e0093ace3d5d70144a9c89c51faedf6abd6ec
+    getMyVideoRecordings(searchText)
       .then((res) => {
         setVideoRecordings(res);
         setLoading(false);
@@ -65,15 +60,7 @@ function VideoSubtitlesLibrary() {
                       }/maxresdefault.jpg`}
                       alt={video.original_video_title}
                     />
-                    <div className="flex align-items-center">
-                      <div className="h-100p">
-                        <UserInfoImage
-                          username={video.create_user}
-                          image={video.sm_img}
-                        />
-                      </div>
-                      <h3 className="ml-4">{video.original_video_title}</h3>
-                    </div>
+                    <h3>{video.original_video_title}</h3>
                   </Card>
                 </Link>
               </Col>
@@ -90,4 +77,4 @@ function VideoSubtitlesLibrary() {
   );
 }
 
-export default VideoSubtitlesLibrary;
+export default VideoSubtitlesMyLibrary;

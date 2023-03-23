@@ -97,7 +97,7 @@ export const ModelsCard = (props) => {
 
     {
       key: "5",
-      label: <ModelPrice model_id={model.id} />,
+      label: <ModelPrice model_id={model.id} product_id={model.product_id}/>,
     },
   ];
 

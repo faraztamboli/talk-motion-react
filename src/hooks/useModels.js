@@ -358,6 +358,28 @@ function useModels() {
     });
   }
 
+  function setProductPrice(product_id, unitamount, tiers, currency, recurring) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.setProductPrice(
+          token,
+          product_id,
+          unitamount,
+          tiers,
+          currency,
+          recurring,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   function addOrRemoveCartProduct(product_id, quantity) {
     return new Promise((resolve, reject) => {
       try {
@@ -440,6 +462,7 @@ function useModels() {
     getModelsUserCanUse,
     deleteModelConceptSample,
     setModelPrice,
+    setProductPrice,
     addOrRemoveCartProduct,
     setCartProductQuantity,
     getUsersModelsByUserName,

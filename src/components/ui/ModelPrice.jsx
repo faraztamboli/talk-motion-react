@@ -278,9 +278,9 @@ function ModelPrice(props) {
 function App(props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { setModelPrice } = useModels();
+  const { setModelPrice, setProductPrice } = useModels();
   const { contextHolder, showMessage } = useMessageApi();
-  const { model_id } = props;
+  const { model_id, product_id } = props;
 
   const onCreate = (values) => {
     setLoading(true);
@@ -289,7 +289,7 @@ function App(props) {
     // For OneTime
     if (values.usagetype === undefined && values.metered === undefined) {
       console.log(values);
-      setModelPrice(model_id, values.unitprice, null, values.currency, null)
+      setProductPrice(product_id, values.unitprice, null, values.currency, null)
         .then((res) => {
           console.log(res);
           setLoading(false);
@@ -311,7 +311,7 @@ function App(props) {
       values.metered === undefined
     ) {
       console.log(values);
-      setModelPrice(model_id, values.unitprice, null, values.currency, {
+      setProductPrice(product_id, values.unitprice, null, values.currency, {
         interval: values.interval,
         usage_type: values.usage_type,
         interval_count: values.interval_count,
@@ -345,7 +345,7 @@ function App(props) {
       console.log(tiers_arr);
       values.metered.map((value, index) => {
         console.log(value, index);
-        setModelPrice(model_id, null, tiers_arr, values.currency, null)
+        setProductPrice(product_id, null, tiers_arr, values.currency, null)
           .then((res) => {
             console.log(res);
             setLoading(false);
