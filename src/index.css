@@ -1069,6 +1069,9 @@ header.ant-layout-header.site-layout-background .anticon.anticon-menu-unfold.tri
 .payment-form-btn {
   border-radius: 4.563rem !important;
 }
+.ant-list-item-meta-title {
+  margin-top: 0px !important;
+}
 
 
 
@@ -1136,4 +1139,40 @@ h4.product-price {
   margin-bottom: 30px;
   color: #777;
   font-weight: 500;
+}
+
+
+
+.record-button {
+  width: 35px;
+  height: 35px;
+  font-size: 0;
+  background-color: red;
+  border: 0;
+  border-radius: 35px;
+  margin: 18px;
+  outline: none;
+}
+
+.notRec{
+  background-color: darkred;
+}
+
+.Rec{
+  animation-name: pulse;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes pulse{
+  0%{
+    box-shadow: 0px 0px 5px 0px rgba(173,0,0,.3);
+  }
+  65%{
+    box-shadow: 0px 0px 5px 13px rgba(173,0,0,.3);
+  }
+  90%{
+    box-shadow: 0px 0px 5px 13px rgba(173,0,0,0);
+  }
 }

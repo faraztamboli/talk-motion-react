@@ -1,26 +1,21 @@
 import JS2Py from "../../remotepyjs";
 import useLocalStorage from "../useLocalStorage";
-import recording from "../video_subtitles_classes/recording";
-import recording_shot from "../video_subtitles_classes/recordingShot";
-import RecordingState from "../video_subtitles_classes/recordingState";
-import youtube_player from "../video_subtitles_classes/youtubePlayer";
 
 function useSlSubtitles() {
   const [token] = useLocalStorage("token");
 
-  const state = new RecordingState();
-
   function getCurrentRecording() {
-    try {
-      if (state.youtube_player == null) return "error";
+    // eslint-disable-next-line
+    if (state == null || state.youtube_player == null) alert("ERROR");
 
-      // else
-      let originalRecordingURL = state.youtube_player?.get_video_url();
+    // else
+    // eslint-disable-next-line
+    let video_code = state.youtube_player.get_video_code();
+    // eslint-disable-next-line
+    let originalRecordingURL = state.youtube_player.get_video_url();
 
-      return state.recordings[originalRecordingURL];
-    } catch (err) {
-      console.log(err);
-    }
+    // eslint-disable-next-line
+    return state.recordings[originalRecordingURL];
   }
 
   function hasGetUserMedia() {
@@ -34,6 +29,7 @@ function useSlSubtitles() {
 
   function loadYouTubeURLOnRecordIdChange(recordingId) {
     let withShots = false;
+    // eslint-disable-next-line
     state.is_recorder ? (withShots = true) : (withShots = false);
 
     JS2Py.PythonFunctions.TalkMotionServer.getVideoRecording(
@@ -42,18 +38,24 @@ function useSlSubtitles() {
       withShots,
       function (result) {
         console.log(result);
+        // eslint-disable-next-line
         state.youtube_player = new youtube_player(
           "youtube_video_frame",
           result.original_video_url,
+          // eslint-disable-next-line
           state.on_ready_callback,
+          // eslint-disable-next-line
           state.on_player_state_changed_callback
         );
+        // eslint-disable-next-line
         let original_video_url = state.youtube_player.get_video_url();
+        // eslint-disable-next-line
         state.recordings[original_video_url] = new recording(
           result.title,
           result.description,
           original_video_url
         );
+        // eslint-disable-next-line
         state.recordings[original_video_url].set_info(
           result.original_video_title,
           result.original_video_author,
@@ -67,6 +69,7 @@ function useSlSubtitles() {
         );
         for (let i in result.recording_shots) {
           let rshot = result.recording_shots[i];
+          // eslint-disable-next-line
           let shot = new recording_shot(
             rshot.session_id,
             rshot.original_video_start,
@@ -81,12 +84,15 @@ function useSlSubtitles() {
             rshot.recording_end,
             rshot.js_end
           );
+          // eslint-disable-next-line
           state.recordings[original_video_url].add_shot(shot);
         }
+        // eslint-disable-next-line
         if (state.is_recorder) {
           // let current_recording = getCurrentRecording();
           let youtube_url = document.getElementById("youtube_url");
           if (youtube_url !== undefined) {
+            // eslint-disable-next-line
             youtube_url.value = state.youtube_player.video_code;
           }
         }

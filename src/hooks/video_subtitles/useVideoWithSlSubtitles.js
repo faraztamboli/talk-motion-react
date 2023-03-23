@@ -1,39 +1,16 @@
-import JS2Py from "../../remotepyjs";
-import useLocalStorage from "../useLocalStorage";
-import recording from "../video_subtitles_classes/recording";
-import recording_shot from "../video_subtitles_classes/recordingShot";
-import RecordingState from "../video_subtitles_classes/recordingState";
-import youtube_player from "../video_subtitles_classes/youtubePlayer";
+import useSlSubtitles from "./useSlSubtitles";
 
 function useVideoWithSlSubtitles() {
-  const [token] = useLocalStorage("token");
-
-  const state = new RecordingState();
+  const {
+    getCurrentRecording,
+    loadYouTubeURLOnRecordIdChange,
+    hasGetUserMedia,
+    // enterPip,
+    // exitPip,
+  } = useSlSubtitles();
 
   const video = document.createElement("video");
   video.style.width = "100%";
-
-  function getCurrentRecording() {
-    try {
-      if (state.youtube_player == null) return "error";
-
-      // else
-      let originalRecordingURL = state.youtube_player?.get_video_url();
-
-      return state.recordings[originalRecordingURL];
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  function hasGetUserMedia() {
-    return !!(
-      navigator.getUserMedia ||
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia ||
-      navigator.msGetUserMedia
-    );
-  }
 
   async function enterPip() {
     if (document.pictureInPictureEnabled && !video.disablePictureInPicture) {
@@ -43,6 +20,7 @@ function useVideoWithSlSubtitles() {
         }
         await video.requestPictureInPicture();
         video.style.visibility = "hidden";
+        // eslint-disable-next-line
         state.in_pip = true;
       } catch (err) {
         console.error(err);
@@ -56,70 +34,9 @@ function useVideoWithSlSubtitles() {
     }
     if (document.pictureInPictureElement) {
       await document.exitPictureInPicture();
+      // eslint-disable-next-line
       state.in_pip = false;
     }
-  }
-
-  function loadYouTubeURLOnRecordIdChange(recordingId) {
-    let withShots = false;
-    state.is_recorder ? (withShots = true) : (withShots = false);
-
-    JS2Py.PythonFunctions.TalkMotionServer.getVideoRecording(
-      token,
-      parseInt(recordingId),
-      withShots,
-      function (result) {
-        console.log(result);
-        state.youtube_player = new youtube_player(
-          "youtube_video_frame",
-          result.original_video_url,
-          state.on_ready_callback,
-          state.on_player_state_changed_callback
-        );
-        let original_video_url = state.youtube_player.get_video_url();
-        state.recordings[original_video_url] = new recording(
-          result.title,
-          result.description,
-          original_video_url
-        );
-        state.recordings[original_video_url].set_info(
-          result.original_video_title,
-          result.original_video_author,
-          result.original_video_quality,
-          result.original_video_duration,
-          result.original_video_currentTimeLastUpdated_,
-          null,
-          result.original_video_playbackRate,
-          null,
-          result.original_video_playbackQuality
-        );
-        for (let i in result.recording_shots) {
-          let rshot = result.recording_shots[i];
-          let shot = new recording_shot(
-            rshot.session_id,
-            rshot.original_video_start,
-            rshot.recording_start,
-            rshot.js_start
-          );
-          shot.close(
-            rshot.shot,
-            rshot.video_url,
-            rshot.chunk_size,
-            rshot.original_video_end,
-            rshot.recording_end,
-            rshot.js_end
-          );
-          state.recordings[original_video_url].add_shot(shot);
-        }
-        if (state.is_recorder) {
-          // let current_recording = getCurrentRecording();
-          let youtube_url = document.getElementById("youtube_url");
-          if (youtube_url !== undefined) {
-            youtube_url.value = state.youtube_player.video_code;
-          }
-        }
-      }
-    );
   }
 
   function on_ready_callback(event) {
@@ -148,6 +65,7 @@ function useVideoWithSlSubtitles() {
     // eslint-disable-next-line
     if (event.data == YT.PlayerState.PLAYING) {
       console.log("playing");
+      // eslint-disable-next-line
       console.log(state.youtube_player.get_current_play_time());
       let current_recording = getCurrentRecording();
       current_recording.set_info(
@@ -165,6 +83,7 @@ function useVideoWithSlSubtitles() {
     // eslint-disable-next-line
     if (event.data == YT.PlayerState.PAUSED) {
       console.log("paused");
+      // eslint-disable-next-line
       console.log(state.youtube_player.get_current_play_time());
     }
     // eslint-disable-next-line
@@ -184,12 +103,14 @@ function useVideoWithSlSubtitles() {
       box.removeChild(box.lastElementChild);
     }
     video.setAttribute("id", "vid" + v.start);
+    // eslint-disable-next-line
     if (state.in_pip) {
       video.style.visibility = "hidden";
     } else {
       video.style.visibility = "visible";
     }
     video.onloadedmetadata = function () {
+      // eslint-disable-next-line
       if (state.in_pip) {
         enterPip(video);
       } else {
@@ -235,8 +156,11 @@ function useVideoWithSlSubtitles() {
   async function play_youtube_sl_together() {
     let current_recording = getCurrentRecording();
     let plan = current_recording.get_record_play_plan();
+    // eslint-disable-next-line
     state.youtube_player.player.playVideo();
+    // eslint-disable-next-line
     state.youtube_player.player.seekTo(0);
+    // eslint-disable-next-line
     let previous_player_time = await state.youtube_player.player.playerInfo
       .currentTime;
     //let skipfirst = true;
@@ -248,14 +172,17 @@ function useVideoWithSlSubtitles() {
         // console.log(key, value);
         if (
           previous_player_time < key &&
+          // eslint-disable-next-line
           state.youtube_player.player.playerInfo.currentTime > key
         ) {
           console.log(previous_player_time);
+          // eslint-disable-next-line
           console.log(state.youtube_player.player.playerInfo.currentTime);
           console.log(value.url);
           play_video(value);
         }
       }
+      // eslint-disable-next-line
       previous_player_time = state.youtube_player.player.playerInfo.currentTime;
       //   let max_time = Object.keys(plan).reduce((a, b) =>
       //     plan[a] > plan[b] ? a : b
@@ -267,18 +194,42 @@ function useVideoWithSlSubtitles() {
   }
 
   function injectYouTubeAPIScript() {
-    let script = document.createElement("script");
-    script.src = "https://www.youtube.com/player_api";
+    const isYouTubeAPIScriptAlreadyInjected = document.querySelector(
+      'script[src="https://www.youtube.com/iframe_api"]'
+    );
+    if (isYouTubeAPIScriptAlreadyInjected) return;
     let firstScriptTag = document.getElementsByTagName("script")[0];
+    let script = document.createElement("script");
+    script.src = "https://www.youtube.com/iframe_api";
     firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+
+    const recordingStateScript = document.getElementById(
+      "recording_state_script"
+    );
+    if (recordingStateScript) {
+      recordingStateScript.remove();
+    }
+
+    const newRecordingStateScript = document.createElement("script");
+    newRecordingStateScript.id = "recording_state_script";
+    newRecordingStateScript.innerHTML = "var state = new recording_state();";
+    firstScriptTag.parentNode.append(newRecordingStateScript);
+
+    // eslint-disable-next-line
+    state.set_is_recorder(false);
+    // eslint-disable-next-line
+    state.set_on_ready_callback(on_ready_callback);
+    // eslint-disable-next-line
+    state.set_on_player_state_changed_callback(
+      on_player_state_changed_callback
+    );
+    // eslint-disable-next-line
+    state.set_in_pip(true);
   }
 
   return {
-    state,
-    loadYouTubeURLOnRecordIdChange,
-    on_ready_callback,
-    on_player_state_changed_callback,
     injectYouTubeAPIScript,
+    loadYouTubeURLOnRecordIdChange,
     enterPip,
     exitPip,
   };

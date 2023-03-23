@@ -33,7 +33,13 @@ const UserModel = React.lazy(() => import("../pages/UserModel"));
 const ModelFiles = React.lazy(() => import("../pages/ModelFiles"));
 const ModelConcepts = React.lazy(() => import("../pages/ModelConcepts"));
 const ConceptDetails = React.lazy(() => import("../pages/ConceptDetails"));
+const Classrooms = React.lazy(() => import("../pages/Classrooms"));
+const StaffClassrooms = React.lazy(() => import("../pages/StaffClassrooms"));
+const Classroom = React.lazy(() => import("../pages/Classroom"));
 const Profile = React.lazy(() => import("../pages/Profile"));
+const PublicUserProfile = React.lazy(() =>
+  import("../pages/PublicUserProfile")
+);
 const Signup = React.lazy(() => import("../pages/Signup"));
 const Cart = React.lazy(() => import("../components/ui/Cart"));
 // const Payment = React.lazy(() => import("../pages/Payment"));
@@ -251,6 +257,64 @@ function AppRoutes(props) {
               fallback={<Skeleton active style={skeletonStyle} />}
             >
               <FolderManager />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/profile/:username" element={<PrivateRoute />}>
+        <Route
+          path="/profile/:username"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <PublicUserProfile collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/video-subtitles/classrooms" element={<PrivateRoute />}>
+        <Route
+          path="/video-subtitles/classrooms"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <Classrooms collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route
+        path="/video-subtitles/staff-classrooms"
+        element={<PrivateRoute />}
+      >
+        <Route
+          path="/video-subtitles/staff-classrooms"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <StaffClassrooms collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route
+        path="/video-subtitles/classrooms/:classroomId"
+        element={<PrivateRoute />}
+      >
+        <Route
+          path="/video-subtitles/classrooms/:classroomId"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <Classroom collapsedWidth={collapsedWidth} />
             </React.Suspense>
           }
         />

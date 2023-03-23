@@ -34,6 +34,7 @@ function Collector(props) {
     console.log(e.target.value);
     setCollectionText(e.target.value);
     dispatch(useConcept(e.target.value));
+    console.log("concept", concept);
   };
 
   const togglePlayed = () => {
@@ -42,6 +43,7 @@ function Collector(props) {
 
   useEffect(() => {
     setCollectionText(transcript);
+    dispatch(useConcept(transcript));
   }, [transcript]);
 
   const collectorStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
@@ -60,8 +62,9 @@ function Collector(props) {
               <p>Collect gestures and train your model</p>
               <Input.Group compact className="mb-3">
                 <Input
+                  id="collector-concept-input"
                   placeholder="Enter Collection Text"
-                  style={{ backgroundColor: "#E6ECF0", width: "70%" }}
+                  style={{ backgroundColor: "#E6ECF0", width: "86%" }}
                   value={collectionText}
                   onChange={handleCollectionTextChange()}
                 />

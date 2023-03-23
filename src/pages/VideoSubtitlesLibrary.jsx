@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Col, Empty, Input, Row, Skeleton } from "antd";
 import useSubtitleVideos from "../hooks/useSubtitleVideos";
 import { Link } from "react-router-dom";
+import UserInfoImage from "../components/ui/UserInfoImg";
 
 function VideoSubtitlesLibrary() {
   const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ function VideoSubtitlesLibrary() {
 
   useEffect(() => {
     setLoading(true);
-    getVideoRecordings(searchText)
+    getVideoRecordings(searchText, 0, 9999)
       .then((res) => {
         setVideoRecordings(res);
         setLoading(false);
@@ -60,7 +61,15 @@ function VideoSubtitlesLibrary() {
                       }/maxresdefault.jpg`}
                       alt={video.original_video_title}
                     />
-                    <h3>{video.original_video_title}</h3>
+                    <div className="flex align-items-center">
+                      <div className="h-100p">
+                        <UserInfoImage
+                          username={video.create_user}
+                          image={video.sm_img}
+                        />
+                      </div>
+                      <h3 className="ml-4">{video.original_video_title}</h3>
+                    </div>
                   </Card>
                 </Link>
               </Col>

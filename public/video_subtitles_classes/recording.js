@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-class recording {
+export default class recording {
   constructor(title, description, original_video_url) {
     this.title = title;
     this.description = description;
@@ -143,5 +143,3 @@ class recording {
     return `recording name is ${this.title}`;
   }
 }
-
-// window.recording = recording;

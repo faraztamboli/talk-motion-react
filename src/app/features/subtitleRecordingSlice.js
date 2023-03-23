@@ -12,7 +12,7 @@ const initialState = {
   inPip: true,
 };
 
-export const subtitleRecordingSlice = createSlice({
+export const subtitleRecordingStateSlice = createSlice({
   name: "subtitleRecording",
   initialState,
   reducers: {
@@ -56,6 +56,6 @@ export const {
   setOnReadyCallback,
   setOnPlayerStateChangedCallback,
   setInPip,
-} = subtitleRecordingSlice.actions;
+} = subtitleRecordingStateSlice.actions;
 
-export default subtitleRecordingSlice.reducer;
+export default subtitleRecordingStateSlice.reducer;

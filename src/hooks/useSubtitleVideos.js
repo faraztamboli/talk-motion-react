@@ -4,12 +4,14 @@ import useLocalStorage from "./useLocalStorage";
 function useSubtitleVideos() {
   const [token] = useLocalStorage("token");
 
-  function getVideoRecordings(searchText) {
+  function getVideoRecordings(searchText, offset, end) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getVideoRecordings(
           token,
           searchText,
+          offset,
+          end,
           function (res) {
             console.log(res);
             resolve(res);

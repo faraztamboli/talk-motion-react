@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-class recording_shot {
+export default class recording_shot {
   constructor(session_id, original_video_start, recording_start, js_start) {
     this.session_id = session_id;
     this.original_video_start = original_video_start;
@@ -35,5 +35,3 @@ class recording_shot {
     return `recording shot name is ${this.name}`;
   }
 }
-
-// window.recording_shot = recording_shot;

@@ -5,29 +5,22 @@ import useVideoWithSlSubtitles from "../hooks/video_subtitles/useVideoWithSlSubt
 
 function VideoWithSubtitles() {
   const {
-    state,
     injectYouTubeAPIScript,
     loadYouTubeURLOnRecordIdChange,
-    on_ready_callback,
-    on_player_state_changed_callback,
     enterPip,
     exitPip,
   } = useVideoWithSlSubtitles();
+
+  const videoElement = document.getElementById("camera_video");
 
   const { recordingId } = useParams();
 
   useEffect(() => {
     injectYouTubeAPIScript();
     loadYouTubeURLOnRecordIdChange(recordingId);
-    state.set_is_recorder(false);
-    state.set_on_ready_callback(on_ready_callback);
-    state.set_on_player_state_changed_callback(
-      on_player_state_changed_callback
-    );
-    state.set_in_pip(true);
 
     return () => {
-      exitPip();
+      exitPip(videoElement);
     };
   }, []);
 
@@ -36,10 +29,10 @@ function VideoWithSubtitles() {
       <h2>Video With Subtitles</h2>
 
       <div>
-        <Button className="mr-5" type="primary" onClick={enterPip}>
+        <Button className="mr-5" type="primary" onClick={() => enterPip()}>
           Enter Picture in Picture
         </Button>
-        <Button danger type="primary" onClick={exitPip}>
+        <Button danger type="primary" onClick={() => exitPip()}>
           Exit Picture in Picture
         </Button>
       </div>
@@ -48,12 +41,12 @@ function VideoWithSubtitles() {
         <Row gutter={[16, 16]}>
           <Col span={12} xs={24} md={12}>
             <Card className="h-100p">
-              <iframe
+              <div
                 src="..."
                 id="youtube_video_frame"
                 className="w-100p"
                 style={{ width: "100%", height: "390px" }}
-              ></iframe>
+              ></div>
             </Card>
           </Col>
           <Col span={12} xs={24} md={12}>

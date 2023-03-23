@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-class youtube_player {
+export default class youtube_player {
   constructor(
     id_video_iframe,
     url,
@@ -113,5 +113,3 @@ class youtube_player {
     return `youtube url is ${this.get_video_url()}`;
   }
 }
-
-// window.youtube_player = youtube_player;

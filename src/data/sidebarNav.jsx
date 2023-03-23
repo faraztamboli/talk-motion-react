@@ -143,6 +143,24 @@ const items = [
         null,
         "/video-subtitles/folder-manager"
       ),
+      getItem(
+        "Classrooms",
+        "44",
+        <Link to="/video-subtitles/classrooms">
+          <MdOutlineFolderSpecial />
+        </Link>,
+        null,
+        "/video-subtititles/classrooms"
+      ),
+      getItem(
+        "Staff Classrooms",
+        "45",
+        <Link to="/video-subtitles/staff-classrooms">
+          <MdOutlineFolderSpecial />
+        </Link>,
+        null,
+        "/video-subtitles/staff-classrooms"
+      ),
     ],
     "/video-subtitles"
   ),

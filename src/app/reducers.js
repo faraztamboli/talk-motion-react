@@ -7,7 +7,7 @@ import trainerSlice from "./features/trainerSlice";
 import speechSlice from "./features/speechSlice";
 import converterSlice from "./features/converterSlice";
 import cartSlice from "./features/cartSlice";
-import subtitleRecordingSlice from "./features/subtitleRecordingSlice";
+import subtitleRecordingStateSlice from "./features/subtitleRecordingSlice";
 import subtitleRecordingButtonSlice from "./features/subtitleRecordingButtonSlice";
 
 const rootReducer = {
@@ -20,7 +20,7 @@ const rootReducer = {
   speech: speechSlice,
   converter: converterSlice,
   cart: cartSlice,
-  subtitleRecording: subtitleRecordingSlice,
+  subtitleRecordingState: subtitleRecordingStateSlice,
   subtitleRecordingButton: subtitleRecordingButtonSlice,
 };
 

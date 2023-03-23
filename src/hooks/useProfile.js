@@ -85,7 +85,25 @@ function useProfile() {
     });
   }
 
-  return { uploadProfilePic, getUserProfile, updateUserProfile };
+  function getUserInfo(username) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getUserInfo(
+          token,
+          username,
+          function (res) {
+            // console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  return { uploadProfilePic, getUserProfile, updateUserProfile, getUserInfo };
 }
 
 export default useProfile;

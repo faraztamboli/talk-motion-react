@@ -14,7 +14,7 @@ function useFolders() {
           parentId,
           isPublic,
           function (res) {
-            console.log(res);
+            // console.log(res);
             resolve(res);
           }
         );
@@ -32,8 +32,8 @@ function useFolders() {
           token,
           parentId,
           function (res) {
-            console.log(res);
-            resolve(res);
+            // console.log(res);
+            if (res.constructor == Array) resolve(res);
           }
         );
       } catch (err) {
@@ -53,7 +53,7 @@ function useFolders() {
           type,
           name,
           function (res) {
-            console.log(res);
+            // console.log(res);
             resolve(res);
           }
         );
@@ -71,7 +71,7 @@ function useFolders() {
           token,
           folderId,
           function (res) {
-            console.log(res);
+            // console.log(res);
             resolve(res);
           }
         );
@@ -90,7 +90,7 @@ function useFolders() {
           srcFolderId,
           destFolderId,
           function (res) {
-            console.log(res);
+            // console.log(res);
             resolve(res);
           }
         );
@@ -109,7 +109,7 @@ function useFolders() {
           srcFolderId,
           destFolderId,
           function (res) {
-            console.log(res);
+            // console.log(res);
             resolve(res);
           }
         );
@@ -127,7 +127,7 @@ function useFolders() {
           token,
           folderId,
           function (res) {
-            console.log(res);
+            // console.log(res);
             resolve(res);
           }
         );
@@ -147,7 +147,7 @@ function useFolders() {
           userId,
           permission,
           function (res) {
-            console.log(res);
+            // console.log(res);
             resolve(res);
           }
         );
@@ -165,7 +165,7 @@ function useFolders() {
           token,
           folderId,
           function (res) {
-            console.log(res);
+            // console.log(res);
             resolve(res);
           }
         );
@@ -183,7 +183,7 @@ function useFolders() {
           token,
           folderPermissionId,
           function (res) {
-            console.log(res);
+            // console.log(res);
             resolve(res);
           }
         );
@@ -201,7 +201,7 @@ function useFolders() {
           token,
           folderContentId,
           function (res) {
-            console.log(res);
+            // console.log(res);
             resolve(res);
           }
         );

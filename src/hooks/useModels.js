@@ -401,6 +401,26 @@ function useModels() {
     });
   }
 
+  function getUsersModelsByUserName(username, search_text, offset, end) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getUsersModelsByUserName(
+          token,
+          username,
+          search_text,
+          offset,
+          end,
+          function (res) {
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   return {
     getPublicModels,
     getUserModels,
@@ -422,6 +442,7 @@ function useModels() {
     setModelPrice,
     addOrRemoveCartProduct,
     setCartProductQuantity,
+    getUsersModelsByUserName,
   };
 }
 

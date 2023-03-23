@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-class camcorder {
+export default class camcorder {
   constructor(
     id_camera_video,
     recording,
@@ -177,5 +177,3 @@ class camcorder {
     return `camcorder id is ${this.id}`;
   }
 }
-
-// window.camcorder = camcorder;
