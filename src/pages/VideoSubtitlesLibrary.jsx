@@ -8,7 +8,7 @@ function VideoSubtitlesLibrary() {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
   const [videoRecordings, setVideoRecordings] = useState([]);
-  const { getPublicVideoRecordings, getMyVideoRecordings } = useSubtitleVideos();
+  const { getVideoRecordings } = useSubtitleVideos();
 
   const { Search } = Input;
   const emptyImgStyle = { filter: "saturate(12)" };
@@ -22,11 +22,7 @@ function VideoSubtitlesLibrary() {
 
   useEffect(() => {
     setLoading(true);
-<<<<<<< HEAD
     getVideoRecordings(searchText, 0, 9999)
-=======
-    getPublicVideoRecordings(searchText)
->>>>>>> 504e0093ace3d5d70144a9c89c51faedf6abd6ec
       .then((res) => {
         setVideoRecordings(res);
         setLoading(false);

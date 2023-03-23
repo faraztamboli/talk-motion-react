@@ -137,11 +137,11 @@ const items = [
       getItem(
         "Classrooms",
         "63",
-        <Link to="/my-models">
+        <Link to="/store/classrooms">
           <MdOutlineCollectionsBookmark />
         </Link>,
         null,
-        "/my-models"
+        "/store/classrooms"
       ),
       getItem(
         "Courses",

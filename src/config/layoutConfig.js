@@ -12,6 +12,7 @@ const noAuthLayoutPages = [
   "setting",
   "uploadvideo",
   "video-subtitles",
+  "store",
 ];
 
 export { noAuthLayoutPages };

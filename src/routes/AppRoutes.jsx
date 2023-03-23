@@ -336,6 +336,32 @@ function AppRoutes(props) {
         />
       </Route>
 
+      <Route path="/store/classrooms" element={<PrivateRoute />}>
+        <Route
+          path="/store/classrooms"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <Classrooms collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/store/classrooms/:classroomId" element={<PrivateRoute />}>
+        <Route
+          path="/store/classrooms/:classroomId"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <Classroom collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
       <Route
         path="/video-subtitles/folder-manager/:folderId"
         element={<PrivateRoute />}
