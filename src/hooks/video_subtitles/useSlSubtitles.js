@@ -39,6 +39,8 @@ function useSlSubtitles() {
       function (result) {
         console.log(result);
         // eslint-disable-next-line
+        console.log(state.on_player_state_changed_callback);
+        // eslint-disable-next-line
         state.youtube_player = new youtube_player(
           "youtube_video_frame",
           result.original_video_url,

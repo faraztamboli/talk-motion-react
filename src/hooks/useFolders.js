@@ -4,7 +4,7 @@ import useLocalStorage from "./useLocalStorage";
 function useFolders() {
   const [token] = useLocalStorage("token");
 
-  function saveFolder(name, description, parentId, isPublic) {
+  function saveFolder(name, description, parentId, image, isPublic) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.saveFolder(
@@ -12,6 +12,7 @@ function useFolders() {
           name,
           description,
           parentId,
+          image,
           isPublic,
           function (res) {
             // console.log(res);

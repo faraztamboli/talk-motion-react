@@ -44,7 +44,29 @@ function useSubtitleVideos() {
     });
   }
 
-  return { getVideoRecordings, getMyVideoRecordings };
+  function updateVideoRecordingPrivacy(recordingId, isPublic) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.updateVideoRecordingPrivacy(
+          token,
+          recordingId,
+          isPublic,
+          function (res) {
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  return {
+    getVideoRecordings,
+    getMyVideoRecordings,
+    updateVideoRecordingPrivacy,
+  };
 }
 
 export default useSubtitleVideos;

@@ -1,11 +1,21 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Modal, Radio } from "antd";
+import { Button, Form, Input, Modal, Radio, Upload } from "antd";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 import useMessageApi from "../../hooks/useMessageApi";
+import { InboxOutlined } from "@ant-design/icons";
+import useBase64String from "../../hooks/useBase64String";
 // import { useParams } from "react-router-dom";
 
 const CollectionCreateForm = (props) => {
   const [form] = Form.useForm();
+
+  const normFile = (e) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
+
   return (
     <Modal
       open={props.open}
@@ -67,6 +77,22 @@ const CollectionCreateForm = (props) => {
             <Radio value={false}>Private</Radio>
           </Radio.Group>
         </Form.Item>
+
+        <Form.Item
+          name="image"
+          valuePropName="fileList"
+          label="Image"
+          getValueFromEvent={normFile}
+        >
+          <Upload.Dragger name="files" accept="image/*">
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag image to this area to upload
+            </p>
+          </Upload.Dragger>
+        </Form.Item>
       </Form>
     </Modal>
   );
@@ -74,24 +100,37 @@ const CollectionCreateForm = (props) => {
 
 const App = (props) => {
   const [open, setOpen] = useState(false);
+  const { getBase64 } = useBase64String();
   const { contextHolder, showMessage } = useMessageApi();
-  const { saveFolder, setLoading, parentFolderId } = props;
+  const { saveFolder, setLoading, folderId } = props;
 
   const iconSize = props.sm ? 20 : 24;
 
   function onCreate(values) {
     setLoading(true);
-    saveFolder(values.name, values.description, parentFolderId, values.modifier)
+
+    getBase64(values.image[0].originFileObj)
       .then((res) => {
         console.log(res);
-        setLoading(false);
-        showMessage("success", "Model created");
+        saveFolder(
+          values.name,
+          values.description,
+          folderId !== undefined ? folderId : null,
+          res,
+          values.modifier
+        )
+          .then((res) => {
+            console.log(res);
+            setLoading(false);
+            showMessage("success", "Folder created");
+          })
+          .catch((err) => {
+            console.log(err);
+            setLoading(false);
+            showMessage("error", "something went wrong!");
+          });
       })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-        showMessage("error", "Cannot create model");
-      });
+      .catch((err) => console.log(err));
     setOpen(false);
   }
 
@@ -103,7 +142,7 @@ const App = (props) => {
           className="flex flex-center-center converter-btns"
           type="primary"
           size="middle"
-          icon={<MdOutlineCreateNewFolder size={iconSize} className="pr-1" />}
+          icon={<MdOutlineCreateNewFolder size={iconSize} />}
           onClick={() => {
             setOpen(true);
           }}
