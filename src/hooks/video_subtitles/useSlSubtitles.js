@@ -53,7 +53,8 @@ function useSlSubtitles() {
         state.recordings[original_video_url] = new recording(
           result.title,
           result.description,
-          original_video_url
+          original_video_url,
+          result.id
         );
         // eslint-disable-next-line
         state.recordings[original_video_url].set_info(

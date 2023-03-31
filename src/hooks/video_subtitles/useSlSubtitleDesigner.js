@@ -187,7 +187,8 @@ function useSlSubtitleDesigner() {
         title,
         description,
         // eslint-disable-next-line
-        state.youtube_player.get_video_url()
+        state.youtube_player.get_video_url(),
+        null
       );
     }
 
