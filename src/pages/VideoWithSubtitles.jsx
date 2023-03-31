@@ -1,15 +1,18 @@
-import React, { useEffect } from "react";
-import { Button, Card, Col, Row } from "antd";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Button, Card, Col, Row, Switch } from "antd";
+import { Link, useParams } from "react-router-dom";
 import useVideoWithSlSubtitles from "../hooks/video_subtitles/useVideoWithSlSubtitles";
+import useSubtitleVideos from "../hooks/useSubtitleVideos";
 
 function VideoWithSubtitles() {
+  const [switchLoading, setSwitchLoading] = useState(false);
   const {
     injectYouTubeAPIScript,
     loadYouTubeURLOnRecordIdChange,
     enterPip,
     exitPip,
   } = useVideoWithSlSubtitles();
+  const { updateVideoRecordingPrivacy } = useSubtitleVideos();
 
   const videoElement = document.getElementById("camera_video");
 
@@ -24,17 +27,48 @@ function VideoWithSubtitles() {
     };
   }, []);
 
+  const handleVideoPrivacy = (checked) => {
+    setSwitchLoading(true);
+    updateVideoRecordingPrivacy(recordingId, checked)
+      .then((res) => {
+        console.log(res);
+        setSwitchLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setSwitchLoading(false);
+      });
+  };
+
   return (
     <div className="layout-bg mh-100vh p-5">
       <h2>Video With Subtitles</h2>
 
-      <div>
-        <Button className="mr-5" type="primary" onClick={() => enterPip()}>
-          Enter Picture in Picture
-        </Button>
-        <Button danger type="primary" onClick={() => exitPip()}>
-          Exit Picture in Picture
-        </Button>
+      <div className="flex flex-between-center pr-3">
+        <div>
+          <Button className="mr-5" type="primary" onClick={() => enterPip()}>
+            Enter Picture in Picture
+          </Button>
+          <Button
+            className="mr-5"
+            danger
+            type="primary"
+            onClick={() => exitPip()}
+          >
+            Exit Picture in Picture
+          </Button>
+          <Link to={`/video-subtitles/designer/${recordingId}`}>
+            <Button type="primary">Edit Video</Button>
+          </Link>
+        </div>
+        <div>
+          <Switch
+            checkedChildren="Public"
+            unCheckedChildren="Private"
+            loading={switchLoading}
+            onChange={handleVideoPrivacy}
+          />
+        </div>
       </div>
 
       <div className="mt-3">

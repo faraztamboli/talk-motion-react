@@ -60,6 +60,7 @@ function useSlSubtitleDesigner() {
     shot,
     activeParts
   ) {
+    console.log(videoRecordingShotId);
     JS2Py.PythonFunctions.TalkMotionServer.closeVideoRecordingShotWithVideo(
       videoRecordingShotId,
       chunkSize,
@@ -69,6 +70,7 @@ function useSlSubtitleDesigner() {
       shot,
       activeParts,
       function (result) {
+        console.log(videoRecordingShotId);
         let currentRecording = getCurrentRecording();
         currentRecording.get_active_shot().set_video_url(result.video_url);
         console.log(result, currentRecording);
@@ -230,6 +232,8 @@ function useSlSubtitleDesigner() {
     firstScriptTag.parentNode.append(newRecordingStateScript);
 
     // eslint-disable-next-line
+    state.recording_button = new recording_button("recButton", state);
+    // eslint-disable-next-line
     state.set_is_recorder(true);
     // eslint-disable-next-line
     state.set_on_ready_callback(onReadyCallback);
@@ -237,14 +241,16 @@ function useSlSubtitleDesigner() {
     state.set_on_player_state_changed_callback(onPlayerStateChangedCallback);
     // eslint-disable-next-line
     state.set_in_pip(false);
-    // eslint-disable-next-line
-    state.recording_button = new recording_button("recButton", state);
   }
+
+  injectYouTubeAPIScript();
 
   return {
     injectYouTubeAPIScript,
     loadYoutubeURLOnURLChange,
     loadYouTubeURLOnRecordIdChange,
+    onReadyCallback,
+    onPlayerStateChangedCallback,
   };
 }
 

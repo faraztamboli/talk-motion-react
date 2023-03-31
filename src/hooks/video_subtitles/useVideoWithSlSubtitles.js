@@ -99,7 +99,7 @@ function useVideoWithSlSubtitles() {
   function play_video(v) {
     const box = document.getElementById("box");
 
-    while (box.lastElementChild) {
+    while (box && box.lastElementChild) {
       box.removeChild(box.lastElementChild);
     }
     video.setAttribute("id", "vid" + v.start);
@@ -128,7 +128,7 @@ function useVideoWithSlSubtitles() {
     video.height = 390;
     video.width = 640;
 
-    box.appendChild(video);
+    box && box.appendChild(video);
     if (!isPlaying) {
       //await video.play();
       var playPromise = video.play();
@@ -140,7 +140,7 @@ function useVideoWithSlSubtitles() {
             // Show playing UI.
             console.log(_);
             console.log("Show playing UI");
-            if (box !== undefined) {
+            if (box && box !== undefined) {
               box.style.visibility = "visible";
             }
           })
@@ -173,7 +173,7 @@ function useVideoWithSlSubtitles() {
         if (
           previous_player_time < key &&
           // eslint-disable-next-line
-          state.youtube_player.player.playerInfo.currentTime > key
+          state?.youtube_player?.player?.playerInfo?.currentTime > key
         ) {
           console.log(previous_player_time);
           // eslint-disable-next-line
@@ -226,6 +226,8 @@ function useVideoWithSlSubtitles() {
     // eslint-disable-next-line
     state.set_in_pip(true);
   }
+
+  injectYouTubeAPIScript();
 
   return {
     injectYouTubeAPIScript,

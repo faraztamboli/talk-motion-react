@@ -223,6 +223,22 @@ function AppRoutes(props) {
         />
       </Route>
 
+      <Route
+        path="/video-subtitles/designer/:recordingId"
+        element={<PrivateRoute />}
+      >
+        <Route
+          path="/video-subtitles/designer/:recordingId"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <VideoSubtitlesDesigner />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
       <Route path="/video-subtitles/library" element={<PrivateRoute />}>
         <Route
           path="/video-subtitles/library"
