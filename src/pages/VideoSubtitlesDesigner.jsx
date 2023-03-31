@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Card, Col, Input, Row } from "antd";
+import { useParams } from "react-router-dom";
 import useSlSubtitleDesigner from "../hooks/video_subtitles/useSlSubtitleDesigner";
 // import YouTube from "react-youtube";
 
 function VideoSubtitlesDesigner() {
-  const { loadYoutubeURLOnURLChange, injectYouTubeAPIScript } =
+  const { loadYoutubeURLOnURLChange, injectYouTubeAPIScript, loadYouTubeURLOnRecordIdChange } =
     useSlSubtitleDesigner();
   const [youtubeURL, setYoutubeURL] = useState("");
   const [title, setTitle] = useState("");
@@ -23,8 +24,13 @@ function VideoSubtitlesDesigner() {
     setDescription(e.target.value);
   }
 
+  const { recordingId } = useParams();
+
   useEffect(() => {
     injectYouTubeAPIScript();
+    if(recordingId !== undefined && recordingId !== null) {
+        loadYouTubeURLOnRecordIdChange(recordingId);
+    }
   }, []);
 
   return (
