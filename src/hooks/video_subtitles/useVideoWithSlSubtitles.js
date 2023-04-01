@@ -79,12 +79,46 @@ function useVideoWithSlSubtitles() {
         event.target.playerInfo.availableQualityLevels,
         event.target.playerInfo.playbackQuality
       );
+
+      // readjust the recorded video to play from middle based on current time in youtube video
+      // Select the first video element on the page
+      const video = document.querySelector('video');
+      if (video !== undefined) {
+        let currentTime = state.youtube_player.get_current_play_time();
+        let plan = current_recording.get_record_play_plan();
+        let start_times = Object.keys(plan);
+        let i = 0;
+        do {
+            i++;
+        } while( !(currentTime < start_times[i] && start_times[i-1] < currentTime) && i < start_times.length);
+        let current_video = plan[start_times[i-1]];
+        if (current_video.url !== video.src) {
+            video.pause();
+            video.src = current_video.url;
+            video.load();
+        }
+        video.currentTime = currentTime - start_times[i-1];
+        var isPlaying = video.currentTime > 0 && !video.paused && !video.ended
+            && video.readyState > video.HAVE_CURRENT_DATA;
+        console.log(isPlaying);
+        if (!isPlaying) {
+            video.play();  // trigger video load
+        }
+        console.log(currentTime, start_times[i-1], currentTime - start_times[i-1]);
+        console.log(current_video.url, video.src)
+      }
     }
     // eslint-disable-next-line
     if (event.data == YT.PlayerState.PAUSED) {
       console.log("paused");
       // eslint-disable-next-line
       console.log(state.youtube_player.get_current_play_time());
+      // pause the recorded video if youtube video is paused.
+      // Select the first video element on the page
+      const video = document.querySelector('video');
+      if (video !== undefined) {
+        video.pause();
+      }
     }
     // eslint-disable-next-line
     if (event.data == YT.PlayerState.BUFFERING) {
@@ -105,16 +139,16 @@ function useVideoWithSlSubtitles() {
     video.setAttribute("id", "vid" + v.start);
     // eslint-disable-next-line
     if (state.in_pip) {
-      video.style.visibility = "hidden";
+      //video.style.visibility = "hidden";
     } else {
       video.style.visibility = "visible";
     }
     video.onloadedmetadata = function () {
       // eslint-disable-next-line
       if (state.in_pip) {
-        enterPip(video);
+        enterPip(); // video
       } else {
-        exitPip(video);
+        exitPip(); // video
       }
     };
     video.src = v.url;
@@ -183,7 +217,9 @@ function useVideoWithSlSubtitles() {
         }
       }
       // eslint-disable-next-line
-      previous_player_time = state.youtube_player.player.playerInfo.currentTime;
+      if(state.youtube_player !== undefined || state.youtube_player !== null) {
+        previous_player_time = state.youtube_player.player.playerInfo.currentTime;
+      }
       //   let max_time = Object.keys(plan).reduce((a, b) =>
       //     plan[a] > plan[b] ? a : b
       //   );

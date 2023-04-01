@@ -23,7 +23,7 @@ function VideoSubtitlesMyLibrary() {
     setLoading(true);
     getMyVideoRecordings(searchText)
       .then((res) => {
-        setVideoRecordings(res);
+        setVideoRecordings(res[0]);
         setLoading(false);
       })
       .catch((err) => {
