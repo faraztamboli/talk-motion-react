@@ -22,6 +22,7 @@ function useHolisticModel1() {
   const dispatch = useDispatch();
 
   const { modelId } = useSelector((state) => state.model);
+  const { sequenceLength } = useSelector((state) => state.model);
   const { concept } = useSelector((state) => state.model);
   const { isModelLoading } = useSelector((state) => state.converter);
 
@@ -116,7 +117,7 @@ function useHolisticModel1() {
 
     // Connect elbows to hands. Do this first so that the other graphics will draw
     // on top of these marks.
-    canvasCtx.lineWidth = 5;
+    canvasCtx.lineWidth = 1;
     if (results.poseLandmarks) {
       if (results.rightHandLandmarks) {
         canvasCtx.strokeStyle = "white";
@@ -143,7 +144,7 @@ function useHolisticModel1() {
       canvasCtx,
       results?.poseLandmarks,
       mpHolistic.POSE_CONNECTIONS,
-      { color: "white" }
+      { color: "rgba(255,230,250,0.2)" }
     );
     drawingUtils.drawLandmarks(
       canvasCtx,
@@ -152,8 +153,8 @@ function useHolisticModel1() {
       ),
       {
         visibilityMin: 0.65,
-        color: "white",
-        fillColor: "rgb(255,138,0)",
+        color: "rgba(255,230,250,0.2)",
+        fillColor: "rgba(255,138,0, 0.1)",
       }
     );
     drawingUtils.drawLandmarks(
@@ -163,8 +164,8 @@ function useHolisticModel1() {
       ),
       {
         visibilityMin: 0.65,
-        color: "white",
-        fillColor: "rgb(0,217,231)",
+        color: "rgba(255,230,250,0.2)",
+        fillColor: "rgba(0,217,231, 0.1)",
       }
     );
 
@@ -173,74 +174,80 @@ function useHolisticModel1() {
       canvasCtx,
       results.rightHandLandmarks,
       mpHolistic.HAND_CONNECTIONS,
-      { color: "white" }
+      { color: "rgba(255,230,250,0.2)" }
     );
     drawingUtils.drawLandmarks(canvasCtx, results.rightHandLandmarks, {
       color: "white",
       fillColor: "rgb(0,217,231)",
-      lineWidth: 2,
+      lineWidth: 1,
       radius: (data) => {
-        return drawingUtils.lerp(data.from.z, -0.15, 0.1, 10, 1);
+        return drawingUtils.lerp(data.from.z, -0.15, 0.1, 6, 1);
       },
     });
     drawingUtils.drawConnectors(
       canvasCtx,
       results.leftHandLandmarks,
       mpHolistic.HAND_CONNECTIONS,
-      { color: "white" }
+      { color: "rgba(255,230,250,0.2)" }
     );
     drawingUtils.drawLandmarks(canvasCtx, results.leftHandLandmarks, {
       color: "white",
       fillColor: "rgb(255,138,0)",
-      lineWidth: 2,
+      lineWidth: 1,
       radius: (data) => {
-        return drawingUtils.lerp(data.from.z, -0.15, 0.1, 10, 1);
+        return drawingUtils.lerp(data.from.z, -0.15, 0.1, 6, 1);
       },
     });
 
-    // Face...
-    drawingUtils.drawConnectors(
-      canvasCtx,
-      results.faceLandmarks,
-      mpHolistic.FACEMESH_TESSELATION,
-      { color: "#C0C0C070", lineWidth: 1 }
-    );
-    drawingUtils.drawConnectors(
-      canvasCtx,
-      results.faceLandmarks,
-      mpHolistic.FACEMESH_RIGHT_EYE,
-      { color: "rgb(0,217,231)" }
-    );
-    drawingUtils.drawConnectors(
-      canvasCtx,
-      results.faceLandmarks,
-      mpHolistic.FACEMESH_RIGHT_EYEBROW,
-      { color: "rgb(0,217,231)" }
-    );
-    drawingUtils.drawConnectors(
-      canvasCtx,
-      results.faceLandmarks,
-      mpHolistic.FACEMESH_LEFT_EYE,
-      { color: "rgb(255,138,0)" }
-    );
-    drawingUtils.drawConnectors(
-      canvasCtx,
-      results.faceLandmarks,
-      mpHolistic.FACEMESH_LEFT_EYEBROW,
-      { color: "rgb(255,138,0)" }
-    );
-    drawingUtils.drawConnectors(
-      canvasCtx,
-      results.faceLandmarks,
-      mpHolistic.FACEMESH_FACE_OVAL,
-      { color: "#E0E0E0", lineWidth: 5 }
-    );
-    drawingUtils.drawConnectors(
-      canvasCtx,
-      results.faceLandmarks,
-      mpHolistic.FACEMESH_LIPS,
-      { color: "#E0E0E0", lineWidth: 5 }
-    );
+
+    const page = window.location.pathname;
+
+    if (page === "/trainer/collect") {
+        // Face...
+        drawingUtils.drawConnectors(
+          canvasCtx,
+          results.faceLandmarks,
+          mpHolistic.FACEMESH_TESSELATION,
+          { color: "rgba(192,192,192,0.1)", lineWidth: 1 }
+        );
+        drawingUtils.drawConnectors(
+          canvasCtx,
+          results.faceLandmarks,
+          mpHolistic.FACEMESH_RIGHT_EYE,
+          { color: "rgba(0,217,231,0.1)" }
+        );
+        drawingUtils.drawConnectors(
+          canvasCtx,
+          results.faceLandmarks,
+          mpHolistic.FACEMESH_RIGHT_EYEBROW,
+          { color: "rgba(0,217,231,0.1)" }
+        );
+        drawingUtils.drawConnectors(
+          canvasCtx,
+          results.faceLandmarks,
+          mpHolistic.FACEMESH_LEFT_EYE,
+          { color: "rgba(255,138,0,0.1)" }
+        );
+        drawingUtils.drawConnectors(
+          canvasCtx,
+          results.faceLandmarks,
+          mpHolistic.FACEMESH_LEFT_EYEBROW,
+          { color: "rgba(255,138,0,0.1)" }
+        );
+        drawingUtils.drawConnectors(
+          canvasCtx,
+          results.faceLandmarks,
+          mpHolistic.FACEMESH_FACE_OVAL,
+          { color: "rgba(224, 224, 224, 0.1)", lineWidth: 1 }
+        );
+        drawingUtils.drawConnectors(
+          canvasCtx,
+          results.faceLandmarks,
+          mpHolistic.FACEMESH_LIPS,
+          { color: "rgba(224, 224, 224, 0.1)", lineWidth: 1 }
+        );
+    }
+
 
     canvasCtx.restore();
   };
@@ -289,11 +296,14 @@ function useHolisticModel1() {
     const page = window.location.pathname;
 
     if (page === "/trainer/collect") {
-      JS2Py.PythonFunctions.TalkMotionServer.collectGetstureAndConcept(
+        console.log('sequenceLength:');
+        console.log(sequenceLength);
+      JS2Py.PythonFunctions.TalkMotionServer.collectGestureAndConcept2(
         modelId,
         data,
         Date.now(),
         concept,
+        sequenceLength,
         function (res) {
           let sample_count = res[1];
           let status = res[0];
@@ -308,10 +318,11 @@ function useHolisticModel1() {
         }
       );
     } else if (page === "/converter") {
-      JS2Py.PythonFunctions.TalkMotionServer.translateGestureToWords(
+      JS2Py.PythonFunctions.TalkMotionServer.translateGestureToWords2(
         data,
         Date.now(),
         modelId,
+        sequenceLength,
         function (res) {
           console.log(res);
           if (res.status == -1) {

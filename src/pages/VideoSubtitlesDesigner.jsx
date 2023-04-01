@@ -5,7 +5,7 @@ import useSlSubtitleDesigner from "../hooks/video_subtitles/useSlSubtitleDesigne
 // import YouTube from "react-youtube";
 
 function VideoSubtitlesDesigner() {
-  const { loadYoutubeURLOnURLChange, injectYouTubeAPIScript, loadYouTubeURLOnRecordIdChange } =
+  const { loadYoutubeURLOnURLChange, injectYouTubeAPIScript, loadYouTubeURLOnRecordIdChange, initializeRecordingStateVariable } =
     useSlSubtitleDesigner();
   const [youtubeURL, setYoutubeURL] = useState("");
   const [title, setTitle] = useState("");
@@ -28,6 +28,7 @@ function VideoSubtitlesDesigner() {
 
   useEffect(() => {
     injectYouTubeAPIScript();
+    initializeRecordingStateVariable();
     if(recordingId !== undefined && recordingId !== null) {
         loadYouTubeURLOnRecordIdChange(recordingId);
     }

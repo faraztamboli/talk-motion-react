@@ -8,7 +8,7 @@ function useTrainModel() {
 
   function train() {
     try {
-      JS2Py.PythonFunctions.TalkMotionServer.train(token,modelId, function (res) {
+      JS2Py.PythonFunctions.TalkMotionServer.train2(token,modelId, function (res) {
         console.log(res);
       });
     } catch (err) {

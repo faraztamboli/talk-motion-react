@@ -6,6 +6,7 @@ const initialState = {
   modelPaginationSize: 10,
   currentModelPage: 1,
   totalModels: null,
+  sequenceLength: 10
 };
 
 export const modelSlice = createSlice({
@@ -17,6 +18,9 @@ export const modelSlice = createSlice({
     },
     useConcept: (state, action) => {
       state.concept = action.payload;
+    },
+    useSequenceLength: (state, action) => {
+      state.sequenceLength = action.payload;
     },
     setModelPaginationSize: (state, action) => {
       state.modelPaginationSize = action.payload;
@@ -30,6 +34,7 @@ export const modelSlice = createSlice({
 export const {
   selectModel,
   useConcept,
+  useSequenceLength,
   setModelPaginationSize,
   setCurrentModelPage,
 } = modelSlice.actions;

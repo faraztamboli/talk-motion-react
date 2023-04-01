@@ -231,6 +231,9 @@ function useSlSubtitleDesigner() {
     newRecordingStateScript.innerHTML = "var state = new recording_state();";
     firstScriptTag.parentNode.append(newRecordingStateScript);
 
+  }
+
+  function initializeRecordingStateVariable() {
     // eslint-disable-next-line
     state.recording_button = new recording_button("recButton", state);
     // eslint-disable-next-line
@@ -251,6 +254,7 @@ function useSlSubtitleDesigner() {
     loadYouTubeURLOnRecordIdChange,
     onReadyCallback,
     onPlayerStateChangedCallback,
+    initializeRecordingStateVariable,
   };
 }
 
