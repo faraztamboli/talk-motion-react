@@ -100,7 +100,7 @@ export const VoiceToGesture = (props) => {
             </div>
 
             <div className="pt-4">
-              <p>{transcript ? transcript : "Transcript"}</p>
+              <p>{transcript ? transcript : ""}</p>
             </div>
           </>
         )}

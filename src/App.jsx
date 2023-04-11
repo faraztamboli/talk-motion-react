@@ -9,6 +9,7 @@ import useServerConnection from "./hooks/useServerConnection";
 import useMediaQueries from "./hooks/useMediaQueries";
 import AppRoutes from "./routes/AppRoutes";
 import jsOnUpdateTrainingStatus from "./utils/jsOnUpdateTrainingStatus";
+import jsOnSignPrediction from "./utils/jsOnSignPrediction";
 
 const App = () => {
   const { collapsed, collapsedWidth, onCollapsed, sideBarWidth, sm, md } =
@@ -22,6 +23,7 @@ const App = () => {
   useServerConnection();
 
   jsOnUpdateTrainingStatus();
+  jsOnSignPrediction();
 
   return (
     <div className="App">

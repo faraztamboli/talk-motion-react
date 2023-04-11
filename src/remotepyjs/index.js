@@ -359,7 +359,7 @@ function JS2PyClient(serverName, clientPageId) {
     };
 
     this.socket.onmessage = function (e) {
-      console.log(e);
+      //console.log(e);
       setTimeout(function() {
 
       JS2PySelf.onmsgFunctions.forEach((fun) => fun());
@@ -548,7 +548,7 @@ function JS2PyClient(serverName, clientPageId) {
           document.getElementById("StatusBar").innerHTML =
             "Chart Loading Completed ...";
         }
-        console.log("message(b) received : " + hex);
+        //console.log("message(b) received : " + hex);
       }
 
       if (JS2PySelf.onmessageprocessed !== undefined) {

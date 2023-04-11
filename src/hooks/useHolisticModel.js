@@ -12,8 +12,10 @@ import {
   setIsModelLoading,
   setIsRecording,
 } from "../app/features/converterSlice";
+import useLocalStorage from "./useLocalStorage";
 
 function useHolisticModel1() {
+  const [token] = useLocalStorage("token");
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const audioRef = useRef(null);
@@ -34,8 +36,13 @@ function useHolisticModel1() {
 
   let activeEffect = "mask";
 
+  // used for gesture collection breaks
+  let last_gesture_collection_timestamp = Date.now();
+  let collection_pause_time_millisec = 3000;
+
+
   const onResults = (results) => {
-    console.log("onresults", isModelLoading);
+    //console.log("onresults", isModelLoading);
 
     dispatch(setIsModelLoading(false));
 
@@ -139,6 +146,7 @@ function useHolisticModel1() {
       }
     }
 
+    /*
     // Pose...
     drawingUtils.drawConnectors(
       canvasCtx,
@@ -168,6 +176,7 @@ function useHolisticModel1() {
         fillColor: "rgba(0,217,231, 0.1)",
       }
     );
+    */
 
     // Hands...
     drawingUtils.drawConnectors(
@@ -279,7 +288,7 @@ function useHolisticModel1() {
 
       holistic.onResults(onResults);
 
-      console.log(holistic);
+      //console.log(holistic);
 
       camera = new cam.Camera(webcamRef.current.video, {
         onFrame: async () => {
@@ -296,47 +305,61 @@ function useHolisticModel1() {
     const page = window.location.pathname;
 
     if (page === "/trainer/collect") {
-        console.log('sequenceLength:');
-        console.log(sequenceLength);
-      JS2Py.PythonFunctions.TalkMotionServer.collectGestureAndConcept2(
-        modelId,
-        data,
-        Date.now(),
-        concept,
-        sequenceLength,
-        function (res) {
-          let sample_count = res[1];
-          let status = res[0];
-          console.log(status);
-          if (status == -1) {
-            dispatch(setTrainingStatusOff());
-          } else if (status == 0) {
-            dispatch(setTrainingStatusOn());
-          } else if (status == 1) {
-            showMessage("success", "sample collected: " + sample_count);
-          }
-        }
-      );
+        //console.log('sequenceLength:');
+        //console.log(sequenceLength);
+      // variable to hold the time of successful gesture collection
+      if (last_gesture_collection_timestamp !== null && (Date.now()-last_gesture_collection_timestamp)>collection_pause_time_millisec) {
+          dispatch(setTrainingStatusOn());
+          JS2Py.PythonFunctions.TalkMotionServer.collectGestureAndConcept2(
+            token,
+            modelId,
+            data,
+            Date.now(),
+            concept,
+            sequenceLength,
+            function (res) {
+              let sample_count = res[1];
+              let status = res[0];
+              //console.log(status);
+              if (status == -1) {
+                //dispatch(setTrainingStatusOff());
+              } else if (status == 0) {
+                //dispatch(setTrainingStatusOn());
+              } else if (status == 1) {
+                showMessage("success", "sample collected: " + sample_count);
+                last_gesture_collection_timestamp = Date.now();
+                dispatch(setTrainingStatusOff());
+              }
+            }
+          );
+      }
     } else if (page === "/converter") {
-      JS2Py.PythonFunctions.TalkMotionServer.translateGestureToWords2(
-        data,
-        Date.now(),
-        modelId,
-        sequenceLength,
-        function (res) {
-          console.log(res);
-          if (res.status == -1) {
-            dispatch(setIsRecording(false));
-            dispatch(setIsSpeaking(false));
-          } else if (res.status == 0) {
-            dispatch(setIsRecording(true));
-            dispatch(setIsSpeaking(false));
-          } else {
-            dispatch(setIsSpeaking(true));
-            dispatch(setSpeakText(res.prediction));
-          }
-        }
-      );
+
+      // send to server only if one or both hands present in the frame:
+      //console.log('page converter');
+      if ('leftHandLandmarks' in data || 'rightHandLandmarks' in data) {
+          JS2Py.PythonFunctions.TalkMotionServer.translateGestureToWords2(
+            token,
+            data,
+            Date.now(),
+            modelId,
+            sequenceLength,
+            function (res) {
+              //console.log(res);
+              if (res.status == -1) {
+                dispatch(setIsRecording(false));
+                dispatch(setIsSpeaking(false));
+              } else if (res.status == 0) {
+                dispatch(setIsRecording(true));
+                dispatch(setIsSpeaking(false));
+              } else {
+                console.log('dispatching setIsSpeaking true');
+                dispatch(setIsSpeaking(true));
+                dispatch(setSpeakText(res.prediction));
+              }
+            }
+          );
+      }
     }
   };
 

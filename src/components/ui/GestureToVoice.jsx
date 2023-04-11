@@ -34,9 +34,10 @@ export const GestureToVoice = (props) => {
         speak(speakText, volume);
       }
     }
-  }, [isSpeaking]);
+  }, [speakText]);
 
   useEffect(() => {
+    console.log('setVolume');
     if (mute) {
       dispatch(setVolume(0));
     } else {
