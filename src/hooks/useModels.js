@@ -336,7 +336,13 @@ function useModels() {
     });
   }
 
-  function setModelPrice(modelid, unitamount, tiers, currency, recurring) {
+  function setModelPrice(
+    modelid,
+    unitamount,
+    tiers,
+    currency,
+    recurring
+  ) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.setModelPrice(
@@ -358,7 +364,13 @@ function useModels() {
     });
   }
 
-  function setProductPrice(product_id, unitamount, tiers, currency, recurring) {
+  function setProductPrice(
+    product_id,
+    unitamount,
+    tiers,
+    currency,
+    recurring
+  ) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.setProductPrice(
@@ -403,6 +415,50 @@ function useModels() {
     });
   }
 
+  function getProductForFree(product_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getProductForFree(
+          token,
+          Number(product_id),
+          function (res) {
+            resolve(res);
+            setTimeout(() => {
+              getCart()
+                .then((res) => console.log(res))
+                .catch((err) => console.log(err));
+            }, 100);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  function getProductForFree(product_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getProductForFree(
+          token,
+          Number(product_id),
+          function (res) {
+            resolve(res);
+            setTimeout(() => {
+              getCart()
+                .then((res) => console.log(res))
+                .catch((err) => console.log(err));
+            }, 100);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   function setCartProductQuantity(product_id, quantity) {
     return new Promise((resolve, reject) => {
       try {
@@ -423,7 +479,12 @@ function useModels() {
     });
   }
 
-  function getUsersModelsByUserName(username, search_text, offset, end) {
+  function getUsersModelsByUserName(
+    username,
+    search_text,
+    offset,
+    end
+  ) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getUsersModelsByUserName(

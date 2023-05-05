@@ -27,6 +27,7 @@ export default function Models(props) {
     purchaseModel,
     addNewTrainer,
     addOrRemoveCartProduct,
+    getProductForFree,
   } = useModels();
 
   const dispatch = useDispatch();
@@ -39,12 +40,11 @@ export default function Models(props) {
       .then((res) => {
         setPublicModels(res[0]);
         setTotalPublicModels(res[1]["count(*)"]);
-        setPublicLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setPublicLoading(false);
       });
+    setPublicLoading(false);
   }, []);
 
   useEffect(() => {
@@ -58,12 +58,11 @@ export default function Models(props) {
         console.log(res[1]["count(*)"]);
         setPublicModels(res[0]);
         setTotalPublicModels(res[1]["count(*)"]);
-        setPublicLoading(false);
       })
       .catch((err) => {
-        setPublicLoading(false);
         console.log(err);
       });
+    setPublicLoading(false);
   }, [publicPage, publicPageSize]);
 
   function onPublicModelsChange(page, pageSize) {
@@ -124,6 +123,7 @@ export default function Models(props) {
                       purchaseModel={purchaseModel}
                       addNewTrainer={addNewTrainer}
                       addOrRemoveCartProduct={addOrRemoveCartProduct}
+                      getProductForFree={getProductForFree}
                       key={model.key}
                       showMessage={showMessage}
                     />

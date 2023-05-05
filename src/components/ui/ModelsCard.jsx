@@ -26,12 +26,14 @@ export const ModelsCard = (props) => {
     purchaseModel,
     addNewTrainer,
     addOrRemoveCartProduct,
+    getProductForFree,
     loading,
     setLoading,
     showMessage,
   } = props;
 
   const handleAddToCart = () => {
+    debugger;
     addOrRemoveCartProduct(model.product_id, quantity)
       .then((res) => {
         console.log(res);
@@ -40,6 +42,14 @@ export const ModelsCard = (props) => {
       .catch((err) => {
         console.log(err);
         showMessage("error", "unable to add the model to the cart");
+      });
+  };
+
+  const handleGetModel = () => {
+    getProductForFree(model.product_id)
+      .then((res) => {})
+      .catch((err) => {
+        showMessage("error", "unable to add the model to cart");
       });
   };
 
@@ -97,7 +107,7 @@ export const ModelsCard = (props) => {
 
     {
       key: "5",
-      label: <ModelPrice model_id={model.id} product_id={model.product_id}/>,
+      label: <ModelPrice model_id={model.id} product_id={model.product_id} />,
     },
   ];
 
@@ -145,7 +155,7 @@ export const ModelsCard = (props) => {
           <h3 className="models-card-description">{model.description}</h3>
         </div>
 
-        {model.price && (
+        {model.price > 0 && (
           <div>
             <h2>
               ${model.price / 100} /{" "}
@@ -175,14 +185,20 @@ export const ModelsCard = (props) => {
 
         {window.location.pathname == "/models" && (
           <Space className="mt-4">
-            <InputNumber
+            {/* <InputNumber
               min={1}
               defaultValue={1}
               onChange={(value) => setQuantity(value)}
-            />
-            <Button type="primary" onClick={handleAddToCart}>
-              Add to Cart
-            </Button>
+            /> */}
+            {model.price > 0 ? (
+              <Button type="primary" onClick={handleAddToCart}>
+                Add to Cart
+              </Button>
+            ) : (
+              <Button type="primary" onClick={handleGetModel}>
+                Get Model
+              </Button>
+            )}
           </Space>
         )}
 

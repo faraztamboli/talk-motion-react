@@ -1,91 +1,66 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "antd";
 import Cart from "../components/ui/Cart";
-import PaymentForm from "../components/ui/PaymentForm";
+import CheckoutForm from "../components/ui/payment/CheckoutForm";
 import usePayment from "../hooks/usePayment";
 import useModels from "../hooks/useModels";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(
+  "pk_test_51MTjNdFiKYZ3UHA3O5m6HW7KBuN8wfvbfgqpzXqrzK4iJW4JpDDRxt1sYynYHS7dk5B1AmbB3q4TQtxb0TTcEZw500WO7YxCZI"
+);
 
 function Payment() {
-  const { getCart } = usePayment();
+  const { getCart, purchaseCart } = usePayment();
   const { addOrRemoveCartProduct } = useModels();
+  const [clientSecret, setClientSecret] = useState("");
+
+  useEffect(() => {
+    // Create PaymentIntent as soon as the page loads
+    purchaseCart()
+      .then((res) => {
+        debugger;
+        const newArray = Object.keys(res).map((id) => ({
+          id: id,
+          client_secret: res[id].subscription["client_secret"],
+        }));
+        const secrets = newArray.map((item) => item.client_secret);
+        setClientSecret(secrets.join(","));
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const appearance = {
+    theme: "stripe",
+  };
+  const options = {
+    clientSecret,
+    appearance,
+  };
+
   return (
     <>
-      <div className="purchase-model-list ">
-        <Row>
-          <Col span={12} xs={24} lg={12} className="payment-first-col">
-            <Cart
-              getCart={getCart}
-              addOrRemoveCartProduct={addOrRemoveCartProduct}
-            />
-          </Col>
-          <Col span={12} xs={24} lg={12} className="payment-second-col">
-            <PaymentForm />
-          </Col>
-        </Row>
-      </div>
+      {
+        <div className="purchase-model-list">
+          <Row>
+            <Col span={12} xs={24} lg={12} className="payment-first-col">
+              <Cart />
+            </Col>
+            <Col span={12} xs={24} lg={12} className="payment-second-col">
+              {clientSecret.length > 8 ? (
+                <Elements options={options} stripe={stripePromise}>
+                  <CheckoutForm />
+                </Elements>
+              ) : (
+                <h1>Client Secret Not Set!</h1>
+              )}
+            </Col>
+          </Row>
+        </div>
+      }
     </>
   );
 }
 
 export default Payment;
-
-// import React, { useState, useEffect } from "react";
-// import { loadStripe } from "@stripe/stripe-js";
-
-// const stripePromise = loadStripe("pk_test_TYooMQauvdEDq54NiTphI7jx");
-
-// const PaymentForm = () => {
-//   const [error, setError] = useState(null);
-//   const [stripe, setStripe] = useState(null);
-//   const [cardElement, setCardElement] = useState(null);
-
-//   useEffect(() => {
-//     stripePromise.then((s) => {
-//       setStripe(s);
-//     });
-//   }, []);
-
-//   useEffect(() => {
-//     if (!stripe) {
-//       return;
-//     }
-
-//     const elements = stripe.elements();
-//     const newCardElement = elements.create("card");
-//     setCardElement(newCardElement);
-//     newCardElement.mount("#card-element");
-//   }, [stripe]);
-
-//   const handleSubmit = async (event) => {
-//     event.preventDefault();
-
-//     if (!stripe || !cardElement) {
-//       return;
-//     }
-
-//     const { error, paymentMethod } = await stripe.createPaymentMethod({
-//       type: "card",
-//       card: cardElement,
-//     });
-
-//     if (error) {
-//       setError(error.message);
-//     } else {
-//       // Send the payment method to your server
-//       console.log(paymentMethod);
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit}>
-//       <div className="form-group">
-//         <label htmlFor="card-element">Credit or debit card</label>
-//         <div id="card-element"></div>
-//         {error && <p className="error">{error}</p>}
-//       </div>
-//       <button type="submit">Pay</button>
-//     </form>
-//   );
-// };
-
-// export default PaymentForm;

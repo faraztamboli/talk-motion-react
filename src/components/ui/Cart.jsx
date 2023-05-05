@@ -53,14 +53,14 @@ function Cart() {
             <h3 className="mr-4">Sub-total:</h3>
             <p>$299.97</p>
           </div>
-          <Button
+          {/* <Button
             type="primary"
             className="converter-btns"
             onClick={handlePurchaseCart}
             loading={btnLoading}
           >
             Checkout
-          </Button>
+          </Button> */}
         </div>
         {!loading &&
           cart.length > 0 &&
