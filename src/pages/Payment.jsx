@@ -26,7 +26,7 @@ function Payment() {
           client_secret: res[id].subscription["client_secret"],
         }));
         const secrets = newArray.map((item) => item.client_secret);
-        setClientSecret(secrets.join(","));
+        setClientSecret(secrets[Object.keys(res).length - 1]);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -44,10 +44,20 @@ function Payment() {
       {
         <div className="purchase-model-list">
           <Row>
-            <Col span={12} xs={24} lg={12} className="payment-first-col">
+            <Col
+              span={12}
+              xs={24}
+              lg={12}
+              className="payment-first-col"
+            >
               <Cart />
             </Col>
-            <Col span={12} xs={24} lg={12} className="payment-second-col">
+            <Col
+              span={12}
+              xs={24}
+              lg={12}
+              className="payment-second-col"
+            >
               {clientSecret.length > 8 ? (
                 <Elements options={options} stripe={stripePromise}>
                   <CheckoutForm />

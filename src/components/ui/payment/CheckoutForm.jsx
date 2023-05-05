@@ -47,7 +47,10 @@ function CheckoutForm(props) {
       },
     });
 
-    if (error.type === "card_error" || error.type === "validation_error") {
+    if (
+      error.type === "card_error" ||
+      error.type === "validation_error"
+    ) {
       showMessage("error", error.message);
     } else {
       showMessage("error", "An unexpected error occurred.");
@@ -67,8 +70,15 @@ function CheckoutForm(props) {
           id="link-authentication-element"
           onChange={(e) => setEmail(e.target.value)}
         />
-        <PaymentElement id="payment-element" options={paymentElementOptions} />
-        <button disabled={isLoading || !stripe || !elements} id="submit">
+        <PaymentElement
+          id="payment-element"
+          options={paymentElementOptions}
+        />
+        <button
+          disabled={isLoading || !stripe || !elements}
+          id="submit"
+          type="primary"
+        >
           <span id="button-text">
             {isLoading ? (
               <div className="spinner" id="spinner"></div>
