@@ -7,6 +7,7 @@ import modelImg from "../../media/images/plurk.png";
 
 function Cart() {
   const [loading, setLoading] = useState(true);
+  const [total, setTotal] = useState(0);
   const [btnLoading, setBtnLoading] = useState(false);
   const [cart, setCart] = useState([]);
   const [ids, setIds] = useState([]);
@@ -18,10 +19,8 @@ function Cart() {
   useEffect(() => {
     getCart()
       .then((res) => {
-        console.log(res);
         setIds(Object.keys(res));
         setCart(Object.values(res));
-        console.log(cart);
         setLoading(false);
       })
       .catch((err) => {
@@ -30,19 +29,19 @@ function Cart() {
       });
   }, []);
 
-  function handlePurchaseCart() {
-    setBtnLoading(true);
-    purchaseCart()
-      .then((res) => {
-        console.log(res);
-        setBtnLoading(false);
-        navigate("/payment");
-      })
-      .catch((err) => {
-        console.log(err);
-        setBtnLoading(false);
-      });
-  }
+  useEffect(() => {
+    setTotal(
+      cart.reduce((total, prod) => {
+        return prod.price_detail?.unit_amount + total;
+      }, 0)
+    );
+  }, [cart]);
+
+  const handleRemoveProduct = () => {
+    addOrRemoveCartProduct(ids[index], -1)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className="container flex flex-center-center">
@@ -51,21 +50,8 @@ function Cart() {
           <h2>Your Cart</h2>
           <div className="total flex flex-center-center">
             <h3 className="mr-4">Sub-total:</h3>
-            <p>
-              $
-              {cart.reduce((total, prod) => {
-                return prod.price_detail?.unit_amount + total;
-              }, 0)}
-            </p>
+            <p>${total}</p>
           </div>
-          {/* <Button
-            type="primary"
-            className="converter-btns"
-            onClick={handlePurchaseCart}
-            loading={btnLoading}
-          >
-            Checkout
-          </Button> */}
         </div>
         {!loading &&
           cart.length > 0 &&
@@ -84,15 +70,7 @@ function Cart() {
                 <p>${elem.price_detail?.unit_amount}</p>
               </div>
               <div>
-                <Button
-                  onClick={() => {
-                    addOrRemoveCartProduct(ids[index], -1)
-                      .then((res) => console.log(res))
-                      .catch((err) => console.log(err));
-                  }}
-                >
-                  Remove
-                </Button>
+                <Button onClick={handleRemoveProduct}>Remove</Button>
               </div>
             </div>
           ))}

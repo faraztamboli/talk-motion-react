@@ -437,32 +437,9 @@ function useModels() {
     });
   }
 
-  function getProductForFree(product_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        JS2Py.PythonFunctions.TalkMotionServer.getProductForFree(
-          token,
-          Number(product_id),
-          function (res) {
-            resolve(res);
-            setTimeout(() => {
-              getCart()
-                .then((res) => console.log(res))
-                .catch((err) => console.log(err));
-            }, 100);
-          }
-        );
-      } catch (err) {
-        console.log(err);
-        reject(err);
-      }
-    });
-  }
-
   function setCartProductQuantity(product_id, quantity) {
     return new Promise((resolve, reject) => {
       try {
-        console.log(product_id, quantity, "line 400");
         JS2Py.PythonFunctions.TalkMotionServer.setCartProductQuantity(
           token,
           product_id,
@@ -527,6 +504,7 @@ function useModels() {
     addOrRemoveCartProduct,
     setCartProductQuantity,
     getUsersModelsByUserName,
+    getProductForFree,
   };
 }
 
