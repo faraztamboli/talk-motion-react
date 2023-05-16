@@ -51,16 +51,21 @@ function Cart() {
           <h2>Your Cart</h2>
           <div className="total flex flex-center-center">
             <h3 className="mr-4">Sub-total:</h3>
-            <p>$299.97</p>
+            <p>
+              $
+              {cart.reduce((total, prod) => {
+                return prod.price_detail?.unit_amount + total;
+              }, 0)}
+            </p>
           </div>
-          <Button
+          {/* <Button
             type="primary"
             className="converter-btns"
             onClick={handlePurchaseCart}
             loading={btnLoading}
           >
             Checkout
-          </Button>
+          </Button> */}
         </div>
         {!loading &&
           cart.length > 0 &&

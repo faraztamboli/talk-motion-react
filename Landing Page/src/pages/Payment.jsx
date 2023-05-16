@@ -9,7 +9,7 @@ function Payment(props) {
   return (
     <>
       <Header md={props.md} />
-      <div className="purchase-model-list ">
+      <div className="purchase-model-list">
         <Row>
           <Col span={12} xs={24} lg={12} className="payment-first-col">
             <Cart />

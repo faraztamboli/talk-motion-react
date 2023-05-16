@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutForm from "./CheckoutForm";
-import usePayment from "../../hooks/usePayment";
+import usePayment from "../../../hooks/usePayment";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -39,6 +39,7 @@ export default function App() {
   };
 
   return (
+    // <h1>Payment</h1>
     clientSecrets && (
       <Elements stripe={stripePromise} options={options}>
         <CheckoutForm clientSecret={clientSecrets} />

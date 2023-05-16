@@ -27,13 +27,18 @@ function usePayment() {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getCart(token, function (res) {
-          let cart = res[0];
-          let cart_total = res[1];
-          console.log(cart);
-          console.log(cart_total);
-          const cart_quantity = Object.keys(cart)?.length;
-          // set the cart quantity to show on header
-          dispatch(setCartCount(cart_quantity));
+          let cart = [];
+          if (typeof res === "object") {
+            cart = res[0];
+            let cart_total = res[1];
+            console.log(cart);
+            console.log(cart_total);
+            const cart_quantity = Object.keys(cart)?.length;
+            // set the cart quantity to show on header
+            dispatch(setCartCount(cart_quantity));
+          } else {
+            dispatch(setCartCount(0));
+          }
           resolve(cart);
         });
       } catch (err) {
