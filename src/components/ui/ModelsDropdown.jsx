@@ -4,6 +4,8 @@ import { AppstoreOutlined } from "@ant-design/icons";
 import useModels from "../../hooks/useModels";
 import { useDispatch, useSelector } from "react-redux";
 import { selectModel } from "../../app/features/modelSlice";
+import JS2Py from "../../remotepyjs";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const { Option } = Select;
 
@@ -12,6 +14,7 @@ export const ModelsDropdown = (props) => {
   const [defaultSelectedModelTitle, setDefaultSelectedModelTitle] = useState();
   const { getModelsUserCanTrain, getModel, getModelsUserCanUse } = useModels();
   const { modelId } = useSelector((state) => state.model);
+  const [token] = useLocalStorage("token");
 
   const dispatch = useDispatch();
 
@@ -37,6 +40,16 @@ export const ModelsDropdown = (props) => {
   }, []);
 
   const handleChange = (value) => {
+    // load model here
+    // loadModel2
+      JS2Py.PythonFunctions.TalkMotionServer.loadModel2(
+        token,
+        value,
+        function (res) {
+            dispatch(setTrainingStatusOff());
+        }
+      );
+
     dispatch(selectModel(value));
     getModel(value)
       .then((res) => setDefaultSelectedModelTitle(res[0].title))

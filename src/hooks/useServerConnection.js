@@ -35,6 +35,15 @@ async function useServerConnection() {
       dispatch(setServerStatus("Disconnected"));
     };
 
+    JS2Py.onerror = function () {
+      dispatch(setServerConnected(false));
+      dispatch(setServerStatus("Retrying Connection"));
+
+      conn = JS2Py.start();
+      console.log(conn.readyState);
+
+    };
+
     // starting connection and taking instance to close on unmounts
     conn = JS2Py.start();
     console.log(conn.readyState);

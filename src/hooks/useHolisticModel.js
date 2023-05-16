@@ -294,8 +294,8 @@ function useHolisticModel1() {
         onFrame: async () => {
           await holistic.send({ image: webcamRef.current.video });
         },
-        // width: 200,
-        // height: 200,
+         width: 512,
+         height: 300,
       });
       camera.start();
     }

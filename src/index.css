@@ -1293,3 +1293,19 @@ h4.product-price {
   background-color: #ddd;
 }
 
+video {
+    border-bottom: 1px solid transparent;
+    background: transparent;
+    height: 200px;
+}
+
+#tFrame{
+position: absolute;
+bottom: 0px;
+right: 0px;
+min-width: 100%;
+min-height: 100%;
+z-index: -1;
+overflow: hidden;
+background-size:cover;
+}

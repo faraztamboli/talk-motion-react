@@ -19,7 +19,7 @@ const CollectionCreateForm = (props) => {
   return (
     <Modal
       open={props.open}
-      title="Create a new Model"
+      title="Create a new Course"
       destroyOnClose
       okText="Create"
       cancelText="Cancel"
@@ -147,7 +147,7 @@ const App = (props) => {
             setOpen(true);
           }}
         >
-          New Folder
+          New Course
         </Button>
         <CollectionCreateForm
           open={open}

@@ -99,7 +99,7 @@ function FolderManager() {
                     </div>
                     <div className="course-summary-content">
                       <div className="course-summary-section">
-                        <h3>Childs</h3>
+                        <h3>Topics</h3>
                         <ul>
                           {child.children.length > 0
                             ? child.children.map((nestedChilds) => (
@@ -148,7 +148,7 @@ function FolderManager() {
                     </div>
                     <div className="course-summary-content">
                       <div className="course-summary-section">
-                        <h3>Childs</h3>
+                        <h3>Sub Topics</h3>
                         <ul>
                           {child.children.length > 0
                             ? child.children.map((nestedChilds) => (

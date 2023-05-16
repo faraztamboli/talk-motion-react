@@ -27,7 +27,7 @@ function getItem(label, key, icon, children, path) {
 
 const items = [
   getItem(
-    "Converter",
+    "Translator",
     "1",
     <Link to="/converter">
       <PieChartOutlined />
@@ -36,7 +36,7 @@ const items = [
     "/converter"
   ),
   getItem(
-    "Signed Videos",
+    "Learning",
     "4",
     <Link to="/video-subtitles">
       <MdOutlineSubtitles />

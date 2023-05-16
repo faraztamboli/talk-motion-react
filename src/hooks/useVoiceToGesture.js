@@ -171,6 +171,8 @@ function useSpeechRecognition() {
       if (word in wordVideoDictionary[modelId]) {
         videoRef.current.classList.remove("bg-black");
         videoRef.current.src = wordVideoDictionary[modelId][word]["remote_url"];
+        videoRef.current.defaultPlaybackRate = 2.0;
+        videoRef.current.load();
         let promise = videoRef.current.play();
         if (promise !== undefined) {
           promise
