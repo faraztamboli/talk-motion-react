@@ -18,6 +18,9 @@ function useVideoWithSlSubtitles() {
         if (document.pictureInPictureElement) {
           document.exitPictureInPicture();
         }
+          video.addEventListener('loadedmetadata', () => {
+            video.requestPictureInPicture();
+          });
         await video.requestPictureInPicture();
         video.style.visibility = "hidden";
         // eslint-disable-next-line

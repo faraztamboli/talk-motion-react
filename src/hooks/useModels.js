@@ -525,6 +525,7 @@ function useModels() {
     setModelPrice,
     setProductPrice,
     addOrRemoveCartProduct,
+    getProductForFree,
     setCartProductQuantity,
     getUsersModelsByUserName,
   };

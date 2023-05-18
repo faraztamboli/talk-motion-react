@@ -89,7 +89,7 @@ function VideoWithSubtitles() {
               <video
                 id="camera_video"
                 className="w-100p"
-                style={{ width: "100%", height: "390px" }}
+                style={{ width: "100%", height: "390px", display: "none" }}
               ></video>
             </Card>
           </Col>

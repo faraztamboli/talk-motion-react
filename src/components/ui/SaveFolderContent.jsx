@@ -31,8 +31,8 @@ function ModelPrice(props) {
   function handleRecordingSearch(value) {
     getMyVideoRecordings(value, 0, 99999)
       .then((res) => {
-        console.log(res);
-        setVideoRecordings(res);
+        console.log(res[0]);
+        setVideoRecordings(res[0]);
       })
       .catch((err) => console.log(err));
   }
