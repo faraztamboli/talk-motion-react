@@ -12,7 +12,7 @@ function useVideoWithSlSubtitles() {
   const video = document.createElement("video");
   video.style.width = "100%";
 
-  async function enterPip() {
+  async function enterPip_old() {
     if (document.pictureInPictureEnabled && !video.disablePictureInPicture) {
       try {
         if (document.pictureInPictureElement) {
@@ -30,6 +30,29 @@ function useVideoWithSlSubtitles() {
       }
     }
   }
+
+    async function enterPip() {
+      const videoElement = document.getElementById('video');
+
+      if (videoElement && document.pictureInPictureEnabled && !videoElement.disablePictureInPicture) {
+        try {
+          if (document.pictureInPictureElement) {
+            await document.exitPictureInPicture();
+          }
+
+          await new Promise((resolve) => {
+            videoElement.onloadedmetadata = resolve;
+          });
+
+          await videoElement.requestPictureInPicture();
+          videoElement.style.visibility = 'hidden';
+          // eslint-disable-next-line
+          state.in_pip = true;
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
 
   async function exitPip() {
     if (video !== undefined) {

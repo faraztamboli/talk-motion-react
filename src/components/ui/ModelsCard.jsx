@@ -204,7 +204,7 @@ export const ModelsCard = (props) => {
               defaultValue={1}
               onChange={(value) => setQuantity(value)}
             /> */}
-            {model?.badge === "purchased" ? (<div>You already own this model!</div>) : (
+            {model?.badge === "purchased" ? (<div>You already purchased this model!</div>) : (
                     model.price > 0 ? (
                       <Button type="primary" onClick={handleAddToCart}>
                         Add to Cart
