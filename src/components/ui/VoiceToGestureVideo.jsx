@@ -36,6 +36,7 @@ function VoiceToGestureVideo(props) {
         >
           <video
             ref={videoRef}
+            height="200px"
             className="block w-100p mb-6 bg-black"
             autoPlay
             playsInline

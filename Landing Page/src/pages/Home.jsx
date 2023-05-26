@@ -23,9 +23,9 @@ function Home(props) {
       <AboutSection />
 
       <FeaturesSection />
-
+      {/*
       <PricingSection />
-
+      */}
       <StoriesSection />
 
       <Footer />

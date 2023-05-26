@@ -26,7 +26,7 @@ function About(props) {
             md={12}
             className="about-page-heading about-page-upper-col"
           >
-            <h2>Easy gesture to voice and voice to gesture converter.</h2>
+            <h2>Easy sign language to voice and voice to sign language converter.</h2>
           </Col>
           <Col span={12} xs={24} md={12} className="about-page-upper-col">
             <img

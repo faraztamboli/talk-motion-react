@@ -35,9 +35,11 @@ function Header(props) {
           <Link to="/guide" className="home-header-links">
             Features
           </Link>
+          {/*
           <HashLink to="/#pricing" className="home-header-links">
             Pricing
           </HashLink>
+          */}
           <Link to="/leadership" className="home-header-links">
             Our Team
           </Link>

@@ -31,8 +31,8 @@ function ModelPrice(props) {
   function handleRecordingSearch(value) {
     getMyVideoRecordings(value, 0, 99999)
       .then((res) => {
-        console.log(res);
-        setVideoRecordings(res);
+        console.log(res[0]);
+        setVideoRecordings(res[0]);
       })
       .catch((err) => console.log(err));
   }
@@ -62,9 +62,9 @@ function ModelPrice(props) {
   return (
     <Modal
       open={props.open}
-      title="Create a new Model"
+      title="Add a video recording or a model"
       destroyOnClose
-      okText="Create"
+      okText="Add"
       cancelText="Cancel"
       onCancel={props.onCancel}
       onOk={handleOnOk}
@@ -77,7 +77,7 @@ function ModelPrice(props) {
             label: (
               <span>
                 <Icon />
-                {id == 1 ? "Recording" : "Modal"}
+                {id == 1 ? "Recording" : "Model"}
               </span>
             ),
             key: id,
@@ -214,7 +214,7 @@ function App(props) {
         className="converter-btns mr-3"
         onClick={() => setOpen(true)}
       >
-        Save Content
+        Add Content
       </Button>
 
       <ModelPrice

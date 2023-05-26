@@ -33,7 +33,7 @@ function GuidePageVideo(props) {
   return (
     <div style={divStyle}>
       <h2 style={h2Style}>
-        Easy gesture to voice and voice to gesture converter.
+        Easy sign language to voice and voice to sign language converter.
       </h2>
       <img
         src={TalkMotionImg}

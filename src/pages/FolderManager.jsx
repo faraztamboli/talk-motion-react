@@ -10,6 +10,7 @@ function FolderManager() {
   const [childLoading, setChildLoading] = useState(false);
   const [tree, setTree] = useState([]);
   const [childrens, setChildrens] = useState([]);
+  const [contents, setContents] = useState([]);
   const { getFolderAndContentsAndPermissions, saveFolder } = useFolders();
 
   const { folderId } = useParams();
@@ -36,6 +37,7 @@ function FolderManager() {
           console.log(res);
           setChildrens(() => res.children);
           setChildLoading(false);
+          setContents(() => res.contents);
         })
         .catch((err) => {
           console.log(err);
@@ -99,7 +101,7 @@ function FolderManager() {
                     </div>
                     <div className="course-summary-content">
                       <div className="course-summary-section">
-                        <h3>Childs</h3>
+                        <h3>Topics</h3>
                         <ul>
                           {child.children.length > 0
                             ? child.children.map((nestedChilds) => (
@@ -148,7 +150,7 @@ function FolderManager() {
                     </div>
                     <div className="course-summary-content">
                       <div className="course-summary-section">
-                        <h3>Childs</h3>
+                        <h3>Sub Topics</h3>
                         <ul>
                           {child.children.length > 0
                             ? child.children.map((nestedChilds) => (
@@ -161,7 +163,7 @@ function FolderManager() {
                                   </Link>
                                 </li>
                               ))
-                            : "Nothing to show"}
+                            : "None"}
                         </ul>
                       </div>
                       <div className="course-summary-section">
@@ -182,19 +184,41 @@ function FolderManager() {
                                   </Link>
                                 </li>
                               ))
-                            : "Nothing to show"}
+                            : "None"}
                         </ul>
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                "Nothing to show"
+              <div className="course-summary-content">
+                <div className="course-summary-section">
+                    <h3>Content</h3>
+                    <ul>
+                          {contents.length > 0
+                            ? contents.map((nestedContent) => (
+                                <li key={nestedContent.content_id}>
+                                  <Link
+                                    className="text-black text-16px pl-1 folder-content-card-list-items"
+                                    to={
+                                      nestedContent.type === "model"
+                                        ? `/models/${nestedContent.content_id}`
+                                        : `/video-subtitles/library/${nestedContent.content_id}`
+                                    }
+                                  >
+                                    {nestedContent.title} - {nestedContent.type}
+                                  </Link>
+                                </li>
+                              ))
+                            : "None"}
+                    </ul>
+                  </div>
+               </div>
               )
             ) : (
               <div className="course-summary">
                 <div className="course-summary-header">
-                  <h2>Nothing to show</h2>
+                  <h2>Nothing to show---</h2>
                 </div>
                 <div className="course-summary-content">
                   <p>No content found</p>
