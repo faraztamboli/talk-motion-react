@@ -42,6 +42,8 @@ export default function Models(props) {
       publicPageSize
     )
       .then((res) => {
+        // removing purchased models and setting the state
+        // res[0].filter((model) => model.badge != "purchased")
         setPublicModels(res[0]);
         setTotalPublicModels(res[1]["count(*)"]);
       })
@@ -150,7 +152,7 @@ export default function Models(props) {
             style={{ width: "500px" }}
           />
         </Row>
-        {totalPublicModels > 9 && (
+        {totalPublicModels > 8 && (
           <div className="flex flex-center-center mt-6">
             <Pagination
               defaultCurrent={1}

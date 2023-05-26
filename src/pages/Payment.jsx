@@ -20,7 +20,6 @@ function Payment() {
     // Create PaymentIntent as soon as the page loads
     purchaseCart()
       .then((res) => {
-        debugger;
         const newArray = Object.keys(res).map((id) => ({
           id: id,
           client_secret: res[id].subscription["client_secret"],

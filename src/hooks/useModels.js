@@ -2,8 +2,10 @@ import React from "react";
 import JS2Py from "../remotepyjs";
 import useLocalStorage from "./useLocalStorage";
 import usePayment from "./usePayment";
+import { useDispatch } from "react-redux";
 
 function useModels() {
+  const dispatch = useDispatch();
   const [token] = useLocalStorage("token");
   const { getCart } = usePayment();
 
@@ -22,7 +24,6 @@ function useModels() {
           end,
           function (res) {
             if (res.constructor == Array) {
-              console.log(res);
               resolve(res);
             }
           }
@@ -44,7 +45,6 @@ function useModels() {
           end,
           function (res) {
             if (res.constructor == Array) {
-              console.log(res);
               resolve(res);
             }
           }
@@ -403,7 +403,9 @@ function useModels() {
             resolve(res);
             setTimeout(() => {
               getCart()
-                .then((res) => console.log(res))
+                .then((res) => {
+                  console.log(res);
+                })
                 .catch((err) => console.log(err));
             }, 100);
           }
