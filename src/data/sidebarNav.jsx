@@ -70,7 +70,7 @@ const items = [
         "/video-subtititles/classrooms"
       ),
       getItem(
-        "Staff Classrooms",
+        "Staff Rooms",
         "45",
         <Link to="/video-subtitles/staff-classrooms">
           <MdOutlineFolderSpecial />
