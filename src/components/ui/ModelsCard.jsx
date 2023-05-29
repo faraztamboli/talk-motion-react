@@ -18,8 +18,11 @@ import ModelPrice from "../../components/ui/ModelPrice";
 import plurkImg from "../../media/images/plurk.png";
 //import useModels from "../../hooks/useModels";
 
+import useModels from "../../hooks/useModels";
+
 export const ModelsCard = (props) => {
   const [quantity, setQuantity] = useState(1);
+  const { getProductForFree } = useModels();
   const {
     model,
     deleteModel,
@@ -27,7 +30,6 @@ export const ModelsCard = (props) => {
     purchaseModel,
     addNewTrainer,
     addOrRemoveCartProduct,
-    getProductForFree,
     loading,
     setLoading,
     showMessage,
@@ -106,12 +108,19 @@ export const ModelsCard = (props) => {
     },
     {
       key: "4",
-      label: <div onClick={() => purchaseModel(model.id)}>Purchase</div>,
+      label: (
+        <div onClick={() => purchaseModel(model.id)}>Purchase</div>
+      ),
     },
 
     {
       key: "5",
-      label: <ModelPrice model_id={model.id} product_id={model.product_id} />,
+      label: (
+        <ModelPrice
+          model_id={model.id}
+          product_id={model.product_id}
+        />
+      ),
     },
   ];
 
@@ -125,7 +134,10 @@ export const ModelsCard = (props) => {
         className="models-card"
         style={{ minWidth: 200, height: "100%" }}
       >
-        <div className="flex" style={{ justifyContent: "space-between" }}>
+        <div
+          className="flex"
+          style={{ justifyContent: "space-between" }}
+        >
           <div
             className="logo_div"
             style={{
@@ -156,7 +168,9 @@ export const ModelsCard = (props) => {
 
         <div className="card_content" style={{ marginTop: "1.5rem" }}>
           <h2 className="models-card-heading">{model.title}</h2>
-          <h3 className="models-card-description">{model.description}</h3>
+          <h3 className="models-card-description">
+            {model.description}
+          </h3>
         </div>
 
 
@@ -185,7 +199,11 @@ export const ModelsCard = (props) => {
           <Avatar.Group>
             {model.trainers.map((trainer, index) => {
               return (
-                <Tooltip key={index} title={trainer.username} placement="top">
+                <Tooltip
+                  key={index}
+                  title={trainer.username}
+                  placement="top"
+                >
                   <Avatar
                     src={trainer.sm_img ? trainer.sm_img : null}
                     icon={<UserOutlined />}

@@ -36,8 +36,14 @@ export default function Models(props) {
 
   useEffect(() => {
     setPublicLoading(true);
-    getPublicModels("", (publicPage - 1) * publicPageSize, publicPageSize)
+    getPublicModels(
+      "",
+      (publicPage - 1) * publicPageSize,
+      publicPageSize
+    )
       .then((res) => {
+        // removing purchased models and setting the state
+        // res[0].filter((model) => model.badge != "purchased")
         setPublicModels(res[0]);
         setTotalPublicModels(res[1]["count(*)"]);
       })
@@ -90,7 +96,9 @@ export default function Models(props) {
       });
   }
 
-  const modelStyle = props.sm ? { padding: "15px" } : { padding: "24px" };
+  const modelStyle = props.sm
+    ? { padding: "15px" }
+    : { padding: "24px" };
   const emptyImgStyle = { filter: "saturate(12)" };
 
   const { title, description } = modelsDetails;
@@ -123,7 +131,6 @@ export default function Models(props) {
                       purchaseModel={purchaseModel}
                       addNewTrainer={addNewTrainer}
                       addOrRemoveCartProduct={addOrRemoveCartProduct}
-                      getProductForFree={getProductForFree}
                       key={model.key}
                       showMessage={showMessage}
                     />
@@ -139,9 +146,13 @@ export default function Models(props) {
                   />
                 </div>
               )}
-          <Skeleton active loading={publicLoading} style={{ width: "500px" }} />
+          <Skeleton
+            active
+            loading={publicLoading}
+            style={{ width: "500px" }}
+          />
         </Row>
-        {totalPublicModels > 9 && (
+        {totalPublicModels > 8 && (
           <div className="flex flex-center-center mt-6">
             <Pagination
               defaultCurrent={1}

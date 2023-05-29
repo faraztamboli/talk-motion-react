@@ -1,27 +1,31 @@
 import { Button, Skeleton } from "antd";
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useModels from "../../hooks/useModels";
 import usePayment from "../../hooks/usePayment";
 import modelImg from "../../media/images/plurk.png";
+import useMessageApi from "../../hooks/useMessageApi";
 
 function Cart() {
+  const { contextHolder, showMessage } = useMessageApi();
   const [loading, setLoading] = useState(true);
+  const [total, setTotal] = useState(0);
   const [btnLoading, setBtnLoading] = useState(false);
-  const [cart, setCart] = useState([]);
-  const [ids, setIds] = useState([]);
+  // const [cart, setCart] = useState([]);
+  // const [ids, setIds] = useState([]);
   const { getCart, purchaseCart } = usePayment();
   const { addOrRemoveCartProduct } = useModels();
+  let cart = useSelector((state) => state.cart.cartProducts);
+  let ids = useSelector((state) => state.cart.cartIds);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     getCart()
       .then((res) => {
-        console.log(res);
-        setIds(Object.keys(res));
-        setCart(Object.values(res));
-        console.log(cart);
+        debugger;
+        // setIds(Object.keys(res));
         setLoading(false);
       })
       .catch((err) => {
@@ -30,42 +34,35 @@ function Cart() {
       });
   }, []);
 
-  function handlePurchaseCart() {
-    setBtnLoading(true);
-    purchaseCart()
-      .then((res) => {
-        console.log(res);
-        setBtnLoading(false);
-        navigate("/payment");
-      })
-      .catch((err) => {
-        console.log(err);
-        setBtnLoading(false);
-      });
-  }
+  useEffect(() => {
+    cart = Object.values(cart);
+    setTotal(
+      cart.reduce((total, prod) => {
+        return prod.price_detail?.unit_amount + total;
+      }, 0)
+    );
+  }, [cart]);
+
+  const handleRemoveProduct = (id) => {
+    addOrRemoveCartProduct(id, -1)
+      .then((res) =>
+        showMessage("success", "Product removed successfully!")
+      )
+      .catch((err) =>
+        showMessage("error", "Something bad happened!")
+      );
+  };
 
   return (
     <div className="container flex flex-center-center">
+      {contextHolder}
       <div className="w-90p mt-3">
         <div className="flex flex-between-center mb-10">
           <h2>Your Cart</h2>
           <div className="total flex flex-center-center">
             <h3 className="mr-4">Sub-total:</h3>
-            <p>
-              $
-              {cart.reduce((total, prod) => {
-                return prod.price_detail?.unit_amount + total;
-              }, 0)}
-            </p>
+            <p>${total}</p>
           </div>
-          {/* <Button
-            type="primary"
-            className="converter-btns"
-            onClick={handlePurchaseCart}
-            loading={btnLoading}
-          >
-            Checkout
-          </Button> */}
         </div>
         {!loading &&
           cart.length > 0 &&
@@ -85,11 +82,7 @@ function Cart() {
               </div>
               <div>
                 <Button
-                  onClick={() => {
-                    addOrRemoveCartProduct(ids[index], -1)
-                      .then((res) => console.log(res))
-                      .catch((err) => console.log(err));
-                  }}
+                  onClick={() => handleRemoveProduct(ids[index])}
                 >
                   Remove
                 </Button>

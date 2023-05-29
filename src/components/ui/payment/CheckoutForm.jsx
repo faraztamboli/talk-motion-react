@@ -9,6 +9,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { useNavigate } from "react-router-dom";
 import useMessageApi from "../../../hooks/useMessageApi";
+import { Button } from "antd";
 
 function CheckoutForm(props) {
   const stripe = useStripe();
@@ -74,7 +75,7 @@ function CheckoutForm(props) {
           id="payment-element"
           options={paymentElementOptions}
         />
-        <button
+        <Button
           disabled={isLoading || !stripe || !elements}
           id="submit"
           type="primary"
@@ -86,7 +87,7 @@ function CheckoutForm(props) {
               "Pay now"
             )}
           </span>
-        </button>
+        </Button>
       </form>
     </div>
   );
