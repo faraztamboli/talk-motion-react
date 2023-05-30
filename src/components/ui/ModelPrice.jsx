@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Tabs, Select, Button, Space } from "antd";
+import {
+  Modal,
+  Form,
+  Input,
+  Tabs,
+  Select,
+  Button,
+  Space,
+} from "antd";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import { PlusOutlined } from "@ant-design/icons/lib/icons";
 import usePayment from "../../hooks/usePayment";
@@ -80,13 +88,15 @@ function ModelPrice(props) {
                     <Form.Item name="currency" label="Currency">
                       <Select>
                         {supportedCurrencies?.length > 0 &&
-                          supportedCurrencies.map((currency, index) => {
-                            return (
-                              <Option key={index} value={currency}>
-                                {currency}
-                              </Option>
-                            );
-                          })}
+                          supportedCurrencies.map(
+                            (currency, index) => {
+                              return (
+                                <Option key={index} value={currency}>
+                                  {currency}
+                                </Option>
+                              );
+                            }
+                          )}
                       </Select>
                     </Form.Item>
                   </Form>
@@ -97,7 +107,9 @@ function ModelPrice(props) {
                   items={new Array(2).fill(null).map((_, i) => {
                     const id = String(i + 1);
                     return {
-                      label: <span>{id == 1 ? "Fixed" : "Metered"}</span>,
+                      label: (
+                        <span>{id == 1 ? "Fixed" : "Metered"}</span>
+                      ),
                       key: id,
                       children:
                         id == 1 ? (
@@ -123,19 +135,26 @@ function ModelPrice(props) {
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Please enter the unit price!",
+                                    message:
+                                      "Please enter the unit price!",
                                   },
                                 ]}
                               >
                                 <Input type="number" />
                               </Form.Item>
-                              <Form.Item name="currency" label="Currency">
+                              <Form.Item
+                                name="currency"
+                                label="Currency"
+                              >
                                 <Select>
                                   {supportedCurrencies?.length > 0 &&
                                     supportedCurrencies.map(
                                       (currency, index) => {
                                         return (
-                                          <Option key={index} value={currency}>
+                                          <Option
+                                            key={index}
+                                            value={currency}
+                                          >
                                             {currency}
                                           </Option>
                                         );
@@ -143,7 +162,10 @@ function ModelPrice(props) {
                                     )}
                                 </Select>
                               </Form.Item>
-                              <Form.Item name="interval" label="Interval">
+                              <Form.Item
+                                name="interval"
+                                label="Interval"
+                              >
                                 <Select>
                                   <Option value="day">day</Option>
                                   <Option value="week">week</Option>
@@ -158,17 +180,25 @@ function ModelPrice(props) {
                                 rules={[
                                   {
                                     required: true,
-                                    message: "Please enter the interval count!",
+                                    message:
+                                      "Please enter the interval count!",
                                   },
                                 ]}
                               >
                                 <Input type="number" />
                               </Form.Item>
 
-                              <Form.Item name="usagetype" label="Usage Type">
+                              <Form.Item
+                                name="usagetype"
+                                label="Usage Type"
+                              >
                                 <Select>
-                                  <Option value="licensed">licensed</Option>
-                                  <Option value="metered">metered</Option>
+                                  <Option value="licensed">
+                                    licensed
+                                  </Option>
+                                  <Option value="metered">
+                                    metered
+                                  </Option>
                                 </Select>
                               </Form.Item>
                             </Form>
@@ -187,13 +217,19 @@ function ModelPrice(props) {
                               }}
                               autoComplete="off"
                             >
-                              <Form.Item name="currency" className="flex">
+                              <Form.Item
+                                name="currency"
+                                className="flex"
+                              >
                                 <Select>
                                   {supportedCurrencies?.length > 0 &&
                                     supportedCurrencies.map(
                                       (currency, index) => {
                                         return (
-                                          <Option key={index} value={currency}>
+                                          <Option
+                                            key={index}
+                                            value={currency}
+                                          >
                                             {currency}
                                           </Option>
                                         );
@@ -206,7 +242,11 @@ function ModelPrice(props) {
                                   <>
                                     {console.log(fields)}
                                     {fields.map(
-                                      ({ key, name, ...restField }) => (
+                                      ({
+                                        key,
+                                        name,
+                                        ...restField
+                                      }) => (
                                         <Space
                                           key={key}
                                           style={{
@@ -217,11 +257,15 @@ function ModelPrice(props) {
                                         >
                                           <Form.Item
                                             {...restField}
-                                            name={[name, "unit_amount"]}
+                                            name={[
+                                              name,
+                                              "unit_amount",
+                                            ]}
                                             rules={[
                                               {
                                                 required: true,
-                                                message: "Missing tiers",
+                                                message:
+                                                  "Missing tiers",
                                               },
                                             ]}
                                           >
@@ -236,14 +280,17 @@ function ModelPrice(props) {
                                             rules={[
                                               {
                                                 required: true,
-                                                message: "Missing upto date",
+                                                message:
+                                                  "Missing upto date",
                                               },
                                             ]}
                                           >
                                             <Input placeholder="Up to" />
                                           </Form.Item>
                                           <MinusCircleOutlined
-                                            onClick={() => remove(name)}
+                                            onClick={() =>
+                                              remove(name)
+                                            }
                                           />
                                         </Space>
                                       )
@@ -284,12 +331,21 @@ function App(props) {
 
   const onCreate = (values) => {
     setLoading(true);
-    console.log(values);
+    console.log("ModelPrice.jsx - onCreate:", values);
 
     // For OneTime
-    if (values.usagetype === undefined && values.metered === undefined) {
+    if (
+      values.usagetype === undefined &&
+      values.metered === undefined
+    ) {
       console.log(values);
-      setProductPrice(product_id, values.unitprice, null, values.currency, null)
+      setProductPrice(
+        product_id,
+        values.unitprice,
+        null,
+        values.currency,
+        null
+      )
         .then((res) => {
           console.log(res);
           setLoading(false);
@@ -311,11 +367,17 @@ function App(props) {
       values.metered === undefined
     ) {
       console.log(values);
-      setProductPrice(product_id, values.unitprice, null, values.currency, {
-        interval: values.interval,
-        usage_type: values.usage_type,
-        interval_count: values.interval_count,
-      })
+      setProductPrice(
+        product_id,
+        values.unitprice,
+        null,
+        values.currency,
+        {
+          interval: values.interval,
+          usage_type: values.usagetype,
+          interval_count: values.intervalcount,
+        }
+      )
         .then((res) => {
           console.log(res);
           setLoading(false);
@@ -345,7 +407,13 @@ function App(props) {
       console.log(tiers_arr);
       values.metered.map((value, index) => {
         console.log(value, index);
-        setProductPrice(product_id, null, tiers_arr, values.currency, null)
+        setProductPrice(
+          product_id,
+          null,
+          tiers_arr,
+          values.currency,
+          null
+        )
           .then((res) => {
             console.log(res);
             setLoading(false);

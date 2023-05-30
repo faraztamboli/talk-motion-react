@@ -173,26 +173,20 @@ export const ModelsCard = (props) => {
           </h3>
         </div>
 
-
-            {model.price > 0 ? (
-                              <div>
-                                <h2>
-                                  ${model.price / 100} /{" "}
-                                  {model.recurring
-                                    ? JSON.parse(model?.recurring).interval
-                                    : "lifetime"}
-                                </h2>
-                              </div>
-                            ) : (
-                              <div>
-                                <h2>Free
-                                </h2>
-                              </div>
-
-                            )
-            }
-
-
+        {model.price > 0 ? (
+          <div>
+            <h2>
+              ${model.price / 100} /{" "}
+              {model.recurring
+                ? JSON.parse(model?.recurring).interval
+                : "lifetime"}
+            </h2>
+          </div>
+        ) : (
+          <div>
+            <h2>Free</h2>
+          </div>
+        )}
 
         <div className="trainer_div" style={{ marginTop: "1rem" }}>
           <h2 className="contributors-heading">Trainers</h2>
@@ -222,16 +216,16 @@ export const ModelsCard = (props) => {
               defaultValue={1}
               onChange={(value) => setQuantity(value)}
             /> */}
-            {model?.badge === "purchased" ? (<div>You already purchased this model!</div>) : (
-                    model.price > 0 ? (
-                      <Button type="primary" onClick={handleAddToCart}>
-                        Add to Cart
-                      </Button>
-                    ) : (
-                      <Button type="primary" onClick={handleGetModel}>
-                        Get
-                      </Button>
-                    )
+            {model?.badge === "purchased" ? (
+              <div>You already purchased this model!</div>
+            ) : model.price > 0 ? (
+              <Button type="primary" onClick={handleAddToCart}>
+                Add to Cart
+              </Button>
+            ) : (
+              <Button type="primary" onClick={handleGetModel}>
+                Get
+              </Button>
             )}
           </Space>
         )}

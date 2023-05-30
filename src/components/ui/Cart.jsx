@@ -14,7 +14,7 @@ function Cart() {
   const [btnLoading, setBtnLoading] = useState(false);
   // const [cart, setCart] = useState([]);
   // const [ids, setIds] = useState([]);
-  const { getCart, purchaseCart } = usePayment();
+  const { getCart } = usePayment();
   const { addOrRemoveCartProduct } = useModels();
   let cart = useSelector((state) => state.cart.cartProducts);
   let ids = useSelector((state) => state.cart.cartIds);
@@ -24,7 +24,6 @@ function Cart() {
   useEffect(() => {
     getCart()
       .then((res) => {
-        debugger;
         // setIds(Object.keys(res));
         setLoading(false);
       })
@@ -35,7 +34,6 @@ function Cart() {
   }, []);
 
   useEffect(() => {
-    cart = Object.values(cart);
     setTotal(
       cart.reduce((total, prod) => {
         return prod.price_detail?.unit_amount + total;
