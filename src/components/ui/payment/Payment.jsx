@@ -16,6 +16,7 @@ export default function App() {
   const { purchaseCart } = usePayment();
 
   useEffect(() => {
+    console.log('purchaseCart called: payment\Payment.jsx');
     purchaseCart()
       .then((res) => {
         console.log(res);

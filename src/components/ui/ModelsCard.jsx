@@ -52,6 +52,7 @@ export const ModelsCard = (props) => {
 
   const handleGetModel = () => {
     debugger;
+    console.log('getProductForFree called: ModelsCard.jsx');
     getProductForFree(model.product_id)
       .then((res) => {})
       .catch((err) => {
