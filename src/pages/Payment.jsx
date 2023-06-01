@@ -3,7 +3,6 @@ import { Col, Row } from "antd";
 import Cart from "../components/ui/Cart";
 import CheckoutForm from "../components/ui/payment/CheckoutForm";
 import usePayment from "../hooks/usePayment";
-import useModels from "../hooks/useModels";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 
@@ -12,8 +11,7 @@ const stripePromise = loadStripe(
 );
 
 function Payment() {
-  const { getCart, purchaseCart } = usePayment();
-  const { addOrRemoveCartProduct } = useModels();
+  const { purchaseCart } = usePayment();
   const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
@@ -21,12 +19,9 @@ function Payment() {
     console.log('purchaseCart called: pages\Payment.jsx');
     purchaseCart()
       .then((res) => {
-        const newArray = Object.keys(res).map((id) => ({
-          id: id,
-          client_secret: res[id].subscription["client_secret"],
-        }));
-        const secrets = newArray.map((item) => item.client_secret);
-        setClientSecret(secrets[Object.keys(res).length - 1]);
+        console.log("purchaseCart res:", res);
+        const secrets = res.client_secret;
+        setClientSecret(res.client_secret);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -59,9 +54,11 @@ function Payment() {
               className="payment-second-col"
             >
               {clientSecret.length > 8 ? (
-                <Elements options={options} stripe={stripePromise}>
-                  <CheckoutForm />
-                </Elements>
+                <>
+                  <Elements options={options} stripe={stripePromise}>
+                    <CheckoutForm />
+                  </Elements>
+                </>
               ) : (
                 <h1>Client Secret Not Set!</h1>
               )}
