@@ -16,6 +16,7 @@ function Payment() {
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
+    console.log('purchaseCart called: pages\Payment.jsx');
     purchaseCart()
       .then((res) => {
         console.log("purchaseCart res:", res);

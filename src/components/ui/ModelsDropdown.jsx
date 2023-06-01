@@ -6,6 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectModel } from "../../app/features/modelSlice";
 import JS2Py from "../../remotepyjs";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import {
+  setTrainingStatusOff,
+  setTrainingStatusOn,
+} from "../../app/features/trainerSlice";
 
 const { Option } = Select;
 
