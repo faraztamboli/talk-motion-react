@@ -66,6 +66,7 @@ function CheckoutForm(props) {
 
   return (
     <div className="container">
+      <h1>Payment Method</h1>
       <form id="payment-form" onSubmit={handleSubmit}>
         <LinkAuthenticationElement
           id="link-authentication-element"

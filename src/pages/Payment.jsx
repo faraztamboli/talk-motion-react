@@ -53,9 +53,11 @@ function Payment() {
               className="payment-second-col"
             >
               {clientSecret.length > 8 ? (
-                <Elements options={options} stripe={stripePromise}>
-                  <CheckoutForm />
-                </Elements>
+                <>
+                  <Elements options={options} stripe={stripePromise}>
+                    <CheckoutForm />
+                  </Elements>
+                </>
               ) : (
                 <h1>Client Secret Not Set!</h1>
               )}
