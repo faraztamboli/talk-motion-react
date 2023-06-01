@@ -61,7 +61,7 @@ function Cart() {
           <h2>Your Cart</h2>
           <div className="total flex flex-center-center">
             <h3 className="mr-4">Sub-total:</h3>
-            <p>${total}</p>
+            <p>${total/100}</p>
           </div>
         </div>
         {!loading &&
@@ -78,7 +78,7 @@ function Cart() {
                 </div>
               </div>
               <div className="purchase-model-list-item-price">
-                <p>${elem.price_detail?.unit_amount}</p>
+                <p>${elem.price_detail?.unit_amount/100}</p>
               </div>
               <div>
                 <Button
