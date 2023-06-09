@@ -10,10 +10,7 @@ import useMessageApi from "../../hooks/useMessageApi";
 function Cart() {
   const { contextHolder, showMessage } = useMessageApi();
   const [loading, setLoading] = useState(true);
-  const [total, setTotal] = useState(0);
-  const [btnLoading, setBtnLoading] = useState(false);
-  // const [cart, setCart] = useState([]);
-  // const [ids, setIds] = useState([]);
+  const [total, setTotal] = useState(null);
   const { getCart } = usePayment();
   const { addOrRemoveCartProduct } = useModels();
   let cart = useSelector((state) => state.cart.cartProducts);
@@ -41,6 +38,11 @@ function Cart() {
     );
   }, [cart]);
 
+  useEffect(() => {
+    debugger;
+    total < 1 && total != null ? navigate("/models") : "";
+  }, [total]);
+
   const handleRemoveProduct = (id) => {
     addOrRemoveCartProduct(id, -1)
       .then((res) =>
@@ -59,7 +61,7 @@ function Cart() {
           <h2>Your Cart</h2>
           <div className="total flex flex-center-center">
             <h3 className="mr-4">Sub-total:</h3>
-            <p>${total}</p>
+            <p>${total != null ? total : 0}</p>
           </div>
         </div>
         {!loading &&

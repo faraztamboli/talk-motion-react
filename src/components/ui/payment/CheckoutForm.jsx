@@ -30,7 +30,7 @@ function CheckoutForm(props) {
   }, [stripe]);
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    debugger;
 
     const { stripe, elements } = props;
     if (!stripe || !elements) {
@@ -67,7 +67,13 @@ function CheckoutForm(props) {
   return (
     <div className="container">
       <h1>Payment Method</h1>
-      <form id="payment-form" onSubmit={handleSubmit}>
+      <form
+        id="payment-form"
+        onSubmit={(e) => {
+          handleSubmit(e);
+          e.preventDefault();
+        }}
+      >
         <LinkAuthenticationElement
           id="link-authentication-element"
           onChange={(e) => setEmail(e.target.value)}
@@ -77,12 +83,13 @@ function CheckoutForm(props) {
           options={paymentElementOptions}
         />
         <Button
-          disabled={isLoading || !stripe || !elements}
+          disabled={disablePayBtn || !stripe || !elements}
           id="submit"
           type="primary"
+          htmlType="submit"
         >
           <span id="button-text">
-            {isLoading ? (
+            {disablePayBtn ? (
               <div className="spinner" id="spinner"></div>
             ) : (
               "Pay now"
