@@ -47,7 +47,6 @@ export const ModelsDropdown = (props) => {
     // load model here
     // loadModel2
       JS2Py.PythonFunctions.TalkMotionServer.loadModel2(
-        token,
         value,
         function (res) {
             dispatch(setTrainingStatusOff());

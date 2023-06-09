@@ -34,7 +34,7 @@ function Cart() {
     setTotal(
       cart.reduce((total, prod) => {
         return prod.price_detail?.unit_amount + total;
-      }, 0)
+      }, 0) / 100
     );
   }, [cart]);
 
@@ -78,7 +78,7 @@ function Cart() {
                 </div>
               </div>
               <div className="purchase-model-list-item-price">
-                <p>${elem.price_detail?.unit_amount}</p>
+                <p>${elem.price_detail?.unit_amount / 100}</p>
               </div>
               <div>
                 <Button
