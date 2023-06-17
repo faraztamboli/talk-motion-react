@@ -40,7 +40,7 @@ function CheckoutForm(props) {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000/payment-success",
+        return_url: "http://127.0.0.1/5173/payment-successful",
       },
     });
 
