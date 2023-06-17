@@ -21,6 +21,7 @@ import {
 } from "../app/features/modelSlice";
 import useMessageApi from "../hooks/useMessageApi";
 import { useParams } from "react-router-dom";
+import usePayment from "../hooks/usePayment";
 
 export default function Models(props) {
   const [publicLoading, setPublicLoading] = useState(true);
@@ -40,6 +41,7 @@ export default function Models(props) {
     addOrRemoveCartProduct,
     getProductForFree,
   } = useModels();
+  const { confirmPurchase } = usePayment();
 
   const [urlParams, setUrlParams] = useState({
     payment_intent: null,
@@ -82,6 +84,17 @@ export default function Models(props) {
     params.redirect_status = queryParams.get("redirect_status");
     setUrlParams((state) => params);
   }, []);
+
+  useEffect(() => {
+    if (urlParams.redirect_status == null) return;
+    confirmPurchase(
+      urlParams.payment_intent,
+      urlParams.payment_intent_client_secret,
+      urlParams.redirect_status
+    ).then((res) => {
+      showMessage("info", `{res.operation_status} - res.error`);
+    });
+  }, [urlParams]);
 
   useEffect(() => {
     setPublicLoading(true);

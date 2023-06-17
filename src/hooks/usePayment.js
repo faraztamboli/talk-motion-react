@@ -75,7 +75,6 @@ function usePayment() {
   }
 
   function confirmPurchase(
-    token,
     payment_intent,
     payment_intent_client_secret,
     redirect_status
@@ -83,7 +82,7 @@ function usePayment() {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.confirmPurchase(
-          sessionid,
+          token,
           payment_intent,
           payment_intent_client_secret,
           redirect_status,
@@ -98,7 +97,12 @@ function usePayment() {
     });
   }
 
-  return { getSupportedCurrencies, getCart, purchaseCart };
+  return {
+    getSupportedCurrencies,
+    getCart,
+    purchaseCart,
+    confirmPurchase,
+  };
 }
 
 export default usePayment;
