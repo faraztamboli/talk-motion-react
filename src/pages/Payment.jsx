@@ -16,7 +16,7 @@ function Payment() {
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
-    console.log('purchaseCart called: pages\Payment.jsx');
+    console.log("purchaseCart called: pagesPayment.jsx");
     purchaseCart()
       .then((res) => {
         console.log("purchaseCart res:", res);
@@ -53,7 +53,7 @@ function Payment() {
               lg={12}
               className="payment-second-col"
             >
-              {clientSecret.length > 8 ? (
+              {clientSecret && clientSecret.length > 8 ? (
                 <>
                   <Elements options={options} stripe={stripePromise}>
                     <CheckoutForm />

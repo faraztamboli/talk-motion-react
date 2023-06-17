@@ -60,8 +60,8 @@ const PublicUserProfile = React.lazy(() =>
 );
 const Signup = React.lazy(() => import("../pages/Signup"));
 const Payment = React.lazy(() => import("../pages/Payment"));
-const PaymentSuccessful = React.lazy(() =>
-  import("../pages/PaymentSuccessful")
+const PaymentConfirmation = React.lazy(() =>
+  import("../pages/paymentConfirmation")
 );
 // const Payment = React.lazy(() => import("../pages/Payment"));
 // const Payment = React.lazy(() => import("../components/ui/Payment"));
@@ -156,7 +156,7 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      <Route exact path="/models" element={<PrivateRoute />}>
+      <Route path="/models" element={<PrivateRoute />}>
         <Route
           path="/models"
           element={
@@ -485,14 +485,14 @@ function AppRoutes(props) {
       </Route>
 
       <Route
-        path="/payment-successful"
+        path="/payment-confirmation"
         exact
         element={<PrivateRoute />}
       >
         <Route
-          path="/payment-successful"
+          path="/payment-confirmation"
           exact
-          element={<PaymentSuccessful />}
+          element={<PaymentConfirmation />}
         />
       </Route>
 

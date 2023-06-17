@@ -38,7 +38,6 @@ export const ModelsCard = (props) => {
   //const { getProductForFree } = useModels();
 
   const handleAddToCart = () => {
-    debugger;
     addOrRemoveCartProduct(model.product_id, quantity)
       .then((res) => {
         console.log(res);
@@ -51,8 +50,7 @@ export const ModelsCard = (props) => {
   };
 
   const handleGetModel = () => {
-    debugger;
-    console.log('getProductForFree called: ModelsCard.jsx');
+    console.log("getProductForFree called: ModelsCard.jsx");
     getProductForFree(model.product_id)
       .then((res) => {})
       .catch((err) => {

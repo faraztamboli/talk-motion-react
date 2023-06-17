@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Skeleton, Empty, Pagination, Input } from "antd";
+import {
+  Row,
+  Col,
+  Skeleton,
+  Empty,
+  Pagination,
+  Input,
+  Alert,
+  Space,
+  Button,
+} from "antd";
 import { ModelsCard } from "../components/ui/ModelsCard";
 import useModels from "../hooks/useModels";
 import { modelsDetails } from "../data/PageDetails";
@@ -10,6 +20,7 @@ import {
   setModelPaginationSize,
 } from "../app/features/modelSlice";
 import useMessageApi from "../hooks/useMessageApi";
+import { useParams } from "react-router-dom";
 
 export default function Models(props) {
   const [publicLoading, setPublicLoading] = useState(true);
@@ -29,6 +40,12 @@ export default function Models(props) {
     addOrRemoveCartProduct,
     getProductForFree,
   } = useModels();
+
+  const [urlParams, setUrlParams] = useState({
+    payment_intent: null,
+    payment_intent_client_secret: null,
+    redirect_status: null,
+  });
 
   const dispatch = useDispatch();
 
@@ -51,6 +68,19 @@ export default function Models(props) {
         console.log(err);
       });
     setPublicLoading(false);
+  }, []);
+
+  // update query parameter
+  useEffect(() => {
+    const request = window.location.search;
+    const queryParams = new URLSearchParams(request);
+    let params = {};
+    params.payment_intent = queryParams.get("payment_intent");
+    params.payment_intent_client_secret = queryParams.get(
+      "payment_intent_client_secret"
+    );
+    params.redirect_status = queryParams.get("redirect_status");
+    setUrlParams((state) => params);
   }, []);
 
   useEffect(() => {
@@ -106,8 +136,37 @@ export default function Models(props) {
   return (
     <>
       {contextHolder}
+
       <MetaDecorator title={title} description={description} />
       <div style={modelStyle} className="layout-bg mh-100vh">
+        {urlParams.redirect_status && (
+          <Row>
+            <Col span={12} offset={6}>
+              <Space direction="vertical" style={{ width: "100%" }}>
+                {urlParams.redirect_status == "succeeded" ? (
+                  <Alert
+                    message="Payment Successful!"
+                    description="Success Description Success Description Success Description"
+                    type="success"
+                    action={<Button type="primary">Done</Button>}
+                    showIcon
+                    banner
+                    closable
+                  />
+                ) : (
+                  <Alert
+                    message="Payment Unsuccessful!"
+                    description="Error Description Error Description Error Description Error Description"
+                    type="error"
+                    showIcon
+                    banner
+                    closable
+                  />
+                )}
+              </Space>
+            </Col>
+          </Row>
+        )}
         <div className="flex flex-between-center mb-4">
           <h2>Models Available for Purchase</h2>
           <Search
@@ -165,4 +224,11 @@ export default function Models(props) {
       </div>
     </>
   );
+}
+
+export async function loader({ request }) {
+  const url = new URL(request.url);
+  const q = url.searchParams.get("q");
+  const contacts = await getContacts(q);
+  return { contacts };
 }

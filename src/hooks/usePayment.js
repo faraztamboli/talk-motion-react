@@ -74,6 +74,30 @@ function usePayment() {
     });
   }
 
+  function confirmPurchase(
+    token,
+    payment_intent,
+    payment_intent_client_secret,
+    redirect_status
+  ) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.confirmPurchase(
+          sessionid,
+          payment_intent,
+          payment_intent_client_secret,
+          redirect_status,
+          function (res) {
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   return { getSupportedCurrencies, getCart, purchaseCart };
 }
 

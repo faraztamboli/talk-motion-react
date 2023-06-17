@@ -39,7 +39,6 @@ function Cart() {
   }, [cart]);
 
   useEffect(() => {
-    debugger;
     total < 0.1 && total != null ? navigate("/models") : "";
   }, [total]);
 
