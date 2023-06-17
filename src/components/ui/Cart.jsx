@@ -40,7 +40,7 @@ function Cart() {
 
   useEffect(() => {
     debugger;
-    total < 1 && total != null ? navigate("/models") : "";
+    total < 0.1 && total != null ? navigate("/models") : "";
   }, [total]);
 
   const handleRemoveProduct = (id) => {

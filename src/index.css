@@ -1319,3 +1319,15 @@ h4.product-price {
   background-color: #ddd;
 }
 
+/* Successful Page */
+.min-height-100vh {
+  min-height: 100vh; 
+}
+.successful-page .row {
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.checked-icon {
+  max-width: 180px;
+}
+/* END - Successful Page */

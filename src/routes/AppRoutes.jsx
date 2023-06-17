@@ -14,11 +14,18 @@ import Setting from "../pages/Setting";
 const Converter = React.lazy(() => import("../pages/Converter"));
 const Trainer = React.lazy(() => import("../pages/Trainer"));
 const Collector = React.lazy(() => import("../pages/Collector"));
-const ModelTrainer = React.lazy(() => import("../pages/ModelTrainer"));
-const UploadVideo = React.lazy(() => import("../components/ui/UploadVideo"));
+const ModelTrainer = React.lazy(() =>
+  import("../pages/ModelTrainer")
+);
+const UploadVideo = React.lazy(() =>
+  import("../components/ui/UploadVideo")
+);
 const Models = React.lazy(() => import("../pages/Models"));
 const MyModels = React.lazy(() => import("../pages/MyModels"));
-const TrainingModels = React.lazy(() => import("../pages/TrainingModels"));
+const TrainingModels = React.lazy(() =>
+  import("../pages/TrainingModels")
+);
+
 const VideoSubtitlesDesigner = React.lazy(() =>
   import("../pages/VideoSubtitlesDesigner")
 );
@@ -31,13 +38,21 @@ const VideoSubtitlesMyLibrary = React.lazy(() =>
 const VideoWithSubtitles = React.lazy(() =>
   import("../pages/VideoWithSubtitles")
 );
-const FolderManager = React.lazy(() => import("../pages/FolderManager"));
+const FolderManager = React.lazy(() =>
+  import("../pages/FolderManager")
+);
 const UserModel = React.lazy(() => import("../pages/UserModel"));
 const ModelFiles = React.lazy(() => import("../pages/ModelFiles"));
-const ModelConcepts = React.lazy(() => import("../pages/ModelConcepts"));
-const ConceptDetails = React.lazy(() => import("../pages/ConceptDetails"));
+const ModelConcepts = React.lazy(() =>
+  import("../pages/ModelConcepts")
+);
+const ConceptDetails = React.lazy(() =>
+  import("../pages/ConceptDetails")
+);
 const Classrooms = React.lazy(() => import("../pages/Classrooms"));
-const StaffClassrooms = React.lazy(() => import("../pages/StaffClassrooms"));
+const StaffClassrooms = React.lazy(() =>
+  import("../pages/StaffClassrooms")
+);
 const Classroom = React.lazy(() => import("../pages/Classroom"));
 const Profile = React.lazy(() => import("../pages/Profile"));
 const PublicUserProfile = React.lazy(() =>
@@ -45,9 +60,14 @@ const PublicUserProfile = React.lazy(() =>
 );
 const Signup = React.lazy(() => import("../pages/Signup"));
 const Payment = React.lazy(() => import("../pages/Payment"));
+const PaymentSuccessful = React.lazy(() =>
+  import("../pages/PaymentSuccessful")
+);
 // const Payment = React.lazy(() => import("../pages/Payment"));
 // const Payment = React.lazy(() => import("../components/ui/Payment"));
-const ForgotPassword = React.lazy(() => import("../pages/ForgotPassword"));
+const ForgotPassword = React.lazy(() =>
+  import("../pages/ForgotPassword")
+);
 
 function AppRoutes(props) {
   const { sm, md, collapsedWidth } = props;
@@ -63,7 +83,11 @@ function AppRoutes(props) {
             <React.Suspense
               fallback={<Skeleton active style={skeletonStyle} />}
             >
-              <Converter sm={sm} md={md} collapsedWidth={collapsedWidth} />
+              <Converter
+                sm={sm}
+                md={md}
+                collapsedWidth={collapsedWidth}
+              />
             </React.Suspense>
           }
         />
@@ -75,7 +99,11 @@ function AppRoutes(props) {
             <React.Suspense
               fallback={<Skeleton active style={skeletonStyle} />}
             >
-              <Converter sm={sm} md={md} collapsedWidth={collapsedWidth} />
+              <Converter
+                sm={sm}
+                md={md}
+                collapsedWidth={collapsedWidth}
+              />
             </React.Suspense>
           }
         />
@@ -196,7 +224,10 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      <Route path="/models/training-models" element={<PrivateRoute />}>
+      <Route
+        path="/models/training-models"
+        element={<PrivateRoute />}
+      >
         <Route
           path="/models/training-models"
           exact
@@ -210,7 +241,10 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/video-subtitles/designer" element={<PrivateRoute />}>
+      <Route
+        path="/video-subtitles/designer"
+        element={<PrivateRoute />}
+      >
         <Route
           path="/video-subtitles/designer"
           element={
@@ -239,7 +273,10 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/video-subtitles/library" element={<PrivateRoute />}>
+      <Route
+        path="/video-subtitles/library"
+        element={<PrivateRoute />}
+      >
         <Route
           path="/video-subtitles/library"
           element={
@@ -252,7 +289,10 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/video-subtitles/mylibrary" element={<PrivateRoute />}>
+      <Route
+        path="/video-subtitles/mylibrary"
+        element={<PrivateRoute />}
+      >
         <Route
           path="/video-subtitles/mylibrary"
           element={
@@ -281,7 +321,10 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/video-subtitles/folder-manager" element={<PrivateRoute />}>
+      <Route
+        path="/video-subtitles/folder-manager"
+        element={<PrivateRoute />}
+      >
         <Route
           path="/video-subtitles/folder-manager"
           element={
@@ -307,7 +350,10 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/video-subtitles/classrooms" element={<PrivateRoute />}>
+      <Route
+        path="/video-subtitles/classrooms"
+        element={<PrivateRoute />}
+      >
         <Route
           path="/video-subtitles/classrooms"
           element={
@@ -365,7 +411,10 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/store/classrooms/:classroomId" element={<PrivateRoute />}>
+      <Route
+        path="/store/classrooms/:classroomId"
+        element={<PrivateRoute />}
+      >
         <Route
           path="/store/classrooms/:classroomId"
           element={
@@ -432,6 +481,18 @@ function AppRoutes(props) {
             <Payment />
             // {/* </React.Suspense> */}
           }
+        />
+      </Route>
+
+      <Route
+        path="/payment-successful"
+        exact
+        element={<PrivateRoute />}
+      >
+        <Route
+          path="/payment-successful"
+          exact
+          element={<PaymentSuccessful />}
         />
       </Route>
 

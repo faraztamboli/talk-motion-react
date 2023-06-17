@@ -24,17 +24,13 @@ function CheckoutForm(props) {
 
   useEffect(() => {
     if (!stripe) {
-      debugger;
       return;
     }
   }, [stripe]);
 
   const handleSubmit = async (event) => {
-    debugger;
-
     const { stripe, elements } = props;
     if (!stripe || !elements) {
-      debugger;
       return;
     }
 
@@ -44,7 +40,7 @@ function CheckoutForm(props) {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000/success",
+        return_url: "http://localhost:3000/payment-success",
       },
     });
 
