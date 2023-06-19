@@ -10,6 +10,7 @@ const noAuthLayoutPages = [
   "profile",
   "my-models",
   "setting",
+  "my-subscriptions",
   "uploadvideo",
   "video-subtitles",
   "store",

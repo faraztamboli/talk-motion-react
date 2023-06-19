@@ -7,6 +7,7 @@ import { Skeleton } from "antd";
 import ResetPassword from "../pages/ResetPassword";
 import AuthPagesLoader from "../components/ui/AuthPagesLoader";
 import Setting from "../pages/Setting";
+import MySubscriptions from "../pages/MySubscriptions";
 // import Payment from "../components/ui/Payment";
 // import Payment from "../components/ui/TestCheckoutForm";
 
@@ -466,6 +467,20 @@ function AppRoutes(props) {
               fallback={<Skeleton active style={skeletonStyle} />}
             >
               <Setting collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route path="/my-subscriptions" element={<PrivateRoute />}>
+        <Route
+          path="/my-subscriptions"
+          exact
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <MySubscriptions collapsedWidth={collapsedWidth} />
             </React.Suspense>
           }
         />
