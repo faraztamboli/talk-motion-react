@@ -4,6 +4,7 @@ import {
   ContainerOutlined,
   SettingOutlined,
   LogoutOutlined,
+  CreditCardOutlined,
 } from "@ant-design/icons";
 import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
 import JS2Py from "../remotepyjs";
@@ -40,9 +41,22 @@ const userMenu = [
     },
   },
   {
+    key: "mySubscriptions",
+    label: (
+      <Link to="/my-subscriptions" key={3}>
+        <div className="user-menu-items">My Subscriptions</div>
+      </Link>
+    ),
+    icon: <CreditCardOutlined />,
+    style: {
+      paddingTop: ".8rem",
+      paddingBottom: ".8rem",
+    },
+  },
+  {
     key: "setting",
     label: (
-      <Link to="/setting" key={3}>
+      <Link to="/setting" key={4}>
         <div className="user-menu-items">Settings</div>
       </Link>
     ),
@@ -56,7 +70,7 @@ const userMenu = [
     key: "logout",
     id: "logout",
     label: (
-      <div className="user-menu-items" key={4} onClick={handleLogout}>
+      <div className="user-menu-items" key={5} onClick={handleLogout}>
         Logout
       </div>
     ),
