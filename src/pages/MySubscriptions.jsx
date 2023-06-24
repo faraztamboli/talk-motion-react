@@ -20,6 +20,20 @@ function MySubscriptions(props) {
   const [list, setList] = useState([]);
   const [purchaseList, setPurchaseList] = useState();
   const { getPurchaseList, getPurchaseDetail } = useMySubscriptions();
+  const dumyData = [
+    {
+      title: "Ant Design Title 1",
+    },
+    {
+      title: "Ant Design Title 2",
+    },
+    {
+      title: "Ant Design Title 3",
+    },
+    {
+      title: "Ant Design Title 4",
+    },
+  ];
 
   useEffect(() => {
     getPurchaseList()
@@ -91,30 +105,32 @@ function MySubscriptions(props) {
           <br />
           <Row gutter={16}>
             <Col span={8}>
-              <List
-                className="demo-loadmore-list"
-                itemLayout="horizontal"
-                renderItem={(item) => (
-                  <List.Item
-                    actions={[
-                      <a key="list-loadmore-edit">edit</a>,
-                      <a key="list-loadmore-more">more</a>,
-                    ]}
-                  >
-                    <Skeleton>
+              <Card title="List of subscriptions" bordered={false}>
+                <List
+                  itemLayout="horizontal"
+                  dataSource={dumyData}
+                  renderItem={(item, index) => (
+                    <List.Item>
                       <List.Item.Meta
+                        avatar={
+                          <Avatar
+                            src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
+                          />
+                        }
                         title={
                           <a href="https://ant.design">
-                            {item.name?.last}
+                            {item.title}
                           </a>
                         }
                         description="Ant Design, a design language for background applications, is refined by Ant UED Team"
                       />
-                      <div>content</div>
-                    </Skeleton>
-                  </List.Item>
-                )}
-              />
+                      <Button type="primary" danger>
+                        Unsubscribe
+                      </Button>
+                    </List.Item>
+                  )}
+                />
+              </Card>
             </Col>
           </Row>
         </div>
