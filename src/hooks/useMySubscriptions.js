@@ -41,9 +41,28 @@ function useMySubscriptions() {
     });
   }
 
+  function cancelSubscription(subscription_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.cancelSubscription(
+          token,
+          subscription_id,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   return {
     getPurchaseList,
     getPurchaseDetail,
+    cancelSubscription,
   };
 }
 

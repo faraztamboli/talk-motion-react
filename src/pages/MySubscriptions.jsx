@@ -19,7 +19,8 @@ function MySubscriptions(props) {
   const [data, setData] = useState([]);
   const [list, setList] = useState([]);
   const [purchaseList, setPurchaseList] = useState();
-  const { getPurchaseList, getPurchaseDetail } = useMySubscriptions();
+  const { getPurchaseList, getPurchaseDetail, cancelSubscription } =
+    useMySubscriptions();
   const dumyData = [
     {
       title: "Ant Design Title 1",
