@@ -12,6 +12,7 @@ import {
 import UpdateProfile from "../components/ui/UpdateProfile";
 import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
 import useMySubscriptions from "../hooks/useMySubscriptions";
+import SubscriptionList from "../components/ui/SubscriptionList";
 
 function MySubscriptions(props) {
   const [initLoading, setInitLoading] = useState(true);
@@ -106,33 +107,8 @@ function MySubscriptions(props) {
           </Row>
           <br />
           <Row gutter={16}>
-            <Col span={8}>
-              <Card title="List of subscriptions" bordered={false}>
-                <List
-                  itemLayout="horizontal"
-                  dataSource={dumyData}
-                  renderItem={(item, index) => (
-                    <List.Item>
-                      <List.Item.Meta
-                        avatar={
-                          <Avatar
-                            src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
-                          />
-                        }
-                        title={
-                          <a href="https://ant.design">
-                            {item.title}
-                          </a>
-                        }
-                        description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                      />
-                      <Button type="primary" danger>
-                        Unsubscribe
-                      </Button>
-                    </List.Item>
-                  )}
-                />
-              </Card>
+            <Col span={16}>
+              <SubscriptionList />
             </Col>
           </Row>
         </div>
