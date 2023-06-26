@@ -82,7 +82,7 @@ export default function Models(props) {
       "payment_intent_client_secret"
     );
     params.redirect_status = queryParams.get("redirect_status");
-    setUrlParams((state) => params);
+    setUrlParams(params);
   }, []);
 
   useEffect(() => {

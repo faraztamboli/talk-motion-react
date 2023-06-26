@@ -40,9 +40,10 @@ function MySubscriptions(props) {
     getPurchaseList()
       .then((res) => {
         console.log(
-          "purchaseList",
+          "purchaseList.res[4]",
           JSON.parse(res[4].stripe_subscription_json)
         );
+        console.log("purchaseList", res);
         setPurchaseList(res);
       })
       .catch((err) => console.log(err));
