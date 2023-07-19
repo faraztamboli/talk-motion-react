@@ -40,10 +40,7 @@ function MySubscriptions(props) {
   useEffect(() => {
     getPurchaseList()
       .then((res) => {
-        console.log(
-          "purchaseList.res[4]",
-          JSON.parse(res[4].stripe_subscription_json)
-        );
+        console.log("purchaseList.res[4]", res);
         console.log("purchaseList", res);
         setPurchaseList(res);
       })
@@ -108,7 +105,7 @@ function MySubscriptions(props) {
           <br />
           <Row gutter={16}>
             <Col span={16}>
-              <SubscriptionList />
+              <SubscriptionList purchaseList />
             </Col>
           </Row>
         </div>
