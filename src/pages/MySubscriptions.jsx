@@ -105,7 +105,11 @@ function MySubscriptions(props) {
           <br />
           <Row gutter={16}>
             <Col span={16}>
-              <SubscriptionList purchaseList />
+              {purchaseList?.length < 1 ? (
+                <h3>You don't have any Subscriptions!</h3>
+              ) : (
+                <SubscriptionList purchaseList={purchaseList} />
+              )}
             </Col>
           </Row>
         </div>
