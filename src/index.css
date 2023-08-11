@@ -1331,3 +1331,12 @@ h4.product-price {
   max-width: 180px;
 }
 /* END - Successful Page */
+
+/* START - My Subscription Page */
+.mySub-product-info-pills span {
+  padding: 5px 10px;
+  background: #f6f6f6;
+  border-radius: 50px;
+  border: 0.5px solid #d4d4d4;
+}
+/* END - My Subscription Page */

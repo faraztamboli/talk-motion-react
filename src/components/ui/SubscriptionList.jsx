@@ -10,7 +10,12 @@ function SubscriptionList(props) {
       {purchaseList?.length < 1
         ? "No subcription!"
         : purchaseList?.map((subscription) => {
-            return <SubscriptionCard subscription={subscription} />;
+            return (
+              <SubscriptionCard
+                subscription={subscription}
+                key={subscription.current_period_end}
+              />
+            );
           })}
     </Card>
   );

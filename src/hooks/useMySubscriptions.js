@@ -30,7 +30,7 @@ function useMySubscriptions() {
         JS2Py.PythonFunctions.TalkMotionServer.getPurchaseList(
           token,
           function (res) {
-            // console.log(res);
+            console.log(res);
             resolve(res);
           }
         );

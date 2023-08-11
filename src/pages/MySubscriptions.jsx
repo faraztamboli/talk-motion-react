@@ -40,7 +40,6 @@ function MySubscriptions(props) {
   useEffect(() => {
     getPurchaseList()
       .then((res) => {
-        console.log("purchaseList.res[4]", res);
         console.log("purchaseList", res);
         setPurchaseList(res);
       })
@@ -57,7 +56,7 @@ function MySubscriptions(props) {
           className="details_section"
           style={{ marginTop: "2rem" }}
         >
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col span={6}>
               <Card title="Recuring Charges" bordered={false}>
                 <Space
@@ -101,7 +100,7 @@ function MySubscriptions(props) {
                 </Space>
               </Card>
             </Col>
-          </Row>
+          </Row> */}
           <br />
           <Row gutter={16}>
             <Col span={16}>
