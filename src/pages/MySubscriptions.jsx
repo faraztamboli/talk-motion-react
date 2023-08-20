@@ -20,22 +20,13 @@ function MySubscriptions(props) {
   const [data, setData] = useState([]);
   const [list, setList] = useState([]);
   const [purchaseList, setPurchaseList] = useState();
-  const { getPurchaseList, getPurchaseDetail, cancelSubscription } =
-    useMySubscriptions();
-  const dumyData = [
-    {
-      title: "Ant Design Title 1",
-    },
-    {
-      title: "Ant Design Title 2",
-    },
-    {
-      title: "Ant Design Title 3",
-    },
-    {
-      title: "Ant Design Title 4",
-    },
-  ];
+  const {
+    getPurchaseList,
+    getPurchaseDetail,
+    cancelSubscription,
+    cancelProductSubscription,
+    cancelSubscriptionItem,
+  } = useMySubscriptions();
 
   useEffect(() => {
     getPurchaseList()
@@ -107,7 +98,14 @@ function MySubscriptions(props) {
               {purchaseList?.length < 1 ? (
                 <h3>You don't have any Subscriptions!</h3>
               ) : (
-                <SubscriptionList purchaseList={purchaseList} />
+                <SubscriptionList
+                  purchaseList={purchaseList}
+                  cancelSubscription={cancelSubscription}
+                  cancelProductSubscription={
+                    cancelProductSubscription
+                  }
+                  cancelSubscriptionItem={cancelSubscriptionItem}
+                />
               )}
             </Col>
           </Row>

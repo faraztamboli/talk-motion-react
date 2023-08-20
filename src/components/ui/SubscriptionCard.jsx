@@ -2,12 +2,18 @@ import React from "react";
 import { Card, Row, Col, Space, Button, Badge } from "antd";
 import thumbnail from "../../media/images/unsplash_PddcoUGPBMw.png";
 
-function SubscriptionCard({ subscription }) {
+function SubscriptionCard({
+  subscription,
+  cancelSubscription,
+  cancelProductSubscription,
+  cancelSubscriptionItem,
+}) {
   const {
     username,
     created,
     fullname,
     stripe_subscription_id,
+    subscription_id,
     latest_invoice_currency,
     invoice_create_time,
     latest_invoice_subtotal,
@@ -15,6 +21,18 @@ function SubscriptionCard({ subscription }) {
     products,
     current_period_end,
   } = subscription;
+
+  const handleProductUnsubscribe = (e, product_id) => {
+    cancelProductSubscription(product_id)
+      .then((res) => console.log("res", res))
+      .catch((err) => console.log("err", err));
+  };
+
+  const handleUnsubscribe = (e, subscription_id_) => {
+    cancelSubscription(subscription_id_)
+      .then((res) => console.log("res", res))
+      .catch((err) => console.log("err", err));
+  };
 
   return (
     <>
@@ -40,18 +58,7 @@ function SubscriptionCard({ subscription }) {
             >
               <Col span="6">
                 <Space direction="vertical">
-                  <span>
-                    ORDER PLACED
-                    {/* <Badge
-                    count={subscription_status}
-                    showZero
-                    color={
-                      subscription_status !== "successs"
-                        ? "red"
-                        : "green"
-                    }
-                  /> */}
-                  </span>
+                  <span>ORDER PLACED</span>
                   <span>{invoice_create_time}</span>
                 </Space>
               </Col>
@@ -73,8 +80,15 @@ function SubscriptionCard({ subscription }) {
             <div style={{ paddingTop: "20px" }}>
               <p>Order #: 123 4567a 123 12</p>
               <Space>
-                <a href="">View order details</a> -
-                <a href="">View invoice</a>
+                <a href="">View invoice</a> -
+                <a
+                  href="#!"
+                  onClick={(e) =>
+                    handleUnsubscribe(e, subscription_id)
+                  }
+                >
+                  Cancel Complete Subscription
+                </a>
               </Space>
             </div>
           }
@@ -141,7 +155,13 @@ function SubscriptionCard({ subscription }) {
                   <Button type="link" block>
                     Problem with the order!
                   </Button>
-                  <Button type="text" block>
+                  <Button
+                    type="text"
+                    block
+                    onClick={(e) =>
+                      handleProductUnsubscribe(e, product.product_id)
+                    }
+                  >
                     Unsubscribe
                   </Button>
                 </Space>

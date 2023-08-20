@@ -4,7 +4,12 @@ import { Card } from "antd";
 import SubscriptionCard from "./SubscriptionCard";
 
 function SubscriptionList(props) {
-  const { purchaseList } = props;
+  const {
+    purchaseList,
+    cancelSubscription,
+    cancelProductSubscription,
+    cancelSubscriptionItem,
+  } = props;
   return (
     <Card title="Your Subscriptions">
       {purchaseList?.length < 1
@@ -13,7 +18,10 @@ function SubscriptionList(props) {
             return (
               <SubscriptionCard
                 subscription={subscription}
-                key={subscription.current_period_end}
+                cancelSubscription={cancelSubscription}
+                cancelProductSubscription={cancelProductSubscription}
+                cancelSubscriptionItem={cancelSubscriptionItem}
+                key={subscription.payment_intent_client_secret}
               />
             );
           })}
