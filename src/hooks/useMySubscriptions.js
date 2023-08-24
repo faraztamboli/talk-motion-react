@@ -58,11 +58,47 @@ function useMySubscriptions() {
       }
     });
   }
+  function cancelProductSubscription(product_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.cancelProductSubscription(
+          token,
+          product_id,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+  function cancelSubscriptionItem(subscription_item_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.cancelSubscriptionItem(
+          token,
+          subscription_item_id,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
 
   return {
     getPurchaseList,
     getPurchaseDetail,
     cancelSubscription,
+    cancelSubscriptionItem,
+    cancelProductSubscription,
   };
 }
 
