@@ -9,11 +9,12 @@ function HeroSection(props) {
         <Row className="hero-section-row">
           <Col span={12} xs={24} md={12}>
             <div className="hero-content">
-              <h1>Connecting Two Worlds...</h1>
+              <h1>Building Bridges Breaking Barriers...</h1>
               <p>
-                Talk-motion brings the world of deaf and speaking people
-                together, reuniting families, friends and colleagues with the
-                power of artificial intelligence.
+                Talk-motion brings the world of Deaf and speaking people
+                together, reuniting families, friends and colleagues;
+                connecting two worlds with the power of
+                artificial intelligence.
               </p>
               <div className="hero-content-btns">
                 <a

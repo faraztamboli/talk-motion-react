@@ -3,7 +3,7 @@ import React from "react";
 const pageContent = {
   TalkMotionDescription: (
     <p>
-      Talk-motion brings the world of deaf and hearing people together,
+      Talk-motion brings the world of Deaf and hearing people together,
       reuniting families, friends, and colleagues with the power of artificial
       intelligence.
     </p>
@@ -16,14 +16,14 @@ const pageContent = {
       <br />
       <br />
       That&apos;s the problem we aim to solve. We&apos;ve developed an AI-based
-      technology and tools that allow deaf and aphonic people to communicate
+      technology and tools that allow Deaf and Aphonic people to communicate
       with anyone, anywhere, with just the push of a button.
       <br />
       <br />
-      We don&apos;t think it&apos;s fair for deaf people to have to wait for
+      We don&apos;t think it&apos;s fair for Deaf people to have to wait for
       someone else to make accommodations for them, or to have to give up their
-      independence in order to get what they need. Instead, we believe that deaf
-      and aphonic people should be able to take their communication wherever
+      independence in order to get what they need. Instead, we believe that Deaf
+      and Aphonic people should be able to take their communication wherever
       they go. That&apos;s why we&apos;ve created TalkMotion; we want you to be
       free to interact with everyone, everywhere.
       <br />
@@ -43,21 +43,21 @@ const pageContent = {
   aboutPageContent: (
     <p>
       When our founder and CEO, Faraz Tamboli, heard about a story from his dad
-      of a deaf and aphonic child named Mona who was unable to communicate with
+      of a Deaf and aphonic child named Mona who was unable to communicate with
       him. Listening to how Mona was misunderstood, underestimated, and
       dismissed and how these gaps in communication created two different
       worlds, Faraz knew something needed to be done. And so TalkMotion was born
       to connect these two worlds!
       <br />
       <br />
-      TalkMotion is a cloud-based communication technology that helps deaf and
+      TalkMotion is a cloud-based communication technology that helps Deaf and
       aphonic people communicate easily with each other in school, at home, or
       in the workplace. We built this app because we believe that communication
       is a fundamental human need, and no one should have to feel restricted or
       excluded from being able to communicate freely.
       <br />
       <br />
-      We provide an easy-to-use platform for deaf and aphonic people in both
+      We provide an easy-to-use platform for Deaf and Aphonic people in both
       professional and personal environments by making it easy for them to
       connect with each other. Whether you&#39;re looking for friends who can
       sign or just want an easier way to talk at work, TalkMotion has got you
@@ -67,10 +67,10 @@ const pageContent = {
 
   privacyPolicyContent: (
     <p>
-      When we started TalkMotion, we were inspired by the fact that many deaf
-      and aphonic people can communicate using sign language, but not everyone
+      When we started TalkMotion, we were inspired by the fact that many Deaf
+      and Aphonic people can communicate using sign language, but not everyone
       knows how to interpret sign language. We wanted to solve the problem of
-      deaf and aphonic people being unable to communicate with the majority of
+      Deaf and Aphonic people being unable to communicate with the majority of
       the world—people who do not know sign language. That&apos;s why we created
       a product that can translate from sign language into speech in
       real-time—so anyone who uses TalkMotion can communicate with anyone else,
@@ -149,7 +149,7 @@ const pageContent = {
         may not access or use the Site.
         <br />
         <br />
-        TalkMotion is a free app for the deaf and aphonic, to have simple
+        TalkMotion is a free app for the Deaf and Aphonic, to have simple
         communication with family, friends, and strangers. It offers an easy way
         to talk with people that don&apos;t know sign language or are deaf
         themselves.

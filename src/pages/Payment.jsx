@@ -7,7 +7,9 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 
 const stripePromise = loadStripe(
-  "pk_test_51MTjNdFiKYZ3UHA3O5m6HW7KBuN8wfvbfgqpzXqrzK4iJW4JpDDRxt1sYynYHS7dk5B1AmbB3q4TQtxb0TTcEZw500WO7YxCZI"
+  // "pk_test_51MTjNdFiKYZ3UHA3O5m6HW7KBuN8wfvbfgqpzXqrzK4iJW4JpDDRxt1sYynYHS7dk5B1AmbB3q4TQtxb0TTcEZw500WO7YxCZI"
+  // "pk_live_51NiVbdDJmqtXI1D7xOmooVhFdbEYEPioIh1NnmmxrD54wOsMyLCM5zhLciRfa2MHpNgx4FKwCnnFRO0R3yZ1NXJt00wlciRBxW"
+  "pk_test_51NiVbdDJmqtXI1D7JOC3AvOMWx3cNTp4e2qqeZC90xuR7gGFw6ahyzUwJfkqVmzGGFflLZA0iElxRcc8Kdm4gH0n00RYotWJUc"
 );
 
 function Payment() {

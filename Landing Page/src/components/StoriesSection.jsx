@@ -49,11 +49,11 @@ function StoriesSection() {
               <h4>Faraz awarded Gloria Barron Prize for Young Heroes</h4>
               <p>
               Faraz Tamboli invented TalkMotion, a device that helps people 
-              who are deaf and aphonic (voiceless) communicate with people 
+              who are Deaf and aphonic (voiceless) communicate with people
               who can hear. His device translates sign language into verbal 
               language and verbal language back into sign language. Faraz
               hopes his invention will help expand the limited world of the
-              deaf and aphonic, allowing them to communicate in everyday life,
+              Deaf and aphonic, allowing them to communicate in everyday life,
               talk with their families, and work in jobs they previously couldn’t.
               </p>
               <a

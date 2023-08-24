@@ -14,7 +14,7 @@ function Faraz(props) {
         />
         <h2>Faraz Tamboli</h2>
         <p className="title">Founder, Chief Executive Officer</p>
-        <p>Faraz invented TalkMotion. He has won numerous awards and scholarships. He is committed to delivering TalkMotion to millions in deaf and hard of hearing community.</p>
+        <p>Faraz invented TalkMotion. He has won numerous awards and scholarships. He is committed to delivering TalkMotion to millions in Deaf and hard of hearing community.</p>
         <p>
                 <a
                   href="https://www.linkedin.com/in/faraz-tamboli-6b0896233"

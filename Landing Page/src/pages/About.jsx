@@ -101,7 +101,7 @@ function About(props) {
                   <p>
                     A hearing person can verbally respond, and TalkMotion will
                     display sign language pictures on the screen using voice
-                    recognition so that the deaf or aphonic person can
+                    recognition so that the Deaf or aphonic individual can
                     understand what the hearing person is saying.
                   </p>
                 </div>

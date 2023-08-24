@@ -7,13 +7,13 @@ const homePageDetails = {
 const aboutPageDetails = {
   title: "TalkMotion | About",
   description:
-    "Talk-motion brings the world of deaf and speaking people together, reuniting families, friends and colleagues with the power of artificial intelligence.",
+    "Talk-motion brings the world of Deaf and speaking people together, reuniting families, friends and colleagues with the power of artificial intelligence.",
 };
 
 const featuresPageDetails = {
   title: "TalkMotion | Features",
   description:
-    "TalkMotion is a cloud-based communication technology that helps deaf and aphonic people communicate easily with each other in school, at home, or in the workplace. We built this app because we believe that communication is a fundamental human need, and no one should have to feel restricted or excluded from being able to communicate freely.",
+    "TalkMotion is a cloud-based communication technology that helps Deaf and Aphonic people communicate easily with each other in school, at home, or in the workplace. We built this app because we believe that communication is a fundamental human need, and no one should have to feel restricted or excluded from being able to communicate freely.",
 };
 
 const contactPageDetails = {
@@ -31,13 +31,13 @@ const faqPageDetails = {
 const privacyPolicyPageDetails = {
   title: "TalkMotion | Privacy Policy",
   description:
-    "When we started TalkMotion, we were inspired by the fact that many deaf and aphonic people can communicate using sign language, but not everyone knows how to interpret sign language. We wanted to solve the problem of deaf and aphonic people being unable to communicate with the majority of the world—people who do not know sign language.",
+    "When we started TalkMotion, we were inspired by the fact that many Deaf and Aphonic people can communicate using sign language, but not everyone knows how to interpret sign language. We wanted to solve the problem of deaf and aphonic people being unable to communicate with the majority of the world—people who do not know sign language.",
 };
 
 const termsPageDetails = {
   title: "TalkMotion | Terms and Conditions",
   description:
-    "TalkMotion is a free app for the deaf and aphonic, to have simple communication with family, friends, and strangers. It offers an easy way to talk with people that don't know sign language or are deaf themselves.",
+    "TalkMotion is a free app for the Deaf and Aphonic, to have simple communication with family, friends, and strangers. It offers an easy way to talk with people that don't know sign language or are deaf themselves.",
 };
 
 export {

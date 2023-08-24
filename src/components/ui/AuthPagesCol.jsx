@@ -1,5 +1,6 @@
 import React from "react";
 import { Col, Button } from "antd";
+import { Link, useParams } from "react-router-dom";
 
 function AuthPagesCol() {
   return (
@@ -12,15 +13,17 @@ function AuthPagesCol() {
           <p className="text-white auth-pages-first-col-para">
             An AI-based Sign Language Translator
           </p>
-          <Button
-            type="default"
-            size="large"
-            shape="round"
-            className="mt-4"
-            style={{ color: "#08165f" }}
-          >
-            Read More
-          </Button>
+            <Link to={`https://talk-motion.com`}>
+              <Button
+                type="primary"
+                size="large"
+                shape="round"
+                className="mt-4"
+                style={{ color: "#08165f" }}
+              >
+                Read More
+              </Button>
+            </Link>
         </div>
       </div>
     </Col>

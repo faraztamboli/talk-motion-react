@@ -36,7 +36,7 @@ function GuidePageContent(props) {
           <p className="guide-page-content-p w-100p">
             A hearing person can verbally respond, and TalkMotion will display
             sign language pictures on the screen using voice recognition so that
-            the deaf or aphonic person can understand what the hearing person is
+            the Deaf or Aphonic person can understand what the hearing person is
             saying.
           </p>
         </div>
@@ -84,7 +84,7 @@ function GuidePageContent(props) {
             TalkMotion in Education
           </h2>
           <p className="guide-page-content-p w-100p">
-            TalkMotion makes educational video content available to the deaf and aphonic community
+            TalkMotion makes educational video content available to the Deaf and aphonic community
             in their own native communication platform sign language. Students can learn the same
             as their hearing peers.
           </p>
