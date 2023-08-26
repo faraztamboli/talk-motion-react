@@ -65,12 +65,20 @@ function SubscriptionCard({
               <Col span="4">
                 <Space direction="vertical">
                   Total
-                  <span>${latest_invoice_subtotal / 100}</span>
+                  <span>${(latest_invoice_subtotal / 100).toFixed(2)}</span>
                 </Space>
               </Col>
+              {products[0].latest_invoice_amount_due > 0 && (
+                  <Col span="4">
+                    <Space direction="vertical">
+                      Due
+                      <span>${(products[0].latest_invoice_amount_due / 100).toFixed(2)}</span>
+                    </Space>
+                  </Col>
+              )}
               <Col span="4">
                 <Space direction="vertical">
-                  Shipped to
+                  Sold to
                   <a href="#!">{fullname}</a>
                 </Space>
               </Col>
@@ -78,9 +86,17 @@ function SubscriptionCard({
           }
           extra={
             <div style={{ paddingTop: "20px" }}>
-              <p>Order #: 123 4567a 123 12</p>
+              <p>Order #: {subscription_id}</p>
               <Space>
-                <a href="">View invoice</a> -
+                  <span>
+                    <a
+                      target="_blank"
+                      href={products[0].hosted_invoice_url}
+                    >
+                      View Invoice
+                    </a>
+                  </span>
+                -
                 <a
                   href="#!"
                   onClick={(e) =>
@@ -123,17 +139,9 @@ function SubscriptionCard({
                       {product.description}
                     </h3>
                     <Space className="mySub-product-info-pills">
-                      {product.latest_invoice_amount_due > 0 && (
-                        <span>
-                          Due Amount:{" "}
-                          <strong>
-                            ${product.latest_invoice_amount_due / 100}{" "}
-                          </strong>
-                        </span>
-                      )}
                       <span>
-                        Totla Amount:{" "}
-                        <strong>${product.amount / 100}</strong>
+                        Product Amount:{" "}
+                        <strong>${(product.amount / 100).toFixed(2)}</strong>
                       </span>
                       <span>
                         <a
@@ -150,10 +158,10 @@ function SubscriptionCard({
               <Col span="5">
                 <Space direction="vertical" style={{ width: "100%" }}>
                   <Button type="primary" dashed block>
-                    Leave a review
+                    Write a product review
                   </Button>
                   <Button type="link" block>
-                    Problem with the order!
+                    Problem with order
                   </Button>
                   <Button
                     type="text"
