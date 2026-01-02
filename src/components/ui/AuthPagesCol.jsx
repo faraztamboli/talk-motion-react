@@ -13,7 +13,7 @@ function AuthPagesCol() {
           <p className="text-white auth-pages-first-col-para">
             An AI-based Sign Language Translator
           </p>
-            <Link to={`https://talk-motion.com`}>
+            <a href="https://talk-motion.com/guide" rel="noopener noreferrer">
               <Button
                 type="primary"
                 size="large"
@@ -23,7 +23,7 @@ function AuthPagesCol() {
               >
                 Read More
               </Button>
-            </Link>
+            </a>
         </div>
       </div>
     </Col>

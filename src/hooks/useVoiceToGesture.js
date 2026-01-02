@@ -120,7 +120,7 @@ function useSpeechRecognition() {
       for (let i in words) {
         if (
           wordVideoDictionary[modelId] === undefined ||
-          !(words[i] in wordVideoDictionary[modelId])
+          !(words[i] in wordVideoDictionary[modelId]) || true
         ) {
           short_list.push(words[i]);
         } else {

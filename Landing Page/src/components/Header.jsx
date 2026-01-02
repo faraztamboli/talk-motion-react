@@ -3,7 +3,7 @@ import { AlignLeftOutlined } from "@ant-design/icons";
 import { Button, Drawer } from "antd";
 import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-import logo from "../media/images/logo.png";
+import logo from "../media/images/logo_new2.png";
 import logoSmall from "../media/images/logo-small.png";
 
 function Header(props) {
@@ -47,12 +47,12 @@ function Header(props) {
             Contact Us
           </Link>
           <a
-            href="https://app.talk-motion.com/signup"
+            href="https://app.talk-motion.com/login"
             target="_blank"
             rel="noreferrer"
           >
             <Button size="large" shape="round" className="home-header-btn">
-              Signup for Free
+              Sign In
             </Button>
           </a>
         </div>
@@ -136,12 +136,18 @@ function Header(props) {
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
               <a
-                href="https://app.talk-motion.com/signup"
+                href="https://app.talk-motion.com/login"
                 target="_blank"
                 rel="noreferrer"
               >
-                <Button size="middle" shape="round">
-                  Signup for Free
+                <Button size="middle" shape="round"
+                style={{
+                      textDecoration: "none",
+                      color: "rgb(255 255 255)",
+                      backgroundColor: "rgb(229 42 39)",
+                    }}
+                >
+                  Sign In
                 </Button>
               </a>
             </li>

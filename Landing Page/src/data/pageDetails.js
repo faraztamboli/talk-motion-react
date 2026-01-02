@@ -1,43 +1,43 @@
 const homePageDetails = {
   title: "TalkMotion | Home",
   description:
-    "TalkMotion uses the power of AI to translate sign language to voice and voice to sign language. It allows you to create and train your own custom gestures. We are working with experts in ASL to map a wide range of gestures.",
+    "TalkMotion uses AI to support communication between signing and non-signing communities. Our tools help translate between sign languages and spoken languages in environments where people may not share the same language, expanding access while honoring the richness of signing. You can create and train your own custom gestures, giving you full control over how you communicate. We work closely with Deaf ASL experts and community members to map a wide range of gestures responsibly and accurately.",
 };
 
 const aboutPageDetails = {
   title: "TalkMotion | About",
   description:
-    "Talk-motion brings the world of Deaf and speaking people together, reuniting families, friends and colleagues with the power of artificial intelligence.",
+    "TalkMotion helps bridge communication between signing and non-signing communities. Our work is grounded in respect for Deaf culture and language, using AI to support clearer interactions in families, schools, workplaces, and public spaces where sign language may not yet be understood.",
 };
 
 const featuresPageDetails = {
   title: "TalkMotion | Features",
   description:
-    "TalkMotion is a cloud-based communication technology that helps Deaf and Aphonic people communicate easily with each other in school, at home, or in the workplace. We built this app because we believe that communication is a fundamental human need, and no one should have to feel restricted or excluded from being able to communicate freely.",
+    "TalkMotion is a cloud-based communication tool designed to support Deaf and aphonic users in environments that may not recognize sign language. We built this platform to expand access, strengthen autonomy, and help people communicate more easily across mixed-language settings such as classrooms, homes, and workplaces.",
 };
 
 const contactPageDetails = {
   title: "TalkMotion | Contact Us",
   description:
-    "At TalkMotion, we are always working to improve the communication experience for our customers. If you have any questions or concerns about your product, please reach out to us. It is our mission to deliver the best communication experience possible, and our team is here to help with any issues you may be having.",
+    "We are committed to improving the communication experience for all TalkMotion users. If you have questions, feedback, or need support, our team is here to help. Your experiences guide what we build next.",
 };
 
 const faqPageDetails = {
   title: "TalkMotion | FAQs",
   description:
-    "At TalkMotion, we are always working to improve the communication experience for our customers. If you have any questions or concerns about your product, please reach out to us. It is our mission to deliver the best communication experience possible, and our team is here to help with any issues you may be having.",
+    "Find answers to common questions about TalkMotion. We continuously refine our tools based on user feedback, and our support team is here to help if you need further assistance.",
 };
 
 const privacyPolicyPageDetails = {
   title: "TalkMotion | Privacy Policy",
   description:
-    "When we started TalkMotion, we were inspired by the fact that many Deaf and Aphonic people can communicate using sign language, but not everyone knows how to interpret sign language. We wanted to solve the problem of deaf and aphonic people being unable to communicate with the majority of the world—people who do not know sign language.",
+    "TalkMotion was created to help bridge communication gaps in settings where sign language may not be widely understood. Our Privacy Policy explains how we collect, use, and protect your information as we deliver tools that support accessible communication across diverse language communities.",
 };
 
 const termsPageDetails = {
   title: "TalkMotion | Terms and Conditions",
   description:
-    "TalkMotion is a free app for the Deaf and Aphonic, to have simple communication with family, friends, and strangers. It offers an easy way to talk with people that don't know sign language or are deaf themselves.",
+    "TalkMotion provides personal, non-commercial communication tools designed to support Deaf and aphonic users in environments where sign language may not be recognized. By using TalkMotion, you agree to our terms governing service use, accessibility, and responsible communication.",
 };
 
 export {

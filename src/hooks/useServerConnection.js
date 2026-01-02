@@ -35,22 +35,22 @@ async function useServerConnection() {
       dispatch(setServerStatus("Disconnected"));
     };
 
-    JS2Py.onerror = function () {
-      dispatch(setServerConnected(false));
-      dispatch(setServerStatus("Retrying Connection"));
-
-      conn = JS2Py.start();
-      console.log(conn.readyState);
-
-    };
+//    JS2Py.onerror = function () {
+//      dispatch(setServerConnected(false));
+//      dispatch(setServerStatus("Retrying Connection"));
+//
+//      conn = JS2Py.start();
+//      console.log(conn.readyState);
+//
+//    };
 
     // starting connection and taking instance to close on unmounts
-    conn = JS2Py.start();
-    console.log(conn.readyState);
+    conn = JS2Py.connect();
+    //console.log(conn.readyState);
 
     // stop server when component unmounts
     return () => {
-      console.log(conn.readyState);
+      //console.log(conn.readyState);
       conn.addEventListener('open', (event) => {
         conn.close(1000, 're-rendered page');
       });

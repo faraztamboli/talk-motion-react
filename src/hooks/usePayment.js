@@ -49,6 +49,8 @@ function usePayment() {
               dispatch(setCartCount(0));
             }
             resolve(cart);
+          },
+          function(err){
           }
         );
       } catch (err) {

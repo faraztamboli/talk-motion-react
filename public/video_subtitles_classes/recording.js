@@ -1,11 +1,11 @@
 // eslint-disable-next-line
 export default class recording {
-  constructor(title, description, original_video_url) {
+  constructor(title, description, original_video_url, recording_id=null) {
     this.title = title;
     this.description = description;
     this.original_video_url = original_video_url;
     this.recording_shots = [];
-    this.recording_id = null; // fill this with value from server
+    this.recording_id = recording_id; // fill this with value from server
   }
 
   set_info(

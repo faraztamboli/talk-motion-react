@@ -8,12 +8,14 @@ import checked from "../media/images/checked.png";
 import cancel from "../media/images/cancel.png";
 import { useNavigate } from "react-router-dom";
 
-import { confirmPurchase } from "../hooks/usePayment/confirmPurchase";
+import usePayment from "../hooks/usePayment";
 
 const paymentConfirmation = () => {
   const navigate = useNavigate();
 
   useEffect(() => {}, []);
+
+  const { confirmPurchase } = usePayment();
 
   return (
     <div className="successful-page">

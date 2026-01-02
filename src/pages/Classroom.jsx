@@ -23,7 +23,7 @@ const Classroom = () => {
   } = useClassrooms();
 
   useEffect(() => {
-    getClassStudents(classroomId)
+    getClassStudents(classroomId, true)
       .then((res) => {
         console.log(res);
         setStudents(res);

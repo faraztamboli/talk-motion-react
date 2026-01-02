@@ -13,16 +13,29 @@ function GuidePage(props) {
     <>
       <MetaDecorator title={title} description={description} />
       <Header md={props.md} />
+
       <div className="guide-page-parent-div">
         <div className="guide-page-container pt-3">
-          <Row className="guide-page mh-83vh">
-            <Col span={12} xs={24} lg={12}>
+
+          {/* HERO ROW — ONLY video, centered nicely */}
+          <Row
+            className="guide-page-hero"
+            justify="center"
+            align="middle"
+            style={{ marginBottom: "1rem" }}
+          >
+            <Col xs={24} lg={16}>
               <GuidePageVideo lg={props.lg} />
             </Col>
-            <Col span={12} xs={24} lg={12}>
-              <GuidePageContent sm={props.sm} lg={props.lg} />
+          </Row>
+
+          {/* FEATURES FULL WIDTH */}
+          <Row justify="center">
+            <Col xs={24}>
+              <GuidePageContent />
             </Col>
           </Row>
+
         </div>
       </div>
     </>

@@ -155,12 +155,13 @@ function useClassrooms() {
     });
   }
 
-  function getClassStudents(classroomId) {
+  function getClassStudents(classroomId, is_approved) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getClassStudents(
           token,
           classroomId,
+          is_approved,
           function (res) {
             resolve(res);
           }

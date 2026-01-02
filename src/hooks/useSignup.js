@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import JS2Py from "../remotepyjs";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
+import useLocalStorage from "./useLocalStorage";
 
 function SignupLogic() {
   const [loading, setLoading] = useState(false);
+  const [token] = useLocalStorage("token");
   const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
@@ -37,6 +39,14 @@ function SignupLogic() {
           success();
           setTimeout(() => {
             navigate("/login");
+
+              JS2Py.PythonFunctions.TalkMotionServer.getProductForFree(
+                token,
+                96,
+                (res) => {
+                }
+              );
+
           }, [2000]);
         }
       );

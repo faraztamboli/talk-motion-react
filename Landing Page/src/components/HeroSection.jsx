@@ -9,12 +9,12 @@ function HeroSection(props) {
         <Row className="hero-section-row">
           <Col span={12} xs={24} md={12}>
             <div className="hero-content">
-              <h1>Building Bridges Breaking Barriers...</h1>
+              <h1 className="hero-headline">
+                <span className="hero-bridges">Building Bridges</span><br/>
+                <span className="hero-nowrap">Breaking Barriers</span><br/>
+              </h1>
               <p>
-                Talk-motion brings the world of Deaf and speaking people
-                together, reuniting families, friends and colleagues;
-                connecting two worlds with the power of
-                artificial intelligence.
+                TalkMotion unites Deaf and hearing communities through the power of artificial intelligence — helping families, friends, and colleagues communicate naturally and inclusively, wherever they are.
               </p>
               <div className="hero-content-btns">
                 <a
@@ -28,7 +28,7 @@ function HeroSection(props) {
                     ghost
                     className="hero-section-btns"
                   >
-                    Signup for Free
+                    Join for Free
                   </Button>
                 </a>
               </div>
@@ -36,7 +36,15 @@ function HeroSection(props) {
           </Col>
           <Col span={12} xs={24} md={12} className="hero-img-div">
             <div className="hero-img">
-              <img src={heroImage} alt="Gesture from a little boy" />
+              <img
+                src={heroImage}
+                alt="Child signing next to the TalkMotion interface"
+                loading="eager"
+                decoding="async"
+              />
+              <figcaption className="sr-only">
+                TalkMotion bridges sign and speech for inclusive communication.
+              </figcaption>
             </div>
           </Col>
         </Row>

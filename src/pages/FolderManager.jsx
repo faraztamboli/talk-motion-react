@@ -63,7 +63,7 @@ function FolderManager() {
               <h3>Courses</h3>
             </div>
             <ul className="sidebar-nav overflow-y-scroll max-height-65vh">
-              {!loading ? (
+              {!loading && tree ? (
                 tree.length > 0 ? (
                   tree.map((folder) => (
                     <li
@@ -90,7 +90,7 @@ function FolderManager() {
         </Col>
 
         <Col span={16}>
-          {!childLoading ? (
+          {!childLoading && tree ? (
             tree.length > 0 ? (
               folderId === undefined ? (
                 tree.map((child) => (

@@ -94,7 +94,7 @@ function useSlSubtitles() {
         if (state.is_recorder) {
           // let current_recording = getCurrentRecording();
           let youtube_url = document.getElementById("youtube_url");
-          if (youtube_url !== undefined) {
+          if (youtube_url !== null && youtube_url !== undefined) {
             // eslint-disable-next-line
             youtube_url.value = state.youtube_player.video_code;
           }
