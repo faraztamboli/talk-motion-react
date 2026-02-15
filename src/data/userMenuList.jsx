@@ -70,9 +70,34 @@ const userMenu = [
     key: "logout",
     id: "logout",
     label: (
-      <div className="user-menu-items" key={5} onClick={handleLogout}>
+      <button
+        type="button"
+        className="user-menu-items"
+        key={5}
+        onClick={handleLogout}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleLogout();
+          }
+        }}
+        style={{
+          background: "none",
+          border: "none",
+          width: "100%",
+          padding: "1rem 0.5rem",
+          textAlign: "left",
+          cursor: "pointer",
+          color: "inherit",
+          fontSize: "inherit",
+          fontFamily: "inherit",
+          fontWeight: 600,
+          borderRadius: "5px",
+        }}
+        aria-label="Logout from account"
+      >
         Logout
-      </div>
+      </button>
     ),
     icon: <LogoutOutlined />,
     style: {

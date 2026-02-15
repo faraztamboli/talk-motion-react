@@ -5,6 +5,7 @@ import Sidebar from "../Layout/Sidebar";
 import selectLayout from "../HOCs/SelectLayout";
 import Footer from "./Footer";
 import { Content } from "antd/es/layout/layout";
+import SkipLink from "../accessibility/SkipLink";
 
 function AppLayout(props) {
   const style = {
@@ -17,6 +18,7 @@ function AppLayout(props) {
 
   return (
     <Layout className="mh-100vh">
+      <SkipLink />
       <Header
         collapsed={props.collapsed}
         onCollapsed={props.onCollapsed}
@@ -30,7 +32,12 @@ function AppLayout(props) {
           sideBarWidth={props.sideBarWidth}
           collapsedWidth={props.collapsedWidth}
         />
-        <Content className="site-layout-background mh-100vh">
+        <Content 
+          className="site-layout-background mh-100vh"
+          id="main-content"
+          role="main"
+          tabIndex={-1}
+        >
           <Layout className="site-layout mh-100vh" style={layoutStyle}>
             <>{props.children}</>
           </Layout>

@@ -10,6 +10,8 @@ import useMediaQueries from "./hooks/useMediaQueries";
 import AppRoutes from "./routes/AppRoutes";
 import jsOnUpdateTrainingStatus from "./utils/jsOnUpdateTrainingStatus";
 import jsOnSignPrediction from "./utils/jsOnSignPrediction";
+import { ConfigProvider } from "antd";
+import { useLanguage } from "./contexts/LanguageContext";
 
 const App = () => {
   const { collapsed, collapsedWidth, onCollapsed, sideBarWidth, sm, md } =
@@ -18,6 +20,7 @@ const App = () => {
     (state) => state.server.serverConnected
   );
   const serverStatus = useSelector((state) => state.server.serverStatus);
+  const { direction, isRTL } = useLanguage();
 
   // connect to server
   useServerConnection();
@@ -26,23 +29,25 @@ const App = () => {
   jsOnSignPrediction();
 
   return (
-    <div className="App">
-      {isServerConnected ? (
-        <LayoutWrapper
-          collapsed={collapsed}
-          onCollapsed={onCollapsed}
-          sideBarWidth={sideBarWidth}
-          collapsedWidth={collapsedWidth}
-        >
-          <AppRoutes sm={sm} md={md} collapsedWidth={collapsedWidth} />
-        </LayoutWrapper>
-      ) : serverStatus === "Connecting..." ? (
-        <Spinner size="large" pageSize="large" />
-      ) : (
-        serverStatus === "Disconnected" && <ServerError />
-      )}
-      <Statuses collapsedWidth={collapsedWidth} />
-    </div>
+    <ConfigProvider direction={direction}>
+      <div className="App">
+        {isServerConnected ? (
+          <LayoutWrapper
+            collapsed={collapsed}
+            onCollapsed={onCollapsed}
+            sideBarWidth={sideBarWidth}
+            collapsedWidth={collapsedWidth}
+          >
+            <AppRoutes sm={sm} md={md} collapsedWidth={collapsedWidth} />
+          </LayoutWrapper>
+        ) : serverStatus === "Connecting..." ? (
+          <Spinner size="large" pageSize="large" />
+        ) : (
+          serverStatus === "Disconnected" && <ServerError />
+        )}
+        <Statuses collapsedWidth={collapsedWidth} />
+      </div>
+    </ConfigProvider>
   );
 };
 

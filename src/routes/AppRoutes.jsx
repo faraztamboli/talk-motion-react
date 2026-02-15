@@ -42,6 +42,11 @@ const VideoWithSubtitles = React.lazy(() =>
 const FolderManager = React.lazy(() =>
   import("../pages/FolderManager")
 );
+const Courses = React.lazy(() => import("../pages/Courses"));
+const CourseDetail = React.lazy(() => import("../pages/CourseDetail"));
+const CourseTreeManager = React.lazy(() =>
+  import("../pages/CourseTreeManager")
+);
 const UserModel = React.lazy(() => import("../pages/UserModel"));
 const ModelFiles = React.lazy(() => import("../pages/ModelFiles"));
 const ModelConcepts = React.lazy(() =>
@@ -51,10 +56,17 @@ const ConceptDetails = React.lazy(() =>
   import("../pages/ConceptDetails")
 );
 const Classrooms = React.lazy(() => import("../pages/Classrooms"));
+const ClassroomsRedesigned = React.lazy(() =>
+  import("../pages/ClassroomsRedesigned")
+);
 const StaffClassrooms = React.lazy(() =>
   import("../pages/StaffClassrooms")
 );
+const StaffRooms = React.lazy(() => import("../pages/StaffRooms"));
 const Classroom = React.lazy(() => import("../pages/Classroom"));
+const ClassroomDetail = React.lazy(() =>
+  import("../pages/ClassroomDetail")
+);
 const Profile = React.lazy(() => import("../pages/Profile"));
 const PublicUserProfile = React.lazy(() =>
   import("../pages/PublicUserProfile")
@@ -69,6 +81,9 @@ const PaymentConfirmation = React.lazy(() =>
 const ForgotPassword = React.lazy(() =>
   import("../pages/ForgotPassword")
 );
+const ContactUs = React.lazy(() => import("../pages/ContactUs"));
+const Dashboard = React.lazy(() => import("../pages/Dashboard"));
+const DashboardNew = React.lazy(() => import("../pages/DashboardNew"));
 
 function AppRoutes(props) {
   const { sm, md, collapsedWidth } = props;
@@ -84,10 +99,26 @@ function AppRoutes(props) {
             <React.Suspense
               fallback={<Skeleton active style={skeletonStyle} />}
             >
-              <Converter
+              <DashboardNew 
+                collapsedWidth={collapsedWidth}
                 sm={sm}
                 md={md}
+              />
+            </React.Suspense>
+          }
+        />
+      </Route>
+      <Route path="/dashboard" element={<PrivateRoute />}>
+        <Route
+          path="/dashboard"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <DashboardNew 
                 collapsedWidth={collapsedWidth}
+                sm={sm}
+                md={md}
               />
             </React.Suspense>
           }
@@ -332,7 +363,61 @@ function AppRoutes(props) {
             <React.Suspense
               fallback={<Skeleton active style={skeletonStyle} />}
             >
-              <FolderManager />
+              <CourseDetail collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path="/video-subtitles/folder-manager/:folderId"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <CourseDetail collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      {/* New Courses Route */}
+      <Route path="/courses" element={<PrivateRoute />}>
+        <Route
+          path="/courses"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <Courses collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      {/* Course Tree Manager Route */}
+      <Route path="/courses/tree-manager" element={<PrivateRoute />}>
+        <Route
+          path="/courses/tree-manager"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <CourseTreeManager collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      <Route
+        path="/courses/:folderId"
+        element={<PrivateRoute />}
+      >
+        <Route
+          path="/courses/:folderId"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <Courses collapsedWidth={collapsedWidth} />
             </React.Suspense>
           }
         />
@@ -367,6 +452,34 @@ function AppRoutes(props) {
         />
       </Route>
 
+      {/* New Redesigned Classrooms Route */}
+      <Route path="/classrooms" element={<PrivateRoute />}>
+        <Route
+          path="/classrooms"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <ClassroomsRedesigned collapsedWidth={collapsedWidth} sm={sm} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      {/* New Classroom Detail Route */}
+      <Route path="/classroom/:classroomId" element={<PrivateRoute />}>
+        <Route
+          path="/classroom/:classroomId"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <ClassroomDetail collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
       <Route
         path="/video-subtitles/staff-classrooms"
         element={<PrivateRoute />}
@@ -378,6 +491,20 @@ function AppRoutes(props) {
               fallback={<Skeleton active style={skeletonStyle} />}
             >
               <StaffClassrooms collapsedWidth={collapsedWidth} />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      {/* New Staff Rooms Route */}
+      <Route path="/staff-rooms" element={<PrivateRoute />}>
+        <Route
+          path="/staff-rooms"
+          element={
+            <React.Suspense
+              fallback={<Skeleton active style={skeletonStyle} />}
+            >
+              <StaffRooms collapsedWidth={collapsedWidth} sm={sm} />
             </React.Suspense>
           }
         />
@@ -438,7 +565,7 @@ function AppRoutes(props) {
             <React.Suspense
               fallback={<Skeleton active style={skeletonStyle} />}
             >
-              <FolderManager />
+              <CourseDetail collapsedWidth={collapsedWidth} />
             </React.Suspense>
           }
         />
@@ -555,6 +682,19 @@ function AppRoutes(props) {
           </React.Suspense>
         }
       />
+
+      <Route
+        path="/contact-us"
+        exact
+        element={
+          <React.Suspense
+            fallback={<Skeleton active style={skeletonStyle} />}
+          >
+            <ContactUs collapsedWidth={collapsedWidth} />
+          </React.Suspense>
+        }
+      />
+
       <Route path="*" element={<Error />} />
     </Routes>
   );

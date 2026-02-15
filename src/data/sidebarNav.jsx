@@ -3,6 +3,7 @@ import {
   DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import {
@@ -26,6 +27,15 @@ function getItem(label, key, icon, children, path) {
 }
 
 const items = [
+  getItem(
+    "Dashboard",
+    "0",
+    <Link to="/dashboard">
+      <HomeOutlined />
+    </Link>,
+    null,
+    "/dashboard"
+  ),
   getItem(
     "Translator",
     "1",
@@ -54,29 +64,38 @@ const items = [
       getItem(
         "My Courses",
         "43",
-        <Link to="/video-subtitles/folder-manager">
+        <Link to="/courses">
           <MdOutlineFolderSpecial />
         </Link>,
         null,
-        "/video-subtitles/folder-manager"
+        "/courses"
+      ),
+      getItem(
+        "Course Tree Manager",
+        "46",
+        <Link to="/courses/tree-manager">
+          <MdOutlineFolderSpecial />
+        </Link>,
+        null,
+        "/courses/tree-manager"
       ),
       getItem(
         "Classrooms",
         "44",
-        <Link to="/video-subtitles/classrooms">
+        <Link to="/classrooms">
           <MdOutlineFolderSpecial />
         </Link>,
         null,
-        "/video-subtititles/classrooms"
+        "/classrooms"
       ),
       getItem(
         "Staff Rooms",
         "45",
-        <Link to="/video-subtitles/staff-classrooms">
+        <Link to="/staff-rooms">
           <MdOutlineFolderSpecial />
         </Link>,
         null,
-        "/video-subtitles/staff-classrooms"
+        "/staff-rooms"
       ),
     ],
     "/video-subtitles"

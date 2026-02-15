@@ -51,6 +51,11 @@ const forgotPasswordDetails = {
   description: "Reset your TalkMotion Profile Password",
 };
 
+const contactUsDetails = {
+  title: "TalkMotion | Contact Us",
+  description: "Get in touch with TalkMotion. Send us a message and we'll respond as soon as possible.",
+};
+
 export {
   homePageDetails,
   converterDetails,
@@ -62,4 +67,5 @@ export {
   signupDetails,
   loginDetails,
   forgotPasswordDetails,
+  contactUsDetails,
 };

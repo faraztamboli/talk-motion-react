@@ -470,6 +470,14 @@ function RemotePyClient(serverName, clientPageId) {
             JS2PySelf.PostMessageEventHandlers.forEach(func => func());
         }
 
+        this.socket.onerror = function(event) {
+            console.error("WebSocket error event:", event);
+            JS2PySelf.isOpen = false;
+            if(JS2PySelf.onerror !== undefined) {
+                JS2PySelf.onerror(event);
+            }
+        }
+
         this.socket.onclose = function(e) {
             console.log("Connection to " + serverConnectionString + ' closed.');
             JS2PySelf.PreCloseEventHandlers.forEach(func => func(e));
