@@ -1,0 +1,115 @@
+{
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる",
+    "submit": "送信",
+    "search": "検索",
+    "filter": "フィルター",
+    "select": "選択",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "confirm": "確認",
+    "yes": "はい",
+    "no": "いいえ"
+  },
+  "header": {
+    "cart": "カート",
+    "language": "言語",
+    "selectLanguage": "言語を選択"
+  },
+  "dashboard": {
+    "title": "ダッシュボード",
+    "welcome": "ようこそ",
+    "quickAccess": "クイックアクセス",
+    "watchVideos": "動画を見る",
+    "watchVideosDesc": "手話字幕付きの教育動画を見る",
+    "takeCourses": "コースを受講",
+    "takeCoursesDesc": "手話コースに登録する",
+    "practice": "練習",
+    "practiceDesc": "インタラクティブな練習で手話を練習する",
+    "translate": "翻訳",
+    "translateDesc": "手話から音声、音声から手話への翻訳を使用",
+    "createContent": "コンテンツを作成",
+    "createContentDesc": "手話コンテンツを作成して共有する",
+    "manageClasses": "クラスを管理",
+    "manageClassesDesc": "クラスを作成して管理する",
+    "myProfile": "マイプロフィール",
+    "myProfileDesc": "プロフィール情報を表示および編集する",
+    "settings": "設定",
+    "settingsDesc": "アカウント設定を構成する"
+  },
+  "sidebar": {
+    "dashboard": "ダッシュボード",
+    "courses": "コース",
+    "classrooms": "教室",
+    "converter": "コンバーター",
+    "models": "モデル",
+    "myModels": "マイモデル",
+    "trainer": "トレーナー",
+    "videoSubtitles": "動画字幕",
+    "profile": "プロフィール",
+    "settings": "設定",
+    "logout": "ログアウト"
+  },
+  "auth": {
+    "login": "ログイン",
+    "signup": "サインアップ",
+    "logout": "ログアウト",
+    "forgotPassword": "パスワードを忘れた場合",
+    "resetPassword": "パスワードをリセット",
+    "email": "メール",
+    "password": "パスワード",
+    "confirmPassword": "パスワードを確認",
+    "rememberMe": "ログイン状態を保持",
+    "dontHaveAccount": "アカウントをお持ちでない場合",
+    "alreadyHaveAccount": "すでにアカウントをお持ちの場合",
+    "createAccount": "アカウントを作成",
+    "signIn": "サインイン"
+  },
+  "converter": {
+    "title": "コンバーター",
+    "voiceToGesture": "音声からジェスチャーへ",
+    "gestureToVoice": "ジェスチャーから音声へ",
+    "speakIntoMicrophone": "マイクに向かって話してジェスチャー翻訳を表示",
+    "startRecording": "録音を開始",
+    "stopRecording": "録音を停止"
+  },
+  "models": {
+    "title": "モデル",
+    "myModels": "マイモデル",
+    "trainer": "トレーナー",
+    "purchase": "購入",
+    "download": "ダウンロード"
+  },
+  "courses": {
+    "title": "コース",
+    "myCourses": "マイコース",
+    "enroll": "登録",
+    "view": "表示"
+  },
+  "classrooms": {
+    "title": "教室",
+    "myClassrooms": "マイ教室",
+    "create": "作成",
+    "join": "参加"
+  },
+  "profile": {
+    "title": "プロフィール",
+    "editProfile": "プロフィールを編集",
+    "changePassword": "パスワードを変更"
+  },
+  "settings": {
+    "title": "設定",
+    "language": "言語",
+    "theme": "テーマ",
+    "notifications": "通知"
+  }
+}
+

@@ -1,0 +1,115 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجاح",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "close": "إغلاق",
+    "submit": "إرسال",
+    "search": "بحث",
+    "filter": "تصفية",
+    "select": "اختيار",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "confirm": "تأكيد",
+    "yes": "نعم",
+    "no": "لا"
+  },
+  "header": {
+    "cart": "السلة",
+    "language": "اللغة",
+    "selectLanguage": "اختر اللغة"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً",
+    "quickAccess": "وصول سريع",
+    "watchVideos": "مشاهدة الفيديوهات",
+    "watchVideosDesc": "شاهد الفيديوهات التعليمية مع ترجمات لغة الإشارة",
+    "takeCourses": "أخذ الدورات",
+    "takeCoursesDesc": "سجل في دورات لغة الإشارة",
+    "practice": "تمرين",
+    "practiceDesc": "تمرن على لغة الإشارة مع تمارين تفاعلية",
+    "translate": "ترجمة",
+    "translateDesc": "استخدم ترجمة الإشارة إلى الكلام والكلام إلى الإشارة",
+    "createContent": "إنشاء محتوى",
+    "createContentDesc": "أنشئ وشارك محتوى لغة الإشارة",
+    "manageClasses": "إدارة الفصول",
+    "manageClassesDesc": "أنشئ وأدر فصولك",
+    "myProfile": "ملفي الشخصي",
+    "myProfileDesc": "عرض وتعديل معلومات ملفك الشخصي",
+    "settings": "الإعدادات",
+    "settingsDesc": "قم بتكوين إعدادات حسابك"
+  },
+  "sidebar": {
+    "dashboard": "لوحة التحكم",
+    "courses": "الدورات",
+    "classrooms": "الفصول",
+    "converter": "المحول",
+    "models": "النماذج",
+    "myModels": "نماذجي",
+    "trainer": "المدرب",
+    "videoSubtitles": "ترجمات الفيديو",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "signup": "إنشاء حساب",
+    "logout": "تسجيل الخروج",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "rememberMe": "تذكرني",
+    "dontHaveAccount": "ليس لديك حساب؟",
+    "alreadyHaveAccount": "لديك حساب بالفعل؟",
+    "createAccount": "إنشاء حساب",
+    "signIn": "تسجيل الدخول"
+  },
+  "converter": {
+    "title": "المحول",
+    "voiceToGesture": "الصوت إلى الإشارة",
+    "gestureToVoice": "الإشارة إلى الصوت",
+    "speakIntoMicrophone": "تحدث في الميكروفون لرؤية ترجمة الإشارة",
+    "startRecording": "بدء التسجيل",
+    "stopRecording": "إيقاف التسجيل"
+  },
+  "models": {
+    "title": "النماذج",
+    "myModels": "نماذجي",
+    "trainer": "المدرب",
+    "purchase": "شراء",
+    "download": "تحميل"
+  },
+  "courses": {
+    "title": "الدورات",
+    "myCourses": "دوراتي",
+    "enroll": "التسجيل",
+    "view": "عرض"
+  },
+  "classrooms": {
+    "title": "الفصول",
+    "myClassrooms": "فصولي",
+    "create": "إنشاء",
+    "join": "انضم"
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "editProfile": "تعديل الملف الشخصي",
+    "changePassword": "تغيير كلمة المرور"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "language": "اللغة",
+    "theme": "المظهر",
+    "notifications": "الإشعارات"
+  }
+}
+

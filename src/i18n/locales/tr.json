@@ -1,0 +1,115 @@
+{
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Hata",
+    "success": "Başarılı",
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "close": "Kapat",
+    "submit": "Gönder",
+    "search": "Ara",
+    "filter": "Filtrele",
+    "select": "Seç",
+    "back": "Geri",
+    "next": "İleri",
+    "previous": "Önceki",
+    "confirm": "Onayla",
+    "yes": "Evet",
+    "no": "Hayır"
+  },
+  "header": {
+    "cart": "Sepet",
+    "language": "Dil",
+    "selectLanguage": "Dil Seç"
+  },
+  "dashboard": {
+    "title": "Kontrol Paneli",
+    "welcome": "Hoş Geldiniz",
+    "quickAccess": "Hızlı Erişim",
+    "watchVideos": "Videoları İzle",
+    "watchVideosDesc": "İşaret dili altyazılı eğitim videolarını izleyin",
+    "takeCourses": "Kurs Al",
+    "takeCoursesDesc": "İşaret dili kurslarına kaydolun",
+    "practice": "Pratik Yap",
+    "practiceDesc": "İnteraktif egzersizlerle işaret dili pratiği yapın",
+    "translate": "Çevir",
+    "translateDesc": "İşaret-konuşma ve konuşma-işaret çevirisi kullanın",
+    "createContent": "İçerik Oluştur",
+    "createContentDesc": "İşaret dili içeriği oluşturun ve paylaşın",
+    "manageClasses": "Sınıfları Yönet",
+    "manageClassesDesc": "Sınıflarınızı oluşturun ve yönetin",
+    "myProfile": "Profilim",
+    "myProfileDesc": "Profil bilgilerinizi görüntüleyin ve düzenleyin",
+    "settings": "Ayarlar",
+    "settingsDesc": "Hesap ayarlarınızı yapılandırın"
+  },
+  "sidebar": {
+    "dashboard": "Kontrol Paneli",
+    "courses": "Kurslar",
+    "classrooms": "Sınıflar",
+    "converter": "Dönüştürücü",
+    "models": "Modeller",
+    "myModels": "Modellerim",
+    "trainer": "Eğitmen",
+    "videoSubtitles": "Video Altyazıları",
+    "profile": "Profil",
+    "settings": "Ayarlar",
+    "logout": "Çıkış Yap"
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "signup": "Kayıt Ol",
+    "logout": "Çıkış Yap",
+    "forgotPassword": "Şifrenizi mi Unuttunuz?",
+    "resetPassword": "Şifreyi Sıfırla",
+    "email": "E-posta",
+    "password": "Şifre",
+    "confirmPassword": "Şifreyi Onayla",
+    "rememberMe": "Beni Hatırla",
+    "dontHaveAccount": "Hesabınız yok mu?",
+    "alreadyHaveAccount": "Zaten hesabınız var mı?",
+    "createAccount": "Hesap Oluştur",
+    "signIn": "Giriş Yap"
+  },
+  "converter": {
+    "title": "Dönüştürücü",
+    "voiceToGesture": "Sesden İşarete",
+    "gestureToVoice": "İşaretten Sese",
+    "speakIntoMicrophone": "İşaret çevirisini görmek için mikrofonunuza konuşun",
+    "startRecording": "Kaydı Başlat",
+    "stopRecording": "Kaydı Durdur"
+  },
+  "models": {
+    "title": "Modeller",
+    "myModels": "Modellerim",
+    "trainer": "Eğitmen",
+    "purchase": "Satın Al",
+    "download": "İndir"
+  },
+  "courses": {
+    "title": "Kurslar",
+    "myCourses": "Kurslarım",
+    "enroll": "Kayıt Ol",
+    "view": "Görüntüle"
+  },
+  "classrooms": {
+    "title": "Sınıflar",
+    "myClassrooms": "Sınıflarım",
+    "create": "Oluştur",
+    "join": "Katıl"
+  },
+  "profile": {
+    "title": "Profil",
+    "editProfile": "Profili Düzenle",
+    "changePassword": "Şifreyi Değiştir"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "language": "Dil",
+    "theme": "Tema",
+    "notifications": "Bildirimler"
+  }
+}
+

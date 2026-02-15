@@ -1,0 +1,115 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "submit": "Enviar",
+    "search": "Pesquisar",
+    "filter": "Filtrar",
+    "select": "Selecionar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "confirm": "Confirmar",
+    "yes": "Sim",
+    "no": "Não"
+  },
+  "header": {
+    "cart": "Carrinho",
+    "language": "Idioma",
+    "selectLanguage": "Selecionar Idioma"
+  },
+  "dashboard": {
+    "title": "Painel",
+    "welcome": "Bem-vindo",
+    "quickAccess": "Acesso Rápido",
+    "watchVideos": "Assistir Vídeos",
+    "watchVideosDesc": "Assistir vídeos educacionais com legendas em linguagem de sinais",
+    "takeCourses": "Fazer Cursos",
+    "takeCoursesDesc": "Inscrever-se em cursos de linguagem de sinais",
+    "practice": "Praticar",
+    "practiceDesc": "Praticar linguagem de sinais com exercícios interativos",
+    "translate": "Traduzir",
+    "translateDesc": "Usar tradução de sinais para fala e fala para sinais",
+    "createContent": "Criar Conteúdo",
+    "createContentDesc": "Criar e compartilhar conteúdo em linguagem de sinais",
+    "manageClasses": "Gerenciar Aulas",
+    "manageClassesDesc": "Criar e gerenciar suas aulas",
+    "myProfile": "Meu Perfil",
+    "myProfileDesc": "Ver e editar informações do seu perfil",
+    "settings": "Configurações",
+    "settingsDesc": "Configurar as configurações da sua conta"
+  },
+  "sidebar": {
+    "dashboard": "Painel",
+    "courses": "Cursos",
+    "classrooms": "Salas de Aula",
+    "converter": "Conversor",
+    "models": "Modelos",
+    "myModels": "Meus Modelos",
+    "trainer": "Treinador",
+    "videoSubtitles": "Legendas de Vídeo",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "logout": "Sair"
+  },
+  "auth": {
+    "login": "Entrar",
+    "signup": "Cadastrar",
+    "logout": "Sair",
+    "forgotPassword": "Esqueceu a Senha?",
+    "resetPassword": "Redefinir Senha",
+    "email": "Email",
+    "password": "Senha",
+    "confirmPassword": "Confirmar Senha",
+    "rememberMe": "Lembrar-me",
+    "dontHaveAccount": "Não tem uma conta?",
+    "alreadyHaveAccount": "Já tem uma conta?",
+    "createAccount": "Criar Conta",
+    "signIn": "Entrar"
+  },
+  "converter": {
+    "title": "Conversor",
+    "voiceToGesture": "Voz para Gestos",
+    "gestureToVoice": "Gestos para Voz",
+    "speakIntoMicrophone": "Fale no seu microfone para ver a tradução de gestos",
+    "startRecording": "Iniciar Gravação",
+    "stopRecording": "Parar Gravação"
+  },
+  "models": {
+    "title": "Modelos",
+    "myModels": "Meus Modelos",
+    "trainer": "Treinador",
+    "purchase": "Comprar",
+    "download": "Baixar"
+  },
+  "courses": {
+    "title": "Cursos",
+    "myCourses": "Meus Cursos",
+    "enroll": "Inscrever-se",
+    "view": "Ver"
+  },
+  "classrooms": {
+    "title": "Salas de Aula",
+    "myClassrooms": "Minhas Salas de Aula",
+    "create": "Criar",
+    "join": "Entrar"
+  },
+  "profile": {
+    "title": "Perfil",
+    "editProfile": "Editar Perfil",
+    "changePassword": "Alterar Senha"
+  },
+  "settings": {
+    "title": "Configurações",
+    "language": "Idioma",
+    "theme": "Tema",
+    "notifications": "Notificações"
+  }
+}
+

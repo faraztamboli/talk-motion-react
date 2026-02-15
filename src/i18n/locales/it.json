@@ -1,0 +1,115 @@
+{
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "close": "Chiudi",
+    "submit": "Invia",
+    "search": "Cerca",
+    "filter": "Filtra",
+    "select": "Seleziona",
+    "back": "Indietro",
+    "next": "Avanti",
+    "previous": "Precedente",
+    "confirm": "Conferma",
+    "yes": "Sì",
+    "no": "No"
+  },
+  "header": {
+    "cart": "Carrello",
+    "language": "Lingua",
+    "selectLanguage": "Seleziona Lingua"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Benvenuto",
+    "quickAccess": "Accesso Rapido",
+    "watchVideos": "Guarda Video",
+    "watchVideosDesc": "Guarda video educativi con sottotitoli in lingua dei segni",
+    "takeCourses": "Segui Corsi",
+    "takeCoursesDesc": "Iscriviti a corsi di lingua dei segni",
+    "practice": "Pratica",
+    "practiceDesc": "Pratica la lingua dei segni con esercizi interattivi",
+    "translate": "Traduci",
+    "translateDesc": "Usa la traduzione segni-parola e parola-segni",
+    "createContent": "Crea Contenuto",
+    "createContentDesc": "Crea e condividi contenuti in lingua dei segni",
+    "manageClasses": "Gestisci Classi",
+    "manageClassesDesc": "Crea e gestisci le tue classi",
+    "myProfile": "Il Mio Profilo",
+    "myProfileDesc": "Visualizza e modifica le informazioni del tuo profilo",
+    "settings": "Impostazioni",
+    "settingsDesc": "Configura le impostazioni del tuo account"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "courses": "Corsi",
+    "classrooms": "Aule",
+    "converter": "Convertitore",
+    "models": "Modelli",
+    "myModels": "I Miei Modelli",
+    "trainer": "Allenatore",
+    "videoSubtitles": "Sottotitoli Video",
+    "profile": "Profilo",
+    "settings": "Impostazioni",
+    "logout": "Esci"
+  },
+  "auth": {
+    "login": "Accedi",
+    "signup": "Registrati",
+    "logout": "Esci",
+    "forgotPassword": "Password Dimenticata?",
+    "resetPassword": "Reimposta Password",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Conferma Password",
+    "rememberMe": "Ricordami",
+    "dontHaveAccount": "Non hai un account?",
+    "alreadyHaveAccount": "Hai già un account?",
+    "createAccount": "Crea Account",
+    "signIn": "Accedi"
+  },
+  "converter": {
+    "title": "Convertitore",
+    "voiceToGesture": "Voce a Gestualità",
+    "gestureToVoice": "Gestualità a Voce",
+    "speakIntoMicrophone": "Parla nel microfono per vedere la traduzione dei gesti",
+    "startRecording": "Inizia Registrazione",
+    "stopRecording": "Ferma Registrazione"
+  },
+  "models": {
+    "title": "Modelli",
+    "myModels": "I Miei Modelli",
+    "trainer": "Allenatore",
+    "purchase": "Acquista",
+    "download": "Scarica"
+  },
+  "courses": {
+    "title": "Corsi",
+    "myCourses": "I Miei Corsi",
+    "enroll": "Iscriviti",
+    "view": "Visualizza"
+  },
+  "classrooms": {
+    "title": "Aule",
+    "myClassrooms": "Le Mie Aule",
+    "create": "Crea",
+    "join": "Unisciti"
+  },
+  "profile": {
+    "title": "Profilo",
+    "editProfile": "Modifica Profilo",
+    "changePassword": "Cambia Password"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "language": "Lingua",
+    "theme": "Tema",
+    "notifications": "Notifiche"
+  }
+}
+

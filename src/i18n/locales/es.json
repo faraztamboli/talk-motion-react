@@ -1,0 +1,115 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "submit": "Enviar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "select": "Seleccionar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "confirm": "Confirmar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "header": {
+    "cart": "Carrito",
+    "language": "Idioma",
+    "selectLanguage": "Seleccionar Idioma"
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "welcome": "Bienvenido",
+    "quickAccess": "Acceso Rápido",
+    "watchVideos": "Ver Videos",
+    "watchVideosDesc": "Ver videos educativos con subtítulos en lenguaje de señas",
+    "takeCourses": "Tomar Cursos",
+    "takeCoursesDesc": "Inscribirse en cursos de lenguaje de señas",
+    "practice": "Practicar",
+    "practiceDesc": "Practicar lenguaje de señas con ejercicios interactivos",
+    "translate": "Traducir",
+    "translateDesc": "Usar traducción de señas a voz y voz a señas",
+    "createContent": "Crear Contenido",
+    "createContentDesc": "Crear y compartir contenido en lenguaje de señas",
+    "manageClasses": "Gestionar Clases",
+    "manageClassesDesc": "Crear y gestionar tus clases",
+    "myProfile": "Mi Perfil",
+    "myProfileDesc": "Ver y editar la información de tu perfil",
+    "settings": "Configuración",
+    "settingsDesc": "Configurar las opciones de tu cuenta"
+  },
+  "sidebar": {
+    "dashboard": "Panel de Control",
+    "courses": "Cursos",
+    "classrooms": "Aulas",
+    "converter": "Convertidor",
+    "models": "Modelos",
+    "myModels": "Mis Modelos",
+    "trainer": "Entrenador",
+    "videoSubtitles": "Subtítulos de Video",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "logout": "Cerrar Sesión"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetPassword": "Restablecer Contraseña",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "rememberMe": "Recordarme",
+    "dontHaveAccount": "¿No tienes una cuenta?",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "createAccount": "Crear Cuenta",
+    "signIn": "Iniciar Sesión"
+  },
+  "converter": {
+    "title": "Convertidor",
+    "voiceToGesture": "Voz a Gestos",
+    "gestureToVoice": "Gestos a Voz",
+    "speakIntoMicrophone": "Habla en tu micrófono para ver la traducción de gestos",
+    "startRecording": "Iniciar Grabación",
+    "stopRecording": "Detener Grabación"
+  },
+  "models": {
+    "title": "Modelos",
+    "myModels": "Mis Modelos",
+    "trainer": "Entrenador",
+    "purchase": "Comprar",
+    "download": "Descargar"
+  },
+  "courses": {
+    "title": "Cursos",
+    "myCourses": "Mis Cursos",
+    "enroll": "Inscribirse",
+    "view": "Ver"
+  },
+  "classrooms": {
+    "title": "Aulas",
+    "myClassrooms": "Mis Aulas",
+    "create": "Crear",
+    "join": "Unirse"
+  },
+  "profile": {
+    "title": "Perfil",
+    "editProfile": "Editar Perfil",
+    "changePassword": "Cambiar Contraseña"
+  },
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "theme": "Tema",
+    "notifications": "Notificaciones"
+  }
+}
+

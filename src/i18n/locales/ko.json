@@ -1,0 +1,115 @@
+{
+  "common": {
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "cancel": "취소",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집",
+    "close": "닫기",
+    "submit": "제출",
+    "search": "검색",
+    "filter": "필터",
+    "select": "선택",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "confirm": "확인",
+    "yes": "예",
+    "no": "아니오"
+  },
+  "header": {
+    "cart": "장바구니",
+    "language": "언어",
+    "selectLanguage": "언어 선택"
+  },
+  "dashboard": {
+    "title": "대시보드",
+    "welcome": "환영합니다",
+    "quickAccess": "빠른 액세스",
+    "watchVideos": "동영상 보기",
+    "watchVideosDesc": "수화 자막이 있는 교육 동영상 보기",
+    "takeCourses": "강좌 수강",
+    "takeCoursesDesc": "수화 강좌에 등록",
+    "practice": "연습",
+    "practiceDesc": "대화형 연습으로 수화 연습",
+    "translate": "번역",
+    "translateDesc": "수화-음성 및 음성-수화 번역 사용",
+    "createContent": "콘텐츠 만들기",
+    "createContentDesc": "수화 콘텐츠 만들기 및 공유",
+    "manageClasses": "수업 관리",
+    "manageClassesDesc": "수업 만들기 및 관리",
+    "myProfile": "내 프로필",
+    "myProfileDesc": "프로필 정보 보기 및 편집",
+    "settings": "설정",
+    "settingsDesc": "계정 설정 구성"
+  },
+  "sidebar": {
+    "dashboard": "대시보드",
+    "courses": "강좌",
+    "classrooms": "교실",
+    "converter": "변환기",
+    "models": "모델",
+    "myModels": "내 모델",
+    "trainer": "트레이너",
+    "videoSubtitles": "동영상 자막",
+    "profile": "프로필",
+    "settings": "설정",
+    "logout": "로그아웃"
+  },
+  "auth": {
+    "login": "로그인",
+    "signup": "회원가입",
+    "logout": "로그아웃",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "resetPassword": "비밀번호 재설정",
+    "email": "이메일",
+    "password": "비밀번호",
+    "confirmPassword": "비밀번호 확인",
+    "rememberMe": "로그인 상태 유지",
+    "dontHaveAccount": "계정이 없으신가요?",
+    "alreadyHaveAccount": "이미 계정이 있으신가요?",
+    "createAccount": "계정 만들기",
+    "signIn": "로그인"
+  },
+  "converter": {
+    "title": "변환기",
+    "voiceToGesture": "음성에서 제스처로",
+    "gestureToVoice": "제스처에서 음성으로",
+    "speakIntoMicrophone": "마이크에 말하여 제스처 번역 보기",
+    "startRecording": "녹음 시작",
+    "stopRecording": "녹음 중지"
+  },
+  "models": {
+    "title": "모델",
+    "myModels": "내 모델",
+    "trainer": "트레이너",
+    "purchase": "구매",
+    "download": "다운로드"
+  },
+  "courses": {
+    "title": "강좌",
+    "myCourses": "내 강좌",
+    "enroll": "등록",
+    "view": "보기"
+  },
+  "classrooms": {
+    "title": "교실",
+    "myClassrooms": "내 교실",
+    "create": "만들기",
+    "join": "참가"
+  },
+  "profile": {
+    "title": "프로필",
+    "editProfile": "프로필 편집",
+    "changePassword": "비밀번호 변경"
+  },
+  "settings": {
+    "title": "설정",
+    "language": "언어",
+    "theme": "테마",
+    "notifications": "알림"
+  }
+}
+

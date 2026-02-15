@@ -1,0 +1,115 @@
+{
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "success": "Успех",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "close": "Закрыть",
+    "submit": "Отправить",
+    "search": "Поиск",
+    "filter": "Фильтр",
+    "select": "Выбрать",
+    "back": "Назад",
+    "next": "Далее",
+    "previous": "Предыдущий",
+    "confirm": "Подтвердить",
+    "yes": "Да",
+    "no": "Нет"
+  },
+  "header": {
+    "cart": "Корзина",
+    "language": "Язык",
+    "selectLanguage": "Выбрать Язык"
+  },
+  "dashboard": {
+    "title": "Панель управления",
+    "welcome": "Добро пожаловать",
+    "quickAccess": "Быстрый доступ",
+    "watchVideos": "Смотреть Видео",
+    "watchVideosDesc": "Смотреть обучающие видео с субтитрами на языке жестов",
+    "takeCourses": "Проходить Курсы",
+    "takeCoursesDesc": "Записаться на курсы языка жестов",
+    "practice": "Практика",
+    "practiceDesc": "Практиковать язык жестов с интерактивными упражнениями",
+    "translate": "Переводить",
+    "translateDesc": "Использовать перевод жестов в речь и речи в жесты",
+    "createContent": "Создать Контент",
+    "createContentDesc": "Создавать и делиться контентом на языке жестов",
+    "manageClasses": "Управлять Классами",
+    "manageClassesDesc": "Создавать и управлять своими классами",
+    "myProfile": "Мой Профиль",
+    "myProfileDesc": "Просматривать и редактировать информацию профиля",
+    "settings": "Настройки",
+    "settingsDesc": "Настроить параметры аккаунта"
+  },
+  "sidebar": {
+    "dashboard": "Панель управления",
+    "courses": "Курсы",
+    "classrooms": "Классы",
+    "converter": "Конвертер",
+    "models": "Модели",
+    "myModels": "Мои Модели",
+    "trainer": "Тренер",
+    "videoSubtitles": "Видео Субтитры",
+    "profile": "Профиль",
+    "settings": "Настройки",
+    "logout": "Выйти"
+  },
+  "auth": {
+    "login": "Войти",
+    "signup": "Регистрация",
+    "logout": "Выйти",
+    "forgotPassword": "Забыли пароль?",
+    "resetPassword": "Сбросить Пароль",
+    "email": "Электронная почта",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердить Пароль",
+    "rememberMe": "Запомнить меня",
+    "dontHaveAccount": "Нет аккаунта?",
+    "alreadyHaveAccount": "Уже есть аккаунт?",
+    "createAccount": "Создать Аккаунт",
+    "signIn": "Войти"
+  },
+  "converter": {
+    "title": "Конвертер",
+    "voiceToGesture": "Голос в Жесты",
+    "gestureToVoice": "Жесты в Голос",
+    "speakIntoMicrophone": "Говорите в микрофон, чтобы увидеть перевод жестов",
+    "startRecording": "Начать Запись",
+    "stopRecording": "Остановить Запись"
+  },
+  "models": {
+    "title": "Модели",
+    "myModels": "Мои Модели",
+    "trainer": "Тренер",
+    "purchase": "Купить",
+    "download": "Скачать"
+  },
+  "courses": {
+    "title": "Курсы",
+    "myCourses": "Мои Курсы",
+    "enroll": "Записаться",
+    "view": "Просмотр"
+  },
+  "classrooms": {
+    "title": "Классы",
+    "myClassrooms": "Мои Классы",
+    "create": "Создать",
+    "join": "Присоединиться"
+  },
+  "profile": {
+    "title": "Профиль",
+    "editProfile": "Редактировать Профиль",
+    "changePassword": "Изменить Пароль"
+  },
+  "settings": {
+    "title": "Настройки",
+    "language": "Язык",
+    "theme": "Тема",
+    "notifications": "Уведомления"
+  }
+}
+

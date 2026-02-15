@@ -1,0 +1,115 @@
+{
+  "common": {
+    "loading": "Lädt...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "submit": "Senden",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "select": "Auswählen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Vorherige",
+    "confirm": "Bestätigen",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "header": {
+    "cart": "Warenkorb",
+    "language": "Sprache",
+    "selectLanguage": "Sprache Auswählen"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Willkommen",
+    "quickAccess": "Schnellzugriff",
+    "watchVideos": "Videos Ansehen",
+    "watchVideosDesc": "Bildungsvideos mit Gebärdensprach-Untertiteln ansehen",
+    "takeCourses": "Kurse Belegen",
+    "takeCoursesDesc": "Für Gebärdensprachkurse anmelden",
+    "practice": "Üben",
+    "practiceDesc": "Gebärdensprache mit interaktiven Übungen üben",
+    "translate": "Übersetzen",
+    "translateDesc": "Gebärden-zu-Sprache und Sprache-zu-Gebärden Übersetzung verwenden",
+    "createContent": "Inhalt Erstellen",
+    "createContentDesc": "Gebärdensprach-Inhalte erstellen und teilen",
+    "manageClasses": "Klassen Verwalten",
+    "manageClassesDesc": "Ihre Klassen erstellen und verwalten",
+    "myProfile": "Mein Profil",
+    "myProfileDesc": "Ihre Profilinformationen anzeigen und bearbeiten",
+    "settings": "Einstellungen",
+    "settingsDesc": "Ihre Kontoeinstellungen konfigurieren"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "courses": "Kurse",
+    "classrooms": "Klassenräume",
+    "converter": "Konverter",
+    "models": "Modelle",
+    "myModels": "Meine Modelle",
+    "trainer": "Trainer",
+    "videoSubtitles": "Video-Untertitel",
+    "profile": "Profil",
+    "settings": "Einstellungen",
+    "logout": "Abmelden"
+  },
+  "auth": {
+    "login": "Anmelden",
+    "signup": "Registrieren",
+    "logout": "Abmelden",
+    "forgotPassword": "Passwort Vergessen?",
+    "resetPassword": "Passwort Zurücksetzen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirmPassword": "Passwort Bestätigen",
+    "rememberMe": "Angemeldet Bleiben",
+    "dontHaveAccount": "Haben Sie kein Konto?",
+    "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+    "createAccount": "Konto Erstellen",
+    "signIn": "Anmelden"
+  },
+  "converter": {
+    "title": "Konverter",
+    "voiceToGesture": "Stimme zu Gebärden",
+    "gestureToVoice": "Gebärden zu Stimme",
+    "speakIntoMicrophone": "Sprechen Sie in Ihr Mikrofon, um die Gebärdenübersetzung zu sehen",
+    "startRecording": "Aufnahme Starten",
+    "stopRecording": "Aufnahme Stoppen"
+  },
+  "models": {
+    "title": "Modelle",
+    "myModels": "Meine Modelle",
+    "trainer": "Trainer",
+    "purchase": "Kaufen",
+    "download": "Herunterladen"
+  },
+  "courses": {
+    "title": "Kurse",
+    "myCourses": "Meine Kurse",
+    "enroll": "Einschreiben",
+    "view": "Ansehen"
+  },
+  "classrooms": {
+    "title": "Klassenräume",
+    "myClassrooms": "Meine Klassenräume",
+    "create": "Erstellen",
+    "join": "Beitreten"
+  },
+  "profile": {
+    "title": "Profil",
+    "editProfile": "Profil Bearbeiten",
+    "changePassword": "Passwort Ändern"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "theme": "Thema",
+    "notifications": "Benachrichtigungen"
+  }
+}
+

@@ -1,0 +1,115 @@
+{
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "त्रुटि",
+    "success": "सफलता",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "close": "बंद करें",
+    "submit": "सबमिट करें",
+    "search": "खोजें",
+    "filter": "फ़िल्टर",
+    "select": "चुनें",
+    "back": "वापस",
+    "next": "अगला",
+    "previous": "पिछला",
+    "confirm": "पुष्टि करें",
+    "yes": "हाँ",
+    "no": "नहीं"
+  },
+  "header": {
+    "cart": "कार्ट",
+    "language": "भाषा",
+    "selectLanguage": "भाषा चुनें"
+  },
+  "dashboard": {
+    "title": "डैशबोर्ड",
+    "welcome": "स्वागत है",
+    "quickAccess": "त्वरित पहुंच",
+    "watchVideos": "वीडियो देखें",
+    "watchVideosDesc": "सांकेतिक भाषा उपशीर्षक के साथ शैक्षिक वीडियो देखें",
+    "takeCourses": "कोर्स लें",
+    "takeCoursesDesc": "सांकेतिक भाषा पाठ्यक्रमों में नामांकन करें",
+    "practice": "अभ्यास",
+    "practiceDesc": "इंटरैक्टिव अभ्यास के साथ सांकेतिक भाषा का अभ्यास करें",
+    "translate": "अनुवाद",
+    "translateDesc": "संकेत-से-भाषण और भाषण-से-संकेत अनुवाद का उपयोग करें",
+    "createContent": "सामग्री बनाएं",
+    "createContentDesc": "सांकेतिक भाषा सामग्री बनाएं और साझा करें",
+    "manageClasses": "कक्षाएं प्रबंधित करें",
+    "manageClassesDesc": "अपनी कक्षाएं बनाएं और प्रबंधित करें",
+    "myProfile": "मेरी प्रोफ़ाइल",
+    "myProfileDesc": "अपनी प्रोफ़ाइल जानकारी देखें और संपादित करें",
+    "settings": "सेटिंग्स",
+    "settingsDesc": "अपनी खाता सेटिंग्स कॉन्फ़िगर करें"
+  },
+  "sidebar": {
+    "dashboard": "डैशबोर्ड",
+    "courses": "पाठ्यक्रम",
+    "classrooms": "कक्षाएं",
+    "converter": "कनवर्टर",
+    "models": "मॉडल",
+    "myModels": "मेरे मॉडल",
+    "trainer": "प्रशिक्षक",
+    "videoSubtitles": "वीडियो उपशीर्षक",
+    "profile": "प्रोफ़ाइल",
+    "settings": "सेटिंग्स",
+    "logout": "लॉगआउट"
+  },
+  "auth": {
+    "login": "लॉगिन",
+    "signup": "साइन अप",
+    "logout": "लॉगआउट",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "resetPassword": "पासवर्ड रीसेट करें",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "confirmPassword": "पासवर्ड की पुष्टि करें",
+    "rememberMe": "मुझे याद रखें",
+    "dontHaveAccount": "खाता नहीं है?",
+    "alreadyHaveAccount": "पहले से ही खाता है?",
+    "createAccount": "खाता बनाएं",
+    "signIn": "साइन इन"
+  },
+  "converter": {
+    "title": "कनवर्टर",
+    "voiceToGesture": "आवाज से इशारा",
+    "gestureToVoice": "इशारा से आवाज",
+    "speakIntoMicrophone": "इशारा अनुवाद देखने के लिए अपने माइक्रोफोन में बोलें",
+    "startRecording": "रिकॉर्डिंग शुरू करें",
+    "stopRecording": "रिकॉर्डिंग बंद करें"
+  },
+  "models": {
+    "title": "मॉडल",
+    "myModels": "मेरे मॉडल",
+    "trainer": "प्रशिक्षक",
+    "purchase": "खरीदें",
+    "download": "डाउनलोड"
+  },
+  "courses": {
+    "title": "पाठ्यक्रम",
+    "myCourses": "मेरे पाठ्यक्रम",
+    "enroll": "नामांकन",
+    "view": "देखें"
+  },
+  "classrooms": {
+    "title": "कक्षाएं",
+    "myClassrooms": "मेरी कक्षाएं",
+    "create": "बनाएं",
+    "join": "शामिल हों"
+  },
+  "profile": {
+    "title": "प्रोफ़ाइल",
+    "editProfile": "प्रोफ़ाइल संपादित करें",
+    "changePassword": "पासवर्ड बदलें"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "language": "भाषा",
+    "theme": "थीम",
+    "notifications": "सूचनाएं"
+  }
+}
+
