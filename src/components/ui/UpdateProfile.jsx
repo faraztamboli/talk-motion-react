@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 const uploadButton = (
   <div>
-    <PlusOutlined />
+    <PlusOutlined aria-hidden="true" />
     <div
       style={{
         marginTop: 8,
@@ -36,7 +36,7 @@ function UpdateProfile(props) {
     <Modal
       open={props.open}
       title="Update your profile"
-      okText="Upload"
+      okText="Update"
       cancelText="Cancel"
       destroyOnClose="true"
       onCancel={props.onCancel}
@@ -51,6 +51,7 @@ function UpdateProfile(props) {
             console.log("Validate Failed:", info);
           });
       }}
+      aria-labelledby="update-profile-title"
     >
       <Form
         form={form}
@@ -68,32 +69,86 @@ function UpdateProfile(props) {
           line2: userProfile?.line2,
         }}
       >
-        <Form.Item name="firstname">
-          <Input placeholder="First Name" type="text" />
+        <Form.Item name="firstname" label="First Name">
+          <Input
+            id="update-profile-firstname"
+            placeholder="First Name"
+            type="text"
+            aria-label="First name"
+          />
         </Form.Item>
-        <Form.Item name="middlename">
-          <Input placeholder="Middle Name" type="text" />
+        <Form.Item name="middlename" label="Middle Name">
+          <Input
+            id="update-profile-middlename"
+            placeholder="Middle Name"
+            type="text"
+            aria-label="Middle name"
+          />
         </Form.Item>
-        <Form.Item name="lastname">
-          <Input placeholder="Last Name" type="text" />
+        <Form.Item name="lastname" label="Last Name">
+          <Input
+            id="update-profile-lastname"
+            placeholder="Last Name"
+            type="text"
+            aria-label="Last name"
+          />
         </Form.Item>
-        <Form.Item name="email">
-          <Input placeholder="Email" type="email" />
+        <Form.Item
+          name="email"
+          label="Email"
+          rules={[
+            {
+              type: "email",
+              message: "Please enter a valid email address",
+            },
+          ]}
+        >
+          <Input
+            id="update-profile-email"
+            placeholder="Email"
+            type="email"
+            aria-label="Email address"
+          />
         </Form.Item>
-        <Form.Item name="street">
-          <Input placeholder="Street" type="text" />
+        <Form.Item name="street" label="Street">
+          <Input
+            id="update-profile-street"
+            placeholder="Street"
+            type="text"
+            aria-label="Street address"
+          />
         </Form.Item>
-        <Form.Item name="city">
-          <Input placeholder="City" type="text" />
+        <Form.Item name="city" label="City">
+          <Input
+            id="update-profile-city"
+            placeholder="City"
+            type="text"
+            aria-label="City"
+          />
         </Form.Item>
-        <Form.Item name="country">
-          <Input placeholder="Country" type="text" />
+        <Form.Item name="country" label="Country">
+          <Input
+            id="update-profile-country"
+            placeholder="Country"
+            type="text"
+            aria-label="Country"
+          />
         </Form.Item>
-        <Form.Item name="zip">
-          <Input placeholder="Zip Code" type="text" />
+        <Form.Item name="zip" label="Zip Code">
+          <Input
+            id="update-profile-zip"
+            placeholder="Zip Code"
+            type="text"
+            aria-label="Zip code"
+          />
         </Form.Item>
-        <Form.Item name="line2">
-          <Input placeholder="Line 2" type="text" />
+        <Form.Item name="line2" label="Address Line 2">
+          <Input
+            id="update-profile-line2"
+            placeholder="Line 2"
+            type="text"
+            aria-label="Address line 2"
+          />
         </Form.Item>
 
         <Form.Item
@@ -132,7 +187,7 @@ function UpdateProfile(props) {
         >
           <Upload.Dragger name="files" accept="image/*">
             <p className="ant-upload-drag-icon">
-              <InboxOutlined />
+              <InboxOutlined aria-hidden="true" />
             </p>
             <p className="ant-upload-text">
               Click or drag image to this area to upload
@@ -250,6 +305,13 @@ const App = (props) => {
         shape="round"
         className="converter-btns mb-6"
         onClick={() => setOpen(true)}
+        aria-label="Open update profile form"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setOpen(true);
+          }
+        }}
       >
         Update Profile
       </Button>

@@ -24,6 +24,8 @@ const CollectionCreateForm = (props) => {
             console.log("Validate Failed:", info);
           });
       }}
+      aria-labelledby="new-model-title"
+      aria-describedby="new-model-description"
     >
       <Form
         form={form}
@@ -41,20 +43,31 @@ const CollectionCreateForm = (props) => {
             },
           ]}
         >
-          <Input />
+          <Input
+            id="new-model-title"
+            aria-label="Model title"
+            aria-required="true"
+          />
         </Form.Item>
         <Form.Item name="description" label="Description">
-          <Input type="textarea" />
+          <Input.TextArea
+            id="new-model-description"
+            aria-label="Model description"
+            rows={4}
+          />
         </Form.Item>
         <Form.Item
           name="modifier"
+          label="Visibility"
           className="collection-create-form_last-form-item"
         >
-          <Radio.Group>
-            <Radio autoFocus checked value={true}>
+          <Radio.Group aria-label="Model visibility setting">
+            <Radio value={true} aria-label="Public model">
               Public
             </Radio>
-            <Radio value={false}>Private</Radio>
+            <Radio value={false} aria-label="Private model">
+              Private
+            </Radio>
           </Radio.Group>
         </Form.Item>
       </Form>
@@ -93,9 +106,16 @@ const App = (props) => {
           className="flex flex-center-center converter-btns"
           type="primary"
           size="middle"
-          icon={<MdOutlineNewLabel size={iconSize} />}
+          icon={<MdOutlineNewLabel size={iconSize} aria-hidden="true" />}
           onClick={() => {
             setOpen(true);
+          }}
+          aria-label="Create new model"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setOpen(true);
+            }
           }}
         >
           Create Model

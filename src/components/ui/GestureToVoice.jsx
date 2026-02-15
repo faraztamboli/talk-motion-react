@@ -26,7 +26,7 @@ export const GestureToVoice = (props) => {
 
   const dispatch = useDispatch();
 
-  const { webcamRef, canvasRef, startHolisticModel } = useHolisticModel();
+  const { webcamRef, canvasRef, startHolisticModel, stopHolisticModel } = useHolisticModel();
 
   useEffect(() => {
     if (isSpeaking) {
@@ -62,20 +62,57 @@ export const GestureToVoice = (props) => {
   return (
     <>
       {contextHolder}
-      <div>
-        <h2 className="mb-0">Gesture to Voice</h2>
-        <div className="flex flex-between-center">
-          <p>Generate speech from gestures</p>
-          {isPlayed && (
-            <div
-              className={isRecording ? "bg-danger" : "bg-success"}
-              style={{
-                width: "30px",
-                height: "30px",
-                borderRadius: "50%",
-              }}
-            ></div>
-          )}
+      <div className="converter-card-content" role="region" aria-labelledby="gesture-to-voice-title">
+        <div style={{ marginBottom: 'var(--spacing-xs)' }}>
+          <div className="flex flex-between-center" style={{ alignItems: 'flex-start' }}>
+            <div>
+              <h2 
+                id="gesture-to-voice-title"
+                className="mb-0" 
+                style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-text-primary)' }}
+              >
+                Gesture to Voice
+              </h2>
+              <p style={{ margin: '2px 0', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+                Generate speech from gestures
+              </p>
+            </div>
+            {isPlayed && (
+              <div 
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 'var(--spacing-xs)',
+                  padding: 'var(--spacing-xs) var(--spacing-sm)',
+                  backgroundColor: isRecording ? 'var(--color-error-light)' : 'var(--color-success-light)',
+                  borderRadius: 'var(--radius-md)',
+                  border: `1px solid ${isRecording ? 'var(--color-error)' : 'var(--color-success)'}`
+                }}
+              >
+                <div
+                  role="img"
+                  aria-label={isRecording ? "Recording indicator" : "Ready indicator"}
+                  className={isRecording ? "bg-danger" : "bg-success"}
+                  style={{
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "50%",
+                    animation: isRecording ? 'pulse 1.5s ease-in-out infinite' : 'none'
+                  }}
+                ></div>
+                <span style={{ 
+                  fontSize: '0.875rem', 
+                  color: isRecording ? 'var(--color-error)' : 'var(--color-success)', 
+                  fontWeight: 600 
+                }}>
+                  {isRecording ? 'Recording' : 'Ready'}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
         <GestureCanvs
           webcamRef={webcamRef}
@@ -85,18 +122,27 @@ export const GestureToVoice = (props) => {
           setIsPageActive={setIsPageActive}
         />
         {isPlayed && (
-          <div className="flex flex-center-center w-100p mb-3">
+          <div 
+            className="flex flex-center-center w-100p mb-3"
+            role="group"
+            aria-label="Volume controls"
+            style={{ gap: 'var(--spacing-sm)' }}
+          >
             {!mute ? (
               <Button
                 className="no-border"
-                icon={<MdVolumeUp size={24} color="#1677ff" />}
+                icon={<MdVolumeUp size={24} color="#1677ff" aria-hidden="true" />}
                 onClick={toggleMute}
+                aria-label="Mute volume"
+                aria-pressed={false}
               />
             ) : (
               <Button
                 className="no-border"
-                icon={<MdVolumeMute size={24} color="#1677ff" />}
+                icon={<MdVolumeMute size={24} color="#1677ff" aria-hidden="true" />}
                 onClick={toggleMute}
+                aria-label="Unmute volume"
+                aria-pressed={true}
               />
             )}
             <Slider
@@ -105,7 +151,22 @@ export const GestureToVoice = (props) => {
               defaultValue={10}
               max={20}
               onChange={onVolumeChange}
+              aria-label="Volume control"
+              aria-valuemin={0}
+              aria-valuemax={20}
+              aria-valuenow={mute ? 0 : 10}
             />
+            <span 
+              style={{ 
+                fontSize: '0.75rem', 
+                color: 'var(--color-text-secondary)',
+                minWidth: '40px',
+                textAlign: 'right'
+              }}
+              aria-live="polite"
+            >
+              {mute ? 'Muted' : `${Math.round((10 / 20) * 100)}%`}
+            </span>
           </div>
         )}
         <div
@@ -113,30 +174,53 @@ export const GestureToVoice = (props) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            marginTop: 'var(--spacing-sm)',
+            gap: 'var(--spacing-sm)'
           }}
+          role="toolbar"
+          aria-label="Gesture to Voice controls"
         >
           {isPlayed ? (
             <>
+              {isModelLoading && (
+                <span 
+                  role="status"
+                  aria-live="polite"
+                  style={{ 
+                    fontSize: '0.875rem', 
+                    color: 'var(--color-text-secondary)', 
+                    marginRight: 'var(--spacing-sm)',
+                    fontWeight: 500
+                  }}
+                >
+                  Processing...
+                </span>
+              )}
               <Button
                 loading={isModelLoading}
-                className="mr-6 converter-btns"
+                className="converter-btns"
                 type="primary"
-                shape="circle"
+                shape="round"
                 style={{ backgroundColor: "#DDBA00" }}
                 size="large"
                 danger
                 onClick={() => {
                   togglePlayed();
                   setIsPageActive(false);
+                  stopHolisticModel();
                 }}
-                icon={<MdPause size={24} />}
-              ></Button>
+                icon={<MdPause size={24} aria-hidden="true" />}
+                aria-label="Pause gesture recognition"
+                aria-pressed={true}
+              >
+                <span>Pause</span>
+              </Button>
             </>
           ) : (
             <Button
-              className="mr-6 converter-btns"
+              className="converter-btns"
               type="primary"
-              shape="circle"
+              shape="round"
               size="large"
               onClick={() => {
                 if (modelId) {
@@ -147,14 +231,36 @@ export const GestureToVoice = (props) => {
                     startHolisticModel();
                   }, 2000);
                 } else {
-                  showMessage("info", "please select a model");
+                  showMessage("info", "Please select a model first");
                 }
               }}
-              icon={<MdPlayArrow size={24} />}
-            ></Button>
+              icon={<MdPlayArrow size={24} aria-hidden="true" />}
+              aria-label="Start gesture recognition to convert gestures to voice"
+              aria-pressed={false}
+            >
+              <span>Start</span>
+            </Button>
           )}
         </div>
-        {props.from === "converter" && <p>{speakText}</p>}
+        {props.from === "converter" && speakText && (
+          <div 
+            role="region"
+            aria-live="polite"
+            aria-label="Generated speech text"
+            style={{ 
+              marginTop: 'var(--spacing-md)', 
+              padding: 'var(--spacing-sm) var(--spacing-md)', 
+              backgroundColor: 'var(--color-neutral-50)', 
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--color-neutral-200)'
+            }}
+          >
+            <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-text-primary)' }}>
+              <strong style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>Speech:</strong>{' '}
+              <span style={{ color: 'var(--color-text-secondary)' }}>{speakText}</span>
+            </p>
+          </div>
+        )}
       </div>
     </>
   );

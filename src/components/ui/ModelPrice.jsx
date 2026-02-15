@@ -287,11 +287,27 @@ function ModelPrice(props) {
                                           >
                                             <Input placeholder="Up to" />
                                           </Form.Item>
-                                          <MinusCircleOutlined
-                                            onClick={() =>
-                                              remove(name)
-                                            }
-                                          />
+                                          <button
+                                            type="button"
+                                            onClick={() => remove(name)}
+                                            onKeyDown={(e) => {
+                                              if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault();
+                                                remove(name);
+                                              }
+                                            }}
+                                            style={{
+                                              background: "none",
+                                              border: "none",
+                                              padding: 0,
+                                              cursor: "pointer",
+                                              display: "inline-flex",
+                                              alignItems: "center",
+                                            }}
+                                            aria-label="Remove field"
+                                          >
+                                            <MinusCircleOutlined aria-hidden="true" />
+                                          </button>
                                         </Space>
                                       )
                                     )}
@@ -300,7 +316,8 @@ function ModelPrice(props) {
                                         type="dashed"
                                         onClick={() => add("", 0)}
                                         block
-                                        icon={<PlusOutlined />}
+                                        icon={<PlusOutlined aria-hidden="true" />}
+                                        aria-label="Add new field"
                                       >
                                         Add field
                                       </Button>
@@ -433,7 +450,28 @@ function App(props) {
   return (
     <>
       {contextHolder}
-      <div onClick={() => setOpen(true)}>Set Price</div>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setOpen(true);
+          }
+        }}
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          cursor: "pointer",
+          color: "inherit",
+          fontSize: "inherit",
+          fontFamily: "inherit",
+        }}
+        aria-label="Set model price"
+      >
+        Set Price
+      </button>
 
       <ModelPrice
         loading={loading}

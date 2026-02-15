@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Modal, Radio, Upload } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import useMessageApi from "../../hooks/useMessageApi";
@@ -8,6 +8,14 @@ import useBase64String from "../../hooks/useBase64String";
 const CollectionCreateForm = (props) => {
   const { normFile } = useClassrooms();
   const [form] = Form.useForm();
+
+  React.useEffect(() => {
+    if (props.open && props.initialValues) {
+      form.setFieldsValue(props.initialValues);
+    } else if (props.open) {
+      form.resetFields();
+    }
+  }, [props.open, props.initialValues, form]);
 
   return (
     <Modal
@@ -21,13 +29,14 @@ const CollectionCreateForm = (props) => {
         form
           .validateFields()
           .then((values) => {
-            form.resetFields();
             props.onCreate(values);
           })
           .catch((info) => {
             console.log("Validate Failed:", info);
           });
       }}
+      aria-labelledby="update-classroom-title"
+      aria-describedby="update-classroom-description"
     >
       <Form
         form={form}
@@ -91,30 +100,46 @@ const App = (props) => {
   const [open, setOpen] = useState(false);
   const { getBase64 } = useBase64String();
   const { contextHolder, showMessage } = useMessageApi();
-  const { updateClassroom, setLoading } = props;
+  const { updateClassroom, setLoading, classroom } = props;
 
   function onCreate(values) {
     console.log(values);
     setLoading(true);
-    getBase64(values.dragger[0].originFileObj)
-      .then((res) => {
-        console.log(res);
-        updateClassroom(values.name, values.description, res, values.modifier, [
-          values.notes,
-        ])
+    
+    // Handle image upload if provided
+    const imagePromise = values.dragger && values.dragger.length > 0
+      ? getBase64(values.dragger[0].originFileObj)
+      : Promise.resolve(classroom?.image || null);
+
+    imagePromise
+      .then((imageBase64) => {
+        console.log(imageBase64);
+        updateClassroom(
+          classroom?.id,
+          values.name,
+          values.description,
+          imageBase64,
+          values.modifier,
+          values.notes || ""
+        )
           .then((res) => {
             console.log(res);
             setLoading(false);
-            showMessage("success", "Classroom created!");
+            showMessage("success", "Classroom updated successfully!");
+            setOpen(false);
+            if (props.onUpdate) props.onUpdate();
           })
           .catch((err) => {
             console.log(err);
             setLoading(false);
-            showMessage("error", "Cannot create classroom!");
+            showMessage("error", "Cannot update classroom!");
           });
       })
-      .catch((err) => console.log(err));
-    setOpen(false);
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        showMessage("error", "Error processing image");
+      });
   }
 
   return (
@@ -122,12 +147,21 @@ const App = (props) => {
       {contextHolder}
       <div>
         <div
-          style={{ width: "100%" }}
+          style={{ width: "100%", cursor: "pointer" }}
           onClick={() => {
             setOpen(true);
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setOpen(true);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Update classroom"
         >
-          Update
+          Update Classroom
         </div>
         <CollectionCreateForm
           open={open}
@@ -135,6 +169,12 @@ const App = (props) => {
           onCancel={() => {
             setOpen(false);
           }}
+          initialValues={classroom ? {
+            name: classroom.name,
+            description: classroom.description,
+            modifier: classroom.is_public,
+            notes: classroom.notes || "",
+          } : {}}
         />
       </div>
     </>

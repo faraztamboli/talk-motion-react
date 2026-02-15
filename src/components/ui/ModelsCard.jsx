@@ -16,9 +16,8 @@ import UpdateModel from "../../components/ui/UpdateModel";
 import NewTrainer from "../../components/ui/NewTrainer";
 import ModelPrice from "../../components/ui/ModelPrice";
 import plurkImg from "../../media/images/plurk.png";
-//import useModels from "../../hooks/useModels";
-
 import useModels from "../../hooks/useModels";
+import { handleKeyboardClick } from "../../utils/accessibility";
 
 export const ModelsCard = (props) => {
   const [quantity, setQuantity] = useState(1);
@@ -74,7 +73,8 @@ export const ModelsCard = (props) => {
     {
       key: "2",
       label: (
-        <div
+        <button
+          type="button"
           onClick={() => {
             setLoading(true);
             deleteModel(model.id)
@@ -89,26 +89,63 @@ export const ModelsCard = (props) => {
                 setLoading(false);
               });
           }}
+          onKeyDown={(e) => handleKeyboardClick(() => {
+            setLoading(true);
+            deleteModel(model.id)
+              .then((res) => {
+                showMessage("success", "Model deleted");
+                console.log(res);
+                setLoading(false);
+              })
+              .catch((err) => {
+                showMessage("error", "Unable to delete the model");
+                console.log(err);
+                setLoading(false);
+              });
+          }, e)}
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            width: "100%",
+            textAlign: "left",
+            cursor: "pointer",
+            color: "inherit",
+            fontSize: "inherit",
+            fontFamily: "inherit",
+          }}
+          aria-label="Delete model"
         >
           Delete
-        </div>
+        </button>
       ),
     },
     {
       key: "3",
       label: (
-        <div
-          style={{ width: "100%" }}
+        <button
+          type="button"
+          style={{ width: "100%", textAlign: "left", background: "none", border: "none", padding: 0, cursor: "pointer", color: "inherit", fontSize: "inherit", fontFamily: "inherit" }}
           onClick={() => cloneModel(model.id, model.is_public)}
+          onKeyDown={(e) => handleKeyboardClick(() => cloneModel(model.id, model.is_public), e)}
+          aria-label="Clone model"
         >
           Clone
-        </div>
+        </button>
       ),
     },
     {
       key: "4",
       label: (
-        <div onClick={() => purchaseModel(model.id)}>Purchase</div>
+        <button
+          type="button"
+          onClick={() => purchaseModel(model.id)}
+          onKeyDown={(e) => handleKeyboardClick(() => purchaseModel(model.id), e)}
+          style={{ background: "none", border: "none", padding: 0, width: "100%", textAlign: "left", cursor: "pointer", color: "inherit", fontSize: "inherit", fontFamily: "inherit" }}
+          aria-label="Purchase model"
+        >
+          Purchase
+        </button>
       ),
     },
 
@@ -135,14 +172,27 @@ export const ModelsCard = (props) => {
       >
         <div
           className="flex"
-          style={{ justifyContent: "space-between" }}
+          style={{ 
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}
         >
           <div
             className="logo_div"
             style={{
-              backgroundColor: "lightgray",
-              display: "inline-block",
-              padding: ".4rem",
+              backgroundColor: "var(--color-neutral-200)",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "var(--spacing-sm)",
+              borderRadius: "var(--radius-md)",
+              transition: "all var(--transition-base)"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--color-neutral-300)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--color-neutral-200)";
             }}
           >
             <img src={plurkImg} alt="model logo" width={40} />
@@ -157,10 +207,20 @@ export const ModelsCard = (props) => {
               className="flex"
               style={{
                 border: "none",
+                boxShadow: "none",
+                transition: "all var(--transition-base)"
               }}
               size="large"
+              aria-label="Open model options menu"
+              aria-haspopup="true"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--color-neutral-100)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+              }}
             >
-              <MdMoreVert size={20} />
+              <MdMoreVert size={20} aria-hidden="true" />
             </Button>
           </Dropdown>
         </div>
@@ -209,21 +269,65 @@ export const ModelsCard = (props) => {
         </div>
 
         {window.location.pathname == "/models" && (
-          <Space className="mt-4">
-            {/* <InputNumber
-              min={1}
-              defaultValue={1}
-              onChange={(value) => setQuantity(value)}
-            /> */}
+          <Space className="mt-4" style={{ width: "100%" }}>
             {model?.badge === "purchased" ? (
-              <div>You already purchased this model!</div>
+              <div style={{
+                padding: "8px 12px",
+                backgroundColor: "var(--color-success-light)",
+                color: "var(--color-success)",
+                borderRadius: "var(--radius-md)",
+                fontSize: "14px",
+                fontWeight: 500,
+                textAlign: "center",
+                width: "100%"
+              }}>
+                ✓ You already purchased this model!
+              </div>
             ) : model.price > 0 ? (
-              <Button type="primary" onClick={handleAddToCart}>
+              <Button 
+                type="primary" 
+                onClick={handleAddToCart}
+                block
+                style={{
+                  borderRadius: "var(--radius-md)",
+                  fontWeight: 600,
+                  height: "40px",
+                  boxShadow: "0 2px 4px rgba(22, 119, 255, 0.2)",
+                  transition: "all var(--transition-base)"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                  e.currentTarget.style.boxShadow = "0 4px 8px rgba(22, 119, 255, 0.3)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 2px 4px rgba(22, 119, 255, 0.2)";
+                }}
+              >
                 Add to Cart
               </Button>
             ) : (
-              <Button type="primary" onClick={handleGetModel}>
-                Get
+              <Button 
+                type="primary" 
+                onClick={handleGetModel}
+                block
+                style={{
+                  borderRadius: "var(--radius-md)",
+                  fontWeight: 600,
+                  height: "40px",
+                  boxShadow: "0 2px 4px rgba(22, 119, 255, 0.2)",
+                  transition: "all var(--transition-base)"
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "translateY(-1px)";
+                  e.currentTarget.style.boxShadow = "0 4px 8px rgba(22, 119, 255, 0.3)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.boxShadow = "0 2px 4px rgba(22, 119, 255, 0.2)";
+                }}
+              >
+                Get for Free
               </Button>
             )}
           </Space>
@@ -237,8 +341,9 @@ export const ModelsCard = (props) => {
             <Button
               type="link"
               className="models-card-btn flex flex-center-center"
+              aria-label="Explore model details"
             >
-              Explore <MdOutlineArrowRightAlt size={20} />
+              Explore <MdOutlineArrowRightAlt size={20} aria-hidden="true" />
             </Button>
           </Link>
         </div>

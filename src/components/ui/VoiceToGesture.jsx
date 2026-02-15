@@ -27,9 +27,19 @@ export const VoiceToGesture = (props) => {
   return (
     <>
       {contextHolder}
-      <div style={{ position: "relative" }}>
-        <h2 className="mb-0">Voice To Gesture</h2>
-        <p>View gestures from speech</p>
+      <div style={{ position: "relative" }} className="converter-card-content" role="region" aria-labelledby="voice-to-gesture-title">
+        <div style={{ marginBottom: 'var(--spacing-xs)' }}>
+          <h2 
+            id="voice-to-gesture-title"
+            className="mb-0" 
+            style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--color-text-primary)' }}
+          >
+            Voice To Gesture
+          </h2>
+          <p style={{ margin: '2px 0', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>
+            View gestures from speech
+          </p>
+        </div>
         <VoiceToGestureVideo
           transcript={transcript}
           videoRef={videoRef}
@@ -50,25 +60,61 @@ export const VoiceToGesture = (props) => {
           <>
             <div
               className="flex flex-center-center"
-              style={{ flexWrap: "wrap" }}
+              style={{ flexWrap: "wrap", marginTop: 'var(--spacing-sm)', gap: 'var(--spacing-sm)' }}
+              role="toolbar"
+              aria-label="Voice to Gesture controls"
             >
               {isListening ? (
-                <Button
-                  style={buttonStyle}
-                  className="mr-6 converter-btns"
-                  type="primary"
-                  shape="round"
-                  size={buttonSize}
-                  danger
-                  onClick={stopListening}
-                  icon={<SoundFilled size={iconSize} />}
-                >
-                  <span>Stop</span>
-                </Button>
+                <>
+                  <div 
+                    role="status" 
+                    aria-live="polite" 
+                    aria-atomic="true"
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: 'var(--spacing-xs)', 
+                      marginRight: 'var(--spacing-sm)',
+                      padding: 'var(--spacing-xs) var(--spacing-sm)',
+                      backgroundColor: 'var(--color-error-light)',
+                      borderRadius: 'var(--radius-md)',
+                      border: '1px solid var(--color-error)'
+                    }}
+                  >
+                    <div 
+                      role="img"
+                      aria-label="Listening indicator"
+                      style={{ 
+                        width: '12px', 
+                        height: '12px', 
+                        borderRadius: '50%', 
+                        backgroundColor: 'var(--color-error)', 
+                        animation: 'pulse 1.5s ease-in-out infinite' 
+                      }}
+                    ></div>
+                    <span style={{ fontSize: '0.875rem', color: 'var(--color-error)', fontWeight: 600 }}>
+                      Listening...
+                    </span>
+                  </div>
+                  <Button
+                    style={buttonStyle}
+                    className="converter-btns"
+                    type="primary"
+                    shape="round"
+                    size={buttonSize}
+                    danger
+                    onClick={stopListening}
+                    icon={<SoundFilled size={iconSize} aria-hidden="true" />}
+                    aria-label="Stop listening and processing"
+                    aria-pressed={isListening}
+                  >
+                    <span>Stop</span>
+                  </Button>
+                </>
               ) : (
                 <Button
                   style={buttonStyle}
-                  className="mr-6 converter-btns"
+                  className="converter-btns"
                   type="primary"
                   shape="round"
                   size={buttonSize}
@@ -76,32 +122,50 @@ export const VoiceToGesture = (props) => {
                     if (modelId) {
                       startListening();
                     } else {
-                      showMessage("info", "please select a model");
+                      showMessage("info", "Please select a model first");
                     }
                   }}
-                  icon={<SoundFilled size={iconSize} />}
+                  icon={<SoundFilled size={iconSize} aria-hidden="true" />}
+                  aria-label="Start listening to convert voice to gesture"
+                  aria-pressed={false}
                 >
                   <span>Speak</span>
                 </Button>
               )}
 
-              <Tooltip title="Full Screen" showArrow={false} placement="bottom">
+              <Tooltip title="View in full screen mode" showArrow={true} placement="bottom">
                 <Button
                   style={buttonStyle}
-                  type="primary"
+                  type="default"
                   className="converter-btns"
-                  danger
                   shape="circle"
                   size={buttonSize}
                   onClick={toggleFullScreen}
-                  icon={<MdFullscreen size={iconSize} />}
+                  icon={<MdFullscreen size={iconSize} aria-hidden="true" />}
+                  aria-label="Open in full screen"
                 />
               </Tooltip>
             </div>
 
-            <div className="pt-4">
-              <p>{transcript ? transcript : ""}</p>
-            </div>
+            {transcript && (
+              <div 
+                role="region"
+                aria-live="polite"
+                aria-label="Speech transcript"
+                style={{ 
+                  marginTop: 'var(--spacing-md)', 
+                  padding: 'var(--spacing-sm) var(--spacing-md)', 
+                  backgroundColor: 'var(--color-neutral-50)', 
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--color-neutral-200)'
+                }}
+              >
+                <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-text-primary)' }}>
+                  <strong style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>Transcript:</strong>{' '}
+                  <span style={{ color: 'var(--color-text-secondary)' }}>{transcript}</span>
+                </p>
+              </div>
+            )}
           </>
         )}
       </div>

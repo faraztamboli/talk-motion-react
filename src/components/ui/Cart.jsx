@@ -82,6 +82,17 @@ function Cart() {
               <div>
                 <Button
                   onClick={() => handleRemoveProduct(ids[index])}
+                  danger
+                  style={{
+                    borderRadius: "var(--radius-md)",
+                    transition: "all var(--transition-base)"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-1px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
                 >
                   Remove
                 </Button>

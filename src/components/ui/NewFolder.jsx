@@ -35,6 +35,8 @@ const CollectionCreateForm = (props) => {
             console.log("Validate Failed:", info);
           });
       }}
+      aria-labelledby="new-folder-title"
+      aria-describedby="new-folder-description"
     >
       <Form
         form={form}
@@ -142,9 +144,16 @@ const App = (props) => {
           className="flex flex-center-center converter-btns"
           type="primary"
           size="middle"
-          icon={<MdOutlineCreateNewFolder size={iconSize} />}
+          icon={<MdOutlineCreateNewFolder size={iconSize} aria-hidden="true" />}
           onClick={() => {
             setOpen(true);
+          }}
+          aria-label="Create new course"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setOpen(true);
+            }
           }}
         >
           New Course

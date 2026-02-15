@@ -29,6 +29,8 @@ const CollectionCreateForm = (props) => {
             console.log("Validate Failed:", info);
           });
       }}
+      aria-labelledby="new-classroom-title"
+      aria-describedby="new-classroom-description"
     >
       <Form
         form={form}
@@ -46,21 +48,33 @@ const CollectionCreateForm = (props) => {
             },
           ]}
         >
-          <Input />
+          <Input
+            id="new-classroom-name"
+            aria-label="Classroom name"
+            aria-required="true"
+          />
         </Form.Item>
         <Form.Item name="description" label="Description">
-          <Input type="textarea" />
+          <Input.TextArea
+            id="new-classroom-description"
+            aria-label="Classroom description"
+            rows={4}
+          />
         </Form.Item>
 
         <Form.Item
           name="dragger"
           valuePropName="fileList"
           getValueFromEvent={normFile}
-          noStyle
+          label="Classroom Image"
         >
-          <Upload.Dragger name="files" accept="image/*">
+          <Upload.Dragger
+            name="files"
+            accept="image/*"
+            aria-label="Upload classroom image"
+          >
             <p className="ant-upload-drag-icon">
-              <InboxOutlined />
+              <InboxOutlined aria-hidden="true" />
             </p>
             <p className="ant-upload-text">
               Click or drag image to this area to upload
@@ -70,13 +84,16 @@ const CollectionCreateForm = (props) => {
 
         <Form.Item
           name="modifier"
+          label="Visibility"
           className="collection-create-form_last-form-item"
         >
-          <Radio.Group>
-            <Radio autoFocus checked value={true}>
+          <Radio.Group aria-label="Classroom visibility setting">
+            <Radio value={true} aria-label="Public classroom">
               Public
             </Radio>
-            <Radio value={false}>Private</Radio>
+            <Radio value={false} aria-label="Private classroom">
+              Private
+            </Radio>
           </Radio.Group>
         </Form.Item>
       </Form>
@@ -122,9 +139,16 @@ const App = (props) => {
           className="flex flex-center-center converter-btns"
           type="primary"
           size="middle"
-          icon={<MdOutlineNewLabel size={iconSize} />}
+          icon={<MdOutlineNewLabel size={iconSize} aria-hidden="true" />}
           onClick={() => {
             setOpen(true);
+          }}
+          aria-label="Create new classroom"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setOpen(true);
+            }
           }}
         >
           Create Classroom

@@ -40,6 +40,8 @@ const CollectionCreateForm = (props) => {
             console.log("Validate Failed:", info);
           });
       }}
+      aria-labelledby="update-model-title"
+      aria-describedby="update-model-description"
     >
       <Form
         form={form}
@@ -61,20 +63,33 @@ const CollectionCreateForm = (props) => {
             },
           ]}
         >
-          <Input />
+          <Input
+            id="update-model-title"
+            aria-label="Model title"
+            aria-required="true"
+          />
         </Form.Item>
         <Form.Item name="description" label="Description">
-          <Input type="textarea" />
+          <Input.TextArea
+            id="update-model-description"
+            aria-label="Model description"
+            rows={4}
+          />
         </Form.Item>
         <Form.Item
           name="modifier"
+          label="Visibility"
           className="collection-create-form_last-form-item"
         >
-          <Radio.Group>
-            <Radio checked value={true}>
+          <Radio.Group
+            aria-label="Model visibility setting"
+          >
+            <Radio value={true} aria-label="Public model">
               Public
             </Radio>
-            <Radio value={false}>Private</Radio>
+            <Radio value={false} aria-label="Private model">
+              Private
+            </Radio>
           </Radio.Group>
         </Form.Item>
       </Form>
@@ -116,14 +131,32 @@ const App = (props) => {
       {contextHolder}
       {props.from === "modelscard" && (
         <>
-          <div
-            style={{ width: "100%" }}
+          <button
+            type="button"
+            style={{
+              width: "100%",
+              background: "none",
+              border: "none",
+              padding: 0,
+              textAlign: "left",
+              cursor: "pointer",
+              color: "inherit",
+              fontSize: "inherit",
+              fontFamily: "inherit",
+            }}
             onClick={() => {
               setOpen(true);
             }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setOpen(true);
+              }
+            }}
+            aria-label="Edit model"
           >
             Edit
-          </div>
+          </button>
           <CollectionCreateForm
             open={open}
             onCreate={onCreate}
