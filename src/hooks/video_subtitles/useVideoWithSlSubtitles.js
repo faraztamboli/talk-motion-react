@@ -112,26 +112,62 @@ function useVideoWithSlSubtitles() {
       if (video !== undefined) {
         let currentTime = state.youtube_player.get_current_play_time();
         let plan = current_recording.get_record_play_plan();
-        let start_times = Object.keys(plan);
-        let i = 0;
-        do {
-            i++;
-        } while( !(currentTime < start_times[i] && start_times[i-1] < currentTime) && i < start_times.length);
-        let current_video = plan[start_times[i-1]];
-        if (current_video.url !== video.src) {
+        let start_times = Object.keys(plan).map(Number).sort((a, b) => a - b);
+        
+        // Find the segment that contains the current time
+        let current_video = null;
+        let segment_start_time = null;
+        
+        // Check if currentTime is before the first segment
+        if (start_times.length === 0 || currentTime < start_times[0]) {
+          // No segments available or before first segment - don't try to play
+          return;
+        }
+        
+        // Find the segment that should be playing
+        for (let i = start_times.length - 1; i >= 0; i--) {
+          let start_time = start_times[i];
+          let segment = plan[start_time];
+          
+          if (segment && currentTime >= start_time && currentTime < segment.end) {
+            current_video = segment;
+            segment_start_time = start_time;
+            break;
+          }
+        }
+        
+        // If no segment found, check if we're past the last segment
+        if (!current_video && start_times.length > 0) {
+          let last_start = start_times[start_times.length - 1];
+          let last_segment = plan[last_start];
+          if (last_segment && currentTime >= last_start && currentTime <= last_segment.end) {
+            current_video = last_segment;
+            segment_start_time = last_start;
+          }
+        }
+        
+        // Only proceed if we found a valid segment with a valid URL
+        if (current_video && current_video.url && segment_start_time !== null) {
+          if (current_video.url !== video.src) {
             video.pause();
             video.src = current_video.url;
             video.load();
+          }
+          video.currentTime = currentTime - segment_start_time;
+          var isPlaying = video.currentTime > 0 && !video.paused && !video.ended
+              && video.readyState > video.HAVE_CURRENT_DATA;
+          console.log(isPlaying);
+          if (!isPlaying) {
+            video.play().catch((error) => {
+              console.error("Error playing video:", error);
+            });
+          }
+          console.log(currentTime, segment_start_time, currentTime - segment_start_time);
+          console.log(current_video.url, video.src);
+        } else {
+          // No valid segment found for current time - pause the video
+          video.pause();
         }
-        video.currentTime = currentTime - start_times[i-1];
-        var isPlaying = video.currentTime > 0 && !video.paused && !video.ended
-            && video.readyState > video.HAVE_CURRENT_DATA;
-        console.log(isPlaying);
-        if (!isPlaying) {
-            video.play();  // trigger video load
-        }
-        console.log(currentTime, start_times[i-1], currentTime - start_times[i-1]);
-        console.log(current_video.url, video.src)
       }
     }
     // eslint-disable-next-line
@@ -157,6 +193,12 @@ function useVideoWithSlSubtitles() {
   }
 
   function play_video(v) {
+    // Validate that v exists and has a valid URL
+    if (!v || !v.url) {
+      console.error("Cannot play video: invalid video object or missing URL", v);
+      return;
+    }
+
     const box = document.getElementById("box");
 
     while (box && box.lastElementChild) {
@@ -230,7 +272,8 @@ function useVideoWithSlSubtitles() {
       // call your function here
       for (const [key, value] of Object.entries(plan)) {
         // console.log(key, value);
-        if (
+        // Validate that value exists and has a valid URL before trying to play
+        if (value && value.url && 
           previous_player_time < key &&
           // eslint-disable-next-line
           state?.youtube_player?.player?.playerInfo?.currentTime > key

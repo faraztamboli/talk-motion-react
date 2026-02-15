@@ -33,6 +33,7 @@ function useHolisticModel1() {
 
   const connect = window.drawConnectors;
   var camera = null;
+  var holisticInstance = null;
 
   let activeEffect = "mask";
 
@@ -261,43 +262,111 @@ function useHolisticModel1() {
     canvasCtx.restore();
   };
 
+  // Cleanup function to stop MediaPipe
+  const stopHolisticModel = () => {
+    if (camera) {
+      try {
+        camera.stop();
+      } catch (e) {
+        // Ignore errors during cleanup
+      }
+      camera = null;
+    }
+    if (holisticInstance) {
+      try {
+        holisticInstance.close();
+      } catch (e) {
+        // Ignore errors during cleanup
+      }
+      holisticInstance = null;
+    }
+  };
+
   // useEffect(() => {
   const startHolisticModel = () => {
     if (
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null
     ) {
-      const holistic = new mpHolistic.Holistic({
-        locateFile: (file) => {
-          return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
-        },
-      });
+      // Check if Holistic is available on window (MediaPipe loads globally)
+      if (!window.Holistic) {
+        console.error("MediaPipe Holistic not found on window object");
+        showMessage("error", "MediaPipe library not loaded. Please refresh the page.");
+        return;
+      }
 
-      holistic.setOptions({
-        selfieMode: true,
-        modelComplexity: 1,
-        smoothLandmarks: true,
-        enableSegmentation: false,
-        smoothSegmentation: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5,
-        effect: "background",
-      });
+      // Clean up any existing instance first
+      stopHolisticModel();
 
-      // holistic.initialize();
+      // Small delay to ensure previous instance is fully cleaned up
+      setTimeout(() => {
+        // Create new Holistic instance
+        holisticInstance = new window.Holistic({
+          locateFile: (file) => {
+            return `https://cdn.jsdelivr.net/npm/@mediapipe/holistic/${file}`;
+          },
+        });
 
-      holistic.onResults(onResults);
+        holisticInstance.onResults(onResults);
 
-      //console.log(holistic);
+        holisticInstance.setOptions({
+          selfieMode: true,
+          modelComplexity: 1,
+          smoothLandmarks: true,
+          enableSegmentation: false,
+          smoothSegmentation: true,
+          minDetectionConfidence: 0.5,
+          minTrackingConfidence: 0.5,
+          effect: "background",
+        });
 
-      camera = new cam.Camera(webcamRef.current.video, {
-        onFrame: async () => {
-          await holistic.send({ image: webcamRef.current.video });
-        },
-         width: 512,
-         height: 300,
-      });
-      camera.start();
+        //console.log(holisticInstance);
+
+        // Wait for react-webcam to initialize and get camera permission
+        // MediaPipe Camera utility will use the existing video stream
+        const startCameraWhenReady = () => {
+          if (webcamRef.current && webcamRef.current.video) {
+            // Check if video has a stream (camera permission granted)
+            const stream = webcamRef.current.video.srcObject;
+            if (stream && stream.active && webcamRef.current.video.readyState >= 2) {
+              try {
+                // MediaPipe Camera utility will use the existing video element
+                // It should not request a new stream since the video already has one
+                camera = new cam.Camera(webcamRef.current.video, {
+                  onFrame: async () => {
+                    if (holisticInstance && webcamRef.current && webcamRef.current.video) {
+                      try {
+                        await holisticInstance.send({ image: webcamRef.current.video });
+                      } catch (error) {
+                        // Silently handle frame processing errors
+                      }
+                    }
+                  },
+                  width: 512,
+                  height: 300,
+                });
+                camera.start();
+              } catch (error) {
+                console.error("Error starting MediaPipe camera:", error);
+                if (error.message && error.message.includes("Permission")) {
+                  showMessage("error", "Camera permission denied. Please allow camera access in your browser settings.");
+                } else {
+                  showMessage("error", "Failed to start camera. Please try again.");
+                }
+              }
+            } else {
+              // Video not ready yet, check again
+              setTimeout(startCameraWhenReady, 100);
+            }
+          } else {
+            // Webcam ref not ready, check again
+            setTimeout(startCameraWhenReady, 100);
+          }
+        };
+        
+        // Start checking for camera readiness
+        startCameraWhenReady();
+      }, 200); // Small delay to ensure cleanup completes
     }
   };
 
@@ -368,6 +437,7 @@ function useHolisticModel1() {
     audioRef,
     canvasRef,
     startHolisticModel,
+    stopHolisticModel,
     contextHolder,
     showMessage,
   };

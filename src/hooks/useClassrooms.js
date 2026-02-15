@@ -163,6 +163,13 @@ function useClassrooms() {
           classroomId,
           is_approved,
           function (res) {
+            if (res && res.error) {
+              // Handle authorization or other errors
+              const errorMessage = res.error.toString();
+              console.error('getClassStudents error:', errorMessage);
+              reject(new Error(errorMessage));
+              return;
+            }
             resolve(res);
           }
         );
@@ -172,12 +179,84 @@ function useClassrooms() {
     });
   }
 
-  function getClassTeachers(classroomId) {
+  function getClassTeachers(classroomId, is_approved) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.getClassTeachers(
           token,
           classroomId,
+          is_approved,
+          function (res) {
+            if (res && res.error) {
+              // Handle authorization or other errors
+              const errorMessage = res.error.toString();
+              console.error('getClassTeachers error:', errorMessage);
+              reject(new Error(errorMessage));
+              return;
+            }
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  function requestClassroomAccessAsStudent(classroomId) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.requestClassroomAccessAsStudent(
+          token,
+          classroomId,
+          function (res) {
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  function requestClassroomAccessAsTeacher(classroomId) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.requestClassroomAccessAsTeacher(
+          token,
+          classroomId,
+          function (res) {
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  function approveStudentRequestToClass(request_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.approveStudentRequestToClass(
+          token,
+          request_id,
+          function (res) {
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  function approveTeacherRequestToClass(request_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.approveTeacherRequestToClass(
+          token,
+          request_id,
           function (res) {
             resolve(res);
           }
@@ -200,6 +279,10 @@ function useClassrooms() {
     removeTeacherFromClass,
     getClassStudents,
     getClassTeachers,
+    requestClassroomAccessAsStudent,
+    requestClassroomAccessAsTeacher,
+    approveStudentRequestToClass,
+    approveTeacherRequestToClass,
   };
 }
 

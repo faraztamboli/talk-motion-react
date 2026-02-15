@@ -91,7 +91,7 @@ function useFolders() {
           srcFolderId,
           destFolderId,
           function (res) {
-            // console.log(res);
+            console.log('[useFolders] copyFolder response:', res);
             resolve(res);
           }
         );
@@ -110,7 +110,15 @@ function useFolders() {
           srcFolderId,
           destFolderId,
           function (res) {
-            // console.log(res);
+            console.log('[useFolders] moveFolder response:', res);
+            // Check if the response indicates success or if it created a new folder (copy behavior)
+            if (res && res.id && res.id !== srcFolderId) {
+              console.warn('[useFolders] WARNING: moveFolder returned a different folder ID. This suggests it copied instead of moved!', {
+                originalId: srcFolderId,
+                returnedId: res.id,
+                response: res
+              });
+            }
             resolve(res);
           }
         );
@@ -139,13 +147,14 @@ function useFolders() {
     });
   }
 
-  function createFolderPermission(folderId, userId, permission) {
+  function createFolderPermission(folderId, entityId, entityType, permission) {
     return new Promise((resolve, reject) => {
       try {
         JS2Py.PythonFunctions.TalkMotionServer.createFolderPermission(
           token,
           folderId,
-          userId,
+          entityId,
+          entityType,
           permission,
           function (res) {
             // console.log(res);
@@ -213,6 +222,46 @@ function useFolders() {
     });
   }
 
+  function updateFolder(folderId, name, description, image, isPublic) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.updateFolder(
+          token,
+          folderId,
+          name,
+          description,
+          image,
+          isPublic,
+          function (res) {
+            // console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  function deleteFolder(folderId) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.deleteFolder(
+          token,
+          folderId,
+          function (res) {
+            // console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   return {
     saveFolder,
     getChildFolders,
@@ -225,6 +274,8 @@ function useFolders() {
     getFolderPermissions,
     deleteFolderPermission,
     removeFolderContent,
+    updateFolder,
+    deleteFolder,
   };
 }
 

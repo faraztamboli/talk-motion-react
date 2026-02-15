@@ -62,10 +62,29 @@ function useSubtitleVideos() {
     });
   }
 
+  function deleteVideoRecording(videoRecordingId) {
+    return new Promise((resolve, reject) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.deleteVideoRecording(
+          token,
+          videoRecordingId,
+          function (res) {
+            console.log(res);
+            resolve(res);
+          }
+        );
+      } catch (err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   return {
     getVideoRecordings,
     getMyVideoRecordings,
     updateVideoRecordingPrivacy,
+    deleteVideoRecording,
   };
 }
 
