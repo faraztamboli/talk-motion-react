@@ -161,7 +161,14 @@ export default function Models(props) {
                     message="Payment Successful!"
                     description="Success Description Success Description Success Description"
                     type="success"
-                    action={<Button type="primary">Done</Button>}
+                    action={
+                      <Button 
+                        type="primary"
+                        aria-label="Dismiss payment success notification"
+                      >
+                        Done
+                      </Button>
+                    }
                     showIcon
                     banner
                     closable
@@ -180,22 +187,51 @@ export default function Models(props) {
             </Col>
           </Row>
         )}
-        <div className="flex flex-between-center mb-4">
-          <h2>Models Available for Purchase</h2>
+        <div 
+          className="flex flex-between-center mb-4"
+          style={{
+            flexWrap: "wrap",
+            gap: "var(--spacing-md)",
+            marginBottom: "var(--spacing-xl)"
+          }}
+        >
+          <div>
+            <h2 style={{
+              margin: 0,
+              marginBottom: "var(--spacing-xs)",
+              fontSize: "var(--font-size-2xl)",
+              fontWeight: "var(--font-weight-bold)",
+              color: "var(--color-neutral-900)"
+            }}>
+              Models Available for Purchase
+            </h2>
+            <p style={{ 
+              margin: 0, 
+              color: "var(--color-text-secondary)",
+              fontSize: "var(--font-size-base)"
+            }}>
+              Browse and purchase gesture recognition models
+            </p>
+          </div>
           <Search
-            style={{ width: 300 }}
-            placeholder="search"
+            style={{ 
+              width: "100%",
+              maxWidth: "400px"
+            }}
+            placeholder="Search models by name or description..."
             enterButton="Search"
-            size="middle"
+            size="large"
             loading={searchBtnLoading}
             onSearch={onPublicModelsSearch}
+            allowClear
+            aria-label="Search models"
           />
         </div>
-        <Row gutter={[16, 16]} style={{ marginBottom: "3rem" }}>
+        <Row gutter={[24, 24]} style={{ marginBottom: "3rem" }}>
           {!publicLoading && publicModels?.length > 0
             ? publicModels.map((model) => {
                 return (
-                  <Col key={model.id} span={8} xs={24} md={8}>
+                  <Col key={model.id} xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
                     <ModelsCard
                       model={model}
                       deleteModel={deleteModel}
@@ -210,19 +246,27 @@ export default function Models(props) {
                 );
               })
             : !publicLoading && (
-                <div className="w-100p m-4">
+                <Col span={24}>
                   <Empty
-                    style={{ fontWeight: 500 }}
+                    style={{ fontWeight: 500, padding: "var(--spacing-xl)" }}
                     imageStyle={emptyImgStyle}
-                    description={<span>No Models</span>}
+                    description={
+                      <span style={{ fontSize: "var(--font-size-base)" }}>
+                        No models found. Try a different search term.
+                      </span>
+                    }
                   />
-                </div>
+                </Col>
               )}
-          <Skeleton
-            active
-            loading={publicLoading}
-            style={{ width: "500px" }}
-          />
+          {publicLoading && (
+            <>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Col key={i} xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+                  <Skeleton active style={{ height: 350 }} />
+                </Col>
+              ))}
+            </>
+          )}
         </Row>
         {totalPublicModels > 8 && (
           <div className="flex flex-center-center mt-6">

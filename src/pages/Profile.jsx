@@ -46,7 +46,14 @@ export default function Profile(props) {
             layout="horizontal"
             column={1}
             bordered
-            labelStyle={{ backgroundColor: "whitesmoke" }}
+            labelStyle={{ 
+              backgroundColor: "var(--color-neutral-100)",
+              fontWeight: 600,
+              color: "var(--color-neutral-700)"
+            }}
+            contentStyle={{
+              backgroundColor: "var(--color-bg-primary)"
+            }}
           >
             <Descriptions.Item label="Username">
               {userProfile?.username}

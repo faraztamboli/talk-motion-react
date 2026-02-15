@@ -41,22 +41,47 @@ function Classrooms(props) {
 
   return (
     <div style={style} className="layout-bg mh-100vh p-5">
-      <div className="flex flex-between-center mb-5">
-        <h2>My Classrooms</h2>
+      <div 
+        className="flex flex-between-center mb-5" 
+        style={{ 
+          flexWrap: "wrap", 
+          gap: "var(--spacing-md)",
+          marginBottom: "var(--spacing-xl)"
+        }}
+      >
+        <div>
+          <h2 style={{ 
+            margin: 0, 
+            marginBottom: "var(--spacing-xs)",
+            fontSize: "var(--font-size-2xl)",
+            fontWeight: "var(--font-weight-bold)"
+          }}>
+            My Classrooms
+          </h2>
+          <p style={{ 
+            margin: 0, 
+            color: "var(--color-text-secondary)",
+            fontSize: "var(--font-size-base)"
+          }}>
+            Browse and manage your learning classrooms
+          </p>
+        </div>
         <Search
-          style={{ width: 300 }}
-          placeholder="search"
+          style={{ width: "100%", maxWidth: 400 }}
+          placeholder="Search classrooms by name or description..."
           enterButton="Search"
-          size="middle"
+          size="large"
           loading={loading}
           onSearch={onSearch}
+          allowClear
+          aria-label="Search classrooms"
         />
       </div>
-      <Row gutter={[16, 16]} style={{ marginBottom: "3rem" }}>
+      <Row gutter={[24, 24]} style={{ marginBottom: "3rem" }}>
         {!loading && classrooms?.length > 0
           ? classrooms.map((classroom) => {
               return (
-                <Col key={classroom.id} span={8} xs={24} md={8}>
+                <Col key={classroom.id} xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
                   <ClassroomCard
                     classroom={classroom}
                     updateClassroom={updateClassroom}
@@ -66,15 +91,27 @@ function Classrooms(props) {
               );
             })
           : !loading && (
-              <div className="w-100p m-4">
+              <Col span={24}>
                 <Empty
-                  style={{ fontWeight: 500 }}
+                  style={{ fontWeight: 500, padding: "var(--spacing-xl)" }}
                   imageStyle={emptyImgStyle}
-                  description={<span>No Classrooms</span>}
+                  description={
+                    <span style={{ fontSize: "var(--font-size-base)" }}>
+                      No classrooms found. Join a classroom to get started!
+                    </span>
+                  }
                 />
-              </div>
+              </Col>
             )}
-        <Skeleton active loading={loading} style={{ width: "500px" }} />
+        {loading && (
+          <>
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Col key={i} xs={24} sm={12} md={8} lg={6}>
+                <Skeleton active style={{ height: 300 }} />
+              </Col>
+            ))}
+          </>
+        )}
       </Row>
     </div>
   );

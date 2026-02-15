@@ -10,11 +10,25 @@ import { forgotPasswordDetails } from "../data/PageDetails";
 const ForgotPassword = (props) => {
   const { onFinish, contextHolder, loading } = useForgotPassword();
 
-  const iconStyle = { marginRight: "10px", color: "#B5B5B5" };
+  const iconStyle = { 
+    marginRight: "10px", 
+    color: "var(--color-neutral-400)" 
+  };
   const formInputStyle = {
     outline: "none",
-    border: "2px solid #EEEEEE",
-    borderRadius: "33px",
+    border: "2px solid var(--color-neutral-200)",
+    borderRadius: "var(--radius-pill)",
+    transition: "all var(--transition-base)",
+  };
+  
+  const handleInputFocus = (e) => {
+    e.target.style.borderColor = "var(--color-primary)";
+    e.target.style.boxShadow = "0 0 0 2px var(--color-primary-light)";
+  };
+  
+  const handleInputBlur = (e) => {
+    e.target.style.borderColor = "var(--color-neutral-200)";
+    e.target.style.boxShadow = "none";
   };
 
   const { title, description } = forgotPasswordDetails;
@@ -53,24 +67,35 @@ const ForgotPassword = (props) => {
                 >
                   <Form.Item
                     name="email"
+                    label="Email"
                     rules={[
                       {
                         required: true,
                         message: "Please input your Email",
                       },
+                      {
+                        type: "email",
+                        message: "Please enter a valid email address",
+                      },
                     ]}
                   >
                     <Input
+                      id="forgot-password-email"
                       prefix={
                         <MailFilled
                           className="site-form-item-icon"
                           style={iconStyle}
+                          aria-hidden="true"
                         />
                       }
                       placeholder="Email"
                       type="email"
                       size="large"
                       style={formInputStyle}
+                      aria-label="Email address"
+                      aria-required="true"
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                     />
                   </Form.Item>
 
@@ -83,6 +108,23 @@ const ForgotPassword = (props) => {
                         size="large"
                         className="w-100p"
                         loading={loading}
+                        style={{
+                          height: "44px",
+                          fontWeight: 600,
+                          fontSize: "16px",
+                          boxShadow: "0 2px 8px rgba(22, 119, 255, 0.3)",
+                          transition: "all var(--transition-base)"
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!loading) {
+                            e.currentTarget.style.transform = "translateY(-1px)";
+                            e.currentTarget.style.boxShadow = "0 4px 12px rgba(22, 119, 255, 0.4)";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow = "0 2px 8px rgba(22, 119, 255, 0.3)";
+                        }}
                       >
                         Send Link
                       </Button>

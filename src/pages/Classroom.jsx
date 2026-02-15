@@ -8,6 +8,12 @@ import { Avatar, Button, Dropdown, Empty, List, Skeleton, Space } from "antd";
 import { DownOutlined, UserOutlined } from "@ant-design/icons";
 import { Link, useParams } from "react-router-dom";
 import useClassrooms from "../hooks/useClassrooms";
+import useMessageApi from "../hooks/useMessageApi";
+
+const isAuthorizationError = (errorMsg) => {
+  return errorMsg.includes("neither classroom teacher or creator") || 
+         errorMsg.includes("not student, teacher or creator");
+};
 
 const Classroom = () => {
   const [loading, setLoading] = useState(true);
@@ -21,16 +27,24 @@ const Classroom = () => {
     updateClassroom,
     getClassStudents,
   } = useClassrooms();
+  const { contextHolder, showMessage } = useMessageApi();
 
   useEffect(() => {
     getClassStudents(classroomId, true)
       .then((res) => {
         console.log(res);
-        setStudents(res);
+        setStudents(res || []);
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
+        const errorMsg = err?.message || err?.toString() || "";
+        if (isAuthorizationError(errorMsg)) {
+          showMessage("warning", "You don't have permission to view students in this classroom.");
+        } else {
+          console.error("Error loading students:", err);
+          showMessage("error", "Failed to load students. Please try again.");
+        }
+        setStudents([]);
         setLoading(false);
       });
   }, []);
@@ -99,6 +113,7 @@ const Classroom = () => {
 
   return (
     <div className="layout-bg mh-100vh p-5">
+      {contextHolder}
       {!loading ? (
         <>
           <div className="flex flex-between-center">

@@ -1,100 +1,100 @@
-import React, { useState, useEffect } from "react";
-import { Button, Card, Col, Row, Switch } from "antd";
-import { Link, useParams } from "react-router-dom";
-import useVideoWithSlSubtitles from "../hooks/video_subtitles/useVideoWithSlSubtitles";
+import React, { useState } from "react";
+import { Switch, Spin, message } from "antd";
+import { useParams, useNavigate } from "react-router-dom";
 import useSubtitleVideos from "../hooks/useSubtitleVideos";
+import useVideoRecording from "../hooks/useVideoRecording";
+import SynchronizedVideoPlayer from "../components/ui/SynchronizedVideoPlayer";
 
 function VideoWithSubtitles() {
   const [switchLoading, setSwitchLoading] = useState(false);
-  const {
-    injectYouTubeAPIScript,
-    loadYouTubeURLOnRecordIdChange,
-    enterPip,
-    exitPip,
-  } = useVideoWithSlSubtitles();
-  const { updateVideoRecordingPrivacy } = useSubtitleVideos();
-
-  const videoElement = document.getElementById("camera_video");
-
   const { recordingId } = useParams();
-
-  useEffect(() => {
-    injectYouTubeAPIScript();
-    loadYouTubeURLOnRecordIdChange(recordingId);
-
-    return () => {
-      exitPip(videoElement);
-    };
-  }, []);
+  const navigate = useNavigate();
+  const { updateVideoRecordingPrivacy } = useSubtitleVideos();
+  const { recording, loading, error } = useVideoRecording(recordingId);
 
   const handleVideoPrivacy = (checked) => {
     setSwitchLoading(true);
     updateVideoRecordingPrivacy(recordingId, checked)
       .then((res) => {
         console.log(res);
+        message.success(
+          checked ? "Video is now public" : "Video is now private"
+        );
         setSwitchLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        message.error("Failed to update video privacy");
         setSwitchLoading(false);
       });
   };
 
+  const handleEdit = () => {
+    navigate(`/video-subtitles/designer/${recordingId}`);
+  };
+
+  if (loading) {
+    return (
+      <div className="layout-bg mh-100vh p-5">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "60vh",
+            gap: "16px",
+          }}
+        >
+          <Spin size="large" />
+          <p>Loading video...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="layout-bg mh-100vh p-5">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "60vh",
+            gap: "16px",
+          }}
+        >
+          <p style={{ color: "red" }}>Error: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="layout-bg mh-100vh p-5">
-      <h2>Video With Subtitles</h2>
-
-      <div className="flex flex-between-center pr-3">
-        <div>
-          <Button className="mr-5" type="primary" onClick={() => enterPip()}>
-            Enter Picture in Picture
-          </Button>
-          <Button
-            className="mr-5"
-            danger
-            type="primary"
-            onClick={() => exitPip()}
-          >
-            Exit Picture in Picture
-          </Button>
-          <Link to={`/video-subtitles/designer/${recordingId}`}>
-            <Button type="primary">Edit Video</Button>
-          </Link>
-        </div>
-        <div>
-          <Switch
-            checkedChildren="Public"
-            unCheckedChildren="Private"
-            loading={switchLoading}
-            onChange={handleVideoPrivacy}
-          />
-        </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "16px",
+        }}
+      >
+        <Switch
+          checkedChildren="Public"
+          unCheckedChildren="Private"
+          loading={switchLoading}
+          onChange={handleVideoPrivacy}
+        />
       </div>
 
-      <div className="mt-3">
-        <Row gutter={[16, 16]}>
-          <Col span={12} xs={24} md={12}>
-            <Card className="h-100p">
-              <div
-                src="..."
-                id="youtube_video_frame"
-                className="w-100p"
-                style={{ width: "100%", height: "390px" }}
-              ></div>
-            </Card>
-          </Col>
-          <Col span={12} xs={24} md={12}>
-            <Card className="h-100p">
-              <div id="box" className="w-100p"></div>
-              <video
-                id="camera_video"
-                className="w-100p"
-                style={{ width: "100%", height: "390px", display: "none" }}
-              ></video>
-            </Card>
-          </Col>
-        </Row>
-      </div>
+      {recording && (
+        <SynchronizedVideoPlayer
+          recording={recording}
+          onEdit={handleEdit}
+        />
+      )}
     </div>
   );
 }

@@ -35,53 +35,118 @@ function VideoSubtitlesLibrary() {
 
   return (
     <div className="layout-bg mh-100vh p-5">
-      <h2>Subtitles Library</h2>
-      <div className="flex flex-center-center">
+      <div style={{ marginBottom: "var(--spacing-xl)" }}>
+        <h2 style={{ 
+          margin: 0, 
+          marginBottom: "var(--spacing-xs)",
+          fontSize: "var(--font-size-2xl)",
+          fontWeight: "var(--font-weight-bold)"
+        }}>
+          Subtitles Library
+        </h2>
+        <p style={{ 
+          margin: 0, 
+          color: "var(--color-text-secondary)",
+          fontSize: "var(--font-size-base)"
+        }}>
+          Browse public videos with sign language subtitles
+        </p>
+      </div>
+      <div style={{ marginBottom: "var(--spacing-xl)" }}>
         <Search
-          style={{ width: 300 }}
-          placeholder="search"
+          style={{ width: "100%", maxWidth: 600 }}
+          placeholder="Search videos by title..."
           enterButton="Search"
-          size="middle"
+          size="large"
           loading={loading}
           onSearch={handleSearch}
+          allowClear
+          aria-label="Search video library"
         />
       </div>
       {!loading && (
-        <Row gutter={[16, 16]} className="mt-8">
+        <Row gutter={[24, 24]} className="mt-8">
           {videoRecordings.length > 0 ? (
             videoRecordings.map((video) => (
-              <Col key={video.id} span={8}>
-                <Link to={`/video-subtitles/library/${video.id}`}>
-                  <Card className="cursor-pointer h-100p" hoverable>
-                    <img
-                      width="100%"
-                      height="100%"
-                      src={`https://img.youtube.com/vi/${
-                        video.original_video_url.match(regex)[1]
-                      }/maxresdefault.jpg`}
-                      alt={video.original_video_title}
-                    />
-                    <div className="flex align-items-center">
-                      <div className="h-100p">
+              <Col key={video.id} xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+                <Link to={`/video-subtitles/library/${video.id}`} style={{ textDecoration: "none" }}>
+                  <Card 
+                    className="cursor-pointer h-100p" 
+                    hoverable
+                    style={{
+                      borderRadius: "var(--radius-lg)",
+                      overflow: "hidden",
+                      transition: "all 0.3s ease",
+                    }}
+                    bodyStyle={{ padding: 0 }}
+                    cover={
+                      <div style={{ position: "relative", paddingTop: "56.25%", overflow: "hidden" }}>
+                        <img
+                          width="100%"
+                          height="100%"
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            objectFit: "cover"
+                          }}
+                          src={`https://img.youtube.com/vi/${
+                            video.original_video_url.match(regex)[1]
+                          }/maxresdefault.jpg`}
+                          alt={video.original_video_title}
+                        />
+                      </div>
+                    }
+                  >
+                    <div style={{ padding: "var(--spacing-md)" }}>
+                      <div className="flex align-items-center" style={{ marginBottom: "var(--spacing-xs)" }}>
                         <UserInfoImage
                           username={video.create_user}
                           image={video.sm_img}
                         />
                       </div>
-                      <h3 className="ml-4">{video.original_video_title}</h3>
+                      <h3 style={{ 
+                        margin: 0, 
+                        fontSize: "var(--font-size-base)",
+                        fontWeight: "var(--font-weight-medium)",
+                        color: "var(--color-text)",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical"
+                      }}>
+                        {video.original_video_title}
+                      </h3>
                     </div>
                   </Card>
                 </Link>
               </Col>
             ))
           ) : (
-            <div className="w-100p m-4">
-              <Empty style={emptyImgStyle} />
-            </div>
+            <Col span={24}>
+              <Empty 
+                style={{ padding: "var(--spacing-xl)" }}
+                imageStyle={emptyImgStyle}
+                description={
+                  <span style={{ fontSize: "var(--font-size-base)" }}>
+                    No videos found. Try a different search term.
+                  </span>
+                }
+              />
+            </Col>
           )}
         </Row>
       )}
-      {loading && <Skeleton active />}
+      {loading && (
+        <Row gutter={[24, 24]}>
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Col key={i} xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+              <Skeleton active style={{ height: 300 }} />
+            </Col>
+          ))}
+        </Row>
+      )}
     </div>
   );
 }

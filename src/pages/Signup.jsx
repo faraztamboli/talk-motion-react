@@ -11,11 +11,25 @@ const Signup = (props) => {
   const [form] = Form.useForm();
   const { onFinish, contextHolder, loading } = useSignup();
 
-  const iconStyle = { marginRight: "10px", color: "#B5B5B5" };
+  const iconStyle = { 
+    marginRight: "10px", 
+    color: "var(--color-neutral-400)" 
+  };
   const formInputStyle = {
     outline: "none",
-    border: "2px solid #EEEEEE",
-    borderRadius: "33px",
+    border: "2px solid var(--color-neutral-200)",
+    borderRadius: "var(--radius-pill)",
+    transition: "all var(--transition-base)",
+  };
+  
+  const handleInputFocus = (e) => {
+    e.target.style.borderColor = "var(--color-primary)";
+    e.target.style.boxShadow = "0 0 0 2px var(--color-primary-light)";
+  };
+  
+  const handleInputBlur = (e) => {
+    e.target.style.borderColor = "var(--color-neutral-200)";
+    e.target.style.boxShadow = "none";
   };
 
   const { title, description } = signupDetails;
@@ -50,29 +64,41 @@ const Signup = (props) => {
                 >
                   <Form.Item
                     name="email"
+                    label="Email"
                     rules={[
                       {
                         required: true,
                         message: "Please input your Email",
                       },
+                      {
+                        type: "email",
+                        message: "Please enter a valid email address",
+                      },
                     ]}
                   >
                     <Input
+                      id="signup-email"
                       prefix={
                         <MailFilled
                           className="site-form-item-icon"
                           style={iconStyle}
+                          aria-hidden="true"
                         />
                       }
                       placeholder="Email"
                       type="email"
                       size="large"
                       style={formInputStyle}
+                      aria-label="Email address"
+                      aria-required="true"
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                     />
                   </Form.Item>
 
                   <Form.Item
                     name="username"
+                    label="Username"
                     rules={[
                       {
                         required: true,
@@ -81,20 +107,27 @@ const Signup = (props) => {
                     ]}
                   >
                     <Input
+                      id="signup-username"
                       prefix={
                         <UserOutlined
                           className="site-form-item-icon"
                           style={iconStyle}
+                          aria-hidden="true"
                         />
                       }
                       placeholder="Username"
                       size="large"
                       style={formInputStyle}
+                      aria-label="Username"
+                      aria-required="true"
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                     />
                   </Form.Item>
 
                   <Form.Item
                     name="password"
+                    label="Password"
                     rules={[
                       {
                         required: true,
@@ -103,39 +136,63 @@ const Signup = (props) => {
                     ]}
                   >
                     <Input
+                      id="signup-password"
                       prefix={
                         <LockFilled
                           className="site-form-item-icon"
                           style={iconStyle}
+                          aria-hidden="true"
                         />
                       }
-                      placeholder="password"
+                      placeholder="Password"
                       size="large"
                       type="password"
+                      autoComplete="new-password"
                       style={formInputStyle}
+                      aria-label="Password"
+                      aria-required="true"
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                     />
                   </Form.Item>
 
                   <Form.Item
                     name="confirm password"
+                    label="Confirm Password"
+                    dependencies={['password']}
                     rules={[
                       {
                         required: true,
-                        message: "Please input your Password",
+                        message: "Please confirm your Password",
                       },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue('password') === value) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('Passwords do not match!'));
+                        },
+                      }),
                     ]}
                   >
                     <Input
+                      id="signup-confirm-password"
                       prefix={
                         <LockFilled
                           className="site-form-item-icon"
                           style={iconStyle}
+                          aria-hidden="true"
                         />
                       }
-                      placeholder="confirm password"
+                      placeholder="Confirm password"
                       size="large"
                       type="password"
+                      autoComplete="new-password"
                       style={formInputStyle}
+                      aria-label="Confirm password"
+                      aria-required="true"
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                     />
                   </Form.Item>
 
@@ -148,6 +205,23 @@ const Signup = (props) => {
                         size="large"
                         className="w-100p"
                         loading={loading}
+                        style={{
+                          height: "44px",
+                          fontWeight: 600,
+                          fontSize: "16px",
+                          boxShadow: "0 2px 8px rgba(22, 119, 255, 0.3)",
+                          transition: "all var(--transition-base)"
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!loading) {
+                            e.currentTarget.style.transform = "translateY(-1px)";
+                            e.currentTarget.style.boxShadow = "0 4px 12px rgba(22, 119, 255, 0.4)";
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow = "0 2px 8px rgba(22, 119, 255, 0.3)";
+                        }}
                       >
                         Sign Up
                       </Button>

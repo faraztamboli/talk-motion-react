@@ -120,27 +120,54 @@ export default function MyModels(props) {
       <MetaDecorator title={title} description={description} />
       <div style={profileStyle} className="layout-bg mh-100vh">
         <div className="details_section">
-          <div className="flex flex-between-center mb-5">
-            <h2>My Models</h2>
-            <Search
-              style={{ width: 300 }}
-              placeholder="search"
-              enterButton="Search"
-              size="middle"
-              loading={searchBtnLoading}
-              onSearch={onUserModelsSearch}
-            />
-            <NewModel
-              sm={props.sm}
-              createNewModel={createNewModel}
-              setLoading={setLoading}
-            />
+          <div 
+            className="flex flex-between-center mb-5"
+            style={{
+              flexWrap: "wrap",
+              gap: "var(--spacing-md)",
+              marginBottom: "var(--spacing-xl)"
+            }}
+          >
+            <div>
+              <h2 style={{
+                margin: 0,
+                marginBottom: "var(--spacing-xs)",
+                fontSize: "var(--font-size-2xl)",
+                fontWeight: "var(--font-weight-bold)"
+              }}>
+                My Models
+              </h2>
+              <p style={{ 
+                margin: 0, 
+                color: "var(--color-text-secondary)",
+                fontSize: "var(--font-size-base)"
+              }}>
+                Manage your gesture recognition models
+              </p>
+            </div>
+            <div style={{ display: "flex", gap: "var(--spacing-md)", flexWrap: "wrap" }}>
+              <Search
+                style={{ width: "100%", maxWidth: 300 }}
+                placeholder="Search my models..."
+                enterButton="Search"
+                size="large"
+                loading={searchBtnLoading}
+                onSearch={onUserModelsSearch}
+                allowClear
+                aria-label="Search my models"
+              />
+              <NewModel
+                sm={props.sm}
+                createNewModel={createNewModel}
+                setLoading={setLoading}
+              />
+            </div>
           </div>
-          <Row gutter={[16, 16]}>
+          <Row gutter={[24, 24]}>
             {!userLoading && userModels?.length > 0
               ? userModels.map((model) => {
                   return (
-                    <Col key={model.id} span={8} xs={24} md={8}>
+                    <Col key={model.id} xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
                       <ModelsCard
                         model={model}
                         collapsedWidth={props.collapsedWidth}
@@ -157,15 +184,34 @@ export default function MyModels(props) {
                   );
                 })
               : !userLoading && (
-                  <div className="w-100p m-4">
+                  <Col span={24}>
                     <Empty
-                      style={{ fontWeight: 500 }}
+                      style={{ fontWeight: 500, padding: "var(--spacing-xl)" }}
                       imageStyle={emptyImgStyle}
-                      description={<span>No Models</span>}
+                      description={
+                        <div style={{ textAlign: "center" }}>
+                          <span style={{ fontSize: "var(--font-size-base)", display: "block", marginBottom: "var(--spacing-md)" }}>
+                            No models found. Create your first model to get started!
+                          </span>
+                          <NewModel
+                            sm={props.sm}
+                            createNewModel={createNewModel}
+                            setLoading={setLoading}
+                          />
+                        </div>
+                      }
                     />
-                  </div>
+                  </Col>
                 )}
-            <Skeleton active loading={userLoading} style={{ width: "500px" }} />
+            {userLoading && (
+              <>
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <Col key={i} xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+                    <Skeleton active style={{ height: 350 }} />
+                  </Col>
+                ))}
+              </>
+            )}
           </Row>
           {totalUserModels > 9 && (
             <div className="flex flex-center-center mt-6">

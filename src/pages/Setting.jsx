@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Descriptions } from "antd";
+import { Descriptions, Card, Divider } from "antd";
 import UpdateProfile from "../components/ui/UpdateProfile";
 import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
+import LanguageSelector from "../components/ui/LanguageSelector";
+import AIPreferences from "../components/ui/AIPreferences";
 import useProfile from "../hooks/useProfile";
+import { useLanguage } from "../contexts/LanguageContext";
 
 function Setting(props) {
   const [userProfile, setUserProfile] = useState();
   const { getUserProfile } = useProfile();
+  const { getCurrentLanguage } = useLanguage();
 
   useEffect(() => {
     getUserProfile()
@@ -54,6 +58,59 @@ function Setting(props) {
         </div>
         <div className="flex flex-center-center mt-6">
           <UpdateProfile userProfile={userProfile} />
+        </div>
+        <Divider />
+        <div className="details_section" style={{ marginTop: "2rem" }}>
+          <Card 
+            title="Language Preferences" 
+            style={{ 
+              maxWidth: "600px",
+              margin: "0 auto",
+              marginBottom: "2rem"
+            }}
+          >
+            <div style={{ 
+              display: "flex", 
+              flexDirection: "column", 
+              gap: "16px",
+              padding: "8px 0"
+            }}>
+              <div>
+                <p style={{ 
+                  marginBottom: "12px",
+                  color: "var(--color-neutral-700)",
+                  fontSize: "14px"
+                }}>
+                  Select your preferred language for the application interface:
+                </p>
+                <LanguageSelector 
+                  size="large" 
+                  showLabel={true}
+                  style={{ width: "100%" }}
+                />
+              </div>
+              <div style={{ 
+                marginTop: "8px",
+                padding: "12px",
+                backgroundColor: "var(--color-neutral-50)",
+                borderRadius: "var(--radius-md)",
+                fontSize: "13px",
+                color: "var(--color-neutral-600)"
+              }}>
+                <strong>Current Language:</strong> {getCurrentLanguage().nativeName || getCurrentLanguage().name}
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <Divider />
+        <div className="details_section" style={{ marginTop: "2rem" }}>
+          <AIPreferences 
+            style={{ 
+              maxWidth: "800px",
+              margin: "0 auto"
+            }}
+          />
         </div>
       </div>
     </>

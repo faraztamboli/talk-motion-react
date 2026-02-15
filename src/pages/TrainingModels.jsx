@@ -105,22 +105,47 @@ export default function TrainingModels(props) {
       {contextHolder}
       <MetaDecorator title={title} description={description} />
       <div style={modelStyle} className="layout-bg mh-100vh">
-        <div className="flex flex-between-center">
-          <h2>Training Models</h2>
+        <div 
+          className="flex flex-between-center"
+          style={{
+            flexWrap: "wrap",
+            gap: "var(--spacing-md)",
+            marginBottom: "var(--spacing-xl)"
+          }}
+        >
+          <div>
+            <h2 style={{
+              margin: 0,
+              marginBottom: "var(--spacing-xs)",
+              fontSize: "var(--font-size-2xl)",
+              fontWeight: "var(--font-weight-bold)"
+            }}>
+              Training Models
+            </h2>
+            <p style={{ 
+              margin: 0, 
+              color: "var(--color-text-secondary)",
+              fontSize: "var(--font-size-base)"
+            }}>
+              Models you can train and improve
+            </p>
+          </div>
           <Search
-            style={{ width: 300 }}
-            placeholder="search"
+            style={{ width: "100%", maxWidth: 400 }}
+            placeholder="Search training models..."
             enterButton="Search"
-            size="middle"
+            size="large"
             loading={searchBtnLoading}
             onSearch={onUserModelsSearch}
+            allowClear
+            aria-label="Search training models"
           />
         </div>
-        <Row gutter={[16, 16]} style={{ marginBottom: "3rem" }}>
+        <Row gutter={[24, 24]} style={{ marginBottom: "3rem" }}>
           {!trainingLoading && trainingModels?.length > 0
             ? trainingModels.map((model) => {
                 return (
-                  <Col key={model.id} span={8} xs={24} md={8}>
+                  <Col key={model.id} xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
                     <ModelsCard
                       model={model}
                       deleteModel={deleteModel}
@@ -134,19 +159,27 @@ export default function TrainingModels(props) {
                 );
               })
             : !trainingLoading && (
-                <div className="w-100p m-4">
+                <Col span={24}>
                   <Empty
-                    style={{ fontWeight: 500 }}
+                    style={{ fontWeight: 500, padding: "var(--spacing-xl)" }}
                     imageStyle={emptyImgStyle}
-                    description={<span>No Models</span>}
+                    description={
+                      <span style={{ fontSize: "var(--font-size-base)" }}>
+                        No training models found. Try a different search term.
+                      </span>
+                    }
                   />
-                </div>
+                </Col>
               )}
-          <Skeleton
-            active
-            loading={trainingLoading}
-            style={{ width: "500px" }}
-          />
+          {trainingLoading && (
+            <>
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Col key={i} xs={24} sm={12} md={8} lg={6} xl={6} xxl={4}>
+                  <Skeleton active style={{ height: 350 }} />
+                </Col>
+              ))}
+            </>
+          )}
         </Row>
         {totalTrainingModels > 9 && (
           <div className="flex flex-center-center mt-6">

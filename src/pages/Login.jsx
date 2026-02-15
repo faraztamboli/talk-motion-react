@@ -11,11 +11,15 @@ const Login = (props) => {
   const { onFinish, loading, contextHolder } = useLogin();
   const { title, description } = loginDetails;
 
-  const iconStyle = { marginRight: "10px", color: "#B5B5B5" };
+  const iconStyle = { 
+    marginRight: "10px", 
+    color: "var(--color-neutral-400)" 
+  };
   const formInputStyle = {
     outline: "none",
-    border: "2px solid #EEEEEE",
-    borderRadius: "33px",
+    border: "2px solid var(--color-neutral-200)",
+    borderRadius: "var(--radius-pill)",
+    transition: "all var(--transition-base)",
   };
 
   return (
@@ -49,6 +53,7 @@ const Login = (props) => {
               >
                 <Form.Item
                   name="username"
+                  label="Username"
                   rules={[
                     {
                       required: true,
@@ -56,20 +61,33 @@ const Login = (props) => {
                     },
                   ]}
                 >
-                  <Input
-                    prefix={
-                      <UserOutlined
-                        className="site-form-item-icon"
-                        style={iconStyle}
-                      />
-                    }
-                    placeholder="Username"
-                    size="large"
-                    style={formInputStyle}
-                  />
+                    <Input
+                      id="login-username"
+                      prefix={
+                        <UserOutlined
+                          className="site-form-item-icon"
+                          style={iconStyle}
+                          aria-hidden="true"
+                        />
+                      }
+                      placeholder="Username"
+                      size="large"
+                      style={formInputStyle}
+                      aria-label="Username"
+                      aria-required="true"
+                      onFocus={(e) => {
+                        e.target.style.borderColor = "var(--color-primary)";
+                        e.target.style.boxShadow = "0 0 0 2px var(--color-primary-light)";
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = "var(--color-neutral-200)";
+                        e.target.style.boxShadow = "none";
+                      }}
+                    />
                 </Form.Item>
                 <Form.Item
                   name="password"
+                  label="Password"
                   rules={[
                     {
                       required: true,
@@ -77,19 +95,31 @@ const Login = (props) => {
                     },
                   ]}
                 >
-                  <Input
-                    prefix={
-                      <LockOutlined
-                        className="site-form-item-icon"
-                        style={iconStyle}
-                      />
-                    }
-                    type="password"
-                    autoComplete="password"
-                    placeholder="Password"
-                    size="large"
-                    style={formInputStyle}
-                  />
+                    <Input
+                      id="login-password"
+                      prefix={
+                        <LockOutlined
+                          className="site-form-item-icon"
+                          style={iconStyle}
+                          aria-hidden="true"
+                        />
+                      }
+                      type="password"
+                      autoComplete="current-password"
+                      placeholder="Password"
+                      size="large"
+                      style={formInputStyle}
+                      aria-label="Password"
+                      aria-required="true"
+                      onFocus={(e) => {
+                        e.target.style.borderColor = "var(--color-primary)";
+                        e.target.style.boxShadow = "0 0 0 2px var(--color-primary-light)";
+                      }}
+                      onBlur={(e) => {
+                        e.target.style.borderColor = "var(--color-neutral-200)";
+                        e.target.style.boxShadow = "none";
+                      }}
+                    />
                 </Form.Item>
 
                 <Form.Item>
@@ -100,6 +130,24 @@ const Login = (props) => {
                       shape="round"
                       className="w-100p"
                       loading={loading}
+                      size="large"
+                      style={{
+                        height: "44px",
+                        fontWeight: 600,
+                        fontSize: "16px",
+                        boxShadow: "0 2px 8px rgba(22, 119, 255, 0.3)",
+                        transition: "all var(--transition-base)"
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!loading) {
+                          e.currentTarget.style.transform = "translateY(-1px)";
+                          e.currentTarget.style.boxShadow = "0 4px 12px rgba(22, 119, 255, 0.4)";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "translateY(0)";
+                        e.currentTarget.style.boxShadow = "0 2px 8px rgba(22, 119, 255, 0.3)";
+                      }}
                     >
                       Log in
                     </Button>
