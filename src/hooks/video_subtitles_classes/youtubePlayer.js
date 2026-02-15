@@ -9,6 +9,12 @@ class youtube_player {
     this.id = id_video_iframe;
     this.player = null;
     this.video_frame = document.getElementById(id_video_iframe);
+    
+    if (!this.video_frame) {
+      console.error(`YouTube iframe with id "${id_video_iframe}" not found in DOM`);
+      return;
+    }
+    
     // let youtube_url = document.getElementById('youtube_url'); // youtube_url.value is url
     this.video_code = this.get_youtube_video_code(url);
     this.video_frame.src = this.get_embedding_youtube_url(this.video_code);
@@ -62,6 +68,9 @@ class youtube_player {
   }
 
   get_video_url() {
+    if (!this.video_frame) {
+      return null;
+    }
     return this.video_frame.src;
   }
 

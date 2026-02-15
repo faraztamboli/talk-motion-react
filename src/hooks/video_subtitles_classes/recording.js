@@ -47,95 +47,94 @@ class recording {
 
   get_record_play_plan() {
     let current_recording = this;
-    let previous_original_start = 0;
-    let previous_original_end = 0;
-    let plan = {};
-    for (let i in current_recording.recording_shots) {
-      let recording_shot = current_recording.recording_shots[i];
-      let previous_recording_shot = null;
-      if (i > 0) {
-        previous_recording_shot = current_recording.recording_shots[i - 1];
-      }
-      // 3 cases
-      // case 1:
-      // if current shot is completely after previous shot (non-overlapping)
-      if (recording_shot.original_video_start >= previous_original_end) {
-        plan[recording_shot.original_video_start] = {
-          start: recording_shot.original_video_start,
-          end: recording_shot.original_video_end,
-          url: recording_shot.blob_url,
-        };
-      }
-      // case 2:
-      // if current shot is completely before previous shot (non-overlapping)
-      else if (recording_shot.original_video_end <= previous_original_start) {
-        plan[recording_shot.original_video_start] = {
-          start: recording_shot.original_video_start,
-          end: recording_shot.original_video_end,
-          url: recording_shot.blob_url,
-        };
-      }
-      // case 3:
-      // if current shot starts in between previous shot but ends after (partial-overlapping)
-      else if (
-        recording_shot.original_video_start > previous_original_start &&
-        recording_shot.original_video_start < previous_original_end &&
-        recording_shot.original_video_end > previous_original_end
-      ) {
-        plan[previous_original_start]["end"] =
-          recording_shot.original_video_start;
-        plan[recording_shot.original_video_start] = {
-          start: recording_shot.original_video_start,
-          end: recording_shot.original_video_end,
-          url: recording_shot.blob_url,
-        };
-      }
-      // case 4:
-      // if current shot starts in before previous shot but ends in between previous shot (partial-overlapping)
-      else if (
-        recording_shot.original_video_start < previous_original_start &&
-        recording_shot.original_video_end < previous_original_end &&
-        recording_shot.original_video_end > previous_original_start
-      ) {
-        plan[recording_shot.original_video_start] = {
-          start: recording_shot.original_video_start,
-          end: recording_shot.original_video_end,
-          url: recording_shot.blob_url,
-        };
-        plan[recording_shot.original_video_end] = {
-          start: recording_shot.original_video_end,
-          end: previous_original_end,
-          url: previous_recording_shot.blob_url,
-        };
-        delete plan[previous_original_start];
-      }
-      // case 5:
-      // if current shot starts and ends in between previous shot (overlapping)
-      else if (
-        recording_shot.original_video_start > previous_original_start &&
-        recording_shot.original_video_start < previous_original_end &&
-        recording_shot.original_video_end > previous_original_start &&
-        recording_shot.original_video_end < previous_original_end
-      ) {
-        plan[previous_original_start]["end"] =
-          recording_shot.original_video_start;
-        plan[recording_shot.original_video_start] = {
-          start: recording_shot.original_video_start,
-          end: recording_shot.original_video_end,
-          url: recording_shot.blob_url,
-        };
-        if (previous_recording_shot === null) {
-          alert("error - should never happen");
+    
+    // CRITICAL: Sort shots by start time, then by array index (newer shots come later)
+    // This ensures that when there are overlaps, newer shots (added later) will override older ones
+    let sorted_shots = current_recording.recording_shots
+      .map((shot, index) => ({ shot, index }))
+      .filter(item => item.shot.original_video_start !== null && item.shot.original_video_start !== undefined &&
+                      item.shot.original_video_end !== null && item.shot.original_video_end !== undefined)
+      .sort((a, b) => {
+        // First sort by start time
+        if (a.shot.original_video_start !== b.shot.original_video_start) {
+          return a.shot.original_video_start - b.shot.original_video_start;
         }
-        plan[recording_shot.original_video_end] = {
-          start: recording_shot.original_video_end,
-          end: previous_original_end,
-          url: previous_recording_shot.blob_url,
-        };
+        // If start times are equal, sort by index (newer shots come later)
+        return a.index - b.index;
+      });
+    
+    // Build a timeline of segments, where newer shots override older ones for overlapping sections
+    let segments = [];
+    
+    for (let i = 0; i < sorted_shots.length; i++) {
+      let { shot } = sorted_shots[i];
+      let start = shot.original_video_start;
+      let end = shot.original_video_end;
+      
+      // Find all existing segments that overlap with this shot
+      let overlappingSegments = segments.filter(seg => 
+        !(seg.end <= start || seg.start >= end)
+      );
+      
+      // Remove overlapping segments (newer shot takes precedence)
+      for (let seg of overlappingSegments) {
+        let segIndex = segments.indexOf(seg);
+        segments.splice(segIndex, 1);
+        
+        // If the new shot doesn't completely cover the old segment, add back the non-overlapping parts
+        if (seg.start < start) {
+          // Add segment before the new shot
+          segments.push({
+            start: seg.start,
+            end: Math.min(start, seg.end),
+            url: seg.url
+          });
+        }
+        if (seg.end > end) {
+          // Add segment after the new shot
+          segments.push({
+            start: Math.max(end, seg.start),
+            end: seg.end,
+            url: seg.url
+          });
+        }
       }
-      previous_original_start = recording_shot.original_video_start;
-      previous_original_end = recording_shot.original_video_end;
+      
+      // Add the new shot segment
+      segments.push({
+        start: start,
+        end: end,
+        url: shot.blob_url
+      });
     }
+    
+    // Sort segments by start time and merge adjacent segments with the same URL
+    segments.sort((a, b) => a.start - b.start);
+    let mergedSegments = [];
+    for (let seg of segments) {
+      if (mergedSegments.length === 0) {
+        mergedSegments.push(seg);
+      } else {
+        let last = mergedSegments[mergedSegments.length - 1];
+        if (last.end === seg.start && last.url === seg.url) {
+          // Merge adjacent segments with same URL
+          last.end = seg.end;
+        } else {
+          mergedSegments.push(seg);
+        }
+      }
+    }
+    
+    // Convert to the expected plan format (object with start time as key)
+    let plan = {};
+    for (let seg of mergedSegments) {
+      plan[seg.start] = {
+        start: seg.start,
+        end: seg.end,
+        url: seg.url
+      };
+    }
+    
     return plan;
   }
 
