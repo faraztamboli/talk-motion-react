@@ -4,7 +4,6 @@ import { MessageOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { createConversation } from "../api";
-import { browserASRSupported } from "../hooks/useBrowserASR";
 import "../conversation.css";
 
 /** /conversation: start a conversation on this phone, or one a second phone can join. */
@@ -24,9 +23,8 @@ export default function ConversationStart() {
       const conversation = await createConversation({
         mode,
         owner_role: role,
-        // Phase 1 recognises speech in the browser (free). Server-side streaming ASR comes
-        // with the microphone streaming ticket.
-        asr_provider: "browser",
+        // No asr_provider: the server picks its default (self-hosted Kyutai when deployed,
+        // otherwise the browser's own recognition). The screen adapts after hello.ack.
         settings: { plain_language: plainLanguage },
       });
       navigate(`/conversation/${conversation.id}`, {
@@ -80,16 +78,6 @@ export default function ConversationStart() {
             </span>
           </Space>
 
-          {!browserASRSupported() && (
-            <Alert
-              type="info"
-              showIcon
-              message={t(
-                "conversation.noASR",
-                "This browser can't turn speech into text. Use Chrome, Edge or Safari, or type instead."
-              )}
-            />
-          )}
           {error && <Alert type="error" showIcon message={error} />}
 
           <Button type="primary" size="large" className="conv-speak-btn" loading={busy} onClick={start}>

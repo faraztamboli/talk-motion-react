@@ -10,6 +10,7 @@ import ShareCodeModal from "./ShareCodeModal";
 import { ConnectionBanner, ParticipantsBar, TurnIndicator } from "./StatusParts";
 import useConversationSocket from "../hooks/useConversationSocket";
 import useBrowserASR from "../hooks/useBrowserASR";
+import useMicStream, { micStreamSupported } from "../hooks/useMicStream";
 import useTTSPlayer from "../hooks/useTTSPlayer";
 import { dispatchEnvelope, newId } from "../protocol";
 import { endConversation, fetchTranscript, listUtterances, shareConversation, transcriptToText } from "../api";
@@ -25,6 +26,14 @@ import {
 import "../conversation.css";
 
 const TEXT_SIZE_KEY = "tm_conv_text_size";
+
+// Server errors after which this device recognises speech itself for the rest of the visit.
+const SERVER_ASR_FALLBACK_CODES = new Set([
+  "asr_unavailable",
+  "asr_stalled",
+  "asr_disconnected",
+  "asr_not_server_side",
+]);
 
 function readTextSize() {
   try {
@@ -55,6 +64,8 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   const [listen, setListen] = useState(false);
   const [textSize, setTextSize] = useState(readTextSize);
   const [share, setShare] = useState(initialShare?.joinCode ? initialShare : null);
+  const [serverAsrFailed, setServerAsrFailed] = useState(false);
+  const [audioReady, setAudioReady] = useState(false);
   const sendRef = useRef(() => false);
   const lastIdRef = useRef(0);
   const partialIdRef = useRef(newId());
@@ -80,7 +91,14 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       if (msg.type === "speak.start") player.begin(msg.payload);
       else if (msg.type === "speak.done") player.end(msg.payload);
       else if (msg.type === "speak.fallback") player.speakText(msg.payload);
-      else dispatchEnvelope(dispatch, msg);
+      else if (msg.type === "audio.ready") setAudioReady(true);
+      else {
+        if (msg.type === "error" && SERVER_ASR_FALLBACK_CODES.has(msg.payload?.code)) {
+          setServerAsrFailed(true);
+          setAudioReady(false);
+        }
+        dispatchEnvelope(dispatch, msg);
+      }
     },
     [dispatch, player]
   );
@@ -88,7 +106,10 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   const onOpen = useCallback(() => {
     sendRef.current("hello", {
       client: "talk-motion-react",
-      caps: { browser_asr: Boolean(window.SpeechRecognition || window.webkitSpeechRecognition) },
+      caps: {
+        browser_asr: Boolean(window.SpeechRecognition || window.webkitSpeechRecognition),
+        mic_stream: micStreamSupported(),
+      },
     });
     // Catch up on anything said while we were disconnected.
     listUtterances(conversationId, { afterId: lastIdRef.current, token: guest ? getToken() : undefined })
@@ -96,7 +117,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       .catch(() => {});
   }, [conversationId, dispatch, getToken, guest]);
 
-  const { status, send } = useConversationSocket({
+  const { status, send, sendBinary } = useConversationSocket({
     conversationId,
     getToken,
     canRefresh: !guest,
@@ -108,8 +129,30 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   });
   sendRef.current = send;
 
+  // Server-side recognition (e.g. self-hosted Kyutai): stream the microphone as PCM16 frames.
+  // If the server can't recognise speech, fall back to the browser's own recognition.
+  const serverAsr = conv.asrServerSide && !serverAsrFailed && micStreamSupported();
+  const wantMic = listen && !conv.ended && serverAsr;
+  const streaming = wantMic && status === "open";
+
+  useEffect(() => {
+    if (!streaming) return undefined;
+    sendRef.current("audio.start", { sample_rate: 16000 });
+    return () => {
+      setAudioReady(false);
+      sendRef.current("audio.stop");
+    };
+  }, [streaming]);
+
+  const mic = useMicStream({
+    enabled: wantMic,
+    onFrame: (frame) => {
+      if (audioReady) sendBinary(frame);
+    },
+  });
+
   const asr = useBrowserASR({
-    enabled: listen && !conv.ended && !conv.asrServerSide,
+    enabled: listen && !conv.ended && !serverAsr,
     lang,
     onPartial: (text) => send("caption.external", { text, is_final: false, partial_id: partialIdRef.current }),
     onFinal: (text, confidence) => {
@@ -258,41 +301,57 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         speaking={conv.speaking}
         talkingNames={talkingNames}
         typingNames={typingNames}
-        listening={asr.listening}
+        listening={serverAsr ? mic.active : asr.listening}
       />
 
-      {!conv.asrServerSide && (
-        <div className="conv-tray-row">
-          {asr.supported ? (
-            <Space align="center">
-              <Switch
-                checked={listen}
-                onChange={setListen}
-                checkedChildren={<AudioOutlined />}
-                unCheckedChildren={<AudioMutedOutlined />}
-                aria-label={t("conversation.listen", "Listen to speech")}
-              />
-              <Typography.Text strong>
-                {listen
-                  ? t("conversation.listeningOn", "Listening to speech on this device")
-                  : t("conversation.listen", "Listen to speech")}
-              </Typography.Text>
-            </Space>
-          ) : (
-            <Typography.Text type="secondary">
-              {t(
-                "conversation.noASR",
-                "This browser can't turn speech into text. Use Chrome, Edge or Safari, or type instead."
-              )}
+      <div className="conv-tray-row">
+        {serverAsr || asr.supported ? (
+          <Space align="center">
+            <Switch
+              checked={listen}
+              onChange={setListen}
+              checkedChildren={<AudioOutlined />}
+              unCheckedChildren={<AudioMutedOutlined />}
+              aria-label={t("conversation.listen", "Listen to speech")}
+            />
+            <Typography.Text strong>
+              {listen
+                ? t("conversation.listeningOn", "Listening to speech on this device")
+                : t("conversation.listen", "Listen to speech")}
             </Typography.Text>
-          )}
-          {asr.error === "mic_denied" && (
-            <Typography.Text type="danger">
-              {t("conversation.micDenied", "Microphone access was blocked. Allow it in the browser settings.")}
-            </Typography.Text>
-          )}
-        </div>
-      )}
+            {serverAsr && mic.active && (
+              <span className="conv-mic-level" style={{ "--level": mic.level }} aria-hidden="true">
+                <span />
+              </span>
+            )}
+          </Space>
+        ) : (
+          <Typography.Text type="secondary">
+            {t(
+              "conversation.noASR",
+              "This browser can't turn speech into text. Use Chrome, Edge or Safari, or type instead."
+            )}
+          </Typography.Text>
+        )}
+        {serverAsrFailed && conv.asrServerSide && asr.supported && (
+          <Typography.Text type="secondary">
+            {t(
+              "conversation.asrFallback",
+              "Server speech recognition is unavailable, so this device is recognising speech instead."
+            )}
+          </Typography.Text>
+        )}
+        {(serverAsr ? mic.error : asr.error) === "mic_denied" && (
+          <Typography.Text type="danger">
+            {t("conversation.micDenied", "Microphone access was blocked. Allow it in the browser settings.")}
+          </Typography.Text>
+        )}
+        {serverAsr && mic.error === "mic_failed" && (
+          <Typography.Text type="danger">
+            {t("conversation.micFailed", "The microphone could not be started. Check that no other app is using it.")}
+          </Typography.Text>
+        )}
+      </div>
 
       <ComposeTray
         onSpeak={onSpeak}

@@ -145,6 +145,30 @@
   align-items: center;
 }
 
+/* Microphone level while streaming to server-side recognition. */
+.conv-mic-level {
+  display: inline-block;
+  width: 64px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--conv-muted-bg, #e5e7eb);
+  overflow: hidden;
+}
+
+.conv-mic-level > span {
+  display: block;
+  height: 100%;
+  width: calc(var(--level, 0) * 100%);
+  background: var(--conv-accent, #2563eb);
+  transition: width 0.1s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .conv-mic-level > span {
+    transition: none;
+  }
+}
+
 .conv-speak-btn.ant-btn {
   min-height: 52px;
   min-width: 140px;
