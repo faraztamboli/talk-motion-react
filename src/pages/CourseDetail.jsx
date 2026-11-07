@@ -26,6 +26,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { useFlag } from "../hooks/useFlag";
 import AddContentModal from "../components/ui/AddContentModal";
 import NewCourseModal from "../components/ui/NewCourseModal";
 import EditCourseModal from "../components/ui/EditCourseModal";
@@ -53,6 +54,7 @@ function CourseDetail(props) {
   const { getFolderAndContentsAndPermissions, saveFolder, removeFolderContent } = useFolders();
   const { getMyVideoRecordings } = useSubtitleVideos();
   const { contextHolder, showMessage } = useMessageApi();
+  const modelsVisible = useFlag("legacy_models_visible");
   const { folderId } = useParams();
   const navigate = useNavigate();
 
@@ -435,17 +437,22 @@ function CourseDetail(props) {
                             ) : null
                           }
                           actions={[
-                            <Link
-                              to={
-                                item.type === "model"
-                                  ? `/models/${item.content_id}`
-                                  : `/video-subtitles/library/${item.content_id}`
-                              }
-                            >
-                              <Button type="link" icon={<ArrowLeftOutlined />}>
-                                Open
-                              </Button>
-                            </Link>,
+                            ...(item.type === "model" && !modelsVisible
+                              ? []
+                              : [
+                                  <Link
+                                    key="open"
+                                    to={
+                                      item.type === "model"
+                                        ? `/models/${item.content_id}`
+                                        : `/video-subtitles/library/${item.content_id}`
+                                    }
+                                  >
+                                    <Button type="link" icon={<ArrowLeftOutlined />}>
+                                      Open
+                                    </Button>
+                                  </Link>,
+                                ]),
                             <Button
                               type="link"
                               danger

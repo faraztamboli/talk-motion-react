@@ -1,0 +1,317 @@
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Alert, Button, Result, Segmented, Space, Switch, Typography, message } from "antd";
+import { AudioMutedOutlined, AudioOutlined, DownloadOutlined, ShareAltOutlined, StopOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import CaptionStream from "./CaptionStream";
+import ComposeTray from "./ComposeTray";
+import ShareCodeModal from "./ShareCodeModal";
+import { ConnectionBanner, ParticipantsBar, TurnIndicator } from "./StatusParts";
+import useConversationSocket from "../hooks/useConversationSocket";
+import useBrowserASR from "../hooks/useBrowserASR";
+import useTTSPlayer from "../hooks/useTTSPlayer";
+import { dispatchEnvelope, newId } from "../protocol";
+import { endConversation, fetchTranscript, listUtterances, shareConversation, transcriptToText } from "../api";
+import {
+  conversationOpened,
+  errorCleared,
+  socketChanged,
+  speakingEnded,
+  speakingStarted,
+  suggestionsCleared,
+  utterancesLoaded,
+} from "../state/conversationV2Slice";
+import "../conversation.css";
+
+const TEXT_SIZE_KEY = "tm_conv_text_size";
+
+function readTextSize() {
+  try {
+    return localStorage.getItem(TEXT_SIZE_KEY) || "m";
+  } catch {
+    return "m";
+  }
+}
+
+function speechLang(spoken) {
+  const nav = typeof navigator !== "undefined" ? navigator.language : "";
+  if (!spoken) return nav || "en-US";
+  return nav && nav.toLowerCase().startsWith(spoken.toLowerCase()) ? nav : spoken;
+}
+
+/**
+ * A live conversation for one participant (signed-in owner or guest who joined by code).
+ *
+ * @param {string} conversationId
+ * @param {() => string} getToken   access token, or the guest's participant token
+ * @param {boolean} guest
+ * @param {{joinCode?: string, expiresAt?: string}} initialShare  show the code right away
+ */
+export default function ConversationView({ conversationId, getToken, guest = false, initialShare = null }) {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const conv = useSelector((state) => state.conversationV2);
+  const [listen, setListen] = useState(false);
+  const [textSize, setTextSize] = useState(readTextSize);
+  const [share, setShare] = useState(initialShare?.joinCode ? initialShare : null);
+  const sendRef = useRef(() => false);
+  const lastIdRef = useRef(0);
+  const partialIdRef = useRef(newId());
+
+  useEffect(() => {
+    dispatch(conversationOpened(conversationId));
+  }, [conversationId, dispatch]);
+
+  useEffect(() => {
+    lastIdRef.current = conv.utterances.length ? conv.utterances[conv.utterances.length - 1].id : 0;
+  }, [conv.utterances]);
+
+  const lang = speechLang(conv.info?.spoken_language);
+
+  const player = useTTSPlayer({
+    lang,
+    onStart: (item) => dispatch(speakingStarted(item)),
+    onEnd: () => dispatch(speakingEnded()),
+  });
+
+  const onMessage = useCallback(
+    (msg) => {
+      if (msg.type === "speak.start") player.begin(msg.payload);
+      else if (msg.type === "speak.done") player.end(msg.payload);
+      else if (msg.type === "speak.fallback") player.speakText(msg.payload);
+      else dispatchEnvelope(dispatch, msg);
+    },
+    [dispatch, player]
+  );
+
+  const onOpen = useCallback(() => {
+    sendRef.current("hello", {
+      client: "talk-motion-react",
+      caps: { browser_asr: Boolean(window.SpeechRecognition || window.webkitSpeechRecognition) },
+    });
+    // Catch up on anything said while we were disconnected.
+    listUtterances(conversationId, { afterId: lastIdRef.current, token: guest ? getToken() : undefined })
+      .then((res) => dispatch(utterancesLoaded(res.items)))
+      .catch(() => {});
+  }, [conversationId, dispatch, getToken, guest]);
+
+  const { status, send } = useConversationSocket({
+    conversationId,
+    getToken,
+    canRefresh: !guest,
+    enabled: !conv.ended,
+    onMessage,
+    onBinary: player.chunk,
+    onStatus: (next) => dispatch(socketChanged(next)),
+    onOpen,
+  });
+  sendRef.current = send;
+
+  const asr = useBrowserASR({
+    enabled: listen && !conv.ended && !conv.asrServerSide,
+    lang,
+    onPartial: (text) => send("caption.external", { text, is_final: false, partial_id: partialIdRef.current }),
+    onFinal: (text, confidence) => {
+      send("caption.external", { text, is_final: true, confidence, partial_id: partialIdRef.current });
+      partialIdRef.current = newId();
+    },
+  });
+
+  const onSpeak = ({ text, draft }) => {
+    player.unlock(); // inside the tap, so mobile browsers allow the audio that follows
+    send("speak.confirm", {
+      text,
+      modality: draft ? "llm_suggestion" : "typed",
+      draft_text: draft?.text,
+      draft_id: draft?.draftId,
+    });
+    dispatch(suggestionsCleared());
+  };
+
+  const onReject = ({ text, draftId }) => {
+    send("speak.reject", { draft_text: text, modality: "llm_suggestion", draft_id: draftId });
+    dispatch(suggestionsCleared());
+  };
+
+  const onShare = async () => {
+    try {
+      const res = await shareConversation(conversationId);
+      setShare({ joinCode: res.join_code, expiresAt: res.join_code_expires_at });
+    } catch (err) {
+      message.error(err.message);
+    }
+  };
+
+  const onEnd = async () => {
+    try {
+      await endConversation(conversationId);
+    } catch (err) {
+      message.error(err.message);
+    }
+  };
+
+  const onDownload = async () => {
+    try {
+      const res = await fetchTranscript(conversationId, { token: guest ? getToken() : undefined });
+      const blob = new Blob([transcriptToText(res.cues)], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `conversation-${new Date().toISOString().slice(0, 10)}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      message.error(err.message);
+    }
+  };
+
+  const changeTextSize = (size) => {
+    setTextSize(size);
+    try {
+      localStorage.setItem(TEXT_SIZE_KEY, size);
+    } catch {
+      // ignore
+    }
+  };
+
+  const meId = conv.me?.participantId;
+  const others = useMemo(
+    () => Object.values(conv.participants).filter((p) => p.participantId !== meId),
+    [conv.participants, meId]
+  );
+  const talkingNames = others.filter((p) => conv.partials[p.participantId]).map((p) => p.displayName);
+  const typingNames = others.filter((p) => conv.typing[p.participantId]).map((p) => p.displayName);
+  const settings = conv.info?.settings || {};
+
+  if (conv.ended) {
+    return (
+      <div className={`conv-root${guest ? " conv-guest" : ""}`}>
+        <Result
+          status="success"
+          title={t("conversation.endedTitle", "This conversation has ended")}
+          extra={[
+            <Button key="dl" icon={<DownloadOutlined />} onClick={onDownload}>
+              {t("conversation.download", "Save transcript")}
+            </Button>,
+            !guest && (
+              <Link key="new" to="/conversation">
+                <Button type="primary">{t("conversation.startAnother", "Start another conversation")}</Button>
+              </Link>
+            ),
+          ]}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={`conv-root${guest ? " conv-guest" : ""}`} data-text-size={textSize}>
+      <div className="conv-header">
+        <ParticipantsBar participants={conv.participants} meId={meId} />
+        <Space wrap>
+          <Segmented
+            value={textSize}
+            onChange={changeTextSize}
+            options={[
+              { label: "A", value: "s" },
+              { label: "A+", value: "m" },
+              { label: "A++", value: "l" },
+              { label: "A+++", value: "xl" },
+            ]}
+            aria-label={t("conversation.textSize", "Text size")}
+          />
+          {conv.me?.isOwner && (
+            <>
+              <Button icon={<ShareAltOutlined />} onClick={onShare}>
+                {t("conversation.share", "Add a phone")}
+              </Button>
+              <Button danger icon={<StopOutlined />} onClick={onEnd}>
+                {t("conversation.end", "End")}
+              </Button>
+            </>
+          )}
+        </Space>
+      </div>
+
+      <ConnectionBanner status={status} ended={conv.ended} />
+      {conv.error && (
+        <Alert
+          type="warning"
+          showIcon
+          closable
+          onClose={() => dispatch(errorCleared())}
+          message={conv.error.message || conv.error.code}
+        />
+      )}
+
+      <CaptionStream
+        utterances={conv.utterances}
+        partials={conv.partials}
+        participants={conv.participants}
+        meId={meId}
+        showPlain={Boolean(settings.plain_language)}
+        showGloss={Boolean(settings.gloss_track)}
+      />
+
+      <TurnIndicator
+        speaking={conv.speaking}
+        talkingNames={talkingNames}
+        typingNames={typingNames}
+        listening={asr.listening}
+      />
+
+      {!conv.asrServerSide && (
+        <div className="conv-tray-row">
+          {asr.supported ? (
+            <Space align="center">
+              <Switch
+                checked={listen}
+                onChange={setListen}
+                checkedChildren={<AudioOutlined />}
+                unCheckedChildren={<AudioMutedOutlined />}
+                aria-label={t("conversation.listen", "Listen to speech")}
+              />
+              <Typography.Text strong>
+                {listen
+                  ? t("conversation.listeningOn", "Listening to speech on this device")
+                  : t("conversation.listen", "Listen to speech")}
+              </Typography.Text>
+            </Space>
+          ) : (
+            <Typography.Text type="secondary">
+              {t(
+                "conversation.noASR",
+                "This browser can't turn speech into text. Use Chrome, Edge or Safari, or type instead."
+              )}
+            </Typography.Text>
+          )}
+          {asr.error === "mic_denied" && (
+            <Typography.Text type="danger">
+              {t("conversation.micDenied", "Microphone access was blocked. Allow it in the browser settings.")}
+            </Typography.Text>
+          )}
+        </div>
+      )}
+
+      <ComposeTray
+        onSpeak={onSpeak}
+        onReject={onReject}
+        onTyping={(isTyping) => send("typing.state", { is_typing: isTyping })}
+        onRequestSuggestions={() =>
+          send("draft.request", { kind: "predictive_replies", n: 3, request_id: newId() })
+        }
+        suggestions={conv.suggestions}
+        llmAvailable={conv.llmAvailable}
+        disabled={status !== "open"}
+      />
+
+      <ShareCodeModal
+        open={Boolean(share)}
+        onClose={() => setShare(null)}
+        code={share?.joinCode}
+        expiresAt={share?.expiresAt}
+      />
+    </div>
+  );
+}

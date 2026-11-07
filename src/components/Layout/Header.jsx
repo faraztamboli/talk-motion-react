@@ -7,17 +7,24 @@ import usePayment from "../../hooks/usePayment";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import FeatureGate from "../flags/FeatureGate";
+import { useFlag } from "../../hooks/useFlag";
 
 const Header = (props) => {
   const { getCart } = usePayment();
   const { cartCount } = useSelector((state) => state.cart);
   const { t } = useTranslation();
+  const cartVisible = useFlag("legacy_models_visible");
+  const serverConnected = useSelector((state) => state.server.serverConnected);
 
+  // The cart only holds v1 models; skip the RPC when the store is hidden or the RemotePy
+  // socket is down.
   useEffect(() => {
+    if (!cartVisible || !serverConnected) return;
     getCart()
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
-  }, []);
+  }, [cartVisible, serverConnected]);
 
   const style = {
     padding: 0,
@@ -80,6 +87,7 @@ const Header = (props) => {
         </Col>
         <Col className="flex flex-center-center" style={{ gap: "16px" }}>
           <LanguageSelector size="default" />
+          <FeatureGate flag="legacy_models_visible">
           <div>
             <Badge 
               count={cartCount} 
@@ -127,6 +135,7 @@ const Header = (props) => {
               </Link>
             </Badge>
           </div>
+          </FeatureGate>
           <UserMenu />
         </Col>
       </Row>

@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Layout, Menu } from "antd";
-import items from "../../data/sidebarNav";
+import { buildSidebarItems } from "../../data/sidebarNav";
+import { useFlags } from "../../hooks/useFlag";
 import logoImg from "../../media/images/logo.png";
 import logoSmall from "../../media/images/logo-small.png";
 
 const { Sider } = Layout;
 
 const Sidebar = (props) => {
+  const flags = useFlags();
+  const items = useMemo(() => buildSidebarItems(flags), [flags]);
+
   return (
     <Sider
       className="side-bar"
@@ -27,9 +31,7 @@ const Sidebar = (props) => {
         theme="dark"
         mode="inline"
         defaultSelectedKeys={["1"]}
-        items={items.map((item) => ({
-          ...item,
-        }))}
+        items={items}
       />
     </Sider>
   );

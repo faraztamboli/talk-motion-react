@@ -6,6 +6,7 @@ import NewCourseModal from "../components/ui/NewCourseModal";
 import NewFolder from "../components/ui/NewFolder";
 import useFolders from "../hooks/useFolders";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import ModelLink from "../components/flags/ModelLink";
 import useMessageApi from "../hooks/useMessageApi";
 import { handleKeyboardClick } from "../utils/accessibility";
 
@@ -219,7 +220,8 @@ function Courses(props) {
                   <Row gutter={[16, 16]}>
                     {contents.map((content) => (
                       <Col key={content.content_id} xs={24} sm={12} md={8}>
-                        <Link
+                        <ModelLink
+                          isModel={content.type === "model"}
                           to={
                             content.type === "model"
                               ? `/models/${content.content_id}`
@@ -255,7 +257,7 @@ function Courses(props) {
                               {content.type}
                             </span>
                           </div>
-                        </Link>
+                        </ModelLink>
                       </Col>
                     ))}
                   </Row>

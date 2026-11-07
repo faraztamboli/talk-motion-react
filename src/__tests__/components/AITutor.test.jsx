@@ -7,8 +7,8 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import AITutor from '../../components/ui/AITutor';
 
 // Mock useLLM hook
-vi.mock('../../hooks/useLLM', () => ({
-  default: () => ({
+// One shared set of mocks, so tests can assert on the same functions the component calls.
+const mockLLM = vi.hoisted(() => ({
     startAIConversation: vi.fn(() => Promise.resolve({
       success: true,
       conversationId: 123,
@@ -30,8 +30,9 @@ vi.mock('../../hooks/useLLM', () => ({
     deleteAIConversation: vi.fn(() => Promise.resolve({
       success: true,
     })),
-  }),
 }));
+
+vi.mock('../../hooks/useLLM', () => ({ default: () => mockLLM }));
 
 // Mock useMessageApi
 vi.mock('../../hooks/useMessageApi', () => ({
@@ -51,12 +52,12 @@ describe('AITutor', () => {
     render(<AITutor {...defaultProps} />);
     
     await waitFor(() => {
-      expect(screen.getByText(/AI Tutor/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/AI Tutor/i).length).toBeGreaterThan(0);
     });
   });
 
   it('should initialize conversation on mount', async () => {
-    const { startAIConversation } = require('../../hooks/useLLM').default();
+    const { startAIConversation } = mockLLM;
     
     render(<AITutor {...defaultProps} />);
     
@@ -74,7 +75,7 @@ describe('AITutor', () => {
   });
 
   it('should send message when user types and clicks send', async () => {
-    const { sendAIConversationMessage } = require('../../hooks/useLLM').default();
+    const { sendAIConversationMessage } = mockLLM;
     
     render(<AITutor {...defaultProps} />);
     
@@ -83,10 +84,8 @@ describe('AITutor', () => {
     });
 
     const input = screen.getByPlaceholderText(/Ask a question/i);
-    const sendButton = screen.getByText(/Send/i);
-
     fireEvent.change(input, { target: { value: 'Test question' } });
-    fireEvent.click(sendButton);
+    fireEvent.click(screen.getByRole('button', { name: /send message/i }));
 
     await waitFor(() => {
       expect(sendAIConversationMessage).toHaveBeenCalledWith(123, 'Test question');
@@ -94,7 +93,7 @@ describe('AITutor', () => {
   });
 
   it('should send message on Enter key press', async () => {
-    const { sendAIConversationMessage } = require('../../hooks/useLLM').default();
+    const { sendAIConversationMessage } = mockLLM;
     
     render(<AITutor {...defaultProps} />);
     
@@ -105,7 +104,7 @@ describe('AITutor', () => {
     const input = screen.getByPlaceholderText(/Ask a question/i);
     
     fireEvent.change(input, { target: { value: 'Test question' } });
-    fireEvent.keyPress(input, { key: 'Enter', code: 'Enter' });
+    fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
 
     await waitFor(() => {
       expect(sendAIConversationMessage).toHaveBeenCalled();
@@ -120,10 +119,8 @@ describe('AITutor', () => {
     });
 
     const input = screen.getByPlaceholderText(/Ask a question/i);
-    const sendButton = screen.getByText(/Send/i);
-
     fireEvent.change(input, { target: { value: 'Test question' } });
-    fireEvent.click(sendButton);
+    fireEvent.click(screen.getByRole('button', { name: /send message/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/Test question/i)).toBeInTheDocument();
@@ -138,8 +135,7 @@ describe('AITutor', () => {
       const input = screen.getByPlaceholderText(/Ask a question/i);
       expect(input).toHaveAttribute('aria-label');
       
-      const sendButton = screen.getByText(/Send/i);
-      expect(sendButton).toHaveAttribute('aria-label');
+      expect(screen.getByRole('button', { name: /send message/i })).toBeInTheDocument();
     });
   });
 });
