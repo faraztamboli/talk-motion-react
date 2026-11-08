@@ -117,7 +117,8 @@ function OpenBuild(props) {
             </Link>
           </div>
           <p className="note">
-            Volunteers are not paid, and we say so. Inside a conversation, "Report a problem" opens the same feedback
+            Partner notes: <a href="/one-pagers/deaf-organizations.pdf">for Deaf organizations</a>,{" "}
+            <a href="/one-pagers/interpreter-agencies.pdf">for interpreter agencies</a>. Volunteers are not paid, and we say so. Inside a conversation, "Report a problem" opens the same feedback
             form.
           </p>
         </Section>

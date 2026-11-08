@@ -1,0 +1,51 @@
+/* TalkMotion one-pagers. Tokens from talkmotion/server/docs/marketing/03-visual-system.md (light, print). */
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #0f1b2d; --ink-2: #44546a; --line: #d3dbe6;
+  --primary: #1550c8; --primary-soft: #e3ebfb; --confirm: #0f8a5f; --confirm-soft: #dbf3ea;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+}
+@page { size: Letter; margin: 0.5in; }
+* { box-sizing: border-box; }
+html { background: var(--surface); }
+body { margin: 0 auto; max-width: 8.5in; background: var(--bg); color: var(--ink); font-family: var(--body);
+  font-size: 11pt; line-height: 1.45; padding: 0.55in 0.6in; }
+@media print {
+  html { background: #fff; }
+  body { padding: 0; max-width: none; font-size: 10pt; line-height: 1.38; }
+  h1 { font-size: 21pt; }
+  .lede { font-size: 11.5pt; margin-top: 6px; }
+  section { margin-top: 12px; }
+  .top { margin-bottom: 12px; }
+  .foot { margin-top: 14px; }
+  li { margin-bottom: 2px; }
+}
+@media screen and (max-width: 700px) { body { padding: 24px 16px; font-size: 12pt; } .grid2, .grid3 { grid-template-columns: 1fr !important; } }
+h1, h2, h3 { font-family: var(--display); margin: 0; line-height: 1.1; text-wrap: balance; }
+h1 { font-size: 26pt; font-weight: 800; }
+h2 { font-size: 13pt; font-weight: 800; margin-bottom: 6px; }
+h3 { font-size: 11pt; font-weight: 600; }
+p { margin: 0; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 18px; }
+.brand { font-family: var(--display); font-weight: 800; font-size: 13pt; }
+.brand span { color: var(--primary); }
+.eyebrow { font-size: 8pt; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--primary); }
+.lede { font-size: 13pt; color: var(--ink-2); margin-top: 8px; max-width: 62ch; }
+section { margin-top: 18px; break-inside: avoid; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.step { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.step .n { font-family: var(--display); font-weight: 800; font-size: 18pt; color: var(--primary); line-height: 1; }
+.step.confirm { border-color: var(--confirm); }
+.step.confirm .n { color: var(--confirm); }
+.step p { color: var(--ink-2); font-size: 10pt; margin-top: 4px; }
+ul { margin: 6px 0 0; padding-left: 1.1em; }
+li { margin-bottom: 4px; }
+.box { border: 2px solid var(--ink); border-radius: 10px; padding: 12px 14px; }
+.soft { background: var(--surface); border-radius: 10px; padding: 12px 14px; }
+.no li::marker { color: #c6322a; }
+.foot { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 10px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 9.5pt; color: var(--ink-2); }
+.foot b { color: var(--ink); }
+.cta { font-family: var(--display); font-weight: 800; font-size: 13pt; color: var(--primary); }
+a { color: var(--primary); }
+.letter p { margin-bottom: 10px; max-width: 70ch; }

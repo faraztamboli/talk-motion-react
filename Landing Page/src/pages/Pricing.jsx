@@ -52,6 +52,9 @@ function Pricing(props) {
               <Link className="btn secondary" to="/contact-us">
                 Ask about a pilot
               </Link>
+              <a className="muted" href="/one-pagers/pharmacies.pdf">
+                Pharmacy one-pager (PDF)
+              </a>
             </article>
             <article className="tier">
               <span className="eyebrow">Organizations</span>

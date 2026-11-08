@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "../components/Header";
+import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import MetaDecorator from "../components/HOCs/MetaDecorator";
 import { howItWorksPageDetails } from "../data/pageDetails";
@@ -29,7 +30,7 @@ function HowItWorks(props) {
           eyebrow="For pharmacies and clinics"
           title="A counter you can set up in an afternoon"
           lede="A tablet at the counter, staff trained in twenty minutes, and a Deaf customer served without waiting for an interpreter."
-          note="Pilot programme for pharmacies opening soon. Ask us through the contact page."
+          note={<>Pharmacy pilots are open now: <Link to="/contact-us">ask about a pilot</Link>. One-pagers to share: <a href="/one-pagers/pharmacies.pdf">pharmacies</a>, <a href="/one-pagers/clinicians.pdf">clinicians</a>.</>}
         >
           <VenueTimeline />
         </Section>

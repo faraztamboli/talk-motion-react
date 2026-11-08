@@ -33,7 +33,7 @@ function Home(props) {
           <Wedges />
         </Section>
 
-        <Section alt eyebrow="Your part, our part" title="Small on purpose">
+        <Section alt eyebrow="Your part, our part" title="You talk. The tool waits for you.">
           <YourPart />
         </Section>
 
