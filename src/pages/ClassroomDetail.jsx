@@ -32,6 +32,7 @@ import ApproveClassroomRequest from "../components/ui/ApproveClassroomRequest";
 import RequestClassroomAccess from "../components/ui/RequestClassroomAccess";
 import useMessageApi from "../hooks/useMessageApi";
 import useProfile from "../hooks/useProfile";
+import StartLessonButton from "../features/conversation/components/StartLessonButton";
 
 const ClassroomDetail = () => {
   const [loading, setLoading] = useState(true);
@@ -447,6 +448,7 @@ const ClassroomDetail = () => {
                 </div>
               )}
             </div>
+            {isStaff && <StartLessonButton classroomName={classroomInfo.name} />}
             {isStaff && menuProps && (
               <Dropdown menu={menuProps} trigger={["click"]}>
                 <Button>
