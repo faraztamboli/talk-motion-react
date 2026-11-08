@@ -6,6 +6,14 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../app/features/loginSlice";
 import useLocalStorage from "./useLocalStorage";
 import useApiAuth from "./useApiAuth";
+import { getAccessToken } from "../api/http";
+import {
+  API_LOGIN_WAIT_MS,
+  isRemotePyLoginOk,
+  loginDestination,
+  settleWithin,
+  signInToRemotePy,
+} from "../api/remotepyLogin";
 import { readLocalOverrides, resolveFlags } from "../config/flags";
 
 /** Conversation Mode is on for this API login (server flags, plus dev overrides). */
@@ -14,13 +22,14 @@ const wantsConversation = (api) =>
 
 function useLogin() {
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useLocalStorage("token", "");
+  const [, setToken] = useLocalStorage("token", "");
   const [messageApi, contextHolder] = message.useMessage();
 
   const navigate = useNavigate();
   const disptach = useDispatch();
-  // Sign in to the TalkMotion 2.0 API alongside RemotePy. The API is optional during the
-  // migration: if it is down, legacy login behaves exactly as before.
+  // The TalkMotion 2.0 API is the sign-in authority. Legacy-linked accounts then sign in to
+  // RemotePy with the API token instead of the password; if the API is down, or RemotePy
+  // cannot take the token, login behaves exactly as before.
   const { loginApi } = useApiAuth();
 
   const success = () => {
@@ -37,52 +46,59 @@ function useLogin() {
     });
   };
 
-  function handleLogin(login_info, token_input, apiLogin) {
-    console.log(login_info);
-    if (login_info && login_info.isValidUser === true && login_info.isPasswordCorrect === true) {
-      disptach(login({ token: token_input }));
+  function handleLogin(loginInfo, sessionId, api) {
+    const destination = loginDestination(loginInfo, wantsConversation(api));
+    if (destination === "dashboard") {
+      disptach(login({ token: sessionId }));
       success();
       // Same 1 s pause and dashboard as before. Conversation Mode, when enabled, is one tap
       // away in the sidebar and quick actions; existing users are never pushed into it.
       setTimeout(() => {
         navigate("/");
       }, 1000);
-    } else if (
-      login_info &&
-      !(login_info.isValidUser === true && login_info.isPasswordCorrect === true)
-    ) {
-      // RemotePy rejected the credentials. An account that exists only in the new API can
+    } else if (destination === "conversation") {
+      // RemotePy did not accept the login. An account that exists only in the new API can
       // still use Conversation Mode.
-      apiLogin.then((api) => {
-        if (wantsConversation(api)) {
-          success();
-          navigate("/conversation");
-        } else {
-          failure();
-          setLoading(false);
-        }
-      });
+      success();
+      navigate("/conversation");
+    } else {
+      failure();
+      setLoading(false);
     }
   }
 
   const onFinish = (values) => {
     setLoading(true);
+    // API login first; a RemotePy session id is fetched meanwhile.
     const apiLogin = loginApi(values.username, values.password);
-    JS2Py.PythonFunctions.SessionServer.getNewSessionId(function (res) {
-      setToken(res);
-      console.log(res);
-      console.log(token);
-      JS2Py.PythonFunctions.SessionServer.validateLogin(
-        res, // session id
-        values.username,
-        values.password,
-        values.remember,
-        "https://app.talk-motion.com/login", // login url
-        "https://app.talk-motion.com", // after login url
-        function (login_info) {
-          handleLogin(login_info, res, apiLogin);
+    const newSessionId = new Promise((resolve) => {
+      JS2Py.PythonFunctions.SessionServer.getNewSessionId(resolve);
+    }).catch((err) => {
+      console.error("RemotePy session unavailable", err);
+      return null;
+    });
+    // A slow API must not hold classic login up for long: past API_LOGIN_WAIT_MS RemotePy
+    // gets the password as before, while the API login finishes in the background.
+    const apiInTime = settleWithin(apiLogin, API_LOGIN_WAIT_MS, { ok: false, flags: {} });
+
+    Promise.all([newSessionId, apiInTime]).then(async ([sessionId, api]) => {
+      let loginInfo = null;
+      if (sessionId) {
+        setToken(sessionId);
+        try {
+          ({ loginInfo } = await signInToRemotePy({
+            js2py: JS2Py,
+            sessionId,
+            values,
+            api,
+            accessToken: api.ok ? getAccessToken() : null,
+          }));
+        } catch (err) {
+          console.error("RemotePy sign-in failed", err);
         }
-      );
+      }
+      // Conversation Mode for API-only accounts needs the API's real answer, however slow.
+      handleLogin(loginInfo, sessionId, isRemotePyLoginOk(loginInfo) ? api : await apiLogin);
     });
   };
 
