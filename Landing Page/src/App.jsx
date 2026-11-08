@@ -14,6 +14,7 @@ import NotFound from "./pages/404NotFound";
 import HowItWorks from "./pages/HowItWorks";
 import Pricing from "./pages/Pricing";
 import OpenBuild from "./pages/OpenBuild";
+import Feedback from "./pages/Feedback";
 
 function App() {
   const { sm, md, lg } = useResizeEvent();
@@ -25,6 +26,7 @@ function App() {
       <Route path="/how-it-works" element={<HowItWorks md={md} />} />
       <Route path="/pricing" element={<Pricing md={md} />} />
       <Route path="/open-build" element={<OpenBuild md={md} />} />
+      <Route path="/feedback" element={<Feedback md={md} />} />
       <Route path="/about" element={<About md={md} />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy md={md} />} />
       <Route path="/terms" element={<TermsAndConditions md={md} />} />

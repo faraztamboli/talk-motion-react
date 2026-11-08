@@ -44,6 +44,11 @@ function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link to="/feedback" className="footer-links">
+                    Feedback and volunteers
+                  </Link>
+                </li>
+                <li>
                   <Link to="/privacy-policy" className="footer-links">
                     Privacy Policy
                   </Link>

@@ -19,6 +19,7 @@ export default function ComposeTray({
   suggestions,
   llmAvailable,
   disabled,
+  prefill = null, // { text, nonce }: fills the box (never speaks); a new nonce refills
 }) {
   const { t } = useTranslation();
   const [text, setText] = useState("");
@@ -34,6 +35,13 @@ export default function ComposeTray({
   };
 
   useEffect(() => () => clearTimeout(idleTimer.current), []);
+
+  useEffect(() => {
+    if (!prefill?.text) return;
+    setText(prefill.text);
+    setDraft(null);
+    inputRef.current?.focus();
+  }, [prefill?.nonce]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (event) => {
     setText(event.target.value);

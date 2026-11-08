@@ -16,6 +16,12 @@ const pricingPageDetails = {
     "TalkMotion is free for individuals who are Deaf, hard of hearing or cannot speak. Pharmacies, clinics and organizations pay per location.",
 };
 
+const feedbackPageDetails = {
+  title: "TalkMotion | Feedback and volunteers",
+  description:
+    "Report a wrong caption, a bad suggestion or wording that should change, or volunteer as a TalkMotion tester. Every message is read.",
+};
+
 const openBuildPageDetails = {
   title: "TalkMotion | Built in the open",
   description:
@@ -63,6 +69,7 @@ export {
   howItWorksPageDetails,
   pricingPageDetails,
   openBuildPageDetails,
+  feedbackPageDetails,
   aboutPageDetails,
   featuresPageDetails,
   contactPageDetails,

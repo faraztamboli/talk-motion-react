@@ -109,13 +109,16 @@ function OpenBuild(props) {
             <li>If you sign on camera, you can record the ASL version of a page so this site is not English-only.</li>
           </ul>
           <div className="btns" style={{ marginTop: 24 }}>
-            <Link className="btn primary" to="/contact-us">
-              Volunteer or send feedback
+            <Link className="btn primary" to="/feedback?volunteer=1">
+              Volunteer as a tester
+            </Link>
+            <Link className="btn secondary" to="/feedback">
+              Send feedback
             </Link>
           </div>
           <p className="note">
-            Volunteers are not paid, and we say so. A dedicated feedback page and an in-app "this was wrong" button are
-            coming next.
+            Volunteers are not paid, and we say so. Inside a conversation, "Report a problem" opens the same feedback
+            form.
           </p>
         </Section>
 
@@ -123,8 +126,8 @@ function OpenBuild(props) {
           <Cta
             title="Changelog"
             body="Every month we publish what people told us and what we changed. The first entry appears after the first volunteers have spoken."
-            to="/contact-us"
-            label="Ask to be notified"
+            to="/feedback"
+            label="Tell us what to change"
           />
         </section>
       </main>

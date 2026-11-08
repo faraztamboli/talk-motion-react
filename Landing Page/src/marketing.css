@@ -134,3 +134,17 @@
 @media (prefers-reduced-motion: no-preference) {
   .tm .btn, .tm .chip { transition: background .15s, box-shadow .15s, border-color .15s; }
 }
+
+/* feedback form */
+.tm .fb { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.tm .fb label { font-weight: 700; font-size: 1rem; }
+.tm .fb input[type="text"], .tm .fb input[type="email"], .tm .fb select, .tm .fb textarea {
+  font: inherit; font-size: 1.05rem; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; width: 100%; min-height: 48px; }
+.tm .fb textarea { resize: vertical; }
+.tm .fb-kind { border: 0; padding: 0; margin: 0 0 8px; display: grid; gap: 8px; }
+.tm .fb-kind label, .tm .fb-check { display: flex; gap: 10px; align-items: center; font-weight: 400; min-height: 44px; }
+.tm .fb-kind input, .tm .fb-check input { width: 20px; height: 20px; accent-color: var(--primary); flex: none; }
+.tm .fb .btn { justify-self: start; margin-top: 8px; }
+.tm .fb-error { color: var(--live); }
+.tm .fb-aside { display: grid; gap: 16px; align-content: start; }

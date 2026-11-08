@@ -8,6 +8,7 @@ import CaptionStream from "./CaptionStream";
 import ComposeTray from "./ComposeTray";
 import ShareCodeModal from "./ShareCodeModal";
 import LessonPanel from "./LessonPanel";
+import InterpreterNotice, { INTERPRETER_REQUEST_TEXT } from "./InterpreterNotice";
 import { ConnectionBanner, ParticipantsBar, TurnIndicator } from "./StatusParts";
 import useConversationSocket from "../hooks/useConversationSocket";
 import useBrowserASR from "../hooks/useBrowserASR";
@@ -68,6 +69,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   const [share, setShare] = useState(initialShare?.joinCode ? initialShare : null);
   const [serverAsrFailed, setServerAsrFailed] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
+  const [prefill, setPrefill] = useState(null);
   const sendRef = useRef(() => false);
   const lastIdRef = useRef(0);
   const partialIdRef = useRef(newId());
@@ -264,6 +266,14 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       <div className="conv-header">
         <ParticipantsBar participants={conv.participants} meId={meId} />
         <Space wrap>
+          <a
+            href="https://talk-motion.com/feedback?from=conversation"
+            target="_blank"
+            rel="noreferrer"
+            className="conv-report"
+          >
+            {t("conversation.report", "Report a problem")}
+          </a>
           <Segmented
             value={textSize}
             onChange={changeTextSize}
@@ -297,6 +307,16 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       </div>
 
       <ConnectionBanner status={status} ended={conv.ended} />
+      {!isLesson && (
+        <InterpreterNotice
+          onAsk={() =>
+            setPrefill({
+              text: t("conversation.interpreterRequest", INTERPRETER_REQUEST_TEXT),
+              nonce: Date.now(),
+            })
+          }
+        />
+      )}
       {conv.error && (
         <Alert
           type="warning"
@@ -388,6 +408,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         suggestions={conv.suggestions}
         llmAvailable={conv.llmAvailable}
         disabled={status !== "open"}
+        prefill={prefill}
       />
       )}
 

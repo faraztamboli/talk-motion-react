@@ -78,6 +78,13 @@ export default function ConversationStart() {
             </span>
           </Space>
 
+          <Typography.Text type="secondary">
+            {t(
+              "conversation.interpreterStart",
+              "For health, legal or money matters, ask for a qualified interpreter. TalkMotion helps when none is available."
+            )}
+          </Typography.Text>
+
           {error && <Alert type="error" showIcon message={error} />}
 
           <Button type="primary" size="large" className="conv-speak-btn" loading={busy} onClick={start}>
