@@ -8,6 +8,7 @@ import YouTubeSearch from "../components/ui/YouTubeSearch";
 import truncateString, { truncateDescription } from "../utils/truncateString";
 import AIContentGenerator from "../components/ui/AIContentGenerator";
 import AITutor from "../components/ui/AITutor";
+import AutoCaptionsPanel from "../features/autoCaptions/AutoCaptionsPanel";
 // Make UploadManager available globally for camcorder.js (loaded as script tag)
 import { uploadManager, UploadManager } from "../utils/UploadManager";
 if (typeof window !== 'undefined') {
@@ -479,6 +480,8 @@ function VideoSubtitlesDesigner() {
           )}
         </>
       )}
+
+      <AutoCaptionsPanel />
 
       {/* Helper text when no video is selected */}
       {!youtubeURL && (

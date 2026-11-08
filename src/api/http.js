@@ -7,7 +7,7 @@
  * - A failed refresh clears tokens and fires the `tm:auth-expired` window event.
  */
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL || "/api/v1").replace(/\/+$/, "");
+export const API_BASE = (import.meta.env.VITE_API_BASE_URL || "/api/v1").replace(/\/+$/, "");
 
 export const ACCESS_TOKEN_KEY = "tm_access_token";
 export const REFRESH_TOKEN_KEY = "tm_refresh_token";
