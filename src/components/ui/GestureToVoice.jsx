@@ -8,6 +8,7 @@ import { setVolume } from "../../app/features/speechSlice";
 import useSpeechSynthesis from "../../hooks/useSpeechSynthesis";
 import { setIsModelLoading } from "../../app/features/converterSlice";
 import useMessageApi from "../../hooks/useMessageApi";
+import { PlainLanguage } from "./PlainLanguage";
 
 export const GestureToVoice = (props) => {
   const [isPageActive, setIsPageActive] = React.useState(false);
@@ -259,6 +260,7 @@ export const GestureToVoice = (props) => {
               <strong style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>Speech:</strong>{' '}
               <span style={{ color: 'var(--color-text-secondary)' }}>{speakText}</span>
             </p>
+              <PlainLanguage text={speakText} />
           </div>
         )}
       </div>
