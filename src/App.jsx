@@ -11,7 +11,10 @@ import AppRoutes from "./routes/AppRoutes";
 import jsOnUpdateTrainingStatus from "./utils/jsOnUpdateTrainingStatus";
 import jsOnSignPrediction from "./utils/jsOnSignPrediction";
 import { ConfigProvider } from "antd";
+import { useLocation } from "react-router-dom";
 import { useLanguage } from "./contexts/LanguageContext";
+import { useApiAuthBootstrap } from "./hooks/useApiAuth";
+import { isRemotePyOptionalPath } from "./config/layoutConfig";
 
 const App = () => {
   const { collapsed, collapsedWidth, onCollapsed, sideBarWidth, sm, md } =
@@ -21,17 +24,24 @@ const App = () => {
   );
   const serverStatus = useSelector((state) => state.server.serverStatus);
   const { direction, isRTL } = useLanguage();
+  const location = useLocation();
 
   // connect to server
   useServerConnection();
+  // restore the TalkMotion 2.0 API session (JWT) and the user's feature flags
+  useApiAuthBootstrap();
 
   jsOnUpdateTrainingStatus();
   jsOnSignPrediction();
 
+  // Legacy pages need the RemotePy socket; Conversation Mode pages talk to the new API and
+  // render even while the socket is connecting or down.
+  const canRender = isServerConnected || isRemotePyOptionalPath(location.pathname);
+
   return (
     <ConfigProvider direction={direction}>
       <div className="App">
-        {isServerConnected ? (
+        {canRender ? (
           <LayoutWrapper
             collapsed={collapsed}
             onCollapsed={onCollapsed}

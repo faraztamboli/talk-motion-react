@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { login, logout } from "../app/features/loginSlice";
 import { setUser } from "../app/features/userSlice";
@@ -13,8 +13,16 @@ function useAuthStatus() {
 
   const dispatch = useDispatch();
   const loggedIn = useSelector((state) => state.login.isLoggedIn);
+  const serverConnected = useSelector((state) => state.server.serverConnected);
+  const wasConnected = useRef(serverConnected);
 
   function isLoggedIn() {
+    // Without the RemotePy socket there is no RemotePy session to check. Resolve now and
+    // re-check when the socket connects, instead of waiting on a callback that never fires.
+    if (!serverConnected) {
+      setCheckingStatus(false);
+      return;
+    }
     try {
 
         JS2Py.PythonFunctions.SessionServer.startSessionIfNotStarted(token, function() {
@@ -39,8 +47,12 @@ function useAuthStatus() {
   }
 
   useEffect(() => {
+    // The socket just came up after we had resolved without it: check again before any
+    // guard decides to redirect.
+    if (serverConnected && !wasConnected.current) setCheckingStatus(true);
+    wasConnected.current = serverConnected;
     isLoggedIn();
-  }, [window.location.pathname]);
+  }, [window.location.pathname, serverConnected]);
 
   return { loggedIn, checkingStatus };
 }

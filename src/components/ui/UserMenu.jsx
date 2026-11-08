@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Drawer, Avatar, Divider } from "antd";
-import { userMenu } from "../../data";
+import { buildUserMenu } from "../../data";
+import { useFlags } from "../../hooks/useFlag";
 import { useSelector, useDispatch } from "react-redux";
 import userIcon from "../../media/images/user-icon.jpg";
 import useProfile from "../../hooks/useProfile";
@@ -11,6 +12,8 @@ export const UserMenu = () => {
   const { profileImg } = useSelector((state) => state.user);
   const { getUserProfile } = useProfile();
   const dispatch = useDispatch();
+  const flags = useFlags();
+  const userMenu = useMemo(() => buildUserMenu(flags), [flags]);
 
   const showUserMenu = () => {
     setOpen(true);

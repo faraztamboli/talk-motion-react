@@ -4,6 +4,7 @@ import {
   FileOutlined,
   PieChartOutlined,
   HomeOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import {
@@ -16,15 +17,19 @@ import {
   MdOutlineVideoLibrary,
 } from "react-icons/md";
 
-function getItem(label, key, icon, children, path) {
+function getItem(label, key, icon, children, path, flag) {
   return {
     key,
     icon,
     children,
     label,
     path,
+    flag,
   };
 }
+
+// Items tagged with a flag only show while that flag is on (see src/config/flags.js).
+const LEGACY = "legacy_models_visible";
 
 const items = [
   getItem(
@@ -44,6 +49,16 @@ const items = [
     </Link>,
     null,
     "/converter"
+  ),
+  getItem(
+    "Conversation",
+    "7",
+    <Link to="/conversation">
+      <MessageOutlined />
+    </Link>,
+    null,
+    "/conversation",
+    "conversation_v2"
   ),
   getItem(
     "Learning",
@@ -114,7 +129,8 @@ const items = [
           <MdOutlineCollectionsBookmark />
         </Link>,
         null,
-        "/my-models"
+        "/my-models",
+        LEGACY
       ),
       getItem(
         "I'm Training",
@@ -123,10 +139,12 @@ const items = [
           <FileOutlined />
         </Link>,
         null,
-        "/models/training-models"
+        "/models/training-models",
+        LEGACY
       ),
     ],
-    "/models"
+    "/models",
+    LEGACY
   ),
   getItem(
     "Store",
@@ -142,7 +160,8 @@ const items = [
           <FileOutlined />
         </Link>,
         null,
-        "/models"
+        "/models",
+        LEGACY
       ),
       getItem(
         "Videos",
@@ -188,7 +207,8 @@ const items = [
           <MdFileUpload />
         </Link>,
         null,
-        "/trainer/upload"
+        "/trainer/upload",
+        LEGACY
       ),
       getItem(
         "Collect",
@@ -197,7 +217,8 @@ const items = [
           <MdOutlineCollectionsBookmark />
         </Link>,
         null,
-        "/trainer/collect"
+        "/trainer/collect",
+        LEGACY
       ),
       getItem(
         "Train",
@@ -206,7 +227,8 @@ const items = [
           <MdModelTraining />
         </Link>,
         null,
-        "/trainer/train"
+        "/trainer/train",
+        LEGACY
       ),
       getItem(
         "Subtitle Designer",
@@ -221,5 +243,56 @@ const items = [
     "/trainer"
   ),
 ];
+
+const STORE_KEY = "5";
+
+function storeIcon(flags) {
+  // The Store group icon used to open the model store; send it to the video library when
+  // models are hidden.
+  return flags[LEGACY] ? (
+    <Link to="/models">
+      <FileOutlined />
+    </Link>
+  ) : (
+    <Link to="/video-subtitles/library">
+      <MdOutlineVideoLibrary />
+    </Link>
+  );
+}
+
+function visible(item, flags) {
+  return !item.flag || Boolean(flags[item.flag]);
+}
+
+function strip(item) {
+  // eslint-disable-next-line no-unused-vars
+  const { flag, ...rest } = item;
+  return rest;
+}
+
+/**
+ * Sidebar items for the current flags. A group that loses children to flags and is left
+ * with a single item is replaced by that item (e.g. Trainer -> Subtitle Designer).
+ */
+export function buildSidebarItems(flags = {}) {
+  const out = [];
+  for (const item of items) {
+    if (!visible(item, flags)) continue;
+    if (!item.children) {
+      out.push(strip(item));
+      continue;
+    }
+    const children = item.children.filter((child) => visible(child, flags)).map(strip);
+    if (children.length === 0) continue;
+    if (children.length === 1 && children.length < item.children.length) {
+      out.push(children[0]);
+      continue;
+    }
+    const group = { ...strip(item), children };
+    if (item.key === STORE_KEY) group.icon = storeIcon(flags);
+    out.push(group);
+  }
+  return out;
+}
 
 export default items;

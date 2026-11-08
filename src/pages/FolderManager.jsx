@@ -4,6 +4,7 @@ import SaveFolderContent from "../components/ui/SaveFolderContent";
 import NewFolder from "../components/ui/NewFolder";
 import useFolders from "../hooks/useFolders";
 import { Link, useParams } from "react-router-dom";
+import ModelLink from "../components/flags/ModelLink";
 
 function FolderManager() {
   const [loading, setLoading] = useState(false);
@@ -123,7 +124,8 @@ function FolderManager() {
                           {child.contents.length > 0
                             ? child.contents.map((nestedContent) => (
                                 <li key={nestedContent.content_id}>
-                                  <Link
+                                  <ModelLink
+                                    isModel={nestedContent.type === "model"}
                                     className="text-black text-16px pl-1 folder-content-card-list-items"
                                     to={
                                       nestedContent.type === "model"
@@ -132,7 +134,7 @@ function FolderManager() {
                                     }
                                   >
                                     {nestedContent.title} - {nestedContent.type}
-                                  </Link>
+                                  </ModelLink>
                                 </li>
                               ))
                             : "Nothing to show"}
@@ -172,7 +174,8 @@ function FolderManager() {
                           {child.contents.length > 0
                             ? child.contents.map((nestedContent) => (
                                 <li key={nestedContent.content_id}>
-                                  <Link
+                                  <ModelLink
+                                    isModel={nestedContent.type === "model"}
                                     className="text-black text-16px pl-1 folder-content-card-list-items"
                                     to={
                                       nestedContent.type === "model"
@@ -181,7 +184,7 @@ function FolderManager() {
                                     }
                                   >
                                     {nestedContent.title} - {nestedContent.type}
-                                  </Link>
+                                  </ModelLink>
                                 </li>
                               ))
                             : "None"}
@@ -198,7 +201,8 @@ function FolderManager() {
                           {contents.length > 0
                             ? contents.map((nestedContent) => (
                                 <li key={nestedContent.content_id}>
-                                  <Link
+                                  <ModelLink
+                                    isModel={nestedContent.type === "model"}
                                     className="text-black text-16px pl-1 folder-content-card-list-items"
                                     to={
                                       nestedContent.type === "model"
@@ -207,7 +211,7 @@ function FolderManager() {
                                     }
                                   >
                                     {nestedContent.title} - {nestedContent.type}
-                                  </Link>
+                                  </ModelLink>
                                 </li>
                               ))
                             : "None"}

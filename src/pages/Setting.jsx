@@ -6,6 +6,7 @@ import LanguageSelector from "../components/ui/LanguageSelector";
 import AIPreferences from "../components/ui/AIPreferences";
 import useProfile from "../hooks/useProfile";
 import { useLanguage } from "../contexts/LanguageContext";
+import DevFlagPanel from "../components/flags/DevFlagPanel";
 
 function Setting(props) {
   const [userProfile, setUserProfile] = useState();
@@ -105,12 +106,15 @@ function Setting(props) {
 
         <Divider />
         <div className="details_section" style={{ marginTop: "2rem" }}>
-          <AIPreferences 
-            style={{ 
+          <AIPreferences
+            style={{
               maxWidth: "800px",
               margin: "0 auto"
             }}
           />
+        </div>
+        <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+          <DevFlagPanel />
         </div>
       </div>
     </>

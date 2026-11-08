@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import PrivateRoute from "../components/PrivateRoute";
+import FlagRoute from "../components/flags/FlagRoute";
 import Login from "../pages/Login";
 import Error from "../pages/Errors/404Error";
 import { Skeleton } from "antd";
@@ -83,6 +84,17 @@ const ForgotPassword = React.lazy(() =>
 );
 const ContactUs = React.lazy(() => import("../pages/ContactUs"));
 const Dashboard = React.lazy(() => import("../pages/Dashboard"));
+// TalkMotion 2.0 Conversation Mode
+const ConversationStart = React.lazy(() =>
+  import("../features/conversation/pages/ConversationStart")
+);
+const ConversationPage = React.lazy(() =>
+  import("../features/conversation/pages/ConversationPage")
+);
+const JoinPage = React.lazy(() => import("../features/conversation/pages/JoinPage"));
+const GuestConversationPage = React.lazy(() =>
+  import("../features/conversation/pages/GuestConversationPage")
+);
 const DashboardNew = React.lazy(() => import("../pages/DashboardNew"));
 
 function AppRoutes(props) {
@@ -140,7 +152,7 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      <Route path="/trainer" element={<PrivateRoute />}>
+      <Route path="/trainer" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route
           path="/trainer"
           element={
@@ -152,7 +164,7 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      <Route path="/trainer/collect" element={<PrivateRoute />}>
+      <Route path="/trainer/collect" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route
           path="/trainer/collect"
           element={
@@ -164,7 +176,7 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      <Route path="/trainer/train" element={<PrivateRoute />}>
+      <Route path="/trainer/train" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route
           path="/trainer/train"
           element={
@@ -176,7 +188,7 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      <Route path="/trainer/upload" element={<PrivateRoute />}>
+      <Route path="/trainer/upload" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route
           path="/trainer/upload"
           element={
@@ -188,7 +200,7 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      <Route path="/models" element={<PrivateRoute />}>
+      <Route path="/models" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route
           path="/models"
           element={
@@ -201,7 +213,7 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/models" element={<PrivateRoute />}>
+      <Route path="/models" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route
           path=":modelid"
           element={
@@ -243,7 +255,7 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      <Route path="/my-models" element={<PrivateRoute />}>
+      <Route path="/my-models" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route
           path="/my-models"
           exact
@@ -258,7 +270,7 @@ function AppRoutes(props) {
       </Route>
       <Route
         path="/models/training-models"
-        element={<PrivateRoute />}
+        element={<FlagRoute flag="legacy_models_visible" />}
       >
         <Route
           path="/models/training-models"
@@ -599,7 +611,7 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/my-subscriptions" element={<PrivateRoute />}>
+      <Route path="/my-subscriptions" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route
           path="/my-subscriptions"
           exact
@@ -613,7 +625,7 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/payment" element={<PrivateRoute />}>
+      <Route path="/payment" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route
           path="/payment"
           element={
@@ -629,7 +641,7 @@ function AppRoutes(props) {
       <Route
         path="/payment-confirmation"
         exact
-        element={<PrivateRoute />}
+        element={<FlagRoute flag="legacy_models_visible" />}
       >
         <Route
           path="/payment-confirmation"
@@ -638,7 +650,7 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/cart" element={<PrivateRoute />}>
+      <Route path="/cart" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route
           path="/cart"
           element={
@@ -691,6 +703,54 @@ function AppRoutes(props) {
             fallback={<Skeleton active style={skeletonStyle} />}
           >
             <ContactUs collapsedWidth={collapsedWidth} />
+          </React.Suspense>
+        }
+      />
+
+      {/* Conversation Mode (TalkMotion 2.0 API). Signed-in owners need conversation_v2;
+          joining by code is public, because the person joining may have no account. */}
+      <Route
+        path="/conversation"
+        element={<FlagRoute flag="conversation_v2" auth="api" fallback="404" />}
+      >
+        <Route
+          path="/conversation"
+          element={
+            <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
+              <ConversationStart />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path=":conversationId"
+          element={
+            <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
+              <ConversationPage />
+            </React.Suspense>
+          }
+        />
+      </Route>
+      <Route
+        path="/join"
+        element={
+          <React.Suspense fallback={<AuthPagesLoader />}>
+            <JoinPage />
+          </React.Suspense>
+        }
+      />
+      <Route
+        path="/c/:code"
+        element={
+          <React.Suspense fallback={<AuthPagesLoader />}>
+            <JoinPage />
+          </React.Suspense>
+        }
+      />
+      <Route
+        path="/join/live/:conversationId"
+        element={
+          <React.Suspense fallback={<AuthPagesLoader />}>
+            <GuestConversationPage />
           </React.Suspense>
         }
       />

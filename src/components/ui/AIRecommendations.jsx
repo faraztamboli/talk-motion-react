@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useFlag } from "../../hooks/useFlag";
 import { Card, List, Button, Space, Typography, Tag, Empty, Spin, Tooltip } from "antd";
 import { 
   ThunderboltOutlined, 
@@ -69,6 +70,8 @@ export default function AIRecommendations({
     }
   };
 
+  const modelsVisible = useFlag("legacy_models_visible");
+
   const handleRecommendationClick = async (recommendation) => {
     // Track the click
     try {
@@ -88,7 +91,8 @@ export default function AIRecommendations({
         model: `/models/${recommendation.recommendedId}`,
       };
       
-      if (routes[recommendation.recommendationType]) {
+      const hiddenModel = recommendation.recommendationType === "model" && !modelsVisible;
+      if (routes[recommendation.recommendationType] && !hiddenModel) {
         window.location.href = routes[recommendation.recommendationType];
       }
     }

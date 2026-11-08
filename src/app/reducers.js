@@ -9,6 +9,9 @@ import converterSlice from "./features/converterSlice";
 import cartSlice from "./features/cartSlice";
 import subtitleRecordingStateSlice from "./features/subtitleRecordingSlice";
 import subtitleRecordingButtonSlice from "./features/subtitleRecordingButtonSlice";
+import flagsReducer from "./features/flagsSlice";
+import apiAuthReducer from "./features/apiAuthSlice";
+import conversationV2Reducer from "../features/conversation/state/conversationV2Slice";
 
 const rootReducer = {
   login: loginReducer,
@@ -22,6 +25,9 @@ const rootReducer = {
   cart: cartSlice,
   subtitleRecordingState: subtitleRecordingStateSlice,
   subtitleRecordingButton: subtitleRecordingButtonSlice,
+  flags: flagsReducer,
+  apiAuth: apiAuthReducer,
+  conversationV2: conversationV2Reducer,
 };
 
 export default rootReducer;

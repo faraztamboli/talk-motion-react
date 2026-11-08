@@ -7,9 +7,14 @@ import { VoicesDropdown } from "../components/ui/VoicesDropdown";
 import { VoiceToGesture } from "../components/ui/VoiceToGesture";
 import { GestureToVoice } from "../components/ui/GestureToVoice";
 import { converterDetails } from "../data/PageDetails";
+import { useFlag } from "../hooks/useFlag";
+import useDefaultModel from "../hooks/useDefaultModel";
 
 const Converter = (props) => {
   const [showAccessibilityInfo, setShowAccessibilityInfo] = useState(false);
+  const modelsVisible = useFlag("legacy_models_visible");
+  // With the model picker hidden, select a vocabulary automatically.
+  useDefaultModel(!modelsVisible);
   const cardBodyStyle = props.sm ? { padding: "5px" } : null;
 
   const { title, description } = converterDetails;
@@ -56,9 +61,11 @@ const Converter = (props) => {
 
         <Row gutter={[12, 8]} role="toolbar" aria-label="Model and voice selection" style={{ marginBottom: 'var(--spacing-sm)' }}>
           <Col span={8} xs={24} md={8}>
-            <div role="group" aria-label="Select model">
-              <ModelsDropdown from="converter" />
-            </div>
+            {modelsVisible && (
+              <div role="group" aria-label="Select model">
+                <ModelsDropdown from="converter" />
+              </div>
+            )}
           </Col>
           <Col span={8} xs={0} md={8} aria-hidden="true"></Col>
           <Col span={8} xs={24} md={8}>

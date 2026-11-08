@@ -8,9 +8,19 @@ import {
   TranslationOutlined,
   UploadOutlined,
   UserAddOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
+import { useFlags } from "../../hooks/useFlag";
 
 const quickActions = [
+  {
+    key: "start-conversation",
+    label: "Start a Conversation",
+    icon: <MessageOutlined />,
+    path: "/conversation",
+    color: "#1677ff",
+    flag: "conversation_v2",
+  },
   {
     key: "start-recording",
     label: "Start Recording",
@@ -45,6 +55,7 @@ const quickActions = [
     icon: <UploadOutlined />,
     path: "/trainer/upload",
     color: "#eb2f96",
+    flag: "legacy_models_visible",
   },
   {
     key: "find-collaborators",
@@ -57,6 +68,8 @@ const quickActions = [
 
 export const QuickActionsPanel = ({ sm }) => {
   const navigate = useNavigate();
+  const flags = useFlags();
+  const actions = quickActions.filter((action) => !action.flag || flags[action.flag]);
 
   return (
     <Card
@@ -65,7 +78,7 @@ export const QuickActionsPanel = ({ sm }) => {
       bodyStyle={{ padding: sm ? "12px" : "16px" }}
     >
       <Row gutter={[8, 8]}>
-        {quickActions.map((action) => (
+        {actions.map((action) => (
           <Col key={action.key} xs={24} sm={12} md={8}>
             <Button
               type="primary"

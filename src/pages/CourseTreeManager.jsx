@@ -32,6 +32,7 @@ import {
   FolderOpenOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { useFlag } from "../hooks/useFlag";
 import useFolders from "../hooks/useFolders";
 import useMessageApi from "../hooks/useMessageApi";
 import NewCourseModal from "../components/ui/NewCourseModal";
@@ -64,6 +65,7 @@ function CourseTreeManager(props) {
     deleteFolder,
   } = useFolders();
   const { contextHolder, showMessage } = useMessageApi();
+  const modelsVisible = useFlag("legacy_models_visible");
   const navigate = useNavigate();
 
   const style = props.collapsedWidth === 0 ? { padding: 8 } : { padding: 24 };
@@ -255,7 +257,8 @@ function CourseTreeManager(props) {
       navigate(`/video-subtitles/folder-manager/${info.node.id}`);
     } else if (info.node.type === "content") {
       if (info.node.contentType === "model") {
-        navigate(`/models/${info.node.id}`);
+        if (modelsVisible) navigate(`/models/${info.node.id}`);
+        else showMessage("info", "Models are not available right now.");
       } else {
         navigate(`/video-subtitles/library/${info.node.id}`);
       }
@@ -366,7 +369,8 @@ function CourseTreeManager(props) {
         break;
       case "open":
         if (node.contentType === "model") {
-          navigate(`/models/${node.id}`);
+          if (modelsVisible) navigate(`/models/${node.id}`);
+          else showMessage("info", "Models are not available right now.");
         } else {
           navigate(`/video-subtitles/library/${node.id}`);
         }

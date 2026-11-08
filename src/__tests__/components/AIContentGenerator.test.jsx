@@ -4,12 +4,12 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from '@testing-library/jest-dom';
+
 import AIContentGenerator from '../../components/ui/AIContentGenerator';
 
 // Mock useLLM hook
-vi.mock('../../hooks/useLLM', () => ({
-  default: () => ({
+// One shared set of mocks, so tests can assert on the same functions the component calls.
+const mockLLM = vi.hoisted(() => ({
     generateVideoDescription: vi.fn(() => Promise.resolve({
       success: true,
       contentId: 123,
@@ -27,8 +27,9 @@ vi.mock('../../hooks/useLLM', () => ({
       contentId: 123,
       status: 'rejected',
     })),
-  }),
 }));
+
+vi.mock('../../hooks/useLLM', () => ({ default: () => mockLLM }));
 
 // Mock useMessageApi
 vi.mock('../../hooks/useMessageApi', () => ({
@@ -68,7 +69,7 @@ describe('AIContentGenerator', () => {
   });
 
   it('should handle generate button click', async () => {
-    const { generateVideoDescription } = require('../../hooks/useLLM').default();
+    const { generateVideoDescription } = mockLLM;
     
     render(<AIContentGenerator {...defaultProps} />);
     
@@ -120,7 +121,7 @@ describe('AIContentGenerator', () => {
   it('should be accessible with keyboard navigation', () => {
     render(<AIContentGenerator {...defaultProps} />);
     
-    const generateButton = screen.getByText(/Generate AI Description/i);
+    const generateButton = screen.getByRole('button', { name: /generate ai description/i });
     expect(generateButton).toHaveAttribute('aria-label');
     
     // Test keyboard interaction

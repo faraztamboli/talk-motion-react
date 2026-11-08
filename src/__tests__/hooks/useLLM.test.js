@@ -8,6 +8,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import useLLM from '../../hooks/useLLM';
+import JS2Py from '../../remotepyjs';
 
 // Mock JS2Py
 vi.mock('../../remotepyjs', () => ({
@@ -71,11 +72,11 @@ describe('useLLM', () => {
       const { generateVideoDescription } = hook.result.current;
       
       // Mock the callback
-      const mockCallback = vi.fn((callback) => {
-        callback(mockResponse);
+      const mockCallback = vi.fn((...args) => {
+        args[args.length - 1](mockResponse);
       });
       
-      vi.mocked(require('../../remotepyjs').default.PythonFunctions.TalkMotionServer.generateVideoDescription)
+      vi.mocked(JS2Py.PythonFunctions.TalkMotionServer.generateVideoDescription)
         .mockImplementation(mockCallback);
 
       const result = await generateVideoDescription(1, { model: 'gpt-4' });
@@ -92,11 +93,11 @@ describe('useLLM', () => {
 
       const { generateVideoDescription } = hook.result.current;
       
-      const mockCallback = vi.fn((callback) => {
-        callback(mockError);
+      const mockCallback = vi.fn((...args) => {
+        args[args.length - 1](mockError);
       });
       
-      vi.mocked(require('../../remotepyjs').default.PythonFunctions.TalkMotionServer.generateVideoDescription)
+      vi.mocked(JS2Py.PythonFunctions.TalkMotionServer.generateVideoDescription)
         .mockImplementation(mockCallback);
 
       await expect(generateVideoDescription(1)).rejects.toEqual(
@@ -115,11 +116,11 @@ describe('useLLM', () => {
 
       const { approveAIGeneratedContent } = hook.result.current;
       
-      const mockCallback = vi.fn((callback) => {
-        callback(mockResponse);
+      const mockCallback = vi.fn((...args) => {
+        args[args.length - 1](mockResponse);
       });
       
-      vi.mocked(require('../../remotepyjs').default.PythonFunctions.TalkMotionServer.approveAIGeneratedContent)
+      vi.mocked(JS2Py.PythonFunctions.TalkMotionServer.approveAIGeneratedContent)
         .mockImplementation(mockCallback);
 
       const result = await approveAIGeneratedContent(123);
@@ -140,11 +141,11 @@ describe('useLLM', () => {
 
       const { startAIConversation } = hook.result.current;
       
-      const mockCallback = vi.fn((callback) => {
-        callback(mockResponse);
+      const mockCallback = vi.fn((...args) => {
+        args[args.length - 1](mockResponse);
       });
       
-      vi.mocked(require('../../remotepyjs').default.PythonFunctions.TalkMotionServer.startAIConversation)
+      vi.mocked(JS2Py.PythonFunctions.TalkMotionServer.startAIConversation)
         .mockImplementation(mockCallback);
 
       const result = await startAIConversation('tutor', 'course', 1);
@@ -171,11 +172,11 @@ describe('useLLM', () => {
 
       const { getRecommendations } = hook.result.current;
       
-      const mockCallback = vi.fn((callback) => {
-        callback(mockResponse);
+      const mockCallback = vi.fn((...args) => {
+        args[args.length - 1](mockResponse);
       });
       
-      vi.mocked(require('../../remotepyjs').default.PythonFunctions.TalkMotionServer.getRecommendations)
+      vi.mocked(JS2Py.PythonFunctions.TalkMotionServer.getRecommendations)
         .mockImplementation(mockCallback);
 
       const result = await getRecommendations('video', 10);
@@ -198,11 +199,11 @@ describe('useLLM', () => {
 
       const { getUserAIPreferences } = hook.result.current;
       
-      const mockCallback = vi.fn((callback) => {
-        callback(mockResponse);
+      const mockCallback = vi.fn((...args) => {
+        args[args.length - 1](mockResponse);
       });
       
-      vi.mocked(require('../../remotepyjs').default.PythonFunctions.TalkMotionServer.getUserAIPreferences)
+      vi.mocked(JS2Py.PythonFunctions.TalkMotionServer.getUserAIPreferences)
         .mockImplementation(mockCallback);
 
       const result = await getUserAIPreferences();
