@@ -42,13 +42,10 @@ function useLogin() {
     if (login_info && login_info.isValidUser === true && login_info.isPasswordCorrect === true) {
       disptach(login({ token: token_input }));
       success();
-      // Same 1 s pause as before. If the API answered by then, honour Conversation Mode.
-      let api = null;
-      apiLogin.then((result) => {
-        api = result;
-      });
+      // Same 1 s pause and dashboard as before. Conversation Mode, when enabled, is one tap
+      // away in the sidebar and quick actions; existing users are never pushed into it.
       setTimeout(() => {
-        navigate(wantsConversation(api) ? "/conversation" : "/");
+        navigate("/");
       }, 1000);
     } else if (
       login_info &&
