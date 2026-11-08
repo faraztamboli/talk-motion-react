@@ -295,6 +295,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         meId={meId}
         showPlain={Boolean(settings.plain_language)}
         showGloss={Boolean(settings.gloss_track)}
+        tapWords={!guest}
       />
 
       <TurnIndicator
