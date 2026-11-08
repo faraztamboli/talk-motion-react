@@ -148,3 +148,11 @@
 .tm .fb .btn { justify-self: start; margin-top: 8px; }
 .tm .fb-error { color: var(--live); }
 .tm .fb-aside { display: grid; gap: 16px; align-content: start; }
+
+/* changelog and staff guide */
+.tm .log { display: grid; gap: 32px; }
+.tm .log-entry { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 20px; }
+.tm .log-entry h4 { margin: 8px 0 0; }
+.tm .guide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 36px; }
+.tm .guide article { display: grid; gap: 8px; align-content: start; min-width: 0; }
+@media (max-width: 860px) { .tm .guide { grid-template-columns: 1fr; } }

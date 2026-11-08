@@ -22,6 +22,17 @@ const feedbackPageDetails = {
     "Report a wrong caption, a bad suggestion or wording that should change, or volunteer as a TalkMotion tester. Every message is read.",
 };
 
+const changelogPageDetails = {
+  title: "TalkMotion | Changelog",
+  description: "What people told us and what we changed, every month, in plain words.",
+};
+
+const staffGuidePageDetails = {
+  title: "TalkMotion | Staff guide",
+  description:
+    "A twenty-minute guide for pharmacy and clinic staff: serving a Deaf or non-speaking customer with TalkMotion, with a practice run.",
+};
+
 const openBuildPageDetails = {
   title: "TalkMotion | Built in the open",
   description:
@@ -31,7 +42,7 @@ const openBuildPageDetails = {
 const aboutPageDetails = {
   title: "TalkMotion | About",
   description:
-    "TalkMotion helps bridge communication between signing and non-signing communities. Our work is grounded in respect for Deaf culture and language, using AI to support clearer interactions in families, schools, workplaces, and public spaces where sign language may not yet be understood.",
+    "How TalkMotion started, what we learned from the first prototype, and what it is now: a conversation tool where the Deaf or non-speaking person controls every word said for them.",
 };
 
 const featuresPageDetails = {
@@ -70,6 +81,8 @@ export {
   pricingPageDetails,
   openBuildPageDetails,
   feedbackPageDetails,
+  changelogPageDetails,
+  staffGuidePageDetails,
   aboutPageDetails,
   featuresPageDetails,
   contactPageDetails,

@@ -6,6 +6,7 @@ import MetaDecorator from "../components/HOCs/MetaDecorator";
 import { feedbackPageDetails } from "../data/pageDetails";
 import { Section } from "../components/marketing/Sections";
 import { sendFeedback } from "../components/marketing/sendFeedback";
+import { track } from "../components/marketing/track";
 import "../marketing.css";
 
 const IDENTITIES = ["Deaf", "Hard of hearing", "I cannot speak", "Hearing", "Prefer not to say"];
@@ -50,6 +51,7 @@ function Feedback(props) {
     try {
       const ok = await sendFeedback({ ...form, kind });
       if (!ok) throw new Error("send failed");
+      track(volunteer ? "volunteer_signup" : "feedback_sent");
       setState({ busy: false, done: true, error: "" });
       setForm(EMPTY);
     } catch {
@@ -147,7 +149,7 @@ function Feedback(props) {
                 <li>Volunteering is unpaid, and we say so plainly.</li>
                 <li>We never use your name without your yes on this form.</li>
                 <li>Every month we publish what people told us and what we changed.</li>
-                <li>You can stop at any time. Email us and we remove your details.</li>
+                <li>You can stop at any time. Tell us through this form and we remove your details.</li>
               </ul>
             </div>
           </div>

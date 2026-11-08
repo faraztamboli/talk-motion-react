@@ -23,13 +23,17 @@ describe("InterpreterNotice", () => {
     expect(onAsk).toHaveBeenCalledTimes(1);
   });
 
-  it("stays hidden on this device once dismissed", () => {
+  it("shrinks to one line once dismissed, but never disappears", () => {
     const { unmount } = render(<InterpreterNotice onAsk={vi.fn()} />);
     fireEvent.click(screen.getByRole("button", { name: /close/i }));
     expect(localStorage.getItem(INTERPRETER_NOTICE_KEY)).toBe("1");
     unmount();
-    render(<InterpreterNotice onAsk={vi.fn()} />);
+    const onAsk = vi.fn();
+    render(<InterpreterNotice onAsk={onAsk} />);
     expect(screen.queryByText(/does not replace one/i)).toBeNull();
+    expect(screen.getByRole("note").textContent).toMatch(/interpreter is best/i);
+    fireEvent.click(screen.getByRole("button", { name: /ask for an interpreter/i }));
+    expect(onAsk).toHaveBeenCalledTimes(1);
   });
 });
 

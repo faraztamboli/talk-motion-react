@@ -261,3 +261,20 @@
 }
 .conv-lesson-panel .conv-code { font-size: clamp(2.5rem, 12vw, 6rem); }
 .conv-lesson-readonly .conv-text { line-height: 1.5; }
+
+/* Voice picker beside Speak: the person chooses the voice their replies are spoken in. */
+.conv-voice {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+.conv-voice .ant-select {
+  min-width: 180px;
+}
+
+/* Interpreter reminder after it has been dismissed: one quiet line, always available. */
+.conv-interpreter-line {
+  font-size: 0.9rem;
+  color: var(--color-neutral-700, #595959);
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import { track } from "./track";
 
 const SUGGESTIONS = ["No allergies", "Yes, penicillin", "Let me check my list"];
 
@@ -21,6 +22,7 @@ function ConversationMock() {
       return;
     }
     setStatus(`Spoken: "${text}"`);
+    track("demo_speak");
   };
 
   return (

@@ -14,8 +14,24 @@ function TappableText({ text }) {
     });
 }
 
-function speakerName(participants, pid, meId, t) {
-  if (pid === meId) return t("conversation.you", "You");
+/**
+ * Lines from this device that the other person produced. Same rule as the API's
+ * speaker_label: speech heard by a Deaf or non-speaking person's device, and text typed on a
+ * hearing owner's shared phone.
+ */
+export function fromOtherPerson(device, spoken) {
+  if (!device) return false;
+  if (device.role === "primary" && spoken) return true;
+  return device.role === "partner" && !spoken && device.isOwner && device.mode === "same_device";
+}
+
+function speakerName(participants, pid, meId, t, device, spoken) {
+  if (pid === meId) {
+    if (fromOtherPerson(device, spoken)) {
+      return device.partnerLabel || t("conversation.otherPerson", "Other person");
+    }
+    return t("conversation.you", "You");
+  }
   return participants[pid]?.displayName || t("conversation.someone", "Someone");
 }
 
@@ -24,7 +40,16 @@ function speakerName(participants, pid, meId, t) {
  * recognised for each speaker. Speech shows a microphone icon, typed text a pencil, so the
  * source never depends on colour.
  */
-export default function CaptionStream({ utterances, partials, participants, meId, showPlain, showGloss, tapWords = false }) {
+export default function CaptionStream({
+  utterances,
+  partials,
+  participants,
+  meId,
+  showPlain,
+  showGloss,
+  tapWords = false,
+  device = null, // { role, isOwner, mode, partnerLabel } of this device's participant
+}) {
   const { t } = useTranslation();
   const endRef = useRef(null);
 
@@ -46,13 +71,13 @@ export default function CaptionStream({ utterances, partials, participants, meId
           </p>
         )}
         {utterances.map((u) => {
-          const mine = u.participant_id === meId;
           const spoken = u.source === "speech";
+          const mine = u.participant_id === meId && !fromOtherPerson(device, spoken);
           return (
             <div key={u.id} className={`conv-caption${mine ? " conv-mine" : ""}`}>
               <div className="conv-speaker">
                 {spoken ? <AudioOutlined aria-hidden /> : <EditOutlined aria-hidden />}
-                <span>{speakerName(participants, u.participant_id, meId, t)}</span>
+                <span>{speakerName(participants, u.participant_id, meId, t, device, spoken)}</span>
                 <span className="sr-only">
                   {spoken ? t("conversation.said", "said") : t("conversation.wrote", "wrote")}
                 </span>
@@ -78,7 +103,7 @@ export default function CaptionStream({ utterances, partials, participants, meId
           <div key={pid} className="conv-caption">
             <div className="conv-speaker">
               <AudioOutlined aria-hidden />
-              <span>{speakerName(participants, pid, meId, t)}</span>
+              <span>{speakerName(participants, pid, meId, t, device, true)}</span>
             </div>
             <div className="conv-partial">{text}…</div>
           </div>

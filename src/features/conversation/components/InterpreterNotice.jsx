@@ -15,25 +15,37 @@ function readDismissed() {
 /**
  * TalkMotion does not replace interpreters (policy, server/docs/marketing/01 §0).
  *
- * Reminds both people that health, legal and money conversations deserve a qualified
- * interpreter. "Ask for an interpreter" only fills the compose box: like every other
- * reply, nothing is spoken until the person presses Speak. Dismissal is remembered on
- * this device.
+ * Every conversation shows this reminder. The first time it is a full notice; once a person
+ * closes it on this device it shrinks to one line, so the reminder and the one-tap request are
+ * always there. "Ask for an interpreter" only fills the compose box: like every other reply,
+ * nothing is spoken until the person presses Speak.
  */
 export default function InterpreterNotice({ onAsk }) {
   const { t } = useTranslation();
   const [dismissed, setDismissed] = useState(readDismissed);
-
-  if (dismissed) return null;
 
   const dismiss = () => {
     setDismissed(true);
     try {
       localStorage.setItem(INTERPRETER_NOTICE_KEY, "1");
     } catch {
-      // private mode or blocked storage: hide for this visit only
+      // private mode or blocked storage: shrink for this visit only
     }
   };
+
+  const ask = onAsk && (
+    <Button size="small" onClick={onAsk}>
+      {t("conversation.interpreterAsk", "Ask for an interpreter")}
+    </Button>
+  );
+
+  if (dismissed) {
+    return (
+      <div className="conv-interpreter-line" role="note">
+        {t("conversation.interpreterLine", "Health, legal or money matter? A qualified interpreter is best.")} {ask}
+      </div>
+    );
+  }
 
   return (
     <Alert
@@ -47,13 +59,7 @@ export default function InterpreterNotice({ onAsk }) {
         "conversation.interpreterBody",
         "Ask for a qualified interpreter. TalkMotion helps when no interpreter is available. It does not replace one."
       )}
-      action={
-        onAsk && (
-          <Button size="small" onClick={onAsk}>
-            {t("conversation.interpreterAsk", "Ask for an interpreter")}
-          </Button>
-        )
-      }
+      action={ask}
     />
   );
 }

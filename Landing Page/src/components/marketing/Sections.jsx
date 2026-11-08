@@ -66,7 +66,7 @@ export const STEPS = [
   {
     n: "04",
     title: "It speaks for you",
-    body: "In a natural voice you choose. The other person hears you at conversation speed.",
+    body: "In a natural voice you choose from a list. The other person hears you at conversation speed.",
   },
 ];
 
@@ -118,7 +118,7 @@ export function Wedges() {
     <div className="wedges">
       <article className="wedge">
         <span className="eyebrow">If you are Deaf or hard of hearing</span>
-        <h3>The counter, the clinic, the call</h3>
+        <h3>The counter, the clinic, the front desk</h3>
         <p>
           Short conversations where no interpreter is present. Read what they say as captions, answer from your
           phone, and confirm before anything is spoken.
@@ -145,7 +145,7 @@ export function Wedges() {
 export function VenueTimeline() {
   const items = [
     { pill: "Day one", title: "A tablet at the counter", body: "Open the app, sign in, done. No install, no IT ticket." },
-    { pill: "Week one", title: "Staff walkthrough", body: "Twenty minutes. Speak normally. Wait for the reply. That is the training." },
+    { pill: "Week one", title: "A twenty-minute staff guide", body: "Speak normally. Wait for the reply. Our printable guide covers the rest, with a practice run." },
     { pill: "Every visit", title: "Served without the wait", body: "The customer reads your words as captions and answers from the tablet or their own phone." },
     { pill: "Every reply", title: "They confirm. It speaks.", body: "Your customer stays in control of every word said on their behalf.", hot: true },
   ];

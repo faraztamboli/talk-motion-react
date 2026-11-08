@@ -14,14 +14,20 @@ const CLAIMS = [
   { claim: "Suggested replies you can tap, edit or ignore", status: "live" },
   { claim: "Nothing is spoken until you tap Speak", status: "live" },
   { claim: "Natural voice output in under a second", status: "live" },
+  { claim: "Choose the voice your replies are spoken in", status: "live" },
+  { claim: "Captions say who said what, even on a shared phone", status: "live" },
   { claim: "Join a conversation from a second phone by code", status: "live" },
   { claim: "Works in a phone browser, nothing to install", status: "live" },
+  { claim: "A reminder in every conversation to ask for an interpreter when it matters", status: "live" },
+  { claim: "Your transcripts: save them as text, or delete them for good", status: "live" },
+  { claim: "Tap a word in a caption to see a sign video, where we have one", status: "live" },
+  { claim: "Pharmacies and clinics: staff accounts and a monthly summary that counts, never reads", status: "live" },
   { claim: "Quick-phrase sets for the doctor, the pharmacy, work", status: "soon" },
   { claim: "Your own cloned voice, with recorded consent", status: "soon" },
   { claim: "Fingerspelling and number recognition", status: "soon" },
-  { claim: "Tap a word to see it signed by a Deaf signer", status: "soon" },
+  { claim: "Sign videos recorded by Deaf signers for common words", status: "soon" },
   { claim: "Sign recognition for a curated vocabulary (draft you confirm)", status: "soon" },
-  { claim: "Reads continuous signing", status: "no" },
+  { claim: "Reads continuous signing (as a draft you confirm)", status: "soon" },
   { claim: "Replaces interpreters", status: "no" },
   { claim: "Animated signing avatar", status: "no" },
 ];
@@ -65,20 +71,21 @@ function OpenBuild(props) {
           </p>
         </Section>
 
-        <Section alt eyebrow="Our policies" title="Three rules we hold ourselves to">
+        <Section alt eyebrow="Our policies" title="Four rules we hold ourselves to">
           <div className="cols">
             <div>
               <h3>You control every word</h3>
               <p className="muted" style={{ fontSize: "1.05rem" }}>
-                No code path in TalkMotion speaks on your behalf without your tap. Suggestions are drafts. If we ever
-                add sign recognition, it will produce drafts too.
+                In a conversation, nothing is spoken on your behalf without your tap. Suggestions are drafts. If we add
+                sign recognition, it will produce drafts too. One exception remains: the older Translator page from our
+                first prototype speaks recognized signs directly. It is not part of Conversation Mode.
               </p>
             </div>
             <div>
               <h3>Interpreters come first</h3>
               <p className="muted" style={{ fontSize: "1.05rem" }}>
-                TalkMotion does not replace interpreters. For medical, legal and financial conversations, book one. We
-                are adding a reminder inside the app that says the same.
+                TalkMotion does not replace interpreters. For medical, legal and financial conversations, book one.
+                Every conversation shows a reminder that says the same, with a one-tap request.
               </p>
             </div>
             <div>
@@ -89,10 +96,11 @@ function OpenBuild(props) {
               </p>
             </div>
             <div>
-              <h3>Consent for voices and data</h3>
+              <h3>Your data stays yours</h3>
               <p className="muted" style={{ fontSize: "1.05rem" }}>
-                Cloned voices will require your recorded consent. Conversations are yours. Any contribution to improving
-                recognition is opt-in and credited.
+                Conversations are yours to save or delete in My conversations. Cloned voices will require your recorded
+                consent. If we ever ask for recordings to improve recognition, it will be opt-in and credited. This
+                website counts visits per day without cookies or ad trackers, and never stores your IP address.
               </p>
             </div>
           </div>
@@ -105,7 +113,7 @@ function OpenBuild(props) {
         >
           <ul className="list">
             <li>Use TalkMotion in a real situation and tell us what went wrong.</li>
-            <li>Tell us when our wording is off. Words like "translate" or "hearing-impaired" have already been removed because people asked.</li>
+            <li>Tell us when our wording is off. We already took "translate" off this site because it promised more than the tool does.</li>
             <li>If you sign on camera, you can record the ASL version of a page so this site is not English-only.</li>
           </ul>
           <div className="btns" style={{ marginTop: 24 }}>

@@ -3,9 +3,8 @@ import React from "react";
 const pageContent = {
   TalkMotionDescription: (
     <p>
-      Talk-motion brings the world of Deaf and hearing people together,
-      reuniting families, friends, and colleagues with the power of artificial
-      intelligence.
+      A conversation tool for Deaf and non-speaking people. They speak, you
+      read. You answer your way. Nothing is said for you until you say so.
     </p>
   ),
   contactPageContent: (

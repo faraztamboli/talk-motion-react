@@ -30,8 +30,9 @@ function Pricing(props) {
                 <li>Plain-language rewrite</li>
                 <li>Suggested replies you tap or edit</li>
                 <li>Natural voice output, confirmed by you</li>
+                <li>Choose the voice your replies use</li>
                 <li>Join from a second phone by code</li>
-                <li>Your transcripts, kept for you</li>
+                <li>Your transcripts, kept for you to save or delete</li>
               </ul>
               <a className="btn primary" href={`${APP}/signup`} target="_blank" rel="noreferrer">
                 Start free
@@ -44,10 +45,12 @@ function Pricing(props) {
               </div>
               <ul>
                 <li>A counter tablet set up in an afternoon</li>
-                <li>Twenty-minute staff walkthrough</li>
+                <li>
+                  A twenty-minute <Link to="/staff-guide">staff guide</Link>
+                </li>
                 <li>Customers join from their own phone</li>
-                <li>Monthly accessibility summary</li>
-                <li>Priority support</li>
+                <li>Add and remove staff yourself</li>
+                <li>Monthly accessibility summary, counts only</li>
               </ul>
               <Link className="btn secondary" to="/contact-us">
                 Ask about a pilot
@@ -63,9 +66,9 @@ function Pricing(props) {
               </div>
               <ul>
                 <li>Many locations or many staff</li>
-                <li>Admin controls and reporting</li>
-                <li>Onboarding for your team</li>
-                <li>Invoicing</li>
+                <li>Admins manage staff for each location</li>
+                <li>A monthly summary for every location</li>
+                <li>Pay by invoice</li>
               </ul>
               <Link className="btn secondary" to="/contact-us">
                 Talk to us

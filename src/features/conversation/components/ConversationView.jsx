@@ -14,6 +14,7 @@ import useConversationSocket from "../hooks/useConversationSocket";
 import useBrowserASR from "../hooks/useBrowserASR";
 import useMicStream, { micStreamSupported } from "../hooks/useMicStream";
 import useTTSPlayer from "../hooks/useTTSPlayer";
+import useVoices from "../hooks/useVoices";
 import { dispatchEnvelope, newId } from "../protocol";
 import { endConversation, fetchTranscript, listUtterances, shareConversation, transcriptToText } from "../api";
 import {
@@ -165,6 +166,8 @@ export default function ConversationView({ conversationId, getToken, guest = fal
     },
   });
 
+  const voices = useVoices(conv.ttsProvider);
+
   const onSpeak = ({ text, draft }) => {
     player.unlock(); // inside the tap, so mobile browsers allow the audio that follows
     send("speak.confirm", {
@@ -172,6 +175,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       modality: draft ? "llm_suggestion" : "typed",
       draft_text: draft?.text,
       draft_id: draft?.draftId,
+      ...(voices.voiceId ? { voice: { provider_voice_id: voices.voiceId } } : {}),
     });
     dispatch(suggestionsCleared());
   };
@@ -337,6 +341,12 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         showPlain={showPlain}
         showGloss={Boolean(settings.gloss_track)}
         tapWords={!guest}
+        device={{
+          role: conv.me?.role,
+          isOwner: Boolean(conv.me?.isOwner),
+          mode: conv.info?.mode,
+          partnerLabel: settings.partner_label,
+        }}
       />
 
       <TurnIndicator
@@ -409,6 +419,9 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         llmAvailable={conv.llmAvailable}
         disabled={status !== "open"}
         prefill={prefill}
+        voices={voices.voices}
+        voiceId={voices.voiceId}
+        onVoiceChange={voices.setVoiceId}
       />
       )}
 
