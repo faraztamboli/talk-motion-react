@@ -21,7 +21,7 @@ const ENTRIES = [
       "My conversations: save any transcript as a text file, or delete it for good.",
       "Pharmacies and clinics: a location's admin adds and removes staff, and reads a monthly summary that counts conversations and never includes what was said.",
       "A feedback page, and a \"Report a problem\" link inside every conversation.",
-      "We count visits to this website without cookies, and without storing IP addresses.",
+      "We count visits to this website without cookies, and our visit counter does not store IP addresses.",
     ],
   },
   {

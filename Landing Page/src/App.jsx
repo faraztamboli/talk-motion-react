@@ -21,6 +21,7 @@ import Feedback from "./pages/Feedback";
 function usePageviews() {
   const { pathname } = useLocation();
   useEffect(() => {
+    if (pathname === "/guide") return; // redirects to /how-it-works, which is counted
     track("pageview");
   }, [pathname]);
 }

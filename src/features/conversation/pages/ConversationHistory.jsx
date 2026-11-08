@@ -57,7 +57,7 @@ export default function ConversationHistory() {
         <Typography.Paragraph type="secondary">
           {t(
             "conversation.historyHelp",
-            "Your transcripts are kept here for you. Save one as a text file, or delete it for good."
+            "Your transcripts are kept here for you. Save one as a text file, or delete it. A deleted conversation leaves our nightly backups within 35 days."
           )}
         </Typography.Paragraph>
         {error && <Alert type="error" showIcon message={error} />}

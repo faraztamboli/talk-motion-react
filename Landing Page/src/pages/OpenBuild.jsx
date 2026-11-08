@@ -19,7 +19,7 @@ const CLAIMS = [
   { claim: "Join a conversation from a second phone by code", status: "live" },
   { claim: "Works in a phone browser, nothing to install", status: "live" },
   { claim: "A reminder in every conversation to ask for an interpreter when it matters", status: "live" },
-  { claim: "Your transcripts: save them as text, or delete them for good", status: "live" },
+  { claim: "Your transcripts: save them as text, or delete them", status: "live" },
   { claim: "Tap a word in a caption to see a sign video, where we have one", status: "live" },
   { claim: "Pharmacies and clinics: staff accounts and a monthly summary that counts, never reads", status: "live" },
   { claim: "Quick-phrase sets for the doctor, the pharmacy, work", status: "soon" },
@@ -98,9 +98,10 @@ function OpenBuild(props) {
             <div>
               <h3>Your data stays yours</h3>
               <p className="muted" style={{ fontSize: "1.05rem" }}>
-                Conversations are yours to save or delete in My conversations. Cloned voices will require your recorded
-                consent. If we ever ask for recordings to improve recognition, it will be opt-in and credited. This
-                website counts visits per day without cookies or ad trackers, and never stores your IP address.
+                Conversations are yours to save or delete in My conversations. A deleted conversation leaves our nightly
+                backups within 35 days. Cloned voices will require your recorded consent. If we ever ask for recordings
+                to improve recognition, it will be opt-in and credited. This website counts visits per day without
+                cookies or ad trackers, and our visit counter never stores your IP address.
               </p>
             </div>
           </div>

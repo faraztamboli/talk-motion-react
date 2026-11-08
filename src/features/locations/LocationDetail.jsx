@@ -85,8 +85,18 @@ export default function LocationDetail() {
   }, [locationId, loadMembers]);
 
   useEffect(() => {
+    let alive = true; // a slow answer for an earlier month must not replace this one
     setSummary(null);
-    fetchSummary(locationId, month).then(setSummary).catch((err) => setError(err.message));
+    fetchSummary(locationId, month)
+      .then((s) => {
+        if (!alive) return;
+        setSummary(s);
+        setError(null);
+      })
+      .catch((err) => alive && setError(err.message));
+    return () => {
+      alive = false;
+    };
   }, [locationId, month]);
 
   const add = async (values) => {
