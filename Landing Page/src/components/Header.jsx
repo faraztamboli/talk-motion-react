@@ -2,7 +2,6 @@ import React from "react";
 import { AlignLeftOutlined } from "@ant-design/icons";
 import { Button, Drawer } from "antd";
 import { Link } from "react-router-dom";
-import { HashLink } from "react-router-hash-link";
 import logo from "../media/images/logo_new2.png";
 import logoSmall from "../media/images/logo-small.png";
 
@@ -32,14 +31,15 @@ function Header(props) {
           <Link to="/about" className="home-header-links">
             About
           </Link>
-          <Link to="/guide" className="home-header-links">
-            Features
+          <Link to="/how-it-works" className="home-header-links">
+            How it works
           </Link>
-          {/*
-          <HashLink to="/#pricing" className="home-header-links">
+          <Link to="/pricing" className="home-header-links">
             Pricing
-          </HashLink>
-          */}
+          </Link>
+          <Link to="/open-build" className="home-header-links">
+            Open build
+          </Link>
           <Link to="/leadership" className="home-header-links">
             Our Team
           </Link>
@@ -84,7 +84,7 @@ function Header(props) {
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
               <Link
-                to="/guide"
+                to="/how-it-works"
                 className="drawer-links"
                 style={{
                   textDecoration: "none",
@@ -92,12 +92,12 @@ function Header(props) {
                   fontSize: "1.1rem",
                 }}
               >
-                Features
+                How it works
               </Link>
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
-              <HashLink
-                to="#pricing"
+              <Link
+                to="/pricing"
                 className="drawer-links"
                 style={{
                   textDecoration: "none",
@@ -106,7 +106,20 @@ function Header(props) {
                 }}
               >
                 Pricing
-              </HashLink>
+              </Link>
+            </li>
+            <li style={{ listStyle: "none", marginBottom: "1rem" }}>
+              <Link
+                to="/open-build"
+                className="drawer-links"
+                style={{
+                  textDecoration: "none",
+                  color: "#000000",
+                  fontSize: "1.1rem",
+                }}
+              >
+                Open build
+              </Link>
             </li>
             <li style={{ listStyle: "none", marginBottom: "1rem" }}>
               <Link

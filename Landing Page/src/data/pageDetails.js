@@ -1,7 +1,25 @@
 const homePageDetails = {
-  title: "TalkMotion | Home",
+  title: "TalkMotion | Talk with anyone, in your own way",
   description:
-    "TalkMotion uses AI to support communication between signing and non-signing communities. Our tools help translate between sign languages and spoken languages in environments where people may not share the same language, expanding access while honoring the richness of signing. You can create and train your own custom gestures, giving you full control over how you communicate. We work closely with Deaf ASL experts and community members to map a wide range of gestures responsibly and accurately.",
+    "TalkMotion lets a Deaf or aphonic person and a hearing person talk in real time. They speak, you read live captions. You answer by typing or tapping a suggested reply. Nothing is spoken for you until you confirm it. Free for individuals.",
+};
+
+const howItWorksPageDetails = {
+  title: "TalkMotion | How a conversation works",
+  description:
+    "Four steps: they speak and you read live captions, you answer your way, you confirm, and TalkMotion speaks for you in a natural voice. Also what TalkMotion does not do.",
+};
+
+const pricingPageDetails = {
+  title: "TalkMotion | Pricing",
+  description:
+    "TalkMotion is free for individuals who are Deaf, hard of hearing or cannot speak. Pharmacies, clinics and organizations pay per location.",
+};
+
+const openBuildPageDetails = {
+  title: "TalkMotion | Built in the open",
+  description:
+    "Exactly what TalkMotion does today and what it does not, our policies on control, interpreters and consent, and how to volunteer as a tester.",
 };
 
 const aboutPageDetails = {
@@ -42,6 +60,9 @@ const termsPageDetails = {
 
 export {
   homePageDetails,
+  howItWorksPageDetails,
+  pricingPageDetails,
+  openBuildPageDetails,
   aboutPageDetails,
   featuresPageDetails,
   contactPageDetails,

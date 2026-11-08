@@ -11,6 +11,9 @@ import ContactUs from "./pages/ContactUs";
 import About from "./pages/About";
 import Payment from "./pages/Payment";
 import NotFound from "./pages/404NotFound";
+import HowItWorks from "./pages/HowItWorks";
+import Pricing from "./pages/Pricing";
+import OpenBuild from "./pages/OpenBuild";
 
 function App() {
   const { sm, md, lg } = useResizeEvent();
@@ -19,6 +22,9 @@ function App() {
     <Routes>
       <Route path="/" element={<Home md={md} />} />
       <Route path="/guide" element={<GuidePage sm={sm} md={md} lg={lg} />} />
+      <Route path="/how-it-works" element={<HowItWorks md={md} />} />
+      <Route path="/pricing" element={<Pricing md={md} />} />
+      <Route path="/open-build" element={<OpenBuild md={md} />} />
       <Route path="/about" element={<About md={md} />} />
       <Route path="/privacy-policy" element={<PrivacyPolicy md={md} />} />
       <Route path="/terms" element={<TermsAndConditions md={md} />} />
