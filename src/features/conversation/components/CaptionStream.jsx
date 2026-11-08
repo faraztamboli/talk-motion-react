@@ -1,6 +1,18 @@
 import React, { useEffect, useRef } from "react";
 import { AudioOutlined, EditOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import SignWord from "./SignWord";
+import { normaliseWord } from "../dictionaryApi";
+
+/** Splits a final caption into words; each word with letters becomes a button. */
+function TappableText({ text }) {
+  return String(text)
+    .split(/(\s+)/)
+    .map((part, i) => {
+      const word = normaliseWord(part);
+      return word ? <SignWord key={i} raw={part} word={word} /> : part;
+    });
+}
 
 function speakerName(participants, pid, meId, t) {
   if (pid === meId) return t("conversation.you", "You");
@@ -12,7 +24,7 @@ function speakerName(participants, pid, meId, t) {
  * recognised for each speaker. Speech shows a microphone icon, typed text a pencil, so the
  * source never depends on colour.
  */
-export default function CaptionStream({ utterances, partials, participants, meId, showPlain, showGloss }) {
+export default function CaptionStream({ utterances, partials, participants, meId, showPlain, showGloss, tapWords = false }) {
   const { t } = useTranslation();
   const endRef = useRef(null);
 
@@ -45,7 +57,7 @@ export default function CaptionStream({ utterances, partials, participants, meId
                   {spoken ? t("conversation.said", "said") : t("conversation.wrote", "wrote")}
                 </span>
               </div>
-              <div className="conv-text">{u.text}</div>
+              <div className="conv-text">{tapWords ? <TappableText text={u.text} /> : u.text}</div>
               {showPlain && u.plain_text && (
                 <div className="conv-plain">
                   <strong>{t("conversation.plain", "Plain language")}:</strong> {u.plain_text}

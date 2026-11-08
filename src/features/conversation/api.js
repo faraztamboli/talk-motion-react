@@ -6,6 +6,16 @@ export function createConversation(body) {
   return apiFetch("/conversations", { method: "POST", body });
 }
 
+/** Start a captioned lesson (settings.kind="lesson"): students join one code as readers. */
+export function createLesson(classroomName) {
+  return createConversation({
+    title: `${classroomName} lesson`,
+    mode: "two_device",
+    owner_role: "partner",
+    settings: { kind: "lesson", plain_language: true },
+  });
+}
+
 export function getConversation(conversationId, token) {
   return apiFetch(`/conversations/${conversationId}`, { token });
 }

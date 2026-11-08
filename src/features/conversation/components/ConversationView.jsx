@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import CaptionStream from "./CaptionStream";
 import ComposeTray from "./ComposeTray";
 import ShareCodeModal from "./ShareCodeModal";
+import LessonPanel from "./LessonPanel";
 import { ConnectionBanner, ParticipantsBar, TurnIndicator } from "./StatusParts";
 import useConversationSocket from "../hooks/useConversationSocket";
 import useBrowserASR from "../hooks/useBrowserASR";
@@ -37,9 +38,9 @@ const SERVER_ASR_FALLBACK_CODES = new Set([
 
 function readTextSize() {
   try {
-    return localStorage.getItem(TEXT_SIZE_KEY) || "m";
+    return localStorage.getItem(TEXT_SIZE_KEY) || null;
   } catch {
-    return "m";
+    return null;
   }
 }
 
@@ -62,7 +63,8 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   const dispatch = useDispatch();
   const conv = useSelector((state) => state.conversationV2);
   const [listen, setListen] = useState(false);
-  const [textSize, setTextSize] = useState(readTextSize);
+  const [chosenSize, setChosenSize] = useState(readTextSize);
+  const [plainChoice, setPlainChoice] = useState(null);
   const [share, setShare] = useState(initialShare?.joinCode ? initialShare : null);
   const [serverAsrFailed, setServerAsrFailed] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
@@ -210,7 +212,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   };
 
   const changeTextSize = (size) => {
-    setTextSize(size);
+    setChosenSize(size);
     try {
       localStorage.setItem(TEXT_SIZE_KEY, size);
     } catch {
@@ -226,6 +228,12 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   const talkingNames = others.filter((p) => conv.partials[p.participantId]).map((p) => p.displayName);
   const typingNames = others.filter((p) => conv.typing[p.participantId]).map((p) => p.displayName);
   const settings = conv.info?.settings || {};
+  const isLesson = settings.kind === "lesson";
+  const isTeacher = isLesson && Boolean(conv.me?.isOwner);
+  const isStudent = isLesson && !conv.me?.isOwner;
+  // Students read from a distance: larger captions unless they chose otherwise.
+  const textSize = chosenSize || (isStudent ? "l" : "m");
+  const showPlain = plainChoice ?? Boolean(settings.plain_language);
 
   if (conv.ended) {
     return (
@@ -249,7 +257,10 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   }
 
   return (
-    <div className={`conv-root${guest ? " conv-guest" : ""}`} data-text-size={textSize}>
+    <div
+      className={`conv-root${guest ? " conv-guest" : ""}${isStudent ? " conv-lesson-readonly" : ""}`}
+      data-text-size={textSize}
+    >
       <div className="conv-header">
         <ParticipantsBar participants={conv.participants} meId={meId} />
         <Space wrap>
@@ -264,13 +275,21 @@ export default function ConversationView({ conversationId, getToken, guest = fal
             ]}
             aria-label={t("conversation.textSize", "Text size")}
           />
+          {isStudent && (
+            <Space>
+              <Switch checked={showPlain} onChange={setPlainChoice} aria-label={t("lesson.plain", "Plain language")} />
+              <Typography.Text>{t("lesson.plain", "Plain language")}</Typography.Text>
+            </Space>
+          )}
           {conv.me?.isOwner && (
             <>
-              <Button icon={<ShareAltOutlined />} onClick={onShare}>
-                {t("conversation.share", "Add a phone")}
-              </Button>
+              {!isLesson && (
+                <Button icon={<ShareAltOutlined />} onClick={onShare}>
+                  {t("conversation.share", "Add a phone")}
+                </Button>
+              )}
               <Button danger icon={<StopOutlined />} onClick={onEnd}>
-                {t("conversation.end", "End")}
+                {isLesson ? t("lesson.end", "End lesson") : t("conversation.end", "End")}
               </Button>
             </>
           )}
@@ -288,13 +307,16 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         />
       )}
 
+      {isTeacher && <LessonPanel conversationId={conversationId} initialShare={initialShare} />}
+
       <CaptionStream
         utterances={conv.utterances}
         partials={conv.partials}
         participants={conv.participants}
         meId={meId}
-        showPlain={Boolean(settings.plain_language)}
+        showPlain={showPlain}
         showGloss={Boolean(settings.gloss_track)}
+        tapWords={!guest}
       />
 
       <TurnIndicator
@@ -304,6 +326,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         listening={serverAsr ? mic.active : asr.listening}
       />
 
+      {!isStudent && (
       <div className="conv-tray-row">
         {serverAsr || asr.supported ? (
           <Space align="center">
@@ -352,7 +375,9 @@ export default function ConversationView({ conversationId, getToken, guest = fal
           </Typography.Text>
         )}
       </div>
+      )}
 
+      {!isLesson && (
       <ComposeTray
         onSpeak={onSpeak}
         onReject={onReject}
@@ -364,6 +389,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         llmAvailable={conv.llmAvailable}
         disabled={status !== "open"}
       />
+      )}
 
       <ShareCodeModal
         open={Boolean(share)}

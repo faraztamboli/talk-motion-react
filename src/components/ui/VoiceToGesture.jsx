@@ -6,6 +6,7 @@ import VoiceToGestureVideo from "./VoiceToGestureVideo";
 import useVoiceToGesture from "../../hooks/useVoiceToGesture";
 import { useSelector } from "react-redux";
 import useMessageApi from "../../hooks/useMessageApi";
+import { PlainLanguage } from "./PlainLanguage";
 
 export const VoiceToGesture = (props) => {
   const [fullScreen, setFullScreen] = React.useState(false);
@@ -164,6 +165,7 @@ export const VoiceToGesture = (props) => {
                   <strong style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>Transcript:</strong>{' '}
                   <span style={{ color: 'var(--color-text-secondary)' }}>{transcript}</span>
                 </p>
+                <PlainLanguage text={transcript} />
               </div>
             )}
           </>
