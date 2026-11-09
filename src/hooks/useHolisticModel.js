@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import * as cam from "@mediapipe/camera_utils";
 import JS2Py from "../remotepyjs";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -332,7 +331,10 @@ function useHolisticModel1() {
               try {
                 // MediaPipe Camera utility will use the existing video element
                 // It should not request a new stream since the video already has one
-                camera = new cam.Camera(webcamRef.current.video, {
+                // window.Camera comes from the camera_utils <script> in index.html. Importing the
+                // npm package instead breaks in production builds (Rollup mis-links its non-ESM
+                // globals: "et.Camera is not a constructor").
+                camera = new window.Camera(webcamRef.current.video, {
                   onFrame: async () => {
                     if (holisticInstance && webcamRef.current && webcamRef.current.video) {
                       try {

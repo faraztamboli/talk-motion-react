@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-export default class recording_state {
+class recording_state {
   constructor() {
     this.camcorder = null;
     this.previous_recording_end_time = 0;
