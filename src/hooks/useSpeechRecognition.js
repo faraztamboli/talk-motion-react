@@ -2,15 +2,28 @@ import { useState } from "react";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
-const mic = new SpeechRecognition();
+// Guarded: importing this module must not crash browsers without the API.
+const mic = SpeechRecognition ? new SpeechRecognition() : null;
 
-mic.continuous = true;
-mic.interimResults = true;
-mic.lang = "en-US";
+if (mic) {
+  mic.continuous = true;
+  mic.interimResults = true;
+  mic.lang = "en-US";
+}
 
 function useVoiceToGesture() {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
+  if (!mic) {
+    return {
+      startListening: () =>
+        console.error("SpeechRecognition is not available in this browser"),
+      stopListening: () => {},
+      isListening: false,
+      transcript: "",
+      setTranscript,
+    };
+  }
   mic.onstart = function (event) {
     console.log("onstart", event);
     setIsListening(true);

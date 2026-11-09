@@ -8,8 +8,28 @@ import {
   AppstoreOutlined,
 } from "@ant-design/icons";
 import "./SynchronizedVideoPlayer.css";
+import { loadYouTubeIframeAPI } from "../../features/videoSubtitles/YouTubePlayerController";
 
 const { Title, Text } = Typography;
+
+/**
+ * Single source of truth for picking the shot that covers a timestamp.
+ * Used by both the sync loop and the seek handler so they can never
+ * disagree. Prefers the latest (highest id) shot when ranges overlap.
+ */
+function findShotIndexForTime(shots, time) {
+  if (!shots?.length) return -1;
+  let bestIndex = -1;
+  for (let i = 0; i < shots.length; i++) {
+    const shot = shots[i];
+    if (time >= shot.startTime && time < shot.endTime) {
+      if (bestIndex === -1 || (shot.id ?? 0) > (shots[bestIndex].id ?? 0)) {
+        bestIndex = i;
+      }
+    }
+  }
+  return bestIndex;
+}
 
 function SynchronizedVideoPlayer({ recording, onEdit }) {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -28,8 +48,12 @@ function SynchronizedVideoPlayer({ recording, onEdit }) {
   const subtitleVideoElementRef = useRef(null);
   const youtubePlayerRef = useRef(null); // Use ref to access current YouTube player
   const playerContainerRef = useRef(null);
-  const timeUpdateIntervalRef = useRef(null);
   const syncIntervalRef = useRef(null);
+  const currentShotIndexRef = useRef(-1);
+  // Always-fresh handler for the once-bound YT onStateChange callback,
+  // avoiding the stale-closure bug where the player kept calling the first
+  // version of the handler forever.
+  const stateChangeHandlerRef = useRef(() => {});
 
   // Initialize YouTube Player
   useEffect(() => {
@@ -64,8 +88,7 @@ function SynchronizedVideoPlayer({ recording, onEdit }) {
             },
             onStateChange: (event) => {
               if (!isMounted) return;
-              console.log("YouTube state changed:", event.data);
-              handleYouTubeStateChange(event.data);
+              stateChangeHandlerRef.current(event.data);
             },
           },
         });
@@ -74,39 +97,14 @@ function SynchronizedVideoPlayer({ recording, onEdit }) {
       }
     }
 
-    // Load YouTube IFrame API if not already loaded
-    if (!window.YT) {
-      const tag = document.createElement("script");
-      tag.src = "https://www.youtube.com/iframe_api";
-      const firstScriptTag = document.getElementsByTagName("script")[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-      const originalCallback = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => {
-        if (originalCallback) originalCallback();
-        if (isMounted) {
-          initializeYouTubePlayer();
-        }
-      };
-    } else if (window.YT.Player) {
-      // API already loaded
-      initializeYouTubePlayer();
-    } else {
-      // API is loading, wait for it
-      const checkInterval = setInterval(() => {
-        if (window.YT && window.YT.Player) {
-          clearInterval(checkInterval);
-          if (isMounted) {
-            initializeYouTubePlayer();
-          }
-        }
-      }, 100);
-
-      // Timeout after 5 seconds
-      setTimeout(() => {
-        clearInterval(checkInterval);
-      }, 5000);
-    }
+    loadYouTubeIframeAPI()
+      .then(() => {
+        if (isMounted) initializeYouTubePlayer();
+      })
+      .catch((error) => {
+        console.error("Failed to load YouTube IFrame API:", error);
+        message.error("Could not load the YouTube player. Check your connection and reload.");
+      });
 
     return () => {
       isMounted = false;
@@ -202,29 +200,6 @@ function SynchronizedVideoPlayer({ recording, onEdit }) {
     }
   }, []);
 
-  // Handle YouTube player state changes
-  const handleYouTubeStateChange = useCallback((state) => {
-    // YT.PlayerState.PLAYING = 1
-    // YT.PlayerState.PAUSED = 2
-    // YT.PlayerState.ENDED = 0
-
-    if (state === 1) {
-      // Playing
-      setIsPlaying(true);
-      startSync();
-    } else if (state === 2) {
-      // Paused
-      setIsPlaying(false);
-      stopSync();
-      if (subtitleVideo) subtitleVideo.pause();
-    } else if (state === 0) {
-      // Ended
-      setIsPlaying(false);
-      stopSync();
-      if (subtitleVideo) subtitleVideo.pause();
-    }
-  }, [subtitleVideo]);
-
   // Play specific subtitle shot
   const playSubtitleShot = useCallback(
     (shotIndex, youtubeTime) => {
@@ -254,29 +229,23 @@ function SynchronizedVideoPlayer({ recording, onEdit }) {
         subtitleVideo.src = shot.videoUrl;
         subtitleVideo.load();
         
-        // Wait for video to be ready before playing
+        // Wait for video to be ready before playing. Both handlers bail if
+        // the src changed again before they fired (stale one-shot guard).
         const onLoadedData = function() {
-          console.log(`Video loaded, readyState: ${subtitleVideo.readyState}`);
+          if (subtitleVideo.src !== shot.videoUrl) return;
           const relativeTime = Math.max(0, youtubeTime - shot.startTime);
-          console.log(`Setting currentTime to ${relativeTime}`);
           subtitleVideo.currentTime = relativeTime;
           subtitleVideo.volume = isMuted ? 0 : volume;
-          
-          subtitleVideo
-            .play()
-            .then(() => {
-              console.log("Subtitle video playing successfully");
-            })
-            .catch((error) => {
-              console.error("Error playing subtitle video:", error);
-            });
+          subtitleVideo.play().catch((error) => {
+            console.error("Error playing subtitle video:", error);
+          });
         };
-        
+
         subtitleVideo.addEventListener('loadeddata', onLoadedData, { once: true });
-        
+
         // Also handle canplay event as fallback
         const onCanPlay = function() {
-          console.log(`Video can play, readyState: ${subtitleVideo.readyState}`);
+          if (subtitleVideo.src !== shot.videoUrl) return;
           if (subtitleVideo.paused) {
             const relativeTime = Math.max(0, youtubeTime - shot.startTime);
             subtitleVideo.currentTime = relativeTime;
@@ -286,7 +255,7 @@ function SynchronizedVideoPlayer({ recording, onEdit }) {
             });
           }
         };
-        
+
         subtitleVideo.addEventListener('canplay', onCanPlay, { once: true });
       } else {
         // Video already loaded, just seek and play
@@ -312,130 +281,45 @@ function SynchronizedVideoPlayer({ recording, onEdit }) {
     [subtitleVideo, recording, isMuted, volume]
   );
 
-  // Start synchronization between YouTube and subtitle videos
+  // Ref so the sync interval always calls the latest version without
+  // recreating the interval on every volume/mute change.
+  const playSubtitleShotRef = useRef(playSubtitleShot);
+  useEffect(() => {
+    playSubtitleShotRef.current = playSubtitleShot;
+  }, [playSubtitleShot]);
+
+  // Start synchronization between YouTube and subtitle videos.
+  // Single interval that also drives the time display; shot selection is
+  // shared with handleSeek via findShotIndexForTime, and the current shot
+  // index lives in a ref so the loop never sees stale state.
   const startSync = useCallback(() => {
     if (syncIntervalRef.current) {
       clearInterval(syncIntervalRef.current);
     }
 
-    console.log("Starting sync - YouTube player:", youtubePlayer, "Shots:", recording?.shots?.length, "Subtitle video:", subtitleVideo);
-
     syncIntervalRef.current = setInterval(() => {
-      // Use refs to get current values, fallback to state
-      const currentYoutubePlayer = youtubePlayerRef.current || youtubePlayer;
-      const currentSubtitleVideo = subtitleVideoRef.current || subtitleVideo;
-      
-      if (!currentYoutubePlayer || !recording?.shots?.length || !currentSubtitleVideo) {
-        if (!currentYoutubePlayer) console.log("Sync: YouTube player not ready");
-        if (!recording?.shots?.length) console.log("Sync: No shots available");
-        if (!currentSubtitleVideo) console.log("Sync: Subtitle video not ready");
-        return;
-      }
+      const currentYoutubePlayer = youtubePlayerRef.current;
+      const currentSubtitleVideo = subtitleVideoRef.current;
+      if (!currentYoutubePlayer || !recording?.shots?.length || !currentSubtitleVideo) return;
 
       try {
         const youtubeTime = currentYoutubePlayer.getCurrentTime();
-        if (isNaN(youtubeTime) || youtubeTime === 0) return;
-        
+        if (isNaN(youtubeTime)) return;
+
         setCurrentTime(youtubeTime);
 
-        // Find the appropriate shot for current time
-        // If multiple shots exist at the same time, select the latest one (highest ID)
-        let shotIndex = -1;
-        let latestShotAtTime = null;
-        let latestShotIndex = -1;
-        
-        // First pass: Find all shots that cover the current time
-        for (let i = 0; i < recording.shots.length; i++) {
-          const shot = recording.shots[i];
-          
-          // Check if this shot covers the current time (time is within shot's range)
-          if (youtubeTime >= shot.startTime && youtubeTime < shot.endTime) {
-            // If multiple shots at same time, keep track of the one with highest ID (latest)
-            if (!latestShotAtTime || shot.id > latestShotAtTime.id) {
-              latestShotAtTime = shot;
-              latestShotIndex = i;
-            }
-          }
-        }
-        
-        // If we found a shot that covers the time, use it
-        if (latestShotIndex !== -1) {
-          shotIndex = latestShotIndex;
-        } else {
-          // Fallback: Find the shot that starts before or at this time and is closest
-          // (for edge cases where time is exactly at shot boundary)
-          for (let i = recording.shots.length - 1; i >= 0; i--) {
-            const shot = recording.shots[i];
-            if (youtubeTime >= shot.startTime) {
-              shotIndex = i;
-              break;
-            }
-          }
-        }
+        const shotIndex = findShotIndexForTime(recording.shots, youtubeTime);
 
         if (shotIndex !== -1) {
           const shot = recording.shots[shotIndex];
-          console.log(`Sync: Found shot ${shotIndex} for time ${youtubeTime}, shot time range: ${shot.startTime}-${shot.endTime}, URL: ${shot.videoUrl}`);
-          
-          // If switching to a new shot, load it
-          if (shotIndex !== currentShotIndex) {
-            console.log(`Switching to shot ${shotIndex}`);
+          if (shotIndex !== currentShotIndexRef.current) {
+            currentShotIndexRef.current = shotIndex;
             setCurrentShotIndex(shotIndex);
-            
-            // Inline playSubtitleShot logic to avoid circular dependency
-            const shot = recording.shots[shotIndex];
-            if (shot && shot.videoUrl && currentSubtitleVideo) {
-              if (currentSubtitleVideo.src !== shot.videoUrl) {
-                console.log(`Loading new video: ${shot.videoUrl}`);
-                currentSubtitleVideo.src = shot.videoUrl;
-                currentSubtitleVideo.load();
-                
-                const onLoadedData = function() {
-                  console.log(`Video loaded, readyState: ${currentSubtitleVideo.readyState}`);
-                  const relativeTime = Math.max(0, youtubeTime - shot.startTime);
-                  console.log(`Setting currentTime to ${relativeTime}`);
-                  currentSubtitleVideo.currentTime = relativeTime;
-                  currentSubtitleVideo.volume = isMuted ? 0 : volume;
-                  currentSubtitleVideo.play().then(() => {
-                    console.log("Subtitle video playing successfully");
-                  }).catch((error) => {
-                    console.error("Error playing subtitle video:", error);
-                  });
-                };
-                
-                currentSubtitleVideo.addEventListener('loadeddata', onLoadedData, { once: true });
-                
-                const onCanPlay = function() {
-                  if (currentSubtitleVideo.paused) {
-                    const relativeTime = Math.max(0, youtubeTime - shot.startTime);
-                    currentSubtitleVideo.currentTime = relativeTime;
-                    currentSubtitleVideo.volume = isMuted ? 0 : volume;
-                    currentSubtitleVideo.play().catch((error) => {
-                      console.error("Error playing subtitle video (canplay):", error);
-                    });
-                  }
-                };
-                
-                currentSubtitleVideo.addEventListener('canplay', onCanPlay, { once: true });
-              } else {
-                console.log("Video already loaded, seeking and playing");
-                const relativeTime = Math.max(0, youtubeTime - shot.startTime);
-                currentSubtitleVideo.currentTime = relativeTime;
-                currentSubtitleVideo.volume = isMuted ? 0 : volume;
-                if (currentSubtitleVideo.readyState >= 2) {
-                  currentSubtitleVideo.play().then(() => {
-                    console.log("Subtitle video playing (already loaded)");
-                  }).catch((error) => {
-                    console.error("Error playing subtitle video (already loaded):", error);
-                  });
-                }
-              }
-            }
+            playSubtitleShotRef.current(shotIndex, youtubeTime);
           } else {
-            // Update subtitle video time to stay in sync
+            // Same shot: nudge only when drifted noticeably.
             const relativeTime = Math.max(0, youtubeTime - shot.startTime);
             const maxTime = shot.duration || (shot.endTime - shot.startTime);
-            
             if (relativeTime <= maxTime) {
               const timeDiff = Math.abs(currentSubtitleVideo.currentTime - relativeTime);
               if (timeDiff > 0.3) {
@@ -443,19 +327,18 @@ function SynchronizedVideoPlayer({ recording, onEdit }) {
               }
             }
           }
-        } else if (currentShotIndex !== -1) {
-          // No shot found for current time, pause subtitle video
-          console.log(`No shot found for time ${youtubeTime}`);
+        } else if (currentShotIndexRef.current !== -1) {
+          currentShotIndexRef.current = -1;
           setCurrentShotIndex(-1);
-          if (currentSubtitleVideo && !currentSubtitleVideo.paused) {
+          if (!currentSubtitleVideo.paused) {
             currentSubtitleVideo.pause();
           }
         }
       } catch (error) {
         console.error("Sync error:", error);
       }
-    }, 100); // Check every 100ms for smooth synchronization
-  }, [youtubePlayer, recording, currentShotIndex, subtitleVideo, isMuted, volume]);
+    }, 100);
+  }, [recording]);
 
   const stopSync = useCallback(() => {
     if (syncIntervalRef.current) {
@@ -464,35 +347,30 @@ function SynchronizedVideoPlayer({ recording, onEdit }) {
     }
   }, []);
 
-  // Update current time display
+  // Handle YouTube player state changes.
+  // PLAYING = 1, PAUSED = 2, ENDED = 0
+  const handleYouTubeStateChange = useCallback((state) => {
+    if (state === 1) {
+      setIsPlaying(true);
+      startSync();
+    } else if (state === 2 || state === 0) {
+      setIsPlaying(false);
+      stopSync();
+      if (subtitleVideoRef.current) subtitleVideoRef.current.pause();
+    }
+  }, [startSync, stopSync]);
+
+  // Keep the once-bound YT callback pointed at the latest handler,
+  // avoiding the stale-closure bug where the player kept calling the
+  // first version of the handler forever.
   useEffect(() => {
-    if (!isPlaying) return;
+    stateChangeHandlerRef.current = handleYouTubeStateChange;
+  }, [handleYouTubeStateChange]);
 
-    timeUpdateIntervalRef.current = setInterval(() => {
-      if (youtubePlayer) {
-        try {
-          const time = youtubePlayer.getCurrentTime();
-          setCurrentTime(time);
-        } catch (error) {
-          // YouTube player might not be ready
-        }
-      }
-    }, 100);
-
-    return () => {
-      if (timeUpdateIntervalRef.current) {
-        clearInterval(timeUpdateIntervalRef.current);
-      }
-    };
-  }, [isPlaying, youtubePlayer]);
-
-  // Cleanup on unmount
+  // Cleanup on unmount (the sync interval also drives the time display)
   useEffect(() => {
     return () => {
       stopSync();
-      if (timeUpdateIntervalRef.current) {
-        clearInterval(timeUpdateIntervalRef.current);
-      }
     };
   }, [stopSync]);
 
@@ -514,18 +392,15 @@ function SynchronizedVideoPlayer({ recording, onEdit }) {
     youtubePlayer.seekTo(value, true);
     setCurrentTime(value);
 
-    // Update subtitle video if needed
+    // Update subtitle video using the same shot selection as the sync loop
     if (recording?.shots?.length && subtitleVideo) {
-      const shotIndex = recording.shots.findIndex(
-        (shot, index) =>
-          value >= shot.startTime &&
-          (index === recording.shots.length - 1 ||
-            value < recording.shots[index + 1].startTime)
-      );
-
+      const shotIndex = findShotIndexForTime(recording.shots, value);
+      currentShotIndexRef.current = shotIndex;
+      setCurrentShotIndex(shotIndex);
       if (shotIndex !== -1) {
-        setCurrentShotIndex(shotIndex);
         playSubtitleShot(shotIndex, value);
+      } else if (!subtitleVideo.paused) {
+        subtitleVideo.pause();
       }
     }
   };

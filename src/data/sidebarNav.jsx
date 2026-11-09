@@ -196,7 +196,7 @@ const items = [
   getItem(
     "Trainer",
     "3",
-    <Link to="/trainer">
+    <Link to="/trainer/collect">
       <DesktopOutlined />
     </Link>,
     [

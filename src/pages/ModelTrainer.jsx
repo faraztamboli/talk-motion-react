@@ -170,7 +170,13 @@ function ModelTrainer(props) {
                     percent={
                       isTrainingComplete
                         ? 100
-                        : Math.ceil((currentProgress / totalProgress) * 100)
+                        : // job-queue logs have a variable message count, so the
+                          // old fixed-total math can overshoot; hold at 99 until
+                          // the job reports complete
+                          Math.min(
+                            99,
+                            Math.ceil((currentProgress / (totalProgress || 12)) * 100)
+                          )
                     }
                     status={isTrainingComplete ? "success" : "active"}
                     strokeColor={isTrainingComplete ? undefined : {
@@ -180,9 +186,9 @@ function ModelTrainer(props) {
                     style={{ marginBottom: "var(--spacing-xs)" }}
                   />
                   <Text type="secondary" style={{ fontSize: "var(--font-size-sm)" }}>
-                    {isTrainingComplete 
-                      ? "Training completed successfully!" 
-                      : `Processing: ${currentProgress} of ${totalProgress} steps`}
+                    {isTrainingComplete
+                      ? "Training completed successfully!"
+                      : `Training in progress — ${currentProgress} update${currentProgress === 1 ? "" : "s"} received`}
                   </Text>
                 </div>
               )}

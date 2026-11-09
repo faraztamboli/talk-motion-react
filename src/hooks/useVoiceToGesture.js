@@ -1,9 +1,11 @@
-import { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import JS2Py from "../remotepyjs";
+import { addConversationEntry } from "../app/features/conversationSlice";
+import useLocalStorage from "./useLocalStorage";
+import useWhisperVoice from "./useWhisperVoice";
 
 // Lazy initialization of SpeechRecognition to avoid module load errors
-let mic = null;
 let SpeechRecognition = null;
 
 function getSpeechRecognition() {
@@ -11,22 +13,20 @@ function getSpeechRecognition() {
     return null;
   }
   if (!SpeechRecognition) {
-    SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
   }
   return SpeechRecognition;
 }
 
-function initializeMic() {
-  if (mic) {
-    return mic;
-  }
+function createMic() {
   const SpeechRecognitionClass = getSpeechRecognition();
   if (!SpeechRecognitionClass) {
     console.warn("SpeechRecognition is not available in this browser");
     return null;
   }
   try {
-    mic = new SpeechRecognitionClass();
+    const mic = new SpeechRecognitionClass();
     mic.continuous = true;
     mic.interimResults = true;
     mic.lang = "en-US";
@@ -37,175 +37,232 @@ function initializeMic() {
   }
 }
 
-function useSpeechRecognition() {
+/**
+ * Voice -> sign-video translation.
+ *
+ * Speech is transcribed in the browser; final transcripts are sent to
+ * TalkMotionServer.translateWordsToGestures, which resolves phrases to video
+ * URLs (including fingerspelling fallback) and returns an ordered playlist.
+ * Videos play sequentially from an explicit FIFO queue driven by the video
+ * element's `ended` event.
+ */
+function useVoiceToGesture({ playbackRate = 1.5, onGloss = null } = {}) {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
-  const [wordsToPlay, setWordsToPlay] = useState([]);
-  const [wordVideoDictionary, setWordVideoDictionary] = useState({});
   const videoRef = useRef(null);
   const micRef = useRef(null);
 
-  const { modelId } = useSelector((state) => state.model);
+  // Play queue and per-model video dictionary live in refs: they are consumed
+  // by event handlers (video.onended, mic.onresult) where stale-closure state
+  // would drop or replay words.
+  const queueRef = useRef([]); // words/phrases waiting to play, in order
+  const dictionaryRef = useRef({}); // word -> { remote_url, ... } for current model
+  const isPlayingRef = useRef(false);
+  const playbackRateRef = useRef(playbackRate);
+  playbackRateRef.current = playbackRate;
 
-  // Initialize mic on mount
+  const { modelId } = useSelector((state) => state.model);
+  const modelIdRef = useRef(modelId);
+  const dispatch = useDispatch();
+  const [token] = useLocalStorage("token");
+  const tokenRef = useRef(token);
+  tokenRef.current = token;
+  // When set, gloss sequences go to this callback (e.g. the signing avatar)
+  // instead of the sign-video play queue.
+  const onGlossRef = useRef(onGloss);
+  onGlossRef.current = onGloss;
+
+  // Reset cached dictionary and pending queue when the model changes.
   useEffect(() => {
-    micRef.current = initializeMic();
-    if (micRef.current) {
-      micRef.current.onstart = function (event) {
-        console.log("onstart", event);
-        setIsListening(true);
-      };
-      micRef.current.onend = function (event) {
-        console.log("onend", event);
-        setIsListening(false);
-      };
-      micRef.current.onerror = function (event) {
-        console.log("onerrror", event);
-      };
+    if (modelIdRef.current !== modelId) {
+      modelIdRef.current = modelId;
+      dictionaryRef.current = {};
+      queueRef.current = [];
+      isPlayingRef.current = false;
     }
-    return () => {
-      if (micRef.current) {
-        try {
-          micRef.current.stop();
-        } catch (e) {
-          // Ignore errors on cleanup
-        }
+  }, [modelId]);
+
+  const playNext = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) {
+      isPlayingRef.current = false;
+      return;
+    }
+    // Skip queue entries with no video (unresolvable words/letters).
+    let word;
+    while (queueRef.current.length > 0) {
+      const candidate = queueRef.current.shift();
+      if (candidate && dictionaryRef.current[candidate]) {
+        word = candidate;
+        break;
       }
-    };
+    }
+    if (!word) {
+      isPlayingRef.current = false;
+      return;
+    }
+    isPlayingRef.current = true;
+    // (Re)assign here rather than in an effect: the video element may not be
+    // mounted yet when the hook first runs (fullscreen remount, lazy render).
+    video.onended = () => playNext();
+    video.onerror = () => playNext(); // a broken URL must not stall the queue
+    video.classList.remove("bg-black");
+    video.src = dictionaryRef.current[word].remote_url;
+    video.playbackRate = playbackRateRef.current;
+    video.load();
+    const promise = video.play();
+    if (promise !== undefined) {
+      promise.catch(() => {
+        // Autoplay blocked: retry muted so the sequence keeps flowing.
+        video.muted = true;
+        video.play().catch(() => {
+          isPlayingRef.current = false;
+        });
+      });
+    }
   }, []);
 
-  // Helper functions - defined before useEffects that use them
-  function playWord(word) {
-    if (wordVideoDictionary[modelId] !== undefined) {
-      if (word in wordVideoDictionary[modelId]) {
-        if (videoRef.current) {
-          // Ensure video has dimensions before loading
-          if (!videoRef.current.width || videoRef.current.width === 0) {
-            videoRef.current.width = videoRef.current.offsetWidth || 640;
+  // One path for final transcripts regardless of which engine produced them.
+  const handleFinalTranscript = useCallback(
+    (finalTranscript) => {
+      setTranscript(finalTranscript);
+      if (!finalTranscript) return;
+      dispatch(addConversationEntry({ source: "voice", text: finalTranscript }));
+      // Translate English to ASL gloss order first (LLM on the server, with
+      // server- and client-side fallbacks to a plain word split), so playback
+      // signs ASL rather than word-for-word English.
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.englishToGloss(
+          tokenRef.current,
+          finalTranscript,
+          function (res) {
+            const gloss =
+              res && Array.isArray(res.gloss) && res.gloss.length > 0
+                ? res.gloss
+                : finalTranscript.split(" ");
+            if (onGlossRef.current) {
+              onGlossRef.current(gloss);
+            } else {
+              translateAndEnqueueRef.current(gloss);
+            }
           }
-          if (!videoRef.current.height || videoRef.current.height === 0) {
-            videoRef.current.height = videoRef.current.offsetHeight || 360;
-          }
-          
-          videoRef.current.classList.remove("bg-black");
-          videoRef.current.src = wordVideoDictionary[modelId][word]["remote_url"];
-          videoRef.current.defaultPlaybackRate = 2.0;
-          videoRef.current.load();
-          let promise = videoRef.current.play();
-          if (promise !== undefined) {
-            promise
-              .catch((error) => {
-                // Auto-play was prevented
-                // Show a UI element to let the user manually start playback
-                console.log(error);
-                videoRef.current.muted = true;
-                videoRef.current.play();
-              })
-              .then(() => {
-                // Auto-play started
-              });
-          }
-        }
-      } else {
-        //TODO: if word is not in the dictionary then try fingerspelling it
-        // for this you need to get all alphabets in initial call
-        word = wordsToPlay.shift();
-        if (word !== undefined) {
-          playWord(word);
+        );
+      } catch (err) {
+        console.error("englishToGloss failed, using raw words:", err);
+        const gloss = finalTranscript.split(" ");
+        if (onGlossRef.current) {
+          onGlossRef.current(gloss);
+        } else {
+          translateAndEnqueueRef.current(gloss);
         }
       }
-    }
-  }
+    },
+    [dispatch]
+  );
 
-  function special_shift(words) {
-    let separator = " ";
-    let i = 0;
-    let j = 0;
-    while (j < words.length) {
-      let phrase_to_remove =
-        j > 0 ? words.slice(i, -j).join(separator) : words.join(separator);
-      if (wordVideoDictionary[modelId] === undefined) {
-        let word_to_remove = words[0];
-        words = words.length > 0 ? words.slice(1) : null;
-        return [word_to_remove, words];
-      }
-      if (phrase_to_remove in wordVideoDictionary[modelId]) {
-        // remove selected phrase
-        words = j > 0 ? words.slice(-j) : null;
-        return [phrase_to_remove, words];
-      }
-      j++;
-    }
-    let word_to_remove = words[0];
-    words = words.length > 0 ? words.slice(1) : null;
-    return [word_to_remove, words];
-  }
+  // Whisper engine (server-side transcription): accurate and cross-browser.
+  const whisper = useWhisperVoice({ onTranscript: handleFinalTranscript });
+  // 'whisper' | 'webspeech' — decided once per session from server capability
+  // + browser support; Web Speech is the fallback.
+  const engineRef = useRef(null);
 
-  function getVideo(words) {
-    let short_list = [];
-    let locally_available_words = [];
-    for (let i in words) {
-      if (
-        wordVideoDictionary[modelId] === undefined ||
-        !(words[i] in wordVideoDictionary[modelId]) || true
-      ) {
-        short_list.push(words[i]);
-      } else {
-        locally_available_words.push(words[i]);
-      }
-    }
-
-    if (short_list === undefined || short_list.length == 0) {
-      setWordsToPlay((prevState) => [prevState, ...words]);
-      let word = wordsToPlay.shift();
-      if (word !== undefined) {
-        playWord(word);
-      }
-    } else {
-      // console.log("Dict", wordVideoDictionary);
+  const translateAndEnqueueRef = useRef(() => {});
+  const translateAndEnqueue = useCallback(
+    (words) => {
       const micLang = micRef.current ? micRef.current.lang : "en-US";
       JS2Py.PythonFunctions.TalkMotionServer.translateWordsToGestures(
-        modelId,
-        short_list,
+        modelIdRef.current,
+        words,
         micLang,
         function (result) {
-          // console.log(result);
-          words = result[1];
-          result = result[0];
-          for (let key in result) {
-            setWordVideoDictionary((prevState) => ({
-              ...prevState,
-              [modelId]: { ...prevState[modelId], [key]: result[key] },
-            }));
-          }
-          if (locally_available_words.length > 0) {
-            words = locally_available_words.concat(words);
-          }
-          setWordsToPlay((prevState) => [prevState, ...words]);
-          let word = wordsToPlay.shift();
-          // console.log(word);
-          if (word !== undefined) {
-            playWord(word);
+          if (!result) return;
+          const wordDictionary = result[0] || {};
+          const playlist = result[1] || [];
+          Object.keys(wordDictionary).forEach((key) => {
+            dictionaryRef.current[key] = wordDictionary[key];
+          });
+          queueRef.current.push(...playlist);
+          if (!isPlayingRef.current) {
+            playNext();
           }
         }
       );
-    }
+    },
+    [playNext]
+  );
+  translateAndEnqueueRef.current = translateAndEnqueue;
+
+  // Create the Web Speech mic once (fallback engine) and wire its handlers.
+  useEffect(() => {
+    micRef.current = createMic();
+    const mic = micRef.current;
+    if (!mic) return undefined;
+
+    mic.onstart = () => setIsListening(true);
+    mic.onend = () => setIsListening(false);
+    mic.onerror = (event) => console.error("SpeechRecognition error:", event.error);
+    mic.onresult = (event) => {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const text = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          handleFinalTranscript(text.trimStart().toLowerCase());
+        } else {
+          setTranscript(text);
+        }
+      }
+    };
+
+    return () => {
+      try {
+        mic.stop();
+      } catch (e) {
+        // Ignore errors on cleanup
+      }
+    };
+  }, [handleFinalTranscript]);
+
+  // Pick the engine once: Whisper needs the server to have an API key and
+  // the browser to have MediaRecorder; otherwise Web Speech (Chrome/Edge).
+  async function resolveEngine() {
+    if (engineRef.current) return engineRef.current;
+    const mediaOk =
+      typeof MediaRecorder !== "undefined" &&
+      navigator.mediaDevices &&
+      navigator.mediaDevices.getUserMedia;
+    const serverWhisper = await new Promise((resolve) => {
+      try {
+        JS2Py.PythonFunctions.TalkMotionServer.getSpeechCapabilities(
+          tokenRef.current,
+          function (res) {
+            resolve(Boolean(res && res.whisper));
+          }
+        );
+      } catch (e) {
+        resolve(false);
+      }
+    });
+    engineRef.current = serverWhisper && mediaOk ? "whisper" : "webspeech";
+    console.log(`Speech engine: ${engineRef.current}`);
+    return engineRef.current;
   }
 
-  useEffect(() => {
-    let word = wordsToPlay.shift();
-    if (word !== undefined) {
-      playWord(word);
-    }
-  }, [wordsToPlay, modelId, wordVideoDictionary]);
-
-  function startListening() {
-    if (!micRef.current) {
-      micRef.current = initializeMic();
-      if (!micRef.current) {
-        console.error("SpeechRecognition is not available");
+  async function startListening() {
+    const engine = await resolveEngine();
+    if (engine === "whisper") {
+      setIsListening(true);
+      try {
+        await whisper.start();
         return;
+      } catch (error) {
+        // mic denied or recorder failure: try the fallback engine
+        console.warn("Whisper capture failed, falling back to Web Speech:", error);
+        engineRef.current = "webspeech";
       }
+    }
+    if (!micRef.current) {
+      console.error("No speech engine available in this browser");
+      setIsListening(false);
+      return;
     }
     setIsListening(true);
     try {
@@ -218,6 +275,7 @@ function useSpeechRecognition() {
 
   function stopListening() {
     setIsListening(false);
+    whisper.stop();
     if (micRef.current) {
       try {
         micRef.current.stop();
@@ -227,80 +285,14 @@ function useSpeechRecognition() {
     }
   }
 
-
-  // Set up onresult handler
-  useEffect(() => {
-    if (micRef.current) {
-      // Override array shift with a special shift
-      const originalShift = Array.prototype.shift;
-      Array.prototype.shift = function () {
-        // console.log(this);
-        let output = special_shift(this);
-        let phrase = output[0];
-        let remaining = output[1];
-        // pop out all elements from existing array
-        while (this.length > 0) {
-          this.pop();
-        }
-        // copy remaining elements after special shifting to this array
-        for (let i in remaining) {
-          this.push(remaining[i]);
-        }
-        // return the popped word or phrase
-        return phrase;
-      };
-
-      micRef.current.onresult = function (event) {
-        let finalTranscript = "";
-        let interimTranscript = "";
-        let results = event["results"];
-
-        for (let i = event.resultIndex; i < results.length; i++) {
-          if (event.results[i].isFinal) {
-            finalTranscript += event.results[i][0].transcript;
-            finalTranscript = finalTranscript.trimStart();
-            finalTranscript = finalTranscript.toLowerCase();
-            setTranscript(finalTranscript);
-            // console.log(finalTranscript);
-            if (finalTranscript !== "") {
-              let words = finalTranscript.split(" ");
-              getVideo(words);
-            }
-          } else {
-            interimTranscript += event.results[i][0].transcript;
-            setTranscript(interimTranscript);
-          }
-        }
-        // console.log("Final", transcript);
-      };
-
-      return () => {
-        // Restore original shift
-        Array.prototype.shift = originalShift;
-      };
-    }
-  }, [modelId, wordVideoDictionary]);
-
-  // Set up video onended handler
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.onended = (event) => {
-        // console.log(event, wordsToPlay);
-        let word = wordsToPlay.shift();
-        if (word !== undefined) {
-          playWord(word);
-        }
-      };
-    }
-  }, [wordsToPlay, modelId, wordVideoDictionary]);
-
   return {
     startListening,
     stopListening,
-    isListening,
+    isListening: isListening || whisper.isListening,
+    isTranscribing: whisper.isTranscribing,
     videoRef,
     transcript,
   };
 }
 
-export default useSpeechRecognition;
+export default useVoiceToGesture;

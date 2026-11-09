@@ -6,6 +6,7 @@ import { ModelsDropdown } from "../components/ui/ModelsDropdown";
 import { VoicesDropdown } from "../components/ui/VoicesDropdown";
 import { VoiceToGesture } from "../components/ui/VoiceToGesture";
 import { GestureToVoice } from "../components/ui/GestureToVoice";
+import { ConversationTranscript } from "../components/ui/ConversationTranscript";
 import { converterDetails } from "../data/PageDetails";
 import { useFlag } from "../hooks/useFlag";
 import useDefaultModel from "../hooks/useDefaultModel";
@@ -99,6 +100,18 @@ const Converter = (props) => {
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <GestureToVoice from="converter" />
               </div>
+            </Card>
+          </Col>
+        </Row>
+        <Row gutter={[16, 16]} style={{ marginTop: 'var(--spacing-md)' }}>
+          <Col span={24}>
+            <Card
+              className="converter-cards"
+              bodyStyle={cardBodyStyle}
+              role="region"
+              aria-label="Unified conversation transcript"
+            >
+              <ConversationTranscript />
             </Card>
           </Col>
         </Row>

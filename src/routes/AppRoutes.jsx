@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoute from "../components/PrivateRoute";
 import FlagRoute from "../components/flags/FlagRoute";
 import Login from "../pages/Login";
@@ -14,7 +14,6 @@ import MySubscriptions from "../pages/MySubscriptions";
 
 // React lazy components
 const Converter = React.lazy(() => import("../pages/Converter"));
-const Trainer = React.lazy(() => import("../pages/Trainer"));
 const Collector = React.lazy(() => import("../pages/Collector"));
 const ModelTrainer = React.lazy(() =>
   import("../pages/ModelTrainer")
@@ -152,17 +151,10 @@ function AppRoutes(props) {
           }
         />
       </Route>
+      {/* The old LeapMotion trainer page is retired; camera-based collection
+          lives at /trainer/collect */}
       <Route path="/trainer" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route
-          path="/trainer"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <Trainer collapsedWidth={collapsedWidth} sm={sm} />
-            </React.Suspense>
-          }
-        />
+        <Route path="/trainer" element={<Navigate to="/trainer/collect" replace />} />
       </Route>
       <Route path="/trainer/collect" element={<FlagRoute flag="legacy_models_visible" />}>
         <Route

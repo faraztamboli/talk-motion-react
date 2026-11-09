@@ -86,7 +86,7 @@ export class UploadManager {
         console.log(`Resuming upload for shot ${shotId}: offset=${nextOffset}, partIndex=${nextPartIndex}`);
       } else {
         // Start new upload
-        const checksum = await sha256HexOfBlob(blob).catch(() => null);
+        const checksum = await this._safeChecksum(blob);
         const initResult = await initVideoRecordingShotUpload(
           token,
           shotId,
@@ -103,7 +103,7 @@ export class UploadManager {
       console.error('Failed to get/init upload status:', err);
       // Try to initialize anyway
       try {
-        const checksum = await sha256HexOfBlob(blob).catch(() => null);
+        const checksum = await this._safeChecksum(blob);
         const initResult = await initVideoRecordingShotUpload(
           token,
           shotId,
@@ -229,6 +229,16 @@ export class UploadManager {
       }
       throw err;
     }
+  }
+
+  /**
+   * Checksum is optional server-side; skip it for large blobs so we never
+   * materialize hundreds of MB in memory just to hash them.
+   */
+  async _safeChecksum(blob) {
+    const MAX_HASHABLE = 32 * 1024 * 1024; // 32MB
+    if (blob.size > MAX_HASHABLE) return null;
+    return sha256HexOfBlob(blob).catch(() => null);
   }
 
   /**

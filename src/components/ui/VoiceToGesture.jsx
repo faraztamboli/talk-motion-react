@@ -1,20 +1,27 @@
 import React from "react";
-import { Button, Tooltip } from "antd";
+import { Button, Tooltip, Segmented } from "antd";
 import { SoundFilled } from "@ant-design/icons";
-import { MdFullscreen } from "react-icons/md";
+import { MdFullscreen, MdVideocam, MdPerson } from "react-icons/md";
 import VoiceToGestureVideo from "./VoiceToGestureVideo";
+import { AvatarCanvas } from "./AvatarCanvas";
 import useVoiceToGesture from "../../hooks/useVoiceToGesture";
+import useAvatarPlayback from "../../hooks/useAvatarPlayback";
 import { useSelector } from "react-redux";
 import useMessageApi from "../../hooks/useMessageApi";
 
 export const VoiceToGesture = (props) => {
   const [fullScreen, setFullScreen] = React.useState(false);
-
-  const { startListening, stopListening, isListening, videoRef, transcript } =
-    useVoiceToGesture();
-  const { contextHolder, showMessage } = useMessageApi();
+  // 'video' plays recorded sign clips; 'avatar' animates a 3D skeleton from
+  // this model's recorded landmark samples
+  const [playbackMode, setPlaybackMode] = React.useState("video");
 
   const { modelId } = useSelector((state) => state.model);
+  const avatar = useAvatarPlayback({ modelId });
+  const { startListening, stopListening, isListening, videoRef, transcript } =
+    useVoiceToGesture({
+      onGloss: playbackMode === "avatar" ? avatar.enqueueWords : null,
+    });
+  const { contextHolder, showMessage } = useMessageApi();
 
   const buttonSize = props.md ? "medium" : "large";
   const iconSize = props.md ? 20 : 24;
@@ -40,6 +47,49 @@ export const VoiceToGesture = (props) => {
             View gestures from speech
           </p>
         </div>
+        <div
+          style={{ marginBottom: "var(--spacing-xs)" }}
+          role="group"
+          aria-label="Sign playback mode"
+        >
+          <Segmented
+            size="small"
+            value={playbackMode}
+            onChange={setPlaybackMode}
+            options={[
+              {
+                label: "Video",
+                value: "video",
+                icon: <MdVideocam aria-hidden="true" />,
+              },
+              {
+                label: "Avatar",
+                value: "avatar",
+                icon: <MdPerson aria-hidden="true" />,
+              },
+            ]}
+            aria-label="Choose between recorded sign videos and the 3D avatar"
+          />
+        </div>
+        {playbackMode === "avatar" && (
+          <div style={{ marginBottom: "var(--spacing-xs)" }}>
+            <AvatarCanvas frame={avatar.currentFrame} />
+            <div
+              role="status"
+              aria-live="polite"
+              style={{
+                marginTop: "4px",
+                minHeight: "1.4em",
+                fontSize: "0.9rem",
+                color: "var(--color-text-secondary)",
+                textAlign: "center",
+              }}
+            >
+              {avatar.currentWord ? `Signing: ${avatar.currentWord}` : " "}
+            </div>
+          </div>
+        )}
+        <div style={{ display: playbackMode === "video" ? "block" : "none" }}>
         <VoiceToGestureVideo
           transcript={transcript}
           videoRef={videoRef}
@@ -56,6 +106,7 @@ export const VoiceToGesture = (props) => {
           md={props.md}
           sm={props.sm}
         />
+        </div>
         {fullScreen !== true && (
           <>
             <div

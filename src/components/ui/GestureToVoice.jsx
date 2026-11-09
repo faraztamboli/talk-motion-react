@@ -3,8 +3,10 @@ import { Button, Slider } from "antd";
 import { MdPause, MdPlayArrow, MdVolumeUp, MdVolumeMute } from "react-icons/md";
 import { GestureCanvs } from "./GestureCanvs";
 import useHolisticModel from "../../hooks/useHolisticModel";
+import useContinuousTranslator from "../../hooks/useContinuousTranslator";
 import { useDispatch, useSelector } from "react-redux";
 import { setVolume } from "../../app/features/speechSlice";
+import { addConversationEntry } from "../../app/features/conversationSlice";
 import useSpeechSynthesis from "../../hooks/useSpeechSynthesis";
 import { setIsModelLoading } from "../../app/features/converterSlice";
 import useMessageApi from "../../hooks/useMessageApi";
@@ -26,12 +28,15 @@ export const GestureToVoice = (props) => {
 
   const dispatch = useDispatch();
 
-  const { webcamRef, canvasRef, startHolisticModel, stopHolisticModel } = useHolisticModel();
+  const translator = useContinuousTranslator({ modelId });
+  const { webcamRef, canvasRef, startHolisticModel, stopHolisticModel } =
+    useHolisticModel({ onFrame: translator.onFrame });
 
   useEffect(() => {
     if (isSpeaking) {
       if (speakText !== undefined) {
         speak(speakText, volume);
+        dispatch(addConversationEntry({ source: "sign", text: speakText }));
       }
     }
   }, [speakText]);
@@ -121,6 +126,35 @@ export const GestureToVoice = (props) => {
           isPageActive={isPageActive}
           setIsPageActive={setIsPageActive}
         />
+        {isPlayed && (translator.words.length > 0 || translator.tentative) && (
+          <div
+            role="status"
+            aria-live="polite"
+            aria-label="Live sign captions"
+            style={{
+              marginTop: "var(--spacing-xs)",
+              padding: "var(--spacing-xs) var(--spacing-sm)",
+              backgroundColor: "var(--color-neutral-50)",
+              borderRadius: "var(--radius-md)",
+              border: "1px solid var(--color-neutral-200)",
+              fontSize: "1rem",
+              minHeight: "2em",
+            }}
+          >
+            <span style={{ color: "var(--color-text-primary)", fontWeight: 600 }}>
+              {translator.words.join(" ")}
+            </span>
+            {translator.tentative && (
+              <span
+                style={{ color: "var(--color-text-secondary)", fontStyle: "italic" }}
+                aria-label={`Tentative word: ${translator.tentative.word}`}
+              >
+                {translator.words.length > 0 ? " " : ""}
+                {translator.tentative.word}?
+              </span>
+            )}
+          </div>
+        )}
         {isPlayed && (
           <div 
             className="flex flex-center-center w-100p mb-3"
@@ -208,6 +242,7 @@ export const GestureToVoice = (props) => {
                   togglePlayed();
                   setIsPageActive(false);
                   stopHolisticModel();
+                  translator.reset();
                 }}
                 icon={<MdPause size={24} aria-hidden="true" />}
                 aria-label="Pause gesture recognition"
