@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-export default class youtube_player {
+class youtube_player {
   constructor(
     id_video_iframe,
     url,

@@ -1,0 +1,5 @@
+# The context is the whole talk-motion-react folder (node_modules included);
+# send only the two build outputs.
+*
+!dist
+!Landing Page/dist

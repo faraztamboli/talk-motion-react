@@ -1,15 +1,40 @@
-Steps to build talk-motion web app front-end react based
+Steps to build and deploy the talk-motion web app (React front-end) and landing page
 
-1. Go to: C:\Users\faruk\Projects\freelancers\bilal\talk-motion-react
-2.  npm run dev [I also did npm run build]
-3. open C:\Users\faruk\Projects\freelancers\bilal\talk-motion-react\dist\assets\useHolisticModel.xxxxxxxx.js
-4. Ctrl-F ".Camera", and replace et.Camera with B.Camera    Note: B is located in the front of the file as import{az as B,h as K   change accordingly if it is different. [Note: it could be some other letter than B, depending upon what is exported from index.xxxxxxxx.js file in this case it was ,Vt as B, ]
-5. go to C:\Users\faruk\Projects\freelancers\bilal\talk-motion-react\dist\video_subtitles_classes
-6. from each of the files camcorder.js, recording.js ... update the line: from the build (dist) folder above  from : export default class camcorder {to: class camcorder {
-7. go to C:\Users\faruk\Projects on anaconda prompt
-8. run dockerbuild.sh
-9. run kubectl delete -f alpharithmic/PycharmProjects/Alpharithmic.FundManagerWeb/deployment_web.yaml
-10. run kubectl apply -f alpharithmic/PycharmProjects/Alpharithmic.FundManagerWeb/deployment_web.yaml
+1. Go to a clean checkout of main, e.g. C:\Users\faruk\Projects\talk-motion-react
+   (git switch main && git pull; npm ci once, and once in "Landing Page")
+2. npm run deploy
+   - builds the app and the landing page into talk-motion-react\dist and
+     talk-motion-react\Landing Page\dist (the folders docker-images/web/Dockerfile copies)
+   - fails if the build has either bug that used to need hand edits in dist (see below)
+   - builds deploy/web-overlay.Dockerfile: the shared farukh/web image with only the two
+     talk-motion sites replaced, tagged farukh/web:12.2.2-ubuntu20.04-tm-<git sha>
+   - pushes it, rolls fweb-deployment to it, waits, and undoes the rollout if it fails
+   - points alpharithmic/.../deployment_web.yaml at the new tag (commit that change there)
+   Try it without shipping: npm run deploy -- --dry-run
+   Roll back: kubectl rollout undo deployment/fweb-deployment
+   History:   kubectl rollout history deployment/fweb-deployment
+
+Works from Anaconda Prompt, PowerShell or Git Bash, and from C:\ or D:\ paths.
+
+Do not hand-edit anything in dist. The old manual steps are fixed in the source:
+- "et.Camera -> B.Camera": src/hooks/useHolisticModel.js imported @mediapipe/camera_utils,
+  which is not a real ES module, and the production build mis-linked it. It now uses
+  window.Camera from the camera_utils <script> in index.html.
+- "export default class X -> class X" in dist\video_subtitles_classes: those files are
+  loaded with plain <script> tags, which can't contain `export`. The exports are removed in
+  public\video_subtitles_classes, and index.html loads them from the same deploy instead of
+  https://app.talk-motion.com.
+- Building from C:\Users\faruk\Projects failed with "The fileName or name properties of
+  emitted files must be ... neither absolute nor relative paths": C:\Users\faruk is a
+  junction to D:\Users\faruk. Both vite.config.js files now build from the real path.
+
+Full rebuild of the shared image (all sites, not just talk-motion), only when another site
+changed: run dockerbuild.sh in C:\Users\faruk\Projects (it copies the talk-motion dist folders
+that the last npm run deploy left in place), then
+kubectl set image deployment/fweb-deployment nginx=farukh/web:12.2.2-ubuntu20.04
+or, if the deployment already uses that exact tag, kubectl rollout restart deployment/fweb-deployment.
+Avoid kubectl delete + apply: it takes every site in that image offline until the new pod starts.
+The next npm run deploy overlays talk-motion on top of that new full image.
 
 
 
@@ -20,4 +45,3 @@ https://www.lifewire.com/hardware-acceleration-in-chrome-4125122
 image.png
 
 image.png
-

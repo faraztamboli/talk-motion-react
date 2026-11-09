@@ -9,11 +9,11 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint src --ext .js,.jsx"
+    "lint": "eslint src --ext .js,.jsx",
+    "deploy": "node scripts/deploy.mjs"
   },
   "dependencies": {
     "@ant-design/icons": "^4.8.0",
-    "@mediapipe/camera_utils": "^0.3.1640029074",
     "@reduxjs/toolkit": "^1.9.0",
     "@stripe/react-stripe-js": "^1.16.4",
     "@stripe/stripe-js": "^1.46.0",
