@@ -1,38 +1,23 @@
-import JS2Py from "../remotepyjs";
-
 /**
- * Promisified wrappers for the video-recording RPC functions used by the
- * sign-language subtitle designer. Mirrors the style of talkmotionUploads.js.
- * Server functions return {error: ...} on failure instead of ok:false, so we
- * reject on a present error field.
+ * Promise wrappers for the video-recording RPCs used by the Subtitle Designer. Built on rpc():
+ * server errors, failure payloads ({error}, {ok: false}, ...), timeouts and disconnects all
+ * reject with an RpcError instead of resolving as if they had worked.
  */
+import { rpc } from "./rpc";
 
-function call(fnName, args) {
-  return new Promise((resolve, reject) => {
-    JS2Py.PythonFunctions.TalkMotionServer[fnName](...args, (result) => {
-      if (!result || result.error) {
-        reject(new Error(result?.error || `${fnName} failed`));
-        return;
-      }
-      resolve(result);
-    });
-  });
-}
-
-/**
- * Create a video recording row; resolves {video_recording_id, ...}.
- */
+/** Create a recording row; resolves {video_recording_id, ...}. */
 export function createVideoRecording(token, title, description, originalVideoUrl) {
-  return call("createVideoRecording", [token, title, description, originalVideoUrl]);
+  return rpc("createVideoRecording", [token, title, description, originalVideoUrl]);
 }
 
 /**
- * Update recording metadata. Pass null to keep an existing column value.
+ * Store the source video's YouTube metadata. A null keeps the stored column (servers from
+ * 0.0.2 on; older ones overwrite with null, so pass every value you know).
  */
 export function updateVideoRecording(
   token,
   videoRecordingId,
-  originalVideoTitle,
+  originalVideoTitle = null,
   originalVideoAuthor = null,
   originalVideoQuality = null,
   originalVideoDuration = null,
@@ -40,7 +25,7 @@ export function updateVideoRecording(
   originalVideoPlaybackRate = null,
   originalVideoPlaybackQuality = null
 ) {
-  return call("updateVideoRecording", [
+  return rpc("updateVideoRecording", [
     token,
     videoRecordingId,
     originalVideoTitle,
@@ -54,27 +39,14 @@ export function updateVideoRecording(
 }
 
 /**
- * Fetch a recording (optionally with its shots); resolves the recording row.
+ * Legacy recording fetch. Resolves null for a recording that doesn't exist or isn't shared
+ * with you. Never asks for the legacy shot blobs.
  */
-export function getVideoRecording(token, recordingId, withShots) {
-  return call("getVideoRecording", [token, parseInt(recordingId, 10), withShots]);
+export function getVideoRecording(token, recordingId) {
+  return rpc("getVideoRecording", [token, Number(recordingId), false], { raw: true });
 }
 
-/**
- * Open a new shot on the server; resolves {video_recording_shot_id, ...}.
- */
-export function openVideoRecordingShot(
-  token,
-  videoRecordingId,
-  originalVideoStart,
-  recordingStart,
-  jsStart
-) {
-  return call("openVideoRecordingShot", [
-    token,
-    videoRecordingId,
-    originalVideoStart,
-    recordingStart,
-    jsStart,
-  ]);
+/** Register a segment; resolves {video_recording_shot_id, ...}. */
+export function openVideoRecordingShot(token, recordingId, originalVideoStart, recordingStart, jsStart) {
+  return rpc("openVideoRecordingShot", [token, recordingId, originalVideoStart, recordingStart, jsStart]);
 }

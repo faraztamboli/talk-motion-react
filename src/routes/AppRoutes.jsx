@@ -45,9 +45,6 @@ const VideoSubtitlesMyLibrary = React.lazy(() =>
 const VideoWithSubtitles = React.lazy(() =>
   import("../pages/VideoWithSubtitles")
 );
-const FolderManager = React.lazy(() =>
-  import("../pages/FolderManager")
-);
 const Courses = React.lazy(() => import("../pages/Courses"));
 const CourseDetail = React.lazy(() => import("../pages/CourseDetail"));
 const CourseTreeManager = React.lazy(() =>
@@ -180,6 +177,9 @@ function AppRoutes(props) {
       <Route path="/my-subscriptions" element={<Navigate to="/store/purchases" replace />} />
       <Route path="/my-models" element={<Navigate to="/models" replace />} />
       <Route path="/trainer/*" element={<Navigate to="/models" replace />} />
+
+      {/* The sidebar's Learning group used to link here; there is no page of its own. */}
+      <Route path="/video-subtitles" element={<Navigate to="/video-subtitles/mylibrary" replace />} />
 
       <Route
         path="/video-subtitles/designer"
@@ -458,22 +458,6 @@ function AppRoutes(props) {
               fallback={<Skeleton active style={skeletonStyle} />}
             >
               <Classroom collapsedWidth={collapsedWidth} />
-            </React.Suspense>
-          }
-        />
-      </Route>
-
-      <Route
-        path="/video-subtitles/folder-manager/:folderId"
-        element={<PrivateRoute />}
-      >
-        <Route
-          path="/video-subtitles/folder-manager/:folderId"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <CourseDetail collapsedWidth={collapsedWidth} />
             </React.Suspense>
           }
         />

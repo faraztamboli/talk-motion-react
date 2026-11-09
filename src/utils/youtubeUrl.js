@@ -1,7 +1,6 @@
 /**
  * Single source of truth for YouTube URL parsing/validation.
- * Replaces the ad-hoc regexes and string-index parsing that used to live in
- * VideoSubtitlesDesigner, youtubePlayer.js and SynchronizedVideoPlayer.
+ * Used by the Subtitle Designer, its viewer and libraries.
  */
 
 const VIDEO_ID_RE = /^[\w-]{11}$/;
