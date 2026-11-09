@@ -208,3 +208,41 @@ Goal: stop the bleeding and make the rest measurable.
 3. **Is the Marketplace (Stripe) in scope now?** Recommendation: move it behind the flag and out of the model pages in Phase 2, and fix payments properly as a separate project.
 4. **Is the Upload (reference video per word) feature still wanted?** The server does not use these videos for training. If not wanted, delete the page.
 5. **Single sign-on direction**: ship `loginWithApiToken` into RemotePy (fast), or build classic REST endpoints in the 2.0 API (months). The plan assumes the first.
+
+---
+
+## 8. Build conventions (revision in progress)
+
+Decisions recorded 2026-11-08: finish the WIP on branches; text captions **and** the sign-video
+overlay; Stripe in scope; reference videos per word **or phrase** stay; single sign-in as
+recommended (RemotePy trusts API tokens; linked accounts are signed in silently).
+
+Branches: frontend `feat/classic-features-rewrite` (draft PR #12), backend
+`feat/classic-backend` in `talkmotion`. Nothing is deployed until the backend image
+`0.0.2-classic` is rolled out (see `server/docs/deploy-classic.md`).
+
+Frontend patterns, all new code:
+- **Server calls:** `rpc(name, args, opts)` from `src/api/rpc.js` (rejects transport errors and
+  failure payloads with `RpcError`), `hasRpc(name)` to detect server features, `sessionToken()`,
+  `unwrapList()`, `rpcErrorMessage(err, fallback)` for anything shown to people. Never call
+  `JS2Py.PythonFunctions` in new code.
+- **Data:** RTK Query endpoints injected into `classicApi` (`src/app/classicApi.js`) from the
+  feature's own `*Api.js`; mutations invalidate tags instead of manual refetches.
+- **Camera / landmarks:** `useLandmarker` + `LandmarkerView` from `src/features/landmarks`. The
+  old `useHolisticModel` is removed once its last consumer migrates.
+- **Models:** `ModelPicker` + `normalizeModel` from `src/features/models`. Pages hold their own
+  selected model (URL or local state), not the global `state.model.modelId`.
+- **Errors:** `ErrorBoundary` (`compact` for a card or panel). Every async action shows a
+  result: success, a message from `rpcErrorMessage`, or a retry.
+- **Text:** `useTranslation()` with `t("area.key", "English fallback")`; don't edit `en.json`
+  in parallel branches.
+- **Styles:** a CSS file next to the feature (`features/<area>/<area>.css`), class prefix `tm-`;
+  no new inline style objects, no additions to `src/index.css`.
+- **Tests:** vitest + Testing Library next to the code; pure logic in plain modules.
+
+Backend patterns (`server/talkmotion`):
+- New RPCs are additive: never change an existing function's return shape (the live frontend
+  still calls it); add a new function instead. New trailing parameters need defaults.
+- Every RPC checks access (`ensure_can_use`, `ensure_can_train`, ownership) before touching
+  data, and returns plain dicts/lists (no JSON strings, no `None` on success).
+- Tests in `server/talkmotion/tests/`, run inside the image (see the test file header).
