@@ -7,13 +7,30 @@ import { speechIdHex } from "../protocol";
  *   speak.fallback {text}               -> the browser's own speechSynthesis
  * onStart/onEnd drive the visual "speaking for you" indicator.
  */
-export default function useTTSPlayer({ lang = "en-US", onStart, onEnd } = {}) {
+/**
+ * A voice that runs on the device. Some browsers offer network voices (for example Chrome's
+ * "Google" voices on desktop), which send the text to the browser maker.
+ */
+export function pickLocalVoice(voices, lang) {
+  const local = (voices || []).filter((v) => v.localService);
+  const base = String(lang || "").slice(0, 2).toLowerCase();
+  return (
+    local.find((v) => v.default && String(v.lang).toLowerCase().startsWith(base)) ||
+    local.find((v) => String(v.lang).toLowerCase() === String(lang).toLowerCase()) ||
+    local.find((v) => String(v.lang).toLowerCase().startsWith(base)) ||
+    null
+  );
+}
+
+export default function useTTSPlayer({ lang = "en-US", onStart, onEnd, localVoiceOnly = false } = {}) {
   const buffers = useRef(new Map());
   const queue = useRef([]);
   const playing = useRef(false);
   const audioRef = useRef(null);
   const callbacks = useRef({});
-  callbacks.current = { onStart, onEnd };
+  // Read at play time: private mode is known only after hello.ack, and the language may not
+  // change, so memoized callbacks must not capture the first render's value.
+  callbacks.current = { onStart, onEnd, localVoiceOnly };
 
   const playNext = useCallback(() => {
     const item = queue.current.shift();
@@ -37,6 +54,14 @@ export default function useTTSPlayer({ lang = "en-US", onStart, onEnd } = {}) {
       }
       const utterance = new SpeechSynthesisUtterance(item.text);
       utterance.lang = lang;
+      if (callbacks.current.localVoiceOnly) {
+        const voice = pickLocalVoice(synth.getVoices?.(), lang);
+        if (!voice) {
+          done(); // no on-device voice: the words stay on screen instead
+          return;
+        }
+        utterance.voice = voice;
+      }
       utterance.onend = done;
       utterance.onerror = done;
       synth.speak(utterance);

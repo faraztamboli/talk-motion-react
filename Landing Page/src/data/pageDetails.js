@@ -1,13 +1,48 @@
 const homePageDetails = {
-  title: "TalkMotion | Home",
+  title: "TalkMotion | Talk with anyone, in your own way",
   description:
-    "TalkMotion uses AI to support communication between signing and non-signing communities. Our tools help translate between sign languages and spoken languages in environments where people may not share the same language, expanding access while honoring the richness of signing. You can create and train your own custom gestures, giving you full control over how you communicate. We work closely with Deaf ASL experts and community members to map a wide range of gestures responsibly and accurately.",
+    "TalkMotion lets a Deaf or aphonic person and a hearing person talk in real time. They speak, you read live captions. You answer by typing or tapping a suggested reply. Nothing is spoken for you until you confirm it. Free for individuals.",
+};
+
+const howItWorksPageDetails = {
+  title: "TalkMotion | How a conversation works",
+  description:
+    "Four steps: they speak and you read live captions, you answer your way, you confirm, and TalkMotion speaks for you in a natural voice. Also what TalkMotion does not do.",
+};
+
+const pricingPageDetails = {
+  title: "TalkMotion | Pricing",
+  description:
+    "TalkMotion is free for individuals who are Deaf, hard of hearing or cannot speak. Pharmacies, clinics and organizations pay per location.",
+};
+
+const feedbackPageDetails = {
+  title: "TalkMotion | Feedback and volunteers",
+  description:
+    "Report a wrong caption, a bad suggestion or wording that should change, or volunteer as a TalkMotion tester. Every message is read.",
+};
+
+const changelogPageDetails = {
+  title: "TalkMotion | Changelog",
+  description: "What people told us and what we changed, every month, in plain words.",
+};
+
+const staffGuidePageDetails = {
+  title: "TalkMotion | Staff guide",
+  description:
+    "A twenty-minute guide for pharmacy and clinic staff: serving a Deaf or non-speaking customer with TalkMotion, with a practice run.",
+};
+
+const openBuildPageDetails = {
+  title: "TalkMotion | Built in the open",
+  description:
+    "Exactly what TalkMotion does today and what it does not, our policies on control, interpreters and consent, and how to volunteer as a tester.",
 };
 
 const aboutPageDetails = {
   title: "TalkMotion | About",
   description:
-    "TalkMotion helps bridge communication between signing and non-signing communities. Our work is grounded in respect for Deaf culture and language, using AI to support clearer interactions in families, schools, workplaces, and public spaces where sign language may not yet be understood.",
+    "How TalkMotion started, what we learned from the first prototype, and what it is now: a conversation tool where the Deaf or non-speaking person controls every word said for them.",
 };
 
 const featuresPageDetails = {
@@ -31,7 +66,7 @@ const faqPageDetails = {
 const privacyPolicyPageDetails = {
   title: "TalkMotion | Privacy Policy",
   description:
-    "TalkMotion was created to help bridge communication gaps in settings where sign language may not be widely understood. Our Privacy Policy explains how we collect, use, and protect your information as we deliver tools that support accessible communication across diverse language communities.",
+    "What TalkMotion collects, why, who else handles it, how long we keep it, and what you can do about it. In plain words.",
 };
 
 const termsPageDetails = {
@@ -42,6 +77,12 @@ const termsPageDetails = {
 
 export {
   homePageDetails,
+  howItWorksPageDetails,
+  pricingPageDetails,
+  openBuildPageDetails,
+  feedbackPageDetails,
+  changelogPageDetails,
+  staffGuidePageDetails,
   aboutPageDetails,
   featuresPageDetails,
   contactPageDetails,

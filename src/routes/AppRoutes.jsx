@@ -92,6 +92,12 @@ const ConversationPage = React.lazy(() =>
   import("../features/conversation/pages/ConversationPage")
 );
 const JoinPage = React.lazy(() => import("../features/conversation/pages/JoinPage"));
+const ConversationHistory = React.lazy(() =>
+  import("../features/conversation/pages/ConversationHistory")
+);
+const LocationsPage = React.lazy(() => import("../features/locations/LocationsPage"));
+const LocationDetail = React.lazy(() => import("../features/locations/LocationDetail"));
+const AnalyticsPage = React.lazy(() => import("../features/admin/AnalyticsPage"));
 const GuestConversationPage = React.lazy(() =>
   import("../features/conversation/pages/GuestConversationPage")
 );
@@ -722,10 +728,48 @@ function AppRoutes(props) {
           }
         />
         <Route
+          path="history"
+          element={
+            <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
+              <ConversationHistory />
+            </React.Suspense>
+          }
+        />
+        <Route
           path=":conversationId"
           element={
             <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
               <ConversationPage />
+            </React.Suspense>
+          }
+        />
+      </Route>
+
+      {/* Venue locations (pharmacies, clinics) and platform analytics: API session only. */}
+      <Route path="/locations" element={<PrivateRoute auth="api" />}>
+        <Route
+          path="/locations"
+          element={
+            <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
+              <LocationsPage />
+            </React.Suspense>
+          }
+        />
+        <Route
+          path=":locationId"
+          element={
+            <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
+              <LocationDetail />
+            </React.Suspense>
+          }
+        />
+      </Route>
+      <Route path="/admin/analytics" element={<PrivateRoute auth="api" />}>
+        <Route
+          path="/admin/analytics"
+          element={
+            <React.Suspense fallback={<Skeleton active style={skeletonStyle} />}>
+              <AnalyticsPage />
             </React.Suspense>
           }
         />

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildSidebarItems } from "./sidebarNav";
+import { accountFlags, buildSidebarItems } from "./sidebarNav";
 import { buildUserMenu } from "./userMenuList";
 
 function keys(items) {
@@ -35,6 +35,21 @@ describe("sidebar", () => {
     const items = buildSidebarItems({ legacy_models_visible: false, conversation_v2: true });
     const conversation = items.find((item) => item.key === "7");
     expect(conversation.path).toBe("/conversation");
+    expect(items.find((item) => item.key === "71").path).toBe("/conversation/history");
+  });
+
+  it("shows Locations to venue staff and Site analytics to platform admins only", () => {
+    const staff = accountFlags({ orgs: [{ kind: "personal" }, { kind: "venue" }], is_platform_admin: false });
+    expect(staff).toEqual({ has_locations: true, platform_admin: false });
+    const staffKeys = keys(buildSidebarItems({ conversation_v2: true, ...staff }));
+    expect(staffKeys).toContain("72");
+    expect(staffKeys).not.toContain("73");
+
+    const personal = keys(buildSidebarItems({ conversation_v2: true, ...accountFlags({ orgs: [{ kind: "personal" }] }) }));
+    expect(personal).not.toContain("72");
+
+    const admin = keys(buildSidebarItems({ conversation_v2: true, ...accountFlags({ orgs: [], is_platform_admin: true }) }));
+    expect(admin).toEqual(expect.arrayContaining(["72", "73"]));
   });
 });
 

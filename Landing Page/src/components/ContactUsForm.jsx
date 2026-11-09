@@ -58,7 +58,7 @@ function ContactUsForm() {
 
         if (res.ok) {
           sent = true;
-        } else if (res.status === 404) {
+        } else if (res.status === 404 || res.status === 405 || res.status >= 500) {
           // No backend route — fall back to EmailJS
           const ok = await sendViaEmailJS(values);
           if (ok) sent = true;

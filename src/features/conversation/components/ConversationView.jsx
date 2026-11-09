@@ -8,11 +8,13 @@ import CaptionStream from "./CaptionStream";
 import ComposeTray from "./ComposeTray";
 import ShareCodeModal from "./ShareCodeModal";
 import LessonPanel from "./LessonPanel";
+import InterpreterNotice, { INTERPRETER_REQUEST_TEXT } from "./InterpreterNotice";
 import { ConnectionBanner, ParticipantsBar, TurnIndicator } from "./StatusParts";
 import useConversationSocket from "../hooks/useConversationSocket";
 import useBrowserASR from "../hooks/useBrowserASR";
 import useMicStream, { micStreamSupported } from "../hooks/useMicStream";
 import useTTSPlayer from "../hooks/useTTSPlayer";
+import useVoices from "../hooks/useVoices";
 import { dispatchEnvelope, newId } from "../protocol";
 import { endConversation, fetchTranscript, listUtterances, shareConversation, transcriptToText } from "../api";
 import {
@@ -68,6 +70,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   const [share, setShare] = useState(initialShare?.joinCode ? initialShare : null);
   const [serverAsrFailed, setServerAsrFailed] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
+  const [prefill, setPrefill] = useState(null);
   const sendRef = useRef(() => false);
   const lastIdRef = useRef(0);
   const partialIdRef = useRef(newId());
@@ -81,9 +84,14 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   }, [conv.utterances]);
 
   const lang = speechLang(conv.info?.spoken_language);
+  // Private mode (pharmacy and clinic locations): nothing said leaves TalkMotion's servers
+  // and these phones. No browser recognizer, and only the phone's own on-device voice.
+  const isPrivate = Boolean(conv.info?.settings?.private);
+  const graceMinutes = conv.info?.words_grace_minutes;
 
   const player = useTTSPlayer({
     lang,
+    localVoiceOnly: isPrivate,
     onStart: (item) => dispatch(speakingStarted(item)),
     onEnd: () => dispatch(speakingEnded()),
   });
@@ -154,7 +162,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   });
 
   const asr = useBrowserASR({
-    enabled: listen && !conv.ended && !serverAsr,
+    enabled: listen && !conv.ended && !serverAsr && !isPrivate,
     lang,
     onPartial: (text) => send("caption.external", { text, is_final: false, partial_id: partialIdRef.current }),
     onFinal: (text, confidence) => {
@@ -163,6 +171,8 @@ export default function ConversationView({ conversationId, getToken, guest = fal
     },
   });
 
+  const voices = useVoices(conv.ttsProvider);
+
   const onSpeak = ({ text, draft }) => {
     player.unlock(); // inside the tap, so mobile browsers allow the audio that follows
     send("speak.confirm", {
@@ -170,6 +180,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       modality: draft ? "llm_suggestion" : "typed",
       draft_text: draft?.text,
       draft_id: draft?.draftId,
+      ...(voices.voiceId ? { voice: { provider_voice_id: voices.voiceId } } : {}),
     });
     dispatch(suggestionsCleared());
   };
@@ -199,6 +210,10 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   const onDownload = async () => {
     try {
       const res = await fetchTranscript(conversationId, { token: guest ? getToken() : undefined });
+      if (res.words_deleted) {
+        message.info(t("conversation.wordsDeleted", "The words of this conversation have been deleted."));
+        return;
+      }
       const blob = new Blob([transcriptToText(res.cues)], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -241,6 +256,15 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         <Result
           status="success"
           title={t("conversation.endedTitle", "This conversation has ended")}
+          subTitle={
+            isPrivate
+              ? t("conversation.privateEnded", {
+                  defaultValue:
+                    "Private mode: save a copy now if you want one. The words of this conversation are deleted {{n}} minutes after it ends.",
+                  n: graceMinutes ?? 15,
+                })
+              : undefined
+          }
           extra={[
             <Button key="dl" icon={<DownloadOutlined />} onClick={onDownload}>
               {t("conversation.download", "Save transcript")}
@@ -264,6 +288,14 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       <div className="conv-header">
         <ParticipantsBar participants={conv.participants} meId={meId} />
         <Space wrap>
+          <a
+            href="https://talk-motion.com/feedback?from=conversation"
+            target="_blank"
+            rel="noreferrer"
+            className="conv-report"
+          >
+            {t("conversation.report", "Report a problem")}
+          </a>
           <Segmented
             value={textSize}
             onChange={changeTextSize}
@@ -297,6 +329,25 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       </div>
 
       <ConnectionBanner status={status} ended={conv.ended} />
+      {isPrivate && (
+        <div className="conv-private-line" role="note">
+          {t("conversation.privateNote", {
+            defaultValue:
+              "Private mode: what is said stays on TalkMotion's servers and these phones. Its words are deleted {{n}} minutes after the conversation ends.",
+            n: graceMinutes ?? 15,
+          })}
+        </div>
+      )}
+      {!isLesson && (
+        <InterpreterNotice
+          onAsk={() =>
+            setPrefill({
+              text: t("conversation.interpreterRequest", INTERPRETER_REQUEST_TEXT),
+              nonce: Date.now(),
+            })
+          }
+        />
+      )}
       {conv.error && (
         <Alert
           type="warning"
@@ -317,6 +368,12 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         showPlain={showPlain}
         showGloss={Boolean(settings.gloss_track)}
         tapWords={!guest}
+        device={{
+          role: conv.me?.role,
+          isOwner: Boolean(conv.me?.isOwner),
+          mode: conv.info?.mode,
+          partnerLabel: settings.partner_label,
+        }}
       />
 
       <TurnIndicator
@@ -328,7 +385,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
 
       {!isStudent && (
       <div className="conv-tray-row">
-        {serverAsr || asr.supported ? (
+        {serverAsr || (asr.supported && !isPrivate) ? (
           <Space align="center">
             <Switch
               checked={listen}
@@ -348,6 +405,13 @@ export default function ConversationView({ conversationId, getToken, guest = fal
               </span>
             )}
           </Space>
+        ) : isPrivate ? (
+          <Typography.Text type="secondary">
+            {t(
+              "conversation.privateNoASR",
+              "Live captions are unavailable right now. In private mode, speech is never sent to an outside service, so type instead or try again in a few minutes."
+            )}
+          </Typography.Text>
         ) : (
           <Typography.Text type="secondary">
             {t(
@@ -356,7 +420,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
             )}
           </Typography.Text>
         )}
-        {serverAsrFailed && conv.asrServerSide && asr.supported && (
+        {serverAsrFailed && conv.asrServerSide && asr.supported && !isPrivate && (
           <Typography.Text type="secondary">
             {t(
               "conversation.asrFallback",
@@ -388,6 +452,10 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         suggestions={conv.suggestions}
         llmAvailable={conv.llmAvailable}
         disabled={status !== "open"}
+        prefill={prefill}
+        voices={voices.voices}
+        voiceId={voices.voiceId}
+        onVoiceChange={voices.setVoiceId}
       />
       )}
 

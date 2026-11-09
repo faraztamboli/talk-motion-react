@@ -11,11 +11,15 @@ function StoriesSection() {
     <section className="  stories-section">
       <div className="container">
         <div className="stories-section-heading-div">
-          <h2>Our Stories</h2>
-          <Link to="/" className="stories-link">
-            View More Stories
+          <h2>Where it started</h2>
+          <Link to="/about" className="stories-link">
+            What changed since
           </Link>
         </div>
+        <p className="stories-intro">
+          These awards recognized Faraz&apos;s first prototype, which tried to translate signs into speech. Today&apos;s
+          TalkMotion works differently: the hearing person is captioned, and you type or tap your reply.
+        </p>
 
         <Row className="stories-card-div">
           <Col span={7} xs={24} md={12} lg={7} className="stories-card-col">
