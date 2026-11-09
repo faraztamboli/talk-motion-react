@@ -119,7 +119,7 @@ function handFeatures(hand, present, origin, scale) {
 }
 
 /**
- * frames: [{t, data}] from useHolisticModel/useContinuousTranslator buffers.
+ * frames: [{t, data}] sign segments (features/translator/segmenter.js).
  * sequenceLength: model_meta_data.input_sequence_length.
  * Returns Float32Array of length sequenceLength * featureCount().
  */

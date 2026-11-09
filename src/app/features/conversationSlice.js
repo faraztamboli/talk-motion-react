@@ -14,9 +14,8 @@ const conversationSlice = createSlice({
     addConversationEntry: (state, action) => {
       const { source, text } = action.payload;
       if (!text || !text.trim()) return;
-      const last = state.entries[state.entries.length - 1];
-      // consecutive duplicates from the same side are prediction repeats
-      if (last && last.source === source && last.text === text) return;
+      // A sentence said twice is said twice: every entry is kept (the old translator's
+      // prediction repeats no longer reach the transcript).
       state.entries.push({
         id: nextId++,
         source,
