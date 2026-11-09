@@ -16,6 +16,7 @@ import ShotTimeline from "../features/videoSubtitles/components/ShotTimeline";
 import StatusPanel from "../features/videoSubtitles/components/StatusPanel";
 import YouTubeSearch from "../components/ui/YouTubeSearch";
 import AIContentGenerator from "../components/ui/AIContentGenerator";
+import AutoCaptionsPanel from "../features/autoCaptions/AutoCaptionsPanel";
 import truncateString, { truncateDescription } from "../utils/truncateString";
 import { isValidYouTubeUrl } from "../utils/youtubeUrl";
 
@@ -418,6 +419,8 @@ function VideoSubtitlesDesigner() {
           )}
         </>
       )}
+
+      <AutoCaptionsPanel />
 
       {!videoId && (
         <Card style={{ textAlign: "center", background: "#f0f2f5" }}>

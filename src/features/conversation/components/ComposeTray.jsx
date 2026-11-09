@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Input, Tooltip } from "antd";
+import { Button, Input, Select, Tooltip } from "antd";
 import { BulbOutlined, CloseOutlined, SoundOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
@@ -19,6 +19,10 @@ export default function ComposeTray({
   suggestions,
   llmAvailable,
   disabled,
+  prefill = null, // { text, nonce }: fills the box (never speaks); a new nonce refills
+  voices = [], // [{ id, name, description }] the person can choose from
+  voiceId = null,
+  onVoiceChange,
 }) {
   const { t } = useTranslation();
   const [text, setText] = useState("");
@@ -34,6 +38,13 @@ export default function ComposeTray({
   };
 
   useEffect(() => () => clearTimeout(idleTimer.current), []);
+
+  useEffect(() => {
+    if (!prefill?.text) return;
+    setText(prefill.text);
+    setDraft(null);
+    inputRef.current?.focus();
+  }, [prefill?.nonce]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (event) => {
     setText(event.target.value);
@@ -120,6 +131,22 @@ export default function ComposeTray({
               {t("conversation.suggest", "Suggest replies")}
             </Button>
           </Tooltip>
+        )}
+        {voices.length > 1 && onVoiceChange && (
+          <span className="conv-voice">
+            <span aria-hidden="true">{t("conversation.voice", "Voice")}</span>
+            <Select
+              size="large"
+              value={voiceId}
+              onChange={onVoiceChange}
+              aria-label={t("conversation.voice", "Voice")}
+              popupMatchSelectWidth={false}
+              options={voices.map((v) => ({
+                value: v.id,
+                label: v.description ? `${v.name} (${v.description})` : v.name,
+              }))}
+            />
+          </span>
         )}
         {draft && (
           <span className="conv-draft-note">{t("conversation.fromSuggestion", "Edited from a suggestion")}</span>

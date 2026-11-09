@@ -10,6 +10,9 @@ import { addConversationEntry } from "../../app/features/conversationSlice";
 import useSpeechSynthesis from "../../hooks/useSpeechSynthesis";
 import { setIsModelLoading } from "../../app/features/converterSlice";
 import useMessageApi from "../../hooks/useMessageApi";
+import { PlainLanguage } from "./PlainLanguage";
+import useConfirmToSpeak from "../../hooks/useConfirmToSpeak";
+import SpeakDraft from "./SpeakDraft";
 
 export const GestureToVoice = (props) => {
   const [isPageActive, setIsPageActive] = React.useState(false);
@@ -18,6 +21,7 @@ export const GestureToVoice = (props) => {
   const { contextHolder, showMessage } = useMessageApi();
 
   const { speak } = useSpeechSynthesis();
+  const speakDraft = useConfirmToSpeak(speak);
 
   const { modelId } = useSelector((state) => state.model);
   const { volume } = useSelector((state) => state.speech);
@@ -35,7 +39,7 @@ export const GestureToVoice = (props) => {
   useEffect(() => {
     if (isSpeaking) {
       if (speakText !== undefined) {
-        speak(speakText, volume);
+        speakDraft.offer(speakText, volume);
         dispatch(addConversationEntry({ source: "sign", text: speakText }));
       }
     }
@@ -291,11 +295,13 @@ export const GestureToVoice = (props) => {
             }}
           >
             <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--color-text-primary)' }}>
-              <strong style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>Speech:</strong>{' '}
+              <strong style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>Recognized:</strong>{' '}
               <span style={{ color: 'var(--color-text-secondary)' }}>{speakText}</span>
             </p>
+              <PlainLanguage text={speakText} />
           </div>
         )}
+        <SpeakDraft {...speakDraft} volume={volume} />
       </div>
     </>
   );

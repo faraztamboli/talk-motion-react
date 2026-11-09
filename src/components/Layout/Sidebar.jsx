@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Layout, Menu } from "antd";
-import { buildSidebarItems } from "../../data/sidebarNav";
+import { useSelector } from "react-redux";
+import { buildSidebarItems, accountFlags } from "../../data/sidebarNav";
 import { useFlags } from "../../hooks/useFlag";
 import logoImg from "../../media/images/logo.png";
 import logoSmall from "../../media/images/logo-small.png";
@@ -9,7 +10,8 @@ const { Sider } = Layout;
 
 const Sidebar = (props) => {
   const flags = useFlags();
-  const items = useMemo(() => buildSidebarItems(flags), [flags]);
+  const apiUser = useSelector((state) => state.apiAuth?.user);
+  const items = useMemo(() => buildSidebarItems({ ...flags, ...accountFlags(apiUser) }), [flags, apiUser]);
 
   return (
     <Sider

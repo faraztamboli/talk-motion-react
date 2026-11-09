@@ -3,8 +3,11 @@ import {
   DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
+  HistoryOutlined,
   HomeOutlined,
+  LineChartOutlined,
   MessageOutlined,
+  ShopOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import {
@@ -59,6 +62,36 @@ const items = [
     null,
     "/conversation",
     "conversation_v2"
+  ),
+  getItem(
+    "My conversations",
+    "71",
+    <Link to="/conversation/history">
+      <HistoryOutlined />
+    </Link>,
+    null,
+    "/conversation/history",
+    "conversation_v2"
+  ),
+  getItem(
+    "Locations",
+    "72",
+    <Link to="/locations">
+      <ShopOutlined />
+    </Link>,
+    null,
+    "/locations",
+    "has_locations"
+  ),
+  getItem(
+    "Site analytics",
+    "73",
+    <Link to="/admin/analytics">
+      <LineChartOutlined />
+    </Link>,
+    null,
+    "/admin/analytics",
+    "platform_admin"
   ),
   getItem(
     "Learning",
@@ -268,6 +301,17 @@ function strip(item) {
   // eslint-disable-next-line no-unused-vars
   const { flag, ...rest } = item;
   return rest;
+}
+
+/**
+ * Switches that come from the signed-in API account rather than feature flags: whether the
+ * person works at a venue location, and whether they are a platform admin.
+ */
+export function accountFlags(apiUser) {
+  return {
+    has_locations: Boolean(apiUser?.is_platform_admin) || (apiUser?.orgs || []).some((o) => o.kind === "venue"),
+    platform_admin: Boolean(apiUser?.is_platform_admin),
+  };
 }
 
 /**

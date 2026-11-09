@@ -6,6 +6,26 @@ export function createConversation(body) {
   return apiFetch("/conversations", { method: "POST", body });
 }
 
+/** Start a captioned lesson (settings.kind="lesson"): students join one code as readers. */
+export function createLesson(classroomName) {
+  return createConversation({
+    title: `${classroomName} lesson`,
+    mode: "two_device",
+    owner_role: "partner",
+    settings: { kind: "lesson", plain_language: true },
+  });
+}
+
+/** Conversations this account owns or joined, newest first (at most 50). */
+export function listConversations() {
+  return apiFetch("/conversations");
+}
+
+/** Owner only: deletes the conversation and everything said in it. */
+export function deleteConversation(conversationId) {
+  return apiFetch(`/conversations/${conversationId}`, { method: "DELETE" });
+}
+
 export function getConversation(conversationId, token) {
   return apiFetch(`/conversations/${conversationId}`, { token });
 }
@@ -44,4 +64,17 @@ export function transcriptToText(cues) {
     return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
   };
   return cues.map((c) => `[${stamp(c.start_ms)}] ${c.speaker}: ${c.text}`).join("\n");
+}
+
+/** Saves the transcript as a .txt file on this device. */
+export async function downloadTranscript(conversationId, { token, startedAt } = {}) {
+  const res = await fetchTranscript(conversationId, { token });
+  if (res.words_deleted) throw new Error("The words of this conversation have been deleted.");
+  const blob = new Blob([transcriptToText(res.cues)], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `conversation-${String(startedAt || new Date().toISOString()).slice(0, 10)}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
 }

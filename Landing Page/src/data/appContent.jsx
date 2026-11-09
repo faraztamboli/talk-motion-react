@@ -1,11 +1,11 @@
 import React from "react";
+import { privacyPolicy } from "./privacyPolicy";
 
 const pageContent = {
   TalkMotionDescription: (
     <p>
-      Talk-motion brings the world of Deaf and hearing people together,
-      reuniting families, friends, and colleagues with the power of artificial
-      intelligence.
+      A conversation tool for Deaf and non-speaking people. They speak, you
+      read. You answer your way. Nothing is said for you until you say so.
     </p>
   ),
   contactPageContent: (
@@ -24,56 +24,7 @@ const pageContent = {
     </p>
   ),
 
-  privacyPolicyContent: (
-<p>
-  TalkMotion was created to support communication in environments where sign language may not be widely understood. Deaf and aphonic people already communicate fluently in their own languages; barriers arise when systems and settings are not designed for them. Our technology helps bridge these gaps by offering real-time tools that facilitate communication across signing and non-signing communities.
-  <br /><br />
-  Protecting your privacy and securing your data are essential to how we operate. This Privacy Policy explains the information we collect, how we use it, the rights you have regarding that information, and the limits of TalkMotion’s responsibilities. By accessing or using any TalkMotion product, service, or website, you acknowledge and agree to the terms of this Privacy Policy.
-  <br /><br />
-  <strong>Scope of This Policy</strong><br />
-  This Policy applies to all TalkMotion products, services, applications, features, and websites. It does not apply to third-party websites, applications, or services. TalkMotion is not responsible for the privacy practices, content, or security of third-party platforms, and we encourage you to review their privacy policies independently.
-  <br /><br />
-  <strong>Information We Collect</strong><br />
-  We collect information necessary to operate, secure, and improve our services. By using TalkMotion, you consent to the collection and processing of the following categories of information:
-  <li>Calls and communication data</li>
-  <li>Device and usage data</li>
-  <li>Location information (when enabled)</li>
-  <li>Information from cookies, beacons, pixels, and similar technologies</li>
-  <br />
-  When creating or maintaining an account, we may also collect:
-  <li>Your name</li>
-  <li>Your email address</li>
-  <li>Your mobile number</li>
-  <li>Your gender identity</li>
-  <li>Gesture data used within the application</li>
-  <br /><br />
-  <strong>How We Use Your Information</strong><br />
-  We use the information we collect for the following purposes:
-  <li>To provide, maintain, and improve our services</li>
-  <li>To ensure secure authentication and account protection</li>
-  <li>To analyze usage patterns and enhance functionality</li>
-  <li>To prevent fraud, misuse, or unauthorized access</li>
-  <li>To comply with legal, regulatory, or security obligations</li>
-  <br />
-  TalkMotion does not sell your personal information. We may share data with trusted service providers only when necessary to deliver our services, and only under strict confidentiality and data-protection agreements.
-  <br /><br />
-  <strong>Your Choices and Responsibilities</strong><br />
-  You may update, modify, or delete certain personal information through your account settings, where available. You are responsible for maintaining the confidentiality of your account credentials and for all activities conducted through your account.
-  <br /><br />
-  <strong>Limits of Liability</strong><br />
-  TalkMotion provides its services “as is” and “as available.” While we take reasonable measures to protect your information, no system is perfectly secure. By using TalkMotion, you acknowledge that:
-  <li>We cannot guarantee absolute data security</li>
-  <li>We are not liable for unauthorized access resulting from your actions or third-party breaches</li>
-  <li>We are not responsible for disruptions, data loss, or service interruptions beyond our reasonable control</li>
-  <br />
-  TalkMotion is not responsible for communication outcomes, misunderstandings, or decisions made based on translated or interpreted content generated through the platform. Users remain fully responsible for how they use information and communication tools provided by TalkMotion.
-  <br /><br />
-  <strong>Contact Us</strong><br />
-  If you have questions about this Privacy Policy, your data, or your rights, please contact us at:
-  <a href="mailto:info@talk-motion.com">info@talk-motion.com</a>.
-</p>
-  ),
-
+  privacyPolicyContent: privacyPolicy,
   termsAndConditionsContent: (
 <>
   <h2>Welcome to TalkMotion</h2>
