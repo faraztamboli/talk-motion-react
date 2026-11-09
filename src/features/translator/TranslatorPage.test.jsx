@@ -24,13 +24,13 @@ vi.mock("./useBrowserModel", () => ({ default: () => ({ status: "server", ready:
 
 import TranslatorPage from "./TranslatorPage";
 
-function renderPage() {
+function renderPage(path = "/converter") {
   const store = configureStore({
     reducer: { conversation: conversationReducer, apiAuth: () => ({ status: "unavailable" }) },
   });
   render(
     <Provider store={store}>
-      <MemoryRouter>
+      <MemoryRouter initialEntries={[path]}>
         <TranslatorPage />
       </MemoryRouter>
     </Provider>
@@ -77,6 +77,13 @@ describe("TranslatorPage", () => {
     renderPage();
     expect(screen.getByRole("button", { name: "model 9" })).toBeInTheDocument();
     expect(screen.getByRole("switch", { name: "Speak automatically" })).not.toBeChecked();
+  });
+
+  it("opens the model a link asks for, and remembers it", () => {
+    localStorage.setItem("tm_translator_model", "9");
+    renderPage("/converter?model=7");
+    expect(screen.getByRole("button", { name: "model 7" })).toBeInTheDocument();
+    expect(localStorage.getItem("tm_translator_model")).toBe("7");
   });
 
   it("lists a sentence said twice twice", () => {

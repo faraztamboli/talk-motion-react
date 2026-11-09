@@ -4,6 +4,7 @@ import { Button, ConfigProvider, Popover, Spin, Typography } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import MetaDecorator from "../../components/MetaDecorator";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import ModelPicker from "../models/ModelPicker";
@@ -83,7 +84,14 @@ export default function TranslatorPage() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const catalogueVisible = useFlag("legacy_models_visible");
-  const [modelId, setModelIdState] = useState(() => readPref("model", null));
+  // A link such as "Try it in the Translator" (/converter?model=7) picks the model; otherwise the
+  // last one used on this device.
+  const [params] = useSearchParams();
+  const [modelId, setModelIdState] = useState(() => {
+    const fromLink = params.get("model");
+    if (fromLink) writePref("model", fromLink);
+    return fromLink || readPref("model", null);
+  });
   const languages = useServerLanguages();
   const speech = useSpeechOutput({ lang: languages[0] || "en-US" });
   const speakDraft = useConfirmToSpeak(speech.speak);

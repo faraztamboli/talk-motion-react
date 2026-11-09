@@ -983,158 +983,23 @@ header.ant-layout-header.site-layout-background
   border-radius: 16px;
 }
 
-.converter-content {
-  background-color: var(--color-bg-tertiary) !important;
-  padding: var(--spacing-sm) !important;
-  height: calc(100vh - 64px);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-@media screen and (max-width: 576px) {
-  .converter-content {
-    padding: var(--spacing-xs) !important;
-    height: calc(100vh - 56px);
-  }
-}
-
 /* Minimal Header */
-.converter-minimal-header {
-  margin-bottom: var(--spacing-xs);
-  padding: 0;
-  flex-shrink: 0;
-}
-
-.converter-page-title-compact {
-  color: var(--color-neutral-900) !important;
-  font-weight: 600 !important;
-  margin: 0 !important;
-  font-size: 1rem !important;
-}
 
 /* Dropdown Above Cards */
-.converter-card-wrapper {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 2px;
-}
-
-.converter-dropdown-above {
-  display: flex;
-  align-items: flex-start;
-  gap: 4px;
-  flex-shrink: 0;
-  padding: 0 var(--spacing-xs);
-  min-height: 32px;
-  position: relative;
-  margin-bottom: 2px;
-}
-
-.converter-dropdown-above .dropdowns {
-  flex: 1;
-  min-width: 0;
-}
 
 /* Model concepts positioning - doesn't affect alignment */
-.converter-models-dropdown-wrapper {
-  align-items: flex-start !important;
-}
-
-.converter-model-concepts {
-  max-height: 50px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-bottom: 2px;
-}
-
-.converter-model-concepts::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
-}
-
-.converter-model-concepts::-webkit-scrollbar-thumb {
-  background: var(--color-neutral-300);
-  border-radius: 2px;
-}
 
 /* Ensure both dropdown areas have same height */
-.converter-card-wrapper:first-child .converter-dropdown-above,
-.converter-card-wrapper:last-child .converter-dropdown-above {
-  min-height: 32px;
-  align-items: flex-start;
-}
-
-@media screen and (max-width: 768px) {
-  .converter-page-title-compact {
-    font-size: 0.9rem !important;
-  }
-  
-  .converter-dropdown-above {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-  }
-  
-  .converter-dropdown-above .dropdowns {
-    width: 100%;
-  }
-}
 
 /* Converter Controls Card */
-.converter-controls-card {
-  background: var(--color-bg-primary) !important;
-  box-shadow: var(--shadow-sm) !important;
-  border-radius: var(--radius-md) !important;
-  border: 1px solid var(--color-neutral-200);
-}
-
-.converter-control-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.converter-control-label {
-  display: block;
-  font-size: 0.85rem;
-  margin-bottom: 0;
-  color: var(--color-neutral-700);
-  font-weight: 500;
-}
-
-.converter-control-hint {
-  display: none; /* Hide helper text to save space */
-}
 
 /* Video Placeholder - Larger to fill space */
-.converter-video-placeholder {
-  display: block;
-  width: 100% !important;
-  min-height: 280px;
-  min-width: 320px;
-  background-color: #000;
-  border-radius: var(--radius-sm);
-  object-fit: contain;
-}
 
 /* Video elements can use flex */
-.converter-video-placeholder video {
-  flex: 1 1 auto;
-}
 
 /* Canvas elements should NOT use flex - they need explicit dimensions */
-.converter-video-placeholder canvas {
-  flex: none !important;
-}
 
 /* Ensure video elements have dimensions for WebGL */
-.converter-video-placeholder video {
-  width: 100% !important;
-  height: auto !important;
-  min-width: 320px !important;
-  min-height: 240px !important;
-}
 
 /* Ensure canvas elements have proper dimensions for WebGL */
 .converter-video-placeholder canvas,
@@ -1150,131 +1015,18 @@ header.ant-layout-header.site-layout-background
 }
 
 /* Override flex for canvas specifically */
-.converter-card-content canvas.converter-video-placeholder {
-  flex: none !important;
-  min-height: 280px !important;
-}
-
-@media screen and (min-height: 900px) {
-  .converter-video-placeholder {
-    min-height: 320px;
-  }
-}
-
-@media screen and (max-height: 800px) {
-  .converter-video-placeholder {
-    min-height: 240px;
-  }
-}
-
-@media screen and (max-height: 700px) {
-  .converter-video-placeholder {
-    min-height: 200px;
-  }
-}
-
-@media screen and (max-height: 600px) {
-  .converter-video-placeholder {
-    min-height: 160px;
-  }
-}
 
 /* Converter Cards - Compact */
-.converter-cards-row {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  margin: 0 !important;
-  align-items: stretch;
-}
-
-.converter-cards-row .ant-col {
-  display: flex;
-  flex-direction: column;
-}
-
-.converter-cards {
-  background: var(--color-bg-primary);
-  box-shadow: var(--shadow-sm) !important;
-  border-radius: var(--radius-sm) !important;
-  flex: 1;
-  min-height: 0;
-  transition: all 0.2s ease;
-  border: 1px solid var(--color-neutral-200);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  height: 100%;
-}
-
-.converter-cards:hover {
-  box-shadow: var(--shadow-md) !important;
-}
-
-.converter-cards .ant-card-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  padding: var(--spacing-sm) !important;
-  overflow: hidden;
-}
-
-.converter-card-content {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  height: 100%;
-  gap: 2px;
-}
 
 /* Make video area take most space */
-.converter-card-content > *:first-of-type {
-  flex-shrink: 0;
-}
 
 /* Video elements can expand */
-.converter-card-content .converter-video-placeholder video {
-  flex: 1 1 auto;
-  min-height: 0;
-}
 
 /* Canvas elements need explicit dimensions, not flex */
-.converter-card-content .converter-video-placeholder canvas,
-.converter-card-content canvas {
-  flex: none !important;
-  width: 100% !important;
-  min-height: 40px !important;
-}
-
-.converter-card-voice-to-gesture {
-  border-left: 4px solid var(--color-info);
-}
-
-.converter-card-gesture-to-voice {
-  border-left: 4px solid var(--color-success);
-}
 
 /* Status indicator pulse animation */
-.converter-status-pulse {
-  animation: pulse 1.5s ease-in-out infinite;
-}
 
 /* Card Icons - Compact */
-.converter-card-icon {
-  font-size: 1rem;
-  margin-right: var(--spacing-xs);
-}
-
-.converter-icon-voice {
-  color: var(--color-info);
-}
-
-.converter-icon-gesture {
-  color: var(--color-success);
-}
 
 .converter-btns {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
@@ -1294,9 +1046,7 @@ header.ant-layout-header.site-layout-background
 
 /* Accessibility: High contrast mode support */
 @media (prefers-contrast: high) {
-  .converter-video-placeholder {
-    border: 2px solid #fff;
-  }
+  
   
   .converter-btns {
     border: 2px solid currentColor;
@@ -1319,54 +1069,10 @@ header.ant-layout-header.site-layout-background
 }
 
 /* Help Section */
-.converter-help-icon {
-  color: var(--color-primary);
-  font-size: 1.2rem;
-  transition: all 0.2s ease;
-}
-
-.converter-help-icon:hover {
-  color: var(--color-primary-hover);
-  transform: scale(1.1);
-}
-
-.converter-help-card {
-  background: var(--color-info-light) !important;
-  border: 1px solid var(--color-info) !important;
-  border-radius: var(--radius-md) !important;
-  margin-bottom: var(--spacing-md) !important;
-}
-
-.converter-help-card .ant-collapse-header {
-  font-weight: 600;
-  color: var(--color-neutral-800);
-}
 
 /* Button Groups - Compact */
-.converter-button-group-compact {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2px;
-  flex-shrink: 0;
-  gap: 6px;
-}
 
 /* Output Cards - Compact */
-.converter-output-card-compact {
-  background: var(--color-bg-secondary) !important;
-  border: 1px solid var(--color-neutral-200) !important;
-  border-radius: var(--radius-sm) !important;
-  flex-shrink: 0;
-  margin-top: 2px !important;
-}
-
-.converter-help-card-compact {
-  background: var(--color-info-light) !important;
-  border: 1px solid var(--color-info) !important;
-  border-radius: var(--radius-sm) !important;
-  flex-shrink: 0;
-}
 
 .trainer-btns {
   padding: 0 4rem !important;
@@ -1738,8 +1444,6 @@ h4.product-price {
   font-weight: 500;
 }
 
-
-
 .record-button {
   width: 35px;
   height: 35px;
@@ -1803,11 +1507,6 @@ h4.product-price {
   }
 }
 
-
-
-
-
-
 .course-summary {
   border: 1px solid #ccc;
   padding: 20px;
@@ -1858,11 +1557,6 @@ h4.product-price {
 .folder-content-card-list-items:hover {
   text-decoration: underline !important;
 }
-
-
-
-
-
 
 .sidebar {
   width: 250px;
@@ -2082,20 +1776,6 @@ html[dir="rtl"] .statuses {
 }
 
 /* RTL Converter Page */
-html[dir="rtl"] .converter-card-voice-to-gesture {
-  border-right: 4px solid var(--color-info);
-  border-left: none;
-}
-
-html[dir="rtl"] .converter-card-gesture-to-voice {
-  border-right: 4px solid var(--color-success);
-  border-left: none;
-}
-
-html[dir="rtl"] .converter-card-icon {
-  margin-left: var(--spacing-xs);
-  margin-right: 0;
-}
 
 /* RTL Form Elements */
 html[dir="rtl"] .ant-form-item-label {
