@@ -61,7 +61,7 @@ const paymentConfirmation = () => {
               </Button>
               <Button
                 type="primary"
-                onClick={(e) => navigate("/my-models")}
+                onClick={(e) => navigate("/models")}
               >
                 <AppstoreOutlined />
                 My Models

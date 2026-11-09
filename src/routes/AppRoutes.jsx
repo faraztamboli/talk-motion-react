@@ -14,18 +14,21 @@ import MySubscriptions from "../pages/MySubscriptions";
 
 // React lazy components
 const Converter = React.lazy(() => import("../pages/Converter"));
-const Collector = React.lazy(() => import("../pages/Collector"));
-const ModelTrainer = React.lazy(() =>
-  import("../pages/ModelTrainer")
-);
-const UploadVideo = React.lazy(() =>
-  import("../components/ui/UploadVideo")
-);
 const Models = React.lazy(() => import("../pages/Models"));
-const MyModels = React.lazy(() => import("../pages/MyModels"));
-const TrainingModels = React.lazy(() =>
-  import("../pages/TrainingModels")
-);
+const ModelsPage = React.lazy(() => import("../features/models/ModelsPage"));
+const ModelPage = React.lazy(() => import("../features/models/ModelPage"));
+const ModelOverview = React.lazy(() => import("../features/models/ModelOverview"));
+const ConceptsTab = React.lazy(() => import("../features/models/ConceptsTab"));
+const ConceptSamples = React.lazy(() => import("../features/models/ConceptSamples"));
+const CollectTab = React.lazy(() => import("../features/models/CollectTab"));
+const TrainTab = React.lazy(() => import("../features/models/TrainTab"));
+const TrainersTab = React.lazy(() => import("../features/models/TrainersTab"));
+const SettingsTab = React.lazy(() => import("../features/models/SettingsTab"));
+
+/** Suspense boundary for a lazy page or tab. */
+function Page({ children }) {
+  return <React.Suspense fallback={<Skeleton active style={{ padding: "24px" }} />}>{children}</React.Suspense>;
+}
 
 const VideoSubtitlesDesigner = React.lazy(() =>
   import("../pages/VideoSubtitlesDesigner")
@@ -46,14 +49,6 @@ const Courses = React.lazy(() => import("../pages/Courses"));
 const CourseDetail = React.lazy(() => import("../pages/CourseDetail"));
 const CourseTreeManager = React.lazy(() =>
   import("../pages/CourseTreeManager")
-);
-const UserModel = React.lazy(() => import("../pages/UserModel"));
-const ModelFiles = React.lazy(() => import("../pages/ModelFiles"));
-const ModelConcepts = React.lazy(() =>
-  import("../pages/ModelConcepts")
-);
-const ConceptDetails = React.lazy(() =>
-  import("../pages/ConceptDetails")
 );
 const Classrooms = React.lazy(() => import("../pages/Classrooms"));
 const ClassroomsRedesigned = React.lazy(() =>
@@ -157,131 +152,28 @@ function AppRoutes(props) {
           }
         />
       </Route>
-      {/* The old LeapMotion trainer page is retired; camera-based collection
-          lives at /trainer/collect */}
-      <Route path="/trainer" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route path="/trainer" element={<Navigate to="/trainer/collect" replace />} />
-      </Route>
-      <Route path="/trainer/collect" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route
-          path="/trainer/collect"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <Collector />
-            </React.Suspense>
-          }
-        />
-      </Route>
-      <Route path="/trainer/train" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route
-          path="/trainer/train"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <ModelTrainer />
-            </React.Suspense>
-          }
-        />
-      </Route>
-      <Route path="/trainer/upload" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route
-          path="/trainer/upload"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <UploadVideo />
-            </React.Suspense>
-          }
-        />
-      </Route>
+      {/* Models hub. /models lists your models; /models/:modelId has tabs for words and phrases,
+          recording, training, trainers and settings. The old trainer pages and model lists
+          redirect into it, and the store moved to /store/models. */}
       <Route path="/models" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route
-          path="/models"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <Models collapsedWidth={collapsedWidth} sm={sm} />
-            </React.Suspense>
-          }
-        />
+        <Route index element={<Page><ModelsPage /></Page>} />
+        <Route path="training-models" element={<Navigate to="/models?show=trainable" replace />} />
+        <Route path=":modelId" element={<Page><ModelPage /></Page>}>
+          <Route index element={<Page><ModelOverview /></Page>} />
+          <Route path="concepts" element={<Page><ConceptsTab /></Page>} />
+          <Route path="concepts/:concept" element={<Page><ConceptSamples /></Page>} />
+          <Route path="collect" element={<Page><CollectTab /></Page>} />
+          <Route path="train" element={<Page><TrainTab /></Page>} />
+          <Route path="trainers" element={<Page><TrainersTab /></Page>} />
+          <Route path="settings" element={<Page><SettingsTab /></Page>} />
+          <Route path="files" element={<Navigate to="../concepts" replace />} />
+        </Route>
       </Route>
-
-      <Route path="/models" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route
-          path=":modelid"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <UserModel collapsedWidth={collapsedWidth} />
-            </React.Suspense>
-          }
-        />
-        <Route
-          path=":modelid/files"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <ModelFiles collapsedWidth={collapsedWidth} />
-            </React.Suspense>
-          }
-        />
-        <Route
-          path=":modelid/concepts"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <ModelConcepts collapsedWidth={collapsedWidth} />
-            </React.Suspense>
-          }
-        />
-        <Route
-          path=":modelid/concepts/:concepttitle"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <ConceptDetails />
-            </React.Suspense>
-          }
-        />
+      <Route path="/store/models" element={<FlagRoute flag="legacy_models_visible" />}>
+        <Route index element={<Page><Models collapsedWidth={collapsedWidth} sm={sm} /></Page>} />
       </Route>
-      <Route path="/my-models" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route
-          path="/my-models"
-          exact
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <MyModels collapsedWidth={collapsedWidth} />
-            </React.Suspense>
-          }
-        />
-      </Route>
-      <Route
-        path="/models/training-models"
-        element={<FlagRoute flag="legacy_models_visible" />}
-      >
-        <Route
-          path="/models/training-models"
-          exact
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <TrainingModels collapsedWidth={collapsedWidth} />
-            </React.Suspense>
-          }
-        />
-      </Route>
+      <Route path="/my-models" element={<Navigate to="/models" replace />} />
+      <Route path="/trainer/*" element={<Navigate to="/models" replace />} />
 
       <Route
         path="/video-subtitles/designer"

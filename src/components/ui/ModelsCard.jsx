@@ -268,7 +268,7 @@ export const ModelsCard = (props) => {
           </Avatar.Group>
         </div>
 
-        {window.location.pathname == "/models" && (
+        {window.location.pathname === "/store/models" && (
           <Space className="mt-4" style={{ width: "100%" }}>
             {model?.badge === "purchased" ? (
               <div style={{

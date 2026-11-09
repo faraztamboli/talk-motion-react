@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
   HistoryOutlined,
@@ -11,7 +10,6 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import {
-  MdFileUpload,
   MdModelTraining,
   MdOutlineCollectionsBookmark,
   MdOutlineDesignServices,
@@ -156,23 +154,23 @@ const items = [
     </Link>,
     [
       getItem(
-        "My Models",
+        "My models",
         "21",
-        <Link to="/my-models">
+        <Link to="/models">
           <MdOutlineCollectionsBookmark />
         </Link>,
         null,
-        "/my-models",
+        "/models",
         LEGACY
       ),
       getItem(
-        "I'm Training",
+        "I can train",
         "22",
-        <Link to="/models/training-models">
-          <FileOutlined />
+        <Link to="/models?show=trainable">
+          <MdModelTraining />
         </Link>,
         null,
-        "/models/training-models",
+        "/models?show=trainable",
         LEGACY
       ),
     ],
@@ -182,18 +180,18 @@ const items = [
   getItem(
     "Store",
     "5",
-    <Link to="/models">
+    <Link to="/store/models">
       <FileOutlined />
     </Link>,
     [
       getItem(
         "Models",
         "61",
-        <Link to="/models">
+        <Link to="/store/models">
           <FileOutlined />
         </Link>,
         null,
-        "/models",
+        "/store/models",
         LEGACY
       ),
       getItem(
@@ -226,54 +224,16 @@ const items = [
     ],
     "/video-subtitles"
   ),
+  // Recording samples and training live inside each model (/models/:id), so the old Trainer
+  // group is gone; the Subtitle Designer is its own item.
   getItem(
-    "Trainer",
-    "3",
-    <Link to="/trainer/collect">
-      <DesktopOutlined />
+    "Subtitle Designer",
+    "42",
+    <Link to="/video-subtitles/designer">
+      <MdOutlineDesignServices />
     </Link>,
-    [
-      getItem(
-        "Upload",
-        "31",
-        <Link to="/trainer/upload">
-          <MdFileUpload />
-        </Link>,
-        null,
-        "/trainer/upload",
-        LEGACY
-      ),
-      getItem(
-        "Collect",
-        "32",
-        <Link to="/trainer/collect">
-          <MdOutlineCollectionsBookmark />
-        </Link>,
-        null,
-        "/trainer/collect",
-        LEGACY
-      ),
-      getItem(
-        "Train",
-        "33",
-        <Link to="/trainer/train">
-          <MdModelTraining />
-        </Link>,
-        null,
-        "/trainer/train",
-        LEGACY
-      ),
-      getItem(
-        "Subtitle Designer",
-        "42",
-        <Link to="/video-subtitles/designer">
-          <MdOutlineDesignServices />
-        </Link>,
-        null,
-        "/video-subtitles/designer"
-      ),
-    ],
-    "/trainer"
+    null,
+    "/video-subtitles/designer"
   ),
 ];
 
@@ -283,7 +243,7 @@ function storeIcon(flags) {
   // The Store group icon used to open the model store; send it to the video library when
   // models are hidden.
   return flags[LEGACY] ? (
-    <Link to="/models">
+    <Link to="/store/models">
       <FileOutlined />
     </Link>
   ) : (

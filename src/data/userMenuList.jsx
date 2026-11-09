@@ -41,7 +41,7 @@ const userMenu = [
     key: "myModels",
     flag: "legacy_models_visible",
     label: (
-      <Link to="/my-models" key={2}>
+      <Link to="/models" key={2}>
         <div className="user-menu-items">My Models</div>
       </Link>
     ),

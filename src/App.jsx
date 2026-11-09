@@ -7,7 +7,6 @@ import useServerConnection from "./hooks/useServerConnection";
 import useClassicSession from "./hooks/useClassicSession";
 import useMediaQueries from "./hooks/useMediaQueries";
 import AppRoutes from "./routes/AppRoutes";
-import useTrainingStatusPush from "./utils/jsOnUpdateTrainingStatus";
 import { ConfigProvider } from "antd";
 import { useLocation } from "react-router-dom";
 import { useLanguage } from "./contexts/LanguageContext";
@@ -29,7 +28,6 @@ const App = () => {
   useApiAuthBootstrap();
   // classic session check on every (re)connect, plus single sign-in for linked accounts
   useClassicSession();
-  useTrainingStatusPush();
 
   // Classic pages need the server's function library before their first call. Once the app
   // has connected, pages stay mounted through reconnects (ConnectionBanner explains), so the
