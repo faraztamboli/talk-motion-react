@@ -1,31 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Layout, Row, Col, Button, Badge } from "antd";
+import { Layout, Row, Col } from "antd";
 import { UserMenu } from "../ui/UserMenu";
 import LanguageSelector from "../ui/LanguageSelector";
-import usePayment from "../../hooks/usePayment";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import HeaderCartButton from "../../features/store/HeaderCartButton";
 import FeatureGate from "../flags/FeatureGate";
-import { useFlag } from "../../hooks/useFlag";
 
 const Header = (props) => {
-  const { getCart } = usePayment();
-  const { cartCount } = useSelector((state) => state.cart);
-  const { t } = useTranslation();
-  const cartVisible = useFlag("legacy_models_visible");
-  const serverConnected = useSelector((state) => state.server.serverConnected);
-
-  // The cart only holds v1 models; skip the RPC when the store is hidden or the RemotePy
-  // socket is down.
-  useEffect(() => {
-    if (!cartVisible || !serverConnected) return;
-    getCart()
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-  }, [cartVisible, serverConnected]);
-
   const style = {
     padding: 0,
     position: "sticky",
@@ -88,53 +69,7 @@ const Header = (props) => {
         <Col className="flex flex-center-center" style={{ gap: "16px" }}>
           <LanguageSelector size="default" />
           <FeatureGate flag="legacy_models_visible">
-          <div>
-            <Badge 
-              count={cartCount} 
-              size="small"
-              style={{ 
-                fontSize: "12px",
-                minWidth: "18px",
-                height: "18px",
-                lineHeight: "18px"
-              }}
-            >
-              <Link to="/cart">
-                <Button 
-                  type="primary" 
-                  style={{
-                    borderRadius: "6px",
-                    height: "36px",
-                    padding: "0 20px",
-                    fontWeight: 500,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    boxShadow: "0 2px 4px rgba(22, 119, 255, 0.2)",
-                    transition: "all 0.2s ease-in-out"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-1px)";
-                    e.currentTarget.style.boxShadow = "0 4px 8px rgba(22, 119, 255, 0.3)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 2px 4px rgba(22, 119, 255, 0.2)";
-                  }}
-                >
-                  <span>{t("header.cart")}</span>
-                  {cartCount > 0 && (
-                    <span style={{ 
-                      fontSize: "12px",
-                      opacity: 0.9
-                    }}>
-                      ({cartCount})
-                    </span>
-                  )}
-                </Button>
-              </Link>
-            </Badge>
-          </div>
+            <HeaderCartButton />
           </FeatureGate>
           <UserMenu />
         </Col>

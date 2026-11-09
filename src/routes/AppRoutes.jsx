@@ -8,14 +8,17 @@ import { Skeleton } from "antd";
 import ResetPassword from "../pages/ResetPassword";
 import AuthPagesLoader from "../components/ui/AuthPagesLoader";
 import Setting from "../pages/Setting";
-import MySubscriptions from "../pages/MySubscriptions";
 // import Payment from "../components/ui/Payment";
 // import Payment from "../components/ui/TestCheckoutForm";
 
 // React lazy components
 const Converter = React.lazy(() => import("../pages/Converter"));
-const Models = React.lazy(() => import("../pages/Models"));
 const ModelsPage = React.lazy(() => import("../features/models/ModelsPage"));
+const StorePage = React.lazy(() => import("../features/store/StorePage"));
+const CartPage = React.lazy(() => import("../features/store/CartPage"));
+const CheckoutPage = React.lazy(() => import("../features/store/CheckoutPage"));
+const CheckoutCompletePage = React.lazy(() => import("../features/store/CheckoutCompletePage"));
+const PurchasesPage = React.lazy(() => import("../features/store/PurchasesPage"));
 const ModelPage = React.lazy(() => import("../features/models/ModelPage"));
 const ModelOverview = React.lazy(() => import("../features/models/ModelOverview"));
 const ConceptsTab = React.lazy(() => import("../features/models/ConceptsTab"));
@@ -67,12 +70,7 @@ const PublicUserProfile = React.lazy(() =>
   import("../pages/PublicUserProfile")
 );
 const Signup = React.lazy(() => import("../pages/Signup"));
-const Payment = React.lazy(() => import("../pages/Payment"));
-const PaymentConfirmation = React.lazy(() =>
-  import("../pages/paymentConfirmation")
-);
-// const Payment = React.lazy(() => import("../pages/Payment"));
-// const Payment = React.lazy(() => import("../components/ui/Payment"));
+// // const Payment = React.lazy(() => import("../components/ui/Payment"));
 const ForgotPassword = React.lazy(() =>
   import("../pages/ForgotPassword")
 );
@@ -169,9 +167,17 @@ function AppRoutes(props) {
           <Route path="files" element={<Navigate to="../concepts" replace />} />
         </Route>
       </Route>
-      <Route path="/store/models" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route index element={<Page><Models collapsedWidth={collapsedWidth} sm={sm} /></Page>} />
+      <Route path="/store" element={<FlagRoute flag="legacy_models_visible" />}>
+        <Route path="models" element={<Page><StorePage /></Page>} />
+        <Route path="cart" element={<Page><CartPage /></Page>} />
+        <Route path="checkout" element={<Page><CheckoutPage /></Page>} />
+        <Route path="checkout/complete" element={<Page><CheckoutCompletePage /></Page>} />
+        <Route path="purchases" element={<Page><PurchasesPage /></Page>} />
       </Route>
+      <Route path="/cart" element={<Navigate to="/store/cart" replace />} />
+      <Route path="/payment" element={<Navigate to="/store/checkout" replace />} />
+      <Route path="/payment-confirmation" element={<Navigate to="/store/purchases" replace />} />
+      <Route path="/my-subscriptions" element={<Navigate to="/store/purchases" replace />} />
       <Route path="/my-models" element={<Navigate to="/models" replace />} />
       <Route path="/trainer/*" element={<Navigate to="/models" replace />} />
 
@@ -501,57 +507,9 @@ function AppRoutes(props) {
         />
       </Route>
 
-      <Route path="/my-subscriptions" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route
-          path="/my-subscriptions"
-          exact
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <MySubscriptions collapsedWidth={collapsedWidth} />
-            </React.Suspense>
-          }
-        />
-      </Route>
 
-      <Route path="/payment" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route
-          path="/payment"
-          element={
-            // <React.Suspense
-            //   fallback={<Skeleton active style={skeletonStyle} />}
-            // >
-            <Payment />
-            // {/* </React.Suspense> */}
-          }
-        />
-      </Route>
 
-      <Route
-        path="/payment-confirmation"
-        exact
-        element={<FlagRoute flag="legacy_models_visible" />}
-      >
-        <Route
-          path="/payment-confirmation"
-          exact
-          element={<PaymentConfirmation />}
-        />
-      </Route>
 
-      <Route path="/cart" element={<FlagRoute flag="legacy_models_visible" />}>
-        <Route
-          path="/cart"
-          element={
-            <React.Suspense
-              fallback={<Skeleton active style={skeletonStyle} />}
-            >
-              <Payment />
-            </React.Suspense>
-          }
-        />
-      </Route>
 
       <Route
         path="/signup"

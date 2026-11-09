@@ -55,8 +55,8 @@ const userMenu = [
     key: "mySubscriptions",
     flag: "legacy_models_visible",
     label: (
-      <Link to="/my-subscriptions" key={3}>
-        <div className="user-menu-items">My Subscriptions</div>
+      <Link to="/store/purchases" key={3}>
+        <div className="user-menu-items">My purchases</div>
       </Link>
     ),
     icon: <CreditCardOutlined />,

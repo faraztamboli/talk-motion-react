@@ -84,7 +84,6 @@ export default function CollectTab() {
   // A new word starts a new session list.
   useEffect(() => {
     session.resetSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conceptKey]);
 
   const choose = (key) => {
@@ -99,7 +98,6 @@ export default function CollectTab() {
     if (conceptKey || !concepts.length) return;
     const first = concepts.find((c) => c.sampleCount < c.target) || concepts[0];
     choose(first.concept);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [concepts, conceptKey]);
 
   const count = session.lastCount ?? concept?.sampleCount ?? 0;

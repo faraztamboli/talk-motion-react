@@ -100,7 +100,6 @@ export default function ModelsPage() {
   // New search text starts from page 1.
   useEffect(() => {
     if ((params.get("q") || "") !== debounced) update({ q: debounced, page: null });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounced]);
 
   const { data, error, isLoading, isFetching, refetch } = useListModelsQuery({

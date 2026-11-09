@@ -6,7 +6,6 @@ import modelReducer from "./features/modelSlice";
 import trainerSlice from "./features/trainerSlice";
 import speechSlice from "./features/speechSlice";
 import converterSlice from "./features/converterSlice";
-import cartSlice from "./features/cartSlice";
 import subtitleRecordingStateSlice from "./features/subtitleRecordingSlice";
 import subtitleRecordingButtonSlice from "./features/subtitleRecordingButtonSlice";
 import conversationSlice from "./features/conversationSlice";
@@ -23,7 +22,6 @@ const rootReducer = {
   trainer: trainerSlice,
   speech: speechSlice,
   converter: converterSlice,
-  cart: cartSlice,
   subtitleRecordingState: subtitleRecordingStateSlice,
   subtitleRecordingButton: subtitleRecordingButtonSlice,
   conversation: conversationSlice,

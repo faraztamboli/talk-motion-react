@@ -76,7 +76,6 @@ export default function SampleReplay({ frames, autoPlay = true, compact = false,
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
     // index is read only to resume where playback stopped
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, playing, speed]);
 
   const seconds = data.length > 1 ? (data[data.length - 1].t / 1000).toFixed(1) : "0.0";

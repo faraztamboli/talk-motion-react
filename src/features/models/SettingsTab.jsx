@@ -6,6 +6,7 @@ import { rpcErrorMessage } from "../../api/rpc";
 import { useModelContext } from "./ModelPage";
 import { useCloneModelMutation, useDeleteModelMutation, useUpdateModelMutation } from "./modelsApi";
 import ModelFormModal from "./ModelFormModal";
+import SellCard from "../store/SellCard";
 
 export default function SettingsTab() {
   const { t } = useTranslation();
@@ -74,6 +75,8 @@ export default function SettingsTab() {
           <Button onClick={() => setEditing(true)}>{t("models.settings.edit", "Edit details")}</Button>
         </Space>
       </Card>
+
+      <SellCard model={model} />
 
       <Card title={t("models.settings.copyTitle", "Make a copy")} className="tm-block-sm">
         <Typography.Paragraph type="secondary">

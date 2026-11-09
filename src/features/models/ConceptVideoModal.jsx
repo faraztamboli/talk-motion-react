@@ -29,7 +29,6 @@ function CameraClip({ onClip, disabled }) {
   useEffect(() => () => {
     stopStream();
     if (clipUrl) URL.revokeObjectURL(clipUrl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const openCamera = async () => {
@@ -125,7 +124,6 @@ export default function ConceptVideoModal({ open, modelId, concept, onClose }) {
     setUrlText("");
     setLinkError(null);
     uploader.reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, concept?.concept]);
 
   if (!concept) return null;
