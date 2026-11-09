@@ -143,12 +143,18 @@ if (fs.existsSync(MANIFEST)) {
 }
 
 // --- smoke check ------------------------------------------------------------------
+// The old pod can keep answering for a few seconds after `rollout status` returns.
 const entry = fs.readFileSync(path.join(appDist, "index.html"), "utf8").match(/assets\/index\.[\w]+\.js/)?.[0];
-try {
-  const live = await (await fetch(APP_URL, { cache: "no-store" })).text();
-  if (entry && live.includes(entry)) console.log(`✓ ${APP_URL} is serving ${entry}`);
-  else console.warn(`! ${APP_URL} does not reference ${entry} yet (CDN cache?). Check it in a browser.`);
-} catch (err) {
-  console.warn(`! Could not fetch ${APP_URL}: ${err.message}`);
+let served = false;
+let lastError = "";
+for (let attempt = 0; attempt < 12 && !served; attempt++) {
+  if (attempt) await new Promise((resolve) => setTimeout(resolve, 5000));
+  try {
+    served = (await (await fetch(`${APP_URL}?deploy=${sha}-${attempt}`, { cache: "no-store" })).text()).includes(entry);
+  } catch (err) {
+    lastError = err.message;
+  }
 }
+if (served) console.log(`✓ ${APP_URL} is serving ${entry}`);
+else console.warn(`! ${APP_URL} still doesn't reference ${entry} after 60s${lastError ? ` (${lastError})` : ""}. Check it in a browser.`);
 console.log(`\n✓ Deployed ${ref}`);
