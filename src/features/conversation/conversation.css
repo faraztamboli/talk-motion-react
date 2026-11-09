@@ -274,6 +274,14 @@
 }
 
 /* Interpreter reminder after it has been dismissed: one quiet line, always available. */
+.conv-private-line {
+  margin: 4px 0 8px;
+  padding: 6px 10px;
+  border-left: 3px solid #1f6f5c;
+  background: rgba(31, 111, 92, 0.08);
+  font-size: 0.9rem;
+}
+
 .conv-interpreter-line {
   font-size: 0.9rem;
   color: var(--color-neutral-700, #595959);

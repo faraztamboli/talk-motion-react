@@ -55,8 +55,8 @@ function StaffGuide(props) {
                 </li>
                 <li>Speak normally, one or two sentences at a time. Then wait.</li>
                 <li>
-                  The customer reads, types or taps a suggested reply, and taps <strong>Speak</strong>. Only then does
-                  the tablet say it aloud.
+                  The customer reads, types a reply and taps <strong>Speak</strong>. Only then does the tablet say it
+                  aloud.
                 </li>
                 <li>
                   When you are done, tap <strong>End</strong>.
@@ -91,8 +91,13 @@ function StaffGuide(props) {
               <h3>5. Afterwards</h3>
               <ul className="list">
                 <li>
-                  The transcript is kept on your account under <strong>My conversations</strong>. Unless the customer asks
-                  for a copy, delete it there.
+                  Your location uses <strong>private mode</strong> unless your admin turned it off. What is said stays
+                  on TalkMotion&apos;s servers and these phones, replies use the tablet&apos;s own voice, and there are
+                  no suggested replies.
+                </li>
+                <li>
+                  In private mode, the words are deleted 15 minutes after you tap End. If the customer wants a copy,
+                  they tap <strong>Save transcript</strong> on their own phone before then.
                 </li>
                 <li>
                   Your location&apos;s monthly summary counts conversations. It never includes what anyone said.

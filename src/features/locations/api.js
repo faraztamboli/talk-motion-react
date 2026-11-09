@@ -8,6 +8,8 @@ export const createLocation = ({ name, admin }) => apiFetch("/locations", { meth
 
 export const listMembers = (id) => apiFetch(`/locations/${id}/members`);
 
+export const updateLocation = (id, body) => apiFetch(`/locations/${id}`, { method: "PATCH", body });
+
 export const addMember = (id, { user, role }) =>
   apiFetch(`/locations/${id}/members`, { method: "POST", body: { user, role } });
 

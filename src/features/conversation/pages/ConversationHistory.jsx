@@ -14,7 +14,8 @@ function minutesBetween(a, b) {
 
 /**
  * /conversation/history: the transcripts kept for this account. Each one can be saved as a
- * text file or deleted for good (owner only).
+ * text file or deleted (owner only). Private-mode conversations lose their words shortly after
+ * they end; the row stays so the location's counts are right.
  */
 export default function ConversationHistory() {
   const { t } = useTranslation();
@@ -83,9 +84,11 @@ export default function ConversationHistory() {
                         {t("conversation.continue", "Continue")}
                       </Link>
                     ),
-                    <Button key="save" icon={<DownloadOutlined />} onClick={() => save(c)}>
-                      {t("conversation.download", "Save transcript")}
-                    </Button>,
+                    !c.words_deleted_at && (
+                      <Button key="save" icon={<DownloadOutlined />} onClick={() => save(c)}>
+                        {t("conversation.download", "Save transcript")}
+                      </Button>
+                    ),
                     owner && (
                       <Popconfirm
                         key="delete"
@@ -109,6 +112,8 @@ export default function ConversationHistory() {
                         {minutes && <span>{t("conversation.minutes", { defaultValue: "{{n}} min", n: minutes })}</span>}
                         {c.status === "open" && <Tag color="green">{t("conversation.openTag", "Open")}</Tag>}
                         {c.mode === "two_device" && <Tag>{t("conversation.twoDevicesTag", "Two phones")}</Tag>}
+                        {c.settings?.private && <Tag color="blue">{t("conversation.privateTag", "Private mode")}</Tag>}
+                        {c.words_deleted_at && <Tag>{t("conversation.wordsDeletedTag", "Words deleted")}</Tag>}
                       </Space>
                     }
                   />

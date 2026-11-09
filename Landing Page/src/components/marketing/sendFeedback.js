@@ -35,7 +35,8 @@ export async function sendFeedback(values) {
       body: JSON.stringify(fields),
     });
     if (res.ok) return true;
-    if (res.status !== 404) return false;
+    // A static host answers 404 or 405 for a missing route; a server error may be temporary.
+    if (res.status !== 404 && res.status !== 405 && res.status < 500) return false;
   } catch {
     // network or CORS: fall through to EmailJS
   }

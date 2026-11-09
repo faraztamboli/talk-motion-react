@@ -51,6 +51,7 @@ function Pricing(props) {
                 <li>Customers join from their own phone</li>
                 <li>Add and remove staff yourself</li>
                 <li>Monthly accessibility summary, counts only</li>
+                <li>Private mode: what is said stays on our servers, and is deleted after each conversation</li>
               </ul>
               <Link className="btn secondary" to="/contact-us">
                 Ask about a pilot
@@ -105,7 +106,16 @@ function Pricing(props) {
             <div>
               <h3>Can I cancel?</h3>
               <p className="muted" style={{ fontSize: "1.05rem" }}>
-                Yes, any time. Your transcripts remain yours to export.
+                Yes, any time.
+              </p>
+            </div>
+            <div>
+              <h3>Is it HIPAA compliant?</h3>
+              <p className="muted" style={{ fontSize: "1.05rem" }}>
+                We do not sign HIPAA business associate agreements yet. Private mode, on by default at every location,
+                keeps what is said on our own servers and the phones in the conversation. Replies use the phone&apos;s
+                own voice, there are no AI suggestions, and the words are deleted 15 minutes after each conversation
+                ends. Ask your privacy officer before using TalkMotion for conversations about prescriptions or health.
               </p>
             </div>
           </div>

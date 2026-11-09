@@ -22,6 +22,7 @@ const CLAIMS = [
   { claim: "Your transcripts: save them as text, or delete them", status: "live" },
   { claim: "Tap a word in a caption to see a sign video, where we have one", status: "live" },
   { claim: "Pharmacies and clinics: staff accounts and a monthly summary that counts, never reads", status: "live" },
+  { claim: "Private mode at pharmacies and clinics: what is said stays on our servers and the phones in the conversation", status: "live" },
   { claim: "Quick-phrase sets for the doctor, the pharmacy, work", status: "soon" },
   { claim: "Your own cloned voice, with recorded consent", status: "soon" },
   { claim: "Fingerspelling and number recognition", status: "soon" },
@@ -76,9 +77,9 @@ function OpenBuild(props) {
             <div>
               <h3>You control every word</h3>
               <p className="muted" style={{ fontSize: "1.05rem" }}>
-                In a conversation, nothing is spoken on your behalf without your tap. Suggestions are drafts. If we add
-                sign recognition, it will produce drafts too. One exception remains: the older Translator page from our
-                first prototype speaks recognized signs directly. It is not part of Conversation Mode.
+                Nothing is spoken on your behalf without your tap. Suggestions are drafts. The older Translator page
+                from our first prototype works the same way: a recognized sign waits for your tap, unless you turn on
+                Speak automatically yourself. If we add sign recognition to conversations, it will produce drafts too.
               </p>
             </div>
             <div>
@@ -99,9 +100,11 @@ function OpenBuild(props) {
               <h3>Your data stays yours</h3>
               <p className="muted" style={{ fontSize: "1.05rem" }}>
                 Conversations are yours to save or delete in My conversations. A deleted conversation leaves our nightly
-                backups within 35 days. Cloned voices will require your recorded consent. If we ever ask for recordings
-                to improve recognition, it will be opt-in and credited. This website counts visits per day without
-                cookies or ad trackers, and our visit counter never stores your IP address.
+                backups within 35 days. At pharmacies and clinics, private mode keeps what is said on our servers and
+                the phones in the conversation, and deletes the words 15 minutes after it ends. We do not sign HIPAA
+                business associate agreements yet. Cloned voices will require your recorded consent. This website
+                counts visits per day without cookies or ad trackers, and our visit counter never stores your IP
+                address. Details are in our <Link to="/privacy-policy">privacy policy</Link>.
               </p>
             </div>
           </div>

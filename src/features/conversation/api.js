@@ -69,6 +69,7 @@ export function transcriptToText(cues) {
 /** Saves the transcript as a .txt file on this device. */
 export async function downloadTranscript(conversationId, { token, startedAt } = {}) {
   const res = await fetchTranscript(conversationId, { token });
+  if (res.words_deleted) throw new Error("The words of this conversation have been deleted.");
   const blob = new Blob([transcriptToText(res.cues)], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");

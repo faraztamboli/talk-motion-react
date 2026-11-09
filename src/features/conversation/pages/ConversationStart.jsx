@@ -25,11 +25,13 @@ export default function ConversationStart() {
 
   // Staff at one location start conversations for it unless they choose otherwise.
   const locationValue = location ?? (locations.length ? locations[0].id : PERSONAL);
+  const chosenLocation = locations.find((l) => l.id === locationValue);
+  const privateMode = Boolean(chosenLocation) && chosenLocation.private_mode !== false;
 
   const start = async () => {
     setBusy(true);
     setError(null);
-    const settings = { plain_language: plainLanguage };
+    const settings = privateMode ? {} : { plain_language: plainLanguage };
     if (mode === "same_device" && partnerLabel.trim()) settings.partner_label = partnerLabel.trim();
     try {
       const conversation = await createConversation({
@@ -130,16 +132,26 @@ export default function ConversationStart() {
               <Typography.Text type="secondary">
                 {t("conversation.locationHelp", "Counted in the location's monthly summary. What is said is never included.")}
               </Typography.Text>
+              {privateMode && (
+                <div className="conv-private-line" role="note">
+                  {t(
+                    "conversation.privateHelp",
+                    "Private mode: what is said stays on TalkMotion's servers and these phones. Replies use the phone's own voice, suggestions and plain language are off, and the words are deleted shortly after the conversation ends."
+                  )}
+                </div>
+              )}
             </div>
           )}
 
-          <Space align="center">
-            <Switch checked={plainLanguage} onChange={setPlainLanguage} aria-label={t("conversation.plainToggle", "Plain-language captions")} />
-            <span>
-              <strong>{t("conversation.plainToggle", "Plain-language captions")}</strong>{" "}
-              {t("conversation.plainToggleHelp", "(adds a simpler version of what is said, when available)")}
-            </span>
-          </Space>
+          {!privateMode && (
+            <Space align="center">
+              <Switch checked={plainLanguage} onChange={setPlainLanguage} aria-label={t("conversation.plainToggle", "Plain-language captions")} />
+              <span>
+                <strong>{t("conversation.plainToggle", "Plain-language captions")}</strong>{" "}
+                {t("conversation.plainToggleHelp", "(adds a simpler version of what is said, when available)")}
+              </span>
+            </Space>
+          )}
 
           <Typography.Text type="secondary">
             {t(

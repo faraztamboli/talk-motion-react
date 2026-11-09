@@ -66,7 +66,7 @@ const faqPageDetails = {
 const privacyPolicyPageDetails = {
   title: "TalkMotion | Privacy Policy",
   description:
-    "TalkMotion was created to help bridge communication gaps in settings where sign language may not be widely understood. Our Privacy Policy explains how we collect, use, and protect your information as we deliver tools that support accessible communication across diverse language communities.",
+    "What TalkMotion collects, why, who else handles it, how long we keep it, and what you can do about it. In plain words.",
 };
 
 const termsPageDetails = {

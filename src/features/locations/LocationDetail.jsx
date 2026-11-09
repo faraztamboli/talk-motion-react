@@ -1,9 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Button, Card, Form, Input, List, Popconfirm, Select, Skeleton, Space, Tag, Typography, message } from "antd";
+import { Alert, Button, Card, Form, Input, List, Popconfirm, Select, Skeleton, Space, Switch, Tag, Typography, message } from "antd";
 import { PrinterOutlined, UserAddOutlined } from "@ant-design/icons";
 import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { addMember, fetchSummary, listLocations, listMembers, monthLabel, recentMonths, removeMember } from "./api";
+import {
+  addMember,
+  fetchSummary,
+  listLocations,
+  listMembers,
+  monthLabel,
+  recentMonths,
+  removeMember,
+  updateLocation,
+} from "./api";
 import { ROLE_LABEL } from "./LocationsPage";
 import "./locations.css";
 
@@ -60,12 +69,46 @@ export function SummaryView({ summary }) {
   );
 }
 
+/** Private mode: on by default, and recommended wherever health information can come up. */
+export function PrivateModeCard({ privateMode, onChange, busy }) {
+  return (
+    <Card title="Private mode" className="loc-noprint" style={{ marginTop: 16 }}>
+      <Space align="start">
+        <Switch checked={privateMode} onChange={onChange} loading={busy} aria-label="Private mode" />
+        <div>
+          {privateMode ? (
+            <Typography.Paragraph>
+              <strong>On (recommended for pharmacies and clinics).</strong> What is said stays on TalkMotion&apos;s
+              servers and the phones in the conversation. Captions come from our own speech recognition, replies are
+              spoken by the phone&apos;s own voice, and AI suggestions and plain language are off. The words of each
+              conversation are deleted 15 minutes after it ends, so the customer can save a copy first. The monthly
+              summary keeps its counts.
+            </Typography.Paragraph>
+          ) : (
+            <Typography.Paragraph>
+              <strong>Off.</strong> Conversations get suggested replies, plain language and a natural voice. These send
+              what is said to outside AI services (OpenAI and ElevenLabs). Transcripts are kept until staff delete them.
+              Turn private mode off only if conversations here never involve health information.
+            </Typography.Paragraph>
+          )}
+          <Typography.Paragraph type="secondary">
+            TalkMotion does not sign HIPAA business associate agreements yet. Ask your privacy officer before using it
+            for conversations about prescriptions or health. A change applies to conversations started after it.
+          </Typography.Paragraph>
+        </div>
+      </Space>
+    </Card>
+  );
+}
+
 /** /locations/:locationId: staff management and the monthly summary (location admins). */
 export default function LocationDetail() {
   const { locationId } = useParams();
   const meId = useSelector((state) => state.apiAuth?.user?.id);
   const months = useMemo(() => recentMonths(12), []);
   const [name, setName] = useState("");
+  const [privateMode, setPrivateMode] = useState(null);
+  const [savingMode, setSavingMode] = useState(false);
   const [members, setMembers] = useState(null);
   const [month, setMonth] = useState(months[0]);
   const [summary, setSummary] = useState(null);
@@ -79,7 +122,11 @@ export default function LocationDetail() {
 
   useEffect(() => {
     listLocations()
-      .then((all) => setName(all.find((l) => l.id === locationId)?.name || ""))
+      .then((all) => {
+        const here = all.find((l) => l.id === locationId);
+        setName(here?.name || "");
+        setPrivateMode(here ? here.private_mode !== false : null);
+      })
       .catch(() => {});
     loadMembers();
   }, [locationId, loadMembers]);
@@ -110,6 +157,19 @@ export default function LocationDetail() {
       message.error(err.message);
     } finally {
       setBusy(false);
+    }
+  };
+
+  const changeMode = async (on) => {
+    setSavingMode(true);
+    try {
+      const res = await updateLocation(locationId, { private_mode: on });
+      setPrivateMode(res.private_mode);
+      message.success(res.private_mode ? "Private mode is on" : "Private mode is off");
+    } catch (err) {
+      message.error(err.message);
+    } finally {
+      setSavingMode(false);
     }
   };
 
@@ -148,6 +208,8 @@ export default function LocationDetail() {
       >
         {summary ? <SummaryView summary={summary} /> : <Skeleton active />}
       </Card>
+
+      {privateMode !== null && <PrivateModeCard privateMode={privateMode} onChange={changeMode} busy={savingMode} />}
 
       <Card title="Staff" className="loc-noprint" style={{ marginTop: 16 }}>
         <Typography.Paragraph type="secondary">
