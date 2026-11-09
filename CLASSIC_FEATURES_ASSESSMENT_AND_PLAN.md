@@ -246,3 +246,27 @@ Backend patterns (`server/talkmotion`):
 - Every RPC checks access (`ensure_can_use`, `ensure_can_train`, ownership) before touching
   data, and returns plain dicts/lists (no JSON strings, no `None` on success).
 - Tests in `server/talkmotion/tests/`, run inside the image (see the test file header).
+
+---
+
+## 9. Status (2026-11-09)
+
+Built on `feat/classic-features-rewrite` (web) and `feat/classic-backend` (server). Not deployed;
+follow `server/docs/deploy-classic.md` (database, then server image `0.0.2-classic`, then web).
+
+| Plan item | State |
+|---|---|
+| Phase 0: WIP committed, image builds, error boundary, pages survive reconnects | done |
+| Phase 1: RPC transport (per-function queue, timeouts, error normalization), RTK Query layer, session guards, silent single sign-in for linked accounts | done |
+| Phase 2: Models hub (list, model page with tabs, words/phrases with targets, rename/merge, samples with replay, trainers, settings) | done |
+| Phase 3: Record (capture session with undo) and Train (readiness, progress, cancel, history), reference videos per word or phrase | done |
+| Phase 4: Translator rebuild | done |
+| Phase 5: Subtitle Designer (3 steps, recording engine, caption editor), viewer with signer overlay and captions, libraries | done |
+| Store with Stripe (server-verified checkout, per-user cart, purchases, selling) and webhook | done |
+| Phase 6: access checks (models, folders, recordings, subscriptions), secrets out of code, deploy runbook | done |
+| Real-browser pass (camera, microphone, Safari recording, YouTube iframe, Stripe test payment) | **not done**: needs the new server running |
+| API-only accounts (no legacy user) on classic pages | **not done**: still see the "classic account needed" screen |
+| Classrooms pages | **not in scope** of this revision |
+
+Tests: web 422 (vitest); server unit suites 62 inside the image, smoke 88/88 RPCs, SQL
+integration against MySQL 8 (models, roles, purchases, cart, folders).
