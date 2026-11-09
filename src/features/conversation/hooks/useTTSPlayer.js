@@ -28,7 +28,9 @@ export default function useTTSPlayer({ lang = "en-US", onStart, onEnd, localVoic
   const playing = useRef(false);
   const audioRef = useRef(null);
   const callbacks = useRef({});
-  callbacks.current = { onStart, onEnd };
+  // Read at play time: private mode is known only after hello.ack, and the language may not
+  // change, so memoized callbacks must not capture the first render's value.
+  callbacks.current = { onStart, onEnd, localVoiceOnly };
 
   const playNext = useCallback(() => {
     const item = queue.current.shift();
@@ -52,7 +54,7 @@ export default function useTTSPlayer({ lang = "en-US", onStart, onEnd, localVoic
       }
       const utterance = new SpeechSynthesisUtterance(item.text);
       utterance.lang = lang;
-      if (localVoiceOnly) {
+      if (callbacks.current.localVoiceOnly) {
         const voice = pickLocalVoice(synth.getVoices?.(), lang);
         if (!voice) {
           done(); // no on-device voice: the words stay on screen instead

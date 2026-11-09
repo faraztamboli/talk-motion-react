@@ -125,7 +125,8 @@ export default function LocationDetail() {
       .then((all) => {
         const here = all.find((l) => l.id === locationId);
         setName(here?.name || "");
-        setPrivateMode(here ? here.private_mode !== false : null);
+        // Only admins may switch it; staff do not see the switch.
+        setPrivateMode(here && here.can_manage ? here.private_mode !== false : null);
       })
       .catch(() => {});
     loadMembers();

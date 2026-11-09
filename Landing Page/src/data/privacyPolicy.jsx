@@ -108,7 +108,8 @@ export const privacyPolicy = (
       off. In private mode, what is said stays on TalkMotion&apos;s servers and the phones in the conversation:
       captions come only from our own speech recognition, replies are spoken by the phone&apos;s own voice, and nothing
       is sent to OpenAI or ElevenLabs. The words of each conversation are deleted 15 minutes after it ends, so the
-      customer can save a copy first. The location&apos;s monthly summary keeps counts only.
+      customer can save a copy first, and a conversation left open with nothing said for an hour ends by itself.
+      Copies in our nightly backups are gone within 35 days. The location&apos;s monthly summary keeps counts only.
     </P>
     <P>
       TalkMotion is not a medical service. We do not sign HIPAA business associate agreements yet. For health, legal

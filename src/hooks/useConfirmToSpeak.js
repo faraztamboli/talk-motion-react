@@ -44,6 +44,7 @@ export default function useConfirmToSpeak(speak) {
 
   const setAutoSpeak = useCallback((on) => {
     setAutoSpeakState(Boolean(on));
+    setDraft(null); // a draft from before the switch is never spoken or shown again
     try {
       localStorage.setItem(AUTO_SPEAK_KEY, on ? "1" : "0");
     } catch {

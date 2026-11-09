@@ -51,6 +51,16 @@ describe("confirm to speak in the Translator", () => {
     expect(localStorage.getItem(AUTO_SPEAK_KEY)).toBe("1");
   });
 
+  it("drops a pending draft when the switch changes", () => {
+    const speak = vi.fn();
+    render(<Harness speak={speak} />);
+    fireEvent.click(screen.getByText("recognize"));
+    fireEvent.click(screen.getByRole("switch", { name: "Speak automatically" }));
+    fireEvent.click(screen.getByRole("switch", { name: "Speak automatically" }));
+    expect(screen.queryByRole("region", { name: "Recognized sign, not spoken yet" })).toBeNull();
+    expect(speak).not.toHaveBeenCalled();
+  });
+
   it("is off by default", () => {
     const { result } = renderHook(() => useConfirmToSpeak(vi.fn()));
     expect(result.current.autoSpeak).toBe(false);

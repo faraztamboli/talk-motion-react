@@ -97,7 +97,8 @@ function StaffGuide(props) {
                 </li>
                 <li>
                   In private mode, the words are deleted 15 minutes after you tap End. If the customer wants a copy,
-                  they tap <strong>Save transcript</strong> on their own phone before then.
+                  they tap <strong>Save transcript</strong> on their own phone before then. If you forget to tap End,
+                  the conversation ends by itself after an hour with nothing said.
                 </li>
                 <li>
                   Your location&apos;s monthly summary counts conversations. It never includes what anyone said.
