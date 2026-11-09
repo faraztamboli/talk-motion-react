@@ -7,27 +7,25 @@ import {
   CreditCardOutlined,
 } from "@ant-design/icons";
 import UserMenuProfileItem from "../components/ui/UserMenuProfileItem";
-import JS2Py from "../remotepyjs";
+import { rpc, sessionToken } from "../api/rpc";
 import { clearTokens } from "../api/http";
 
 const handleLogout = () => {
-  const token = localStorage.getItem("token");
+  const token = sessionToken();
   // The TalkMotion 2.0 API session is client-side JWTs: drop them right away.
   clearTokens();
   const finish = () => {
     window.localStorage.removeItem("token");
     window.location.href = "/login";
   };
-  try {
-    JS2Py.PythonFunctions.SessionServer.logOut(token, function (res) {
-      console.log(res);
-      finish();
-    });
-  } catch (err) {
-    // RemotePy socket is down (e.g. signed in to Conversation Mode only).
-    console.log(err);
+  if (!token) {
     finish();
+    return;
   }
+  // Tell the classic server, but never keep someone waiting to sign out (it may be unreachable).
+  rpc("SessionServer.logOut", [token], { raw: true, timeoutMs: 3000 })
+    .catch(() => {})
+    .finally(finish);
 };
 
 const userMenu = [

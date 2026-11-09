@@ -6,6 +6,7 @@ import { getAccessToken, refreshTokens } from "../api/http";
 import { decodeJwtPayload, isRemotePyLoginOk, legacyUsernameOf } from "../api/remotepyLogin";
 import { sessionChecked, ssoFinished, ssoStarted } from "../app/features/loginSlice";
 import { setUser } from "../app/features/userSlice";
+import { classicApi, invalidateAllClassic } from "../app/classicApi";
 
 /** An API access token with at least a minute left, refreshed if needed; null if none. */
 export async function freshAccessToken({ getToken = getAccessToken, refresh = refreshTokens } = {}) {
@@ -73,6 +74,21 @@ export default function useClassicSession() {
   const ssoTried = useRef(false);
 
   const connected = phase === "connected";
+  const wasConnected = useRef(false);
+  const wasLoggedIn = useRef(false);
+
+  // After a reconnect, refetch whatever is on screen (it may have changed meanwhile).
+  useEffect(() => {
+    if (connected && wasConnected.current === "dropped") dispatch(invalidateAllClassic());
+    if (connected) wasConnected.current = true;
+    else if (wasConnected.current) wasConnected.current = "dropped";
+  }, [connected, dispatch]);
+
+  // Signed out: drop cached classic data so the next account never sees it.
+  useEffect(() => {
+    if (wasLoggedIn.current && checked && !isLoggedIn) dispatch(classicApi.util.resetApiState());
+    wasLoggedIn.current = isLoggedIn;
+  }, [checked, isLoggedIn, dispatch]);
 
   // Verify the stored session on every (re)connect.
   useEffect(() => {
