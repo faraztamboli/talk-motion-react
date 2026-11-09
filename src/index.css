@@ -2768,3 +2768,19 @@ html[dir="rtl"] .ant-layout-footer {
     text-align: right;
   }
 }
+/* ---- Connection banner and inline render errors (classic revision) ---- */
+.tm-connection-banner {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 8px 16px 0;
+}
+.tm-error-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-neutral-200, #e5e7eb);
+  border-radius: 8px;
+  background: var(--color-neutral-50, #f9fafb);
+}

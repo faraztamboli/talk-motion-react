@@ -2,7 +2,7 @@ import { useState } from "react";
 import JS2Py from "../remotepyjs";
 import { message } from "antd";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { login } from "../app/features/loginSlice";
 import useLocalStorage from "./useLocalStorage";
 import useApiAuth from "./useApiAuth";
@@ -20,13 +20,23 @@ import { readLocalOverrides, resolveFlags } from "../config/flags";
 const wantsConversation = (api) =>
   Boolean(api?.ok) && resolveFlags({ server: api.flags, overrides: readLocalOverrides() }).conversation_v2;
 
+/** Only same-app paths, never "//host" or a full URL. */
+export function safeReturnPath(from) {
+  if (typeof from !== "string" || !from.startsWith("/") || from.startsWith("//")) return null;
+  if (/^\/(login|signup|forgetpassword|resetpassword)(?=$|[/?#])/.test(from)) return null;
+  return from;
+}
+
 function useLogin() {
   const [loading, setLoading] = useState(false);
   const [, setToken] = useLocalStorage("token", "");
   const [messageApi, contextHolder] = message.useMessage();
 
   const navigate = useNavigate();
+  const location = useLocation();
   const disptach = useDispatch();
+  // A guard that sent the visitor here passes the page they wanted; go back there after login.
+  const returnTo = safeReturnPath(location.state?.from);
   // The TalkMotion 2.0 API is the sign-in authority. Legacy-linked accounts then sign in to
   // RemotePy with the API token instead of the password; if the API is down, or RemotePy
   // cannot take the token, login behaves exactly as before.
@@ -54,7 +64,7 @@ function useLogin() {
       // Same 1 s pause and dashboard as before. Conversation Mode, when enabled, is one tap
       // away in the sidebar and quick actions; existing users are never pushed into it.
       setTimeout(() => {
-        navigate("/");
+        navigate(returnTo || "/", { replace: true });
       }, 1000);
     } else if (destination === "conversation") {
       // RemotePy did not accept the login. An account that exists only in the new API can

@@ -1,126 +1,93 @@
-import React from "react";
-import JS2Py from "../remotepyjs";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-  setServerConnected,
-  setServerStatus,
-} from "../app/features/serverSlice";
-import { setProfileImg } from "../app/features/userSlice";
-import useProfile from "./useProfile";
+import JS2Py from "../remotepyjs";
+import { connectionPhaseChanged } from "../app/features/serverSlice";
 
-async function useServerConnection() {
-  const { getUserProfile } = useProfile();
+const MAX_DELAY_MS = 30000;
+/** Failed attempts in a row before the app reports "offline" (it keeps retrying). */
+export const OFFLINE_AFTER_ATTEMPTS = 4;
+
+export function retryDelayMs(attempt) {
+  return Math.min(1000 * 2 ** Math.max(0, attempt - 1), MAX_DELAY_MS);
+}
+
+/** Ask the mounted connection hook to reconnect now (the banner's "Try again"). */
+export const RECONNECT_NOW_EVENT = "tm:remotepy-reconnect-now";
+
+/**
+ * Mount once (App). Opens the RemotePy socket and keeps it open: reconnects with exponential
+ * backoff (1 s, 2 s, 4 s ... capped at 30 s) for as long as the page is open, and immediately
+ * when the browser comes back online, the tab becomes visible, or the user asks.
+ */
+export default function useServerConnection() {
   const dispatch = useDispatch();
 
-  return React.useEffect(() => {
-    // Get WebSocket URL from environment variable or use default
-    const wsUrl = import.meta.env.VITE_WS_SERVER_URL || "wss://app.talk-motion.com:8083";
-    JS2Py.serverName = wsUrl;
+  useEffect(() => {
+    JS2Py.serverName = import.meta.env.VITE_WS_SERVER_URL || "wss://app.talk-motion.com:8083";
 
-    let retryCount = 0;
-    let maxRetries = 5;
-    let retryTimeoutId = null;
-    let isUnmounted = false;
+    let attempt = 0;
+    let retryTimer = null;
+    let unmounted = false;
+    let everConnected = false;
 
-    const connectWithRetry = () => {
-      if (isUnmounted) return;
-
-      if (retryCount > 0) {
-        const delay = Math.min(1000 * Math.pow(2, retryCount - 1), 30000); // Exponential backoff, max 30s
-        dispatch(setServerStatus(`Retrying connection (${retryCount}/${maxRetries})...`));
-        console.log(`Retrying WebSocket connection in ${delay}ms (attempt ${retryCount}/${maxRetries})`);
-        
-        retryTimeoutId = setTimeout(() => {
-          if (!isUnmounted) {
-            JS2Py.connect();
-          }
-        }, delay);
-        return;
-      }
-
-      dispatch(setServerStatus("Connecting..."));
+    const connectNow = () => {
+      if (unmounted) return;
+      clearTimeout(retryTimer);
+      retryTimer = null;
+      if (JS2Py.socket && JS2Py.socket.readyState <= 1) return; // connecting or open
       JS2Py.connect();
     };
 
-    JS2Py.onopen = function () {
-      retryCount = 0; // Reset retry count on successful connection
-      dispatch(setServerConnected(true));
-      dispatch(setServerStatus("Connected"));
-      console.log("WebSocket connected successfully");
-//      setTimeout(() => {
-//        getUserProfile()
-//          .then((res) => {
-//            console.log('on result of: getUserProfile');
-//            console.log(res);
-//            dispatch(setProfileImg(res.sm_img));
-//          })
-//          .catch((err) => console.log(err));
-//      }, 2000);
+    const scheduleRetry = () => {
+      if (unmounted || retryTimer) return;
+      attempt += 1;
+      const delay = retryDelayMs(attempt);
+      const phase = attempt >= OFFLINE_AFTER_ATTEMPTS ? "offline" : everConnected || attempt > 1 ? "reconnecting" : "connecting";
+      dispatch(connectionPhaseChanged({ phase, attempt, nextRetryAt: Date.now() + delay }));
+      retryTimer = setTimeout(() => {
+        retryTimer = null;
+        connectNow();
+      }, delay);
     };
 
-    JS2Py.onclose = function (event) {
-      dispatch(setServerConnected(false));
-      
-      // Only retry if not a normal closure and we haven't exceeded max retries
-      if (event.code !== 1000 && retryCount < maxRetries && !isUnmounted) {
-        retryCount++;
-        console.warn(`WebSocket closed unexpectedly (code: ${event.code}, reason: ${event.reason || 'none'})`);
-        connectWithRetry();
-      } else if (retryCount >= maxRetries) {
-        dispatch(setServerStatus("Connection failed. Please refresh the page."));
-        console.error("WebSocket connection failed after maximum retries");
-      } else {
-        dispatch(setServerStatus("Disconnected"));
-        console.log("WebSocket connection closed");
-      }
+    // Fires once the function library has loaded on a fresh socket.
+    JS2Py.onopen = () => {
+      attempt = 0;
+      everConnected = true;
+      dispatch(connectionPhaseChanged({ phase: "connected", attempt: 0 }));
+    };
+    JS2Py.onclose = (event) => {
+      if (unmounted) return;
+      if (event?.code === 1000 && event?.reason === "Component unmounted") return;
+      scheduleRetry();
+    };
+    JS2Py.onerror = () => {
+      // onclose follows an error and schedules the retry.
     };
 
-    JS2Py.onerror = function (event) {
-      console.error("WebSocket error occurred:", event);
-      dispatch(setServerConnected(false));
-      
-      // WebSocket onerror doesn't provide detailed error info, but we can check the socket state
-      let errorMessage = "Connection error";
-      if (JS2Py.socket) {
-        const state = JS2Py.socket.readyState;
-        if (state === WebSocket.CLOSED) {
-          errorMessage = "Connection closed unexpectedly";
-        } else if (state === WebSocket.CONNECTING) {
-          errorMessage = "Connection timeout";
-        }
-      }
-      
-      // Check browser console for certificate errors (they appear as network errors)
-      // The actual error details are logged to console by the browser
-      dispatch(setServerStatus(`Error: ${errorMessage}`));
-      
-      // Retry connection if we haven't exceeded max retries
-      if (retryCount < maxRetries && !isUnmounted) {
-        retryCount++;
-        connectWithRetry();
-      } else if (retryCount >= maxRetries) {
-        dispatch(setServerStatus("Connection failed. Please refresh the page."));
-      }
+    const retryNowIfDown = () => {
+      if (JS2Py.isOpen) return;
+      attempt = Math.max(0, attempt - 1);
+      connectNow();
     };
+    const onVisible = () => {
+      if (document.visibilityState === "visible") retryNowIfDown();
+    };
+    window.addEventListener("online", retryNowIfDown);
+    window.addEventListener(RECONNECT_NOW_EVENT, retryNowIfDown);
+    document.addEventListener("visibilitychange", onVisible);
 
-    // Starting connection
-    connectWithRetry();
+    dispatch(connectionPhaseChanged({ phase: "connecting", attempt: 0 }));
+    connectNow();
 
-    // Cleanup function
     return () => {
-      isUnmounted = true;
-      if (retryTimeoutId) {
-        clearTimeout(retryTimeoutId);
-      }
-      if (JS2Py.socket) {
-        const socket = JS2Py.socket;
-        if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
-          socket.close(1000, 'Component unmounted');
-        }
-      }
+      unmounted = true;
+      clearTimeout(retryTimer);
+      window.removeEventListener("online", retryNowIfDown);
+      window.removeEventListener(RECONNECT_NOW_EVENT, retryNowIfDown);
+      document.removeEventListener("visibilitychange", onVisible);
+      const socket = JS2Py.socket;
+      if (socket && socket.readyState <= 1) socket.close(1000, "Component unmounted");
     };
-    //eslint-disable-next-line
-  }, []);
+  }, [dispatch]);
 }
-
-export default useServerConnection;

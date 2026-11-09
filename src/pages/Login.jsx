@@ -1,8 +1,9 @@
 import React from "react";
 import { Layout, Space, Row, Col, Button, Form, Input, Checkbox } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import useLogin from "../hooks/useLogin";
+import { Link, Navigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import useLogin, { safeReturnPath } from "../hooks/useLogin";
 import AuthPagesCol from "../components/ui/AuthPagesCol";
 import MetaDecorator from "../components/MetaDecorator";
 import { loginDetails } from "../data/PageDetails";
@@ -10,6 +11,8 @@ import { loginDetails } from "../data/PageDetails";
 const Login = (props) => {
   const { onFinish, loading, contextHolder } = useLogin();
   const { title, description } = loginDetails;
+  const location = useLocation();
+  const { isLoggedIn, checked } = useSelector((state) => state.login);
 
   const iconStyle = { 
     marginRight: "10px", 
@@ -21,6 +24,11 @@ const Login = (props) => {
     borderRadius: "var(--radius-pill)",
     transition: "all var(--transition-base)",
   };
+
+  // Already signed in (a refresh on /login, or single sign-in finished): go where they meant to.
+  if (checked && isLoggedIn && !loading) {
+    return <Navigate to={safeReturnPath(location.state?.from) || "/dashboard"} replace />;
+  }
 
   return (
     <Layout>
