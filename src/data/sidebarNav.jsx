@@ -96,7 +96,7 @@ const items = [
   getItem(
     "Learning",
     "4",
-    <Link to="/video-subtitles">
+    <Link to="/video-subtitles/mylibrary">
       <MdOutlineSubtitles />
     </Link>,
     [

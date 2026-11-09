@@ -7,8 +7,6 @@ import trainerSlice from "./features/trainerSlice";
 import speechSlice from "./features/speechSlice";
 import converterSlice from "./features/converterSlice";
 import cartSlice from "./features/cartSlice";
-import subtitleRecordingStateSlice from "./features/subtitleRecordingSlice";
-import subtitleRecordingButtonSlice from "./features/subtitleRecordingButtonSlice";
 import conversationSlice from "./features/conversationSlice";
 import flagsReducer from "./features/flagsSlice";
 import apiAuthReducer from "./features/apiAuthSlice";
@@ -24,8 +22,6 @@ const rootReducer = {
   speech: speechSlice,
   converter: converterSlice,
   cart: cartSlice,
-  subtitleRecordingState: subtitleRecordingStateSlice,
-  subtitleRecordingButton: subtitleRecordingButtonSlice,
   conversation: conversationSlice,
   flags: flagsReducer,
   apiAuth: apiAuthReducer,
