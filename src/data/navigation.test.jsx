@@ -6,7 +6,7 @@ function keys(items) {
   return items.flatMap((item) => [item.key, ...(item.children ? keys(item.children) : [])]);
 }
 
-const LEGACY_KEYS = ["2", "21", "22", "61", "31", "32", "33"];
+const LEGACY_KEYS = ["2", "21", "22", "61"];
 
 describe("sidebar", () => {
   it("shows everything as today when v1 models are visible", () => {
@@ -14,6 +14,12 @@ describe("sidebar", () => {
     expect(keys(items)).toEqual(expect.arrayContaining([...LEGACY_KEYS, "42", "62", "63", "64"]));
     expect(keys(items)).not.toContain("7");
     expect(items.every((item) => !("flag" in item))).toBe(true);
+    // Models lead to the hub; the store has its own page.
+    const models = items.find((item) => item.key === "2");
+    expect(models.children.map((c) => c.path)).toEqual(["/models", "/models?show=trainable"]);
+    const store = items.find((item) => item.key === "5");
+    expect(store.children.find((c) => c.key === "61").path).toBe("/store/models");
+    expect(items.find((item) => item.key === "42").path).toBe("/video-subtitles/designer");
   });
 
   it("hides models, model store and trainer, but keeps subtitles and content", () => {
@@ -23,7 +29,7 @@ describe("sidebar", () => {
     // Store keeps Videos, Classrooms and Courses.
     const store = items.find((item) => item.key === "5");
     expect(store.children.map((c) => c.key)).toEqual(["62", "63", "64"]);
-    // Trainer is left with only the Subtitle Designer, which moves to the top level.
+    // The Subtitle Designer is a top-level item; recording and training live inside each model.
     expect(items.find((item) => item.key === "3")).toBeUndefined();
     const designer = items.find((item) => item.key === "42");
     expect(designer.path).toBe("/video-subtitles/designer");

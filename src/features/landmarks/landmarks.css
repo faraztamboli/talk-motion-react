@@ -1,0 +1,89 @@
+.tm-cam {
+  width: 100%;
+}
+.tm-cam-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.tm-cam-video {
+  position: absolute;
+  inset: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.tm-cam-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.tm-cam-hidden {
+  visibility: hidden;
+}
+.tm-cam-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  text-align: center;
+  color: #e2e8f0;
+}
+.tm-cam-msg strong {
+  font-size: 1.05rem;
+  color: #fff;
+}
+.tm-cam-msg span {
+  max-width: 420px;
+  font-size: 0.9rem;
+}
+.tm-cam-msg-overlay {
+  background: rgba(15, 23, 42, 0.6);
+}
+.tm-cam-msg-icon {
+  font-size: 2rem;
+  opacity: 0.8;
+}
+.tm-cam-msg-icon-warn {
+  color: #fbbf24;
+}
+.tm-cam-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.75);
+  color: #fff;
+  font-size: 0.85rem;
+}
+.tm-cam-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+.tm-cam-device {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+.tm-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

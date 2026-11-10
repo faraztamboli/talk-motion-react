@@ -53,7 +53,7 @@ const quickActions = [
     key: "upload-video",
     label: "Upload Video",
     icon: <UploadOutlined />,
-    path: "/trainer/upload",
+    path: "/models",
     color: "#eb2f96",
     flag: "legacy_models_visible",
   },

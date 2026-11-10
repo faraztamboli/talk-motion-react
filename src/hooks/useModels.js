@@ -1,18 +1,11 @@
 import React from "react";
 import JS2Py from "../remotepyjs";
 import useLocalStorage from "./useLocalStorage";
-import usePayment from "./usePayment";
 import { useDispatch } from "react-redux";
 
 function useModels() {
   const dispatch = useDispatch();
   const [token] = useLocalStorage("token");
-  const { getCart } = usePayment();
-
-  React.useEffect(() => {
-    getUserModels("", 0, 10);
-    getPublicModels("", 0, 10);
-  }, []);
 
   function getPublicModels(search_text, offset, end) {
     return new Promise((resolve, reject) => {
@@ -136,20 +129,6 @@ function useModels() {
   function cloneModel(modelid) {
     try {
       JS2Py.PythonFunctions.TalkMotionServer.cloneModel(
-        token,
-        modelid,
-        function (res) {
-          console.log(res);
-        }
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  function purchaseModel(modelid) {
-    try {
-      JS2Py.PythonFunctions.TalkMotionServer.purchaseModel(
         token,
         modelid,
         function (res) {
@@ -336,128 +315,6 @@ function useModels() {
     });
   }
 
-  function setModelPrice(
-    modelid,
-    unitamount,
-    tiers,
-    currency,
-    recurring
-  ) {
-    return new Promise((resolve, reject) => {
-      try {
-        JS2Py.PythonFunctions.TalkMotionServer.setModelPrice(
-          token,
-          modelid,
-          unitamount,
-          tiers,
-          currency,
-          recurring,
-          function (res) {
-            console.log(res);
-            resolve(res);
-          }
-        );
-      } catch (err) {
-        console.log(err);
-        reject(err);
-      }
-    });
-  }
-
-  function setProductPrice(
-    product_id,
-    unitamount,
-    tiers,
-    currency,
-    recurring
-  ) {
-    return new Promise((resolve, reject) => {
-      try {
-        JS2Py.PythonFunctions.TalkMotionServer.setProductPrice(
-          token,
-          product_id,
-          unitamount,
-          tiers,
-          currency,
-          recurring,
-          function (res) {
-            console.log(res);
-            resolve(res);
-          }
-        );
-      } catch (err) {
-        console.log(err);
-        reject(err);
-      }
-    });
-  }
-
-  function addOrRemoveCartProduct(product_id, quantity) {
-    return new Promise((resolve, reject) => {
-      try {
-        JS2Py.PythonFunctions.TalkMotionServer.addOrRemoveCartProduct(
-          token,
-          Number(product_id),
-          Number(quantity),
-          function (res) {
-            resolve(res);
-            setTimeout(() => {
-              getCart()
-                .then((res) => {
-                  console.log(res);
-                })
-                .catch((err) => console.log(err));
-            }, 100);
-          }
-        );
-      } catch (err) {
-        console.log(err);
-        reject(err);
-      }
-    });
-  }
-
-  function getProductForFree(product_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        JS2Py.PythonFunctions.TalkMotionServer.getProductForFree(
-          token,
-          Number(product_id),
-          function (res) {
-            resolve(res);
-            setTimeout(() => {
-              getCart()
-                .then((res) => console.log(res))
-                .catch((err) => console.log(err));
-            }, 100);
-          }
-        );
-      } catch (err) {
-        console.log(err);
-        reject(err);
-      }
-    });
-  }
-
-  function setCartProductQuantity(product_id, quantity) {
-    return new Promise((resolve, reject) => {
-      try {
-        JS2Py.PythonFunctions.TalkMotionServer.setCartProductQuantity(
-          token,
-          product_id,
-          quantity,
-          function (res) {
-            console.log(res);
-            resolve(res);
-          }
-        );
-      } catch (err) {
-        console.log(err);
-        reject(err);
-      }
-    });
-  }
-
   function getUsersModelsByUserName(
     username,
     search_text,
@@ -491,7 +348,6 @@ function useModels() {
     deleteModel,
     updateModel,
     cloneModel,
-    purchaseModel,
     getModel,
     getModelFiles,
     getModelConcepts,
@@ -501,13 +357,7 @@ function useModels() {
     getModelsUserCanTrain,
     getModelsUserCanUse,
     deleteModelConceptSample,
-    setModelPrice,
-    setProductPrice,
-    addOrRemoveCartProduct,
-    getProductForFree,
-    setCartProductQuantity,
     getUsersModelsByUserName,
-    getProductForFree,
   };
 }
 

@@ -18,12 +18,11 @@ Works from Anaconda Prompt, PowerShell or Git Bash, and from C:\ or D:\ paths.
 
 Do not hand-edit anything in dist. The old manual steps are fixed in the source:
 - "et.Camera -> B.Camera": src/hooks/useHolisticModel.js imported @mediapipe/camera_utils,
-  which is not a real ES module, and the production build mis-linked it. It now uses
-  window.Camera from the camera_utils <script> in index.html.
-- "export default class X -> class X" in dist\video_subtitles_classes: those files are
-  loaded with plain <script> tags, which can't contain `export`. The exports are removed in
-  public\video_subtitles_classes, and index.html loads them from the same deploy instead of
-  https://app.talk-motion.com.
+  which is not a real ES module, and the production build mis-linked it. Landmarks now come
+  from @mediapipe/tasks-vision (a real ES module); no camera_utils and no MediaPipe <script>s.
+- "export default class X -> class X" in dist\video_subtitles_classes: those files were
+  loaded with plain <script> tags, which can't contain `export`. The subtitle designer now
+  uses src\features\videoSubtitles (RecordingEngine), bundled normally; the classes are gone.
 - Building from C:\Users\faruk\Projects failed with "The fileName or name properties of
   emitted files must be ... neither absolute nor relative paths": C:\Users\faruk is a
   junction to D:\Users\faruk. Both vite.config.js files now build from the real path.

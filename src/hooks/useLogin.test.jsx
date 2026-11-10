@@ -12,7 +12,7 @@ const m = vi.hoisted(() => ({
 
 vi.mock("../remotepyjs", () => ({ default: m.js2py }));
 vi.mock("./useApiAuth", () => ({ default: () => ({ loginApi: m.loginApi }) }));
-vi.mock("react-router-dom", () => ({ useNavigate: () => m.navigate }));
+vi.mock("react-router-dom", () => ({ useNavigate: () => m.navigate, useLocation: () => ({ state: null }) }));
 vi.mock("react-redux", () => ({ useDispatch: () => m.dispatch }));
 vi.mock("antd", () => ({ message: { useMessage: () => [{ open: m.open }, null] } }));
 
@@ -63,7 +63,7 @@ describe("useLogin", () => {
     m.loginApi = apiAnswers({ ok: true, lu: "alice" });
     const rp = remotePy({ token: OK, password: OK });
     submit();
-    await waitFor(() => expect(m.navigate).toHaveBeenCalledWith("/"), { timeout: 2500 });
+    await waitFor(() => expect(m.navigate).toHaveBeenCalledWith("/", { replace: true }), { timeout: 2500 });
     expect(rp.TalkMotionServer.loginWithApiToken).toHaveBeenCalledWith(
       "sid-1", expect.stringContaining("."), expect.any(Function), expect.any(Function)
     );
@@ -76,7 +76,7 @@ describe("useLogin", () => {
     m.loginApi = apiAnswers({ ok: true, lu: "alice" });
     const rp = remotePy({ token: undefined, password: OK });
     submit();
-    await waitFor(() => expect(m.navigate).toHaveBeenCalledWith("/"), { timeout: 2500 });
+    await waitFor(() => expect(m.navigate).toHaveBeenCalledWith("/", { replace: true }), { timeout: 2500 });
     expect(rp.SessionServer.validateLogin).toHaveBeenCalledWith(
       "sid-1", "alice", "s3cret", false, expect.any(String), expect.any(String), expect.any(Function)
     );
@@ -86,7 +86,7 @@ describe("useLogin", () => {
     m.loginApi = apiAnswers({ ok: false });
     const rp = remotePy({ token: OK, password: OK });
     submit();
-    await waitFor(() => expect(m.navigate).toHaveBeenCalledWith("/"), { timeout: 2500 });
+    await waitFor(() => expect(m.navigate).toHaveBeenCalledWith("/", { replace: true }), { timeout: 2500 });
     expect(rp.TalkMotionServer.loginWithApiToken).not.toHaveBeenCalled();
     expect(rp.SessionServer.validateLogin).toHaveBeenCalled();
   });
