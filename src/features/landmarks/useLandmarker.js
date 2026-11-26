@@ -19,6 +19,8 @@ import { HAND_CONNECTIONS, POSE_CONNECTIONS, drawConnections, drawPoints } from 
  *
  * onFrame receives the slim payload the server expects ({leftHandLandmarks?, ...}) and
  * meta { timestamp, handsVisible }. The hook stops the camera and the loop on unmount.
+ * fullFace: put all 468 face points in each frame (for v1 models; see slimResults). It can
+ * change while the camera runs.
  */
 
 export function describeCameraError(err) {
@@ -89,7 +91,9 @@ function savedDeviceId() {
   }
 }
 
-export default function useLandmarker({ onFrame, draw = true, width = 960, height = 540 } = {}) {
+export default function useLandmarker({ onFrame, draw = true, width = 960, height = 540, fullFace = false } = {}) {
+  const fullFaceRef = useRef(fullFace);
+  fullFaceRef.current = fullFace;
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -224,7 +228,7 @@ export default function useLandmarker({ onFrame, draw = true, width = 960, heigh
             const legacy = toLegacyResults(engine.landmarker.detectForVideo(v, now));
             consecutiveFailures = 0;
             if (draw) drawFrame(canvasRef.current, v, legacy);
-            const frame = slimResults(legacy);
+            const frame = slimResults(legacy, { fullFace: fullFaceRef.current });
             const visible = hasHands(frame);
             if (visible !== handsVisibleRef.current) {
               handsVisibleRef.current = visible;

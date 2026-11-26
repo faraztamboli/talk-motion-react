@@ -47,7 +47,7 @@ export default function SignToSpeechPanel({ modelId, untrained = false, speech, 
   );
 
   const rec = useSignRecognizer({ modelId, autoSend, idleMs, onSentence: handleSentence });
-  const lm = useLandmarker({ onFrame: rec.onFrame });
+  const lm = useLandmarker({ onFrame: rec.onFrame, fullFace: rec.fullFace });
 
   // Show "didn't catch that" for a few seconds after a miss.
   useEffect(() => {

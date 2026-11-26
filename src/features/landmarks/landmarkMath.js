@@ -72,18 +72,27 @@ function slimLandmark(lm) {
   return out;
 }
 
+/** Face-mesh points the v1 (feature spec 1) models were trained on: the whole mesh, no irises. */
+export const LEGACY_FACE_POINTS = 468;
+
 /**
  * What the server featurizes: hands, pose, and the face subset (other face points null, so
  * positions stay aligned). This is the frame payload of submitGestureSample and
  * translateGestureSample.
+ *
+ * fullFace: send all 468 face points instead. Models trained before feature spec v2 were trained
+ * on the old client's full Holistic results and read every face point; with only the subset they
+ * see ~1300 zeroed inputs and answer the same thing for every sign.
  */
-export function slimResults(results) {
+export function slimResults(results, { fullFace = false } = {}) {
   const slim = {};
   if (results.leftHandLandmarks) slim.leftHandLandmarks = results.leftHandLandmarks.map(slimLandmark);
   if (results.rightHandLandmarks) slim.rightHandLandmarks = results.rightHandLandmarks.map(slimLandmark);
   if (results.poseLandmarks) slim.poseLandmarks = results.poseLandmarks.map(slimLandmark);
   if (results.faceLandmarks) {
-    slim.faceLandmarks = results.faceLandmarks.map((lm, i) => (FACE_SUBSET.has(i) ? slimLandmark(lm) : null));
+    slim.faceLandmarks = fullFace
+      ? results.faceLandmarks.slice(0, LEGACY_FACE_POINTS).map(slimLandmark)
+      : results.faceLandmarks.map((lm, i) => (FACE_SUBSET.has(i) ? slimLandmark(lm) : null));
   }
   return slim;
 }

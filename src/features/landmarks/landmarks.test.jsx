@@ -1,7 +1,7 @@
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, render, renderHook, screen } from "@testing-library/react";
-import { FACE_SUBSET, hasHands, slimResults, toLegacyResults } from "./landmarkMath";
+import { FACE_SUBSET, LEGACY_FACE_POINTS, hasHands, slimResults, toLegacyResults } from "./landmarkMath";
 import useLandmarker, { describeCameraError } from "./useLandmarker";
 import LandmarkerView from "./LandmarkerView";
 
@@ -44,6 +44,13 @@ describe("slimResults", () => {
     expect(kept).toBe(FACE_SUBSET.size);
     expect(slim.faceLandmarks[61]).toEqual({ x: 0.1235, y: 0.5, z: 0 });
     expect(slim.faceLandmarks[1]).toBeNull();
+  });
+
+  it("sends the whole 468-point face mesh for v1 models, without the iris points", () => {
+    const face = Array.from({ length: 478 }, () => pt(0.25));
+    const slim = slimResults({ faceLandmarks: face }, { fullFace: true });
+    expect(slim.faceLandmarks).toHaveLength(LEGACY_FACE_POINTS);
+    expect(slim.faceLandmarks.every(Boolean)).toBe(true);
   });
 
   it("keeps pose visibility", () => {

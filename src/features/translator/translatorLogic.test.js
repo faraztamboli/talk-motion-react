@@ -5,7 +5,7 @@ import { buildPlaylist, currentItem, initialQueue, queueReducer, resolveKey } fr
 import { framesForItem, lerpFrame, TRANSITION_FRAMES, toViewer } from "./avatarFrames";
 import { describeWebSpeechError, describeWhisperError, micErrorCode } from "./speechErrors";
 import { pickVoice } from "./useSpeechOutput";
-import { topPredictions } from "./useBrowserModel";
+import { legacyInputOf, topPredictions } from "./useBrowserModel";
 
 const hand = (x, y = 0.5) => ({ rightHandLandmarks: [{ x, y, z: 0 }] });
 const noHands = { poseLandmarks: [] };
@@ -243,5 +243,18 @@ describe("topPredictions", () => {
     const probs = new Float32Array([0.1, 0.7, 0.2]);
     expect(topPredictions(probs, ["a", "b", "c"]).map((p) => p.word)).toEqual(["b", "c", "a"]);
     expect(topPredictions(probs, { 0: "a", 1: "b", 2: "c" }, 1)[0].word).toBe("b");
+  });
+});
+
+describe("legacyInputOf", () => {
+  it("marks models trained before feature spec v2", () => {
+    expect(legacyInputOf({ meta_data: { input_sequence_length: 10, label_dictionary: ["a"] } })).toEqual({ sequenceLength: 10 });
+    expect(legacyInputOf({ meta_data: { feature_spec_version: 1, input_sequence_length: 30 } })).toEqual({ sequenceLength: 30 });
+  });
+
+  it("leaves newer models and unknown models alone", () => {
+    expect(legacyInputOf({ meta_data: { feature_spec_version: 2, input_sequence_length: 64 } })).toBeNull();
+    expect(legacyInputOf(null)).toBeNull();
+    expect(legacyInputOf({})).toBeNull();
   });
 });
