@@ -5,15 +5,20 @@ import { MdFullscreen, MdFullscreenExit, MdReplay, MdStop } from "react-icons/md
 import { useTranslation } from "react-i18next";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import { useFullscreen } from "./SignVideoPlayer";
+import CharacterPicker from "./avatar/CharacterPicker";
+import useAvatarLook from "./avatar/useAvatarLook";
 
 // three.js lives in this chunk; it loads only when someone picks the avatar.
 const AvatarStage = lazy(() => import("./AvatarStage"));
+const CharacterStage = lazy(() => import("./avatar/CharacterStage"));
 
 /** The signing avatar (useAvatarQueue) with stop, replay and full screen. */
 export default function AvatarPlayer({ avatar, onReplay, canReplay, placeholder }) {
   const { t } = useTranslation();
   const stageRef = useRef(null);
   const fs = useFullscreen(stageRef);
+  const { character, look, chooseCharacter, setPart, resetLook } = useAvatarLook();
+  const wireframe = character.kind === "wireframe";
   return (
     <div className="tm-tr-player">
       <div ref={stageRef} className={`tm-tr-stage tm-tr-stage-avatar ${fs.active ? "tm-tr-stage-full" : ""}`}>
@@ -25,7 +30,7 @@ export default function AvatarPlayer({ avatar, onReplay, canReplay, placeholder 
               </div>
             }
           >
-            <AvatarStage frame={avatar.frame} />
+            {wireframe ? <AvatarStage frame={avatar.frame} /> : <CharacterStage frame={avatar.frame} character={character} look={look} />}
           </Suspense>
         </ErrorBoundary>
         {!avatar.playing && !avatar.frame && <div className="tm-tr-stage-placeholder tm-tr-stage-placeholder-soft">{placeholder}</div>}
@@ -53,6 +58,7 @@ export default function AvatarPlayer({ avatar, onReplay, canReplay, placeholder 
           </Tooltip>
         )}
       </div>
+      <CharacterPicker character={character} look={look} onCharacter={chooseCharacter} onPart={setPart} onReset={resetLook} />
       {avatar.label && (
         <p className="tm-tr-muted" aria-live="polite">
           {t("translator.nowSigning", "Signing")}: <strong>{avatar.label}</strong>

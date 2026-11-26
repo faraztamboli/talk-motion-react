@@ -10,6 +10,8 @@ export const PREF_KEYS = {
   language: "tm_translator_language",
   speed: "tm_translator_speed",
   playback: "tm_translator_playback",
+  avatarCharacter: "tm_translator_avatar_character",
+  avatarLooks: "tm_translator_avatar_looks",
 };
 
 export function readPref(name, fallback) {

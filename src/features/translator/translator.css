@@ -408,3 +408,50 @@
     animation: none !important;
   }
 }
+
+/* ---- avatar character ---- */
+.tm-tr-character {
+  position: absolute;
+  inset: 0;
+}
+.tm-tr-character-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.tm-tr-credit {
+  font-size: 0.75rem;
+  color: #4b5563;
+}
+.tm-tr-customize {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 240px;
+}
+.tm-tr-swatch-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tm-tr-swatch-label {
+  width: 52px;
+  font-size: 0.85rem;
+}
+.tm-tr-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #9ca3af;
+  cursor: pointer;
+  padding: 0;
+}
+.tm-tr-swatch.is-on {
+  box-shadow: 0 0 0 3px #0b57d0;
+}
+.tm-tr-swatch:focus-visible {
+  outline: 3px solid #0b57d0;
+  outline-offset: 2px;
+}
