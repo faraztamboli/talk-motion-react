@@ -27,6 +27,17 @@ export function canRunInBrowser(info) {
   );
 }
 
+/**
+ * For a model trained before feature spec v2: { sequenceLength } (the server featurizes these
+ * from the full face mesh and only the first sequenceLength frames of a segment). Otherwise null.
+ */
+export function legacyInputOf(info) {
+  const meta = info?.meta_data;
+  if (!meta || (meta.feature_spec_version || 1) >= 2) return null;
+  const sequenceLength = Number(meta.input_sequence_length);
+  return { sequenceLength: Number.isFinite(sequenceLength) && sequenceLength >= 2 ? sequenceLength : null };
+}
+
 /** probabilities -> top 3 [{word, confidence}] */
 export function topPredictions(probs, labels, n = 3) {
   const indices = Array.from(probs.keys()).sort((a, b) => probs[b] - probs[a]);
@@ -42,9 +53,12 @@ export function topPredictions(probs, labels, n = 3) {
  * status: "off" (no model) | "checking" | "loading" | "ready" | "server" (no browser version:
  * recognition runs on the server). A model is disposed when another one is chosen or the page
  * goes away, so switching models doesn't leak GPU memory.
+ *
+ * legacyInput: legacyInputOf(the model's info) once known, else null.
  */
 export default function useBrowserModel(modelId) {
   const [status, setStatus] = useState("off");
+  const [legacyInput, setLegacyInput] = useState(null);
   const loadedRef = useRef(null); // { tf, model, meta, modelId }
 
   const disposeLoaded = useCallback(() => {
@@ -59,6 +73,7 @@ export default function useBrowserModel(modelId) {
 
   useEffect(() => {
     disposeLoaded();
+    setLegacyInput(null);
     if (!modelId) {
       setStatus("off");
       return undefined;
@@ -78,6 +93,7 @@ export default function useBrowserModel(modelId) {
         return;
       }
       if (cancelled) return;
+      setLegacyInput(legacyInputOf(info));
       if (!canRunInBrowser(info)) {
         setStatus("server");
         return;
@@ -123,5 +139,5 @@ export default function useBrowserModel(modelId) {
     }
   }, []);
 
-  return { status, predict, ready: status === "ready" };
+  return { status, predict, ready: status === "ready", legacyInput };
 }

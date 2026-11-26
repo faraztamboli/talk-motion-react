@@ -8,7 +8,10 @@ vi.mock("../../api/rpc", () => ({
   sessionToken: () => "tok",
   rpcErrorMessage: (err, fallback) => err?.message || fallback,
 }));
-vi.mock("./useBrowserModel", () => ({ default: () => ({ status: "server", ready: false, predict: vi.fn() }) }));
+const browserMock = vi.hoisted(() => ({ legacyInput: null }));
+vi.mock("./useBrowserModel", () => ({
+  default: () => ({ status: "server", ready: false, predict: vi.fn(), legacyInput: browserMock.legacyInput }),
+}));
 
 const whisperMock = vi.hoisted(() => ({ supported: false, onUtterance: null, start: null, stop: null }));
 vi.mock("./useWhisperCapture", () => ({
@@ -58,11 +61,33 @@ function handsDown(result, t0, ms) {
 afterEach(() => {
   vi.clearAllMocks();
   localStorage.clear();
+  browserMock.legacyInput = null;
 });
 
 describe("useSignRecognizer", () => {
   beforeEach(() => {
     rpcMock.hasRpc.mockReturnValue(true);
+  });
+
+  it("asks for full face meshes and sends only the frames a v1 model reads", async () => {
+    browserMock.legacyInput = { sequenceLength: 5 };
+    rpcMock.rpc.mockResolvedValue({ predictions: [{ word: "hello", confidence: 0.9 }] });
+    const { result } = renderHook(() => useSignRecognizer({ modelId: "121", autoSend: false }));
+    expect(result.current.fullFace).toBe(true);
+    signOnce(result);
+    await waitFor(() => expect(result.current.words.map((w) => w.word)).toEqual(["hello"]));
+    const [, args] = rpcMock.rpc.mock.calls.find(([name]) => name === "translateGestureSample");
+    expect(args[2]).toHaveLength(5);
+  });
+
+  it("keeps whole segments and the face subset for newer models", async () => {
+    rpcMock.rpc.mockResolvedValue({ predictions: [{ word: "hello", confidence: 0.9 }] });
+    const { result } = renderHook(() => useSignRecognizer({ modelId: "7", autoSend: false }));
+    expect(result.current.fullFace).toBe(false);
+    signOnce(result);
+    await waitFor(() => expect(result.current.words).toHaveLength(1));
+    const [, args] = rpcMock.rpc.mock.calls.find(([name]) => name === "translateGestureSample");
+    expect(args[2].length).toBeGreaterThan(5);
   });
 
   it("turns a sign into a word and sends the sentence after a pause", async () => {

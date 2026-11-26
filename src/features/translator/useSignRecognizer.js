@@ -11,7 +11,7 @@ import useBrowserModel from "./useBrowserModel";
  * onSentence(text, gloss).
  *
  *   const rec = useSignRecognizer({ modelId, autoSend, idleMs, onSentence });
- *   useLandmarker({ onFrame: rec.onFrame });
+ *   useLandmarker({ onFrame: rec.onFrame, fullFace: rec.fullFace });
  */
 export default function useSignRecognizer({ modelId, autoSend = true, idleMs = 1500, onSentence }) {
   const browser = useBrowserModel(modelId);
@@ -75,7 +75,11 @@ export default function useSignRecognizer({ modelId, autoSend = true, idleMs = 1
         }
       }
       if (!predictions) {
-        const res = await rpc("translateGestureSample", [sessionToken(), modelIdRef.current, frames]);
+        // A v1 model reads only the first sequenceLength frames (the server truncates the rest),
+        // and its frames carry the whole face mesh, so don't send what it would drop.
+        const seqLen = browserRef.current.legacyInput?.sequenceLength;
+        const sent = seqLen ? frames.slice(0, Math.max(seqLen, 2)) : frames;
+        const res = await rpc("translateGestureSample", [sessionToken(), modelIdRef.current, sent]);
         predictions = res?.predictions || [];
       }
       if (mountedRef.current) dispatch({ type: "predicted", generation, requestId, predictions, at: Date.now() });
@@ -162,5 +166,7 @@ export default function useSignRecognizer({ modelId, autoSend = true, idleMs = 1
     confirm: useCallback((id) => dispatch({ type: "confirm", id }), []),
     dismissError: useCallback(() => dispatch({ type: "dismissError" }), []),
     recognitionMode: browser.status, // off | checking | loading | ready | server
+    /** The model was trained on full face meshes: pass to useLandmarker({ fullFace }). */
+    fullFace: Boolean(browser.legacyInput),
   };
 }
