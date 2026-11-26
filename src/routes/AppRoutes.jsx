@@ -90,7 +90,7 @@ const AnalyticsPage = React.lazy(() => import("../features/admin/AnalyticsPage")
 const GuestConversationPage = React.lazy(() =>
   import("../features/conversation/pages/GuestConversationPage")
 );
-const DashboardNew = React.lazy(() => import("../pages/DashboardNew"));
+const HomePage = React.lazy(() => import("../features/home/HomePage"));
 
 function AppRoutes(props) {
   const { sm, md, collapsedWidth } = props;
@@ -106,11 +106,7 @@ function AppRoutes(props) {
             <React.Suspense
               fallback={<Skeleton active style={skeletonStyle} />}
             >
-              <DashboardNew 
-                collapsedWidth={collapsedWidth}
-                sm={sm}
-                md={md}
-              />
+              <HomePage sm={sm} />
             </React.Suspense>
           }
         />
@@ -122,11 +118,7 @@ function AppRoutes(props) {
             <React.Suspense
               fallback={<Skeleton active style={skeletonStyle} />}
             >
-              <DashboardNew 
-                collapsedWidth={collapsedWidth}
-                sm={sm}
-                md={md}
-              />
+              <HomePage sm={sm} />
             </React.Suspense>
           }
         />

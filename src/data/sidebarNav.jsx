@@ -1,265 +1,83 @@
 import React from "react";
 import {
-  FileOutlined,
-  PieChartOutlined,
+  BookOutlined,
+  CompassOutlined,
   HistoryOutlined,
   HomeOutlined,
   LineChartOutlined,
   MessageOutlined,
+  PlayCircleOutlined,
   ShopOutlined,
+  TeamOutlined,
+  TranslationOutlined,
+  VideoCameraAddOutlined,
+  ExperimentOutlined,
+  SolutionOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import {
-  MdModelTraining,
-  MdOutlineCollectionsBookmark,
-  MdOutlineDesignServices,
-  MdOutlineFolderSpecial,
-  MdOutlineSubtitles,
-  MdOutlineVideoLibrary,
-} from "react-icons/md";
 
-function getItem(label, key, icon, children, path, flag) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    path,
-    flag,
-  };
-}
-
-// Items tagged with a flag only show while that flag is on (see src/config/flags.js).
+/**
+ * The sidebar is a short, flat list in plain words, grouped by what a person wants to do.
+ * No nested menus: every destination is one click away.
+ *
+ * An item's `key` is its URL, so the menu can navigate by key and highlight the current page
+ * (see `selectedSidebarKey`). Items tagged with a `flag` only show while that flag is on
+ * (see src/config/flags.js).
+ */
 const LEGACY = "legacy_models_visible";
 
+const item = (label, key, icon, flag) => ({ label, key, icon, flag });
+const group = (label, key, children, flag) => ({ type: "group", label, key, children, flag });
+
 const items = [
-  getItem(
-    "Dashboard",
-    "0",
-    <Link to="/dashboard">
-      <HomeOutlined />
-    </Link>,
-    null,
-    "/dashboard"
-  ),
-  getItem(
-    "Translator",
-    "1",
-    <Link to="/converter">
-      <PieChartOutlined />
-    </Link>,
-    null,
-    "/converter"
-  ),
-  getItem(
-    "Conversation",
-    "7",
-    <Link to="/conversation">
-      <MessageOutlined />
-    </Link>,
-    null,
-    "/conversation",
-    "conversation_v2"
-  ),
-  getItem(
-    "My conversations",
-    "71",
-    <Link to="/conversation/history">
-      <HistoryOutlined />
-    </Link>,
-    null,
-    "/conversation/history",
-    "conversation_v2"
-  ),
-  getItem(
-    "Locations",
-    "72",
-    <Link to="/locations">
-      <ShopOutlined />
-    </Link>,
-    null,
-    "/locations",
-    "has_locations"
-  ),
-  getItem(
-    "Site analytics",
-    "73",
-    <Link to="/admin/analytics">
-      <LineChartOutlined />
-    </Link>,
-    null,
-    "/admin/analytics",
-    "platform_admin"
-  ),
-  getItem(
-    "Learning",
-    "4",
-    <Link to="/video-subtitles/mylibrary">
-      <MdOutlineSubtitles />
-    </Link>,
+  item("Home", "/dashboard", <HomeOutlined />),
+
+  group("Talk", "g-talk", [
+    item("Talk with someone", "/conversation", <MessageOutlined />, "conversation_v2"),
+    item("Past conversations", "/conversation/history", <HistoryOutlined />, "conversation_v2"),
+    item("Translate signs and speech", "/converter", <TranslationOutlined />),
+  ]),
+
+  group("Videos", "g-videos", [
+    item("My videos", "/video-subtitles/mylibrary", <PlayCircleOutlined />),
+    item("Make a captioned video", "/video-subtitles/designer", <VideoCameraAddOutlined />),
+  ]),
+
+  group("Teach and learn", "g-teach", [
+    item("My classrooms", "/classrooms", <TeamOutlined />),
+    item("My courses", "/courses", <BookOutlined />),
+    item("Staff rooms", "/staff-rooms", <SolutionOutlined />),
+  ]),
+
+  group(
+    "Sign models",
+    "g-models",
     [
-      getItem(
-        "My Videos",
-        "41",
-        <Link to="/video-subtitles/mylibrary">
-          <MdOutlineVideoLibrary />
-        </Link>,
-        null,
-        "/video-subtitles/mylibrary"
-      ),
-      getItem(
-        "My Courses",
-        "43",
-        <Link to="/courses">
-          <MdOutlineFolderSpecial />
-        </Link>,
-        null,
-        "/courses"
-      ),
-      getItem(
-        "Course Tree Manager",
-        "46",
-        <Link to="/courses/tree-manager">
-          <MdOutlineFolderSpecial />
-        </Link>,
-        null,
-        "/courses/tree-manager"
-      ),
-      getItem(
-        "Classrooms",
-        "44",
-        <Link to="/classrooms">
-          <MdOutlineFolderSpecial />
-        </Link>,
-        null,
-        "/classrooms"
-      ),
-      getItem(
-        "Staff Rooms",
-        "45",
-        <Link to="/staff-rooms">
-          <MdOutlineFolderSpecial />
-        </Link>,
-        null,
-        "/staff-rooms"
-      ),
+      item("My sign models", "/models", <ExperimentOutlined />, LEGACY),
+      item("Models I can train", "/models?show=trainable", <ExperimentOutlined />, LEGACY),
     ],
-    "/video-subtitles"
-  ),
-  getItem(
-    "Models",
-    "2",
-    <Link to="/models">
-      <FileOutlined />
-    </Link>,
-    [
-      getItem(
-        "My models",
-        "21",
-        <Link to="/models">
-          <MdOutlineCollectionsBookmark />
-        </Link>,
-        null,
-        "/models",
-        LEGACY
-      ),
-      getItem(
-        "I can train",
-        "22",
-        <Link to="/models?show=trainable">
-          <MdModelTraining />
-        </Link>,
-        null,
-        "/models?show=trainable",
-        LEGACY
-      ),
-    ],
-    "/models",
     LEGACY
   ),
-  getItem(
-    "Store",
-    "5",
-    <Link to="/store/models">
-      <FileOutlined />
-    </Link>,
-    [
-      getItem(
-        "Models",
-        "61",
-        <Link to="/store/models">
-          <FileOutlined />
-        </Link>,
-        null,
-        "/store/models",
-        LEGACY
-      ),
-      getItem(
-        "Videos",
-        "62",
-        <Link to="/video-subtitles/library">
-          <MdOutlineVideoLibrary />
-        </Link>,
-        null,
-        "/video-subtitles/library"
-      ),
-      getItem(
-        "Classrooms",
-        "63",
-        <Link to="/store/classrooms">
-          <MdOutlineCollectionsBookmark />
-        </Link>,
-        null,
-        "/store/classrooms"
-      ),
-      getItem(
-        "Courses",
-        "64",
-        <Link to="/video-subtitles/folder-manager">
-          <MdOutlineFolderSpecial />
-        </Link>,
-        null,
-        "/video-subtitles/folder-manager"
-      ),
-    ],
-    "/video-subtitles"
-  ),
-  // Recording samples and training live inside each model (/models/:id), so the old Trainer
-  // group is gone; the Subtitle Designer is its own item.
-  getItem(
-    "Subtitle Designer",
-    "42",
-    <Link to="/video-subtitles/designer">
-      <MdOutlineDesignServices />
-    </Link>,
-    null,
-    "/video-subtitles/designer"
-  ),
+
+  group("Find more", "g-find", [
+    item("Find videos", "/video-subtitles/library", <CompassOutlined />),
+    item("Find classrooms", "/store/classrooms", <CompassOutlined />),
+    item("Find courses", "/video-subtitles/folder-manager", <CompassOutlined />),
+    item("Find sign models", "/store/models", <CompassOutlined />, LEGACY),
+  ]),
+
+  group("Your places", "g-places", [
+    item("Locations", "/locations", <ShopOutlined />, "has_locations"),
+    item("Site analytics", "/admin/analytics", <LineChartOutlined />, "platform_admin"),
+  ]),
 ];
 
-const STORE_KEY = "5";
-
-function storeIcon(flags) {
-  // The Store group icon used to open the model store; send it to the video library when
-  // models are hidden.
-  return flags[LEGACY] ? (
-    <Link to="/store/models">
-      <FileOutlined />
-    </Link>
-  ) : (
-    <Link to="/video-subtitles/library">
-      <MdOutlineVideoLibrary />
-    </Link>
-  );
+function visible(entry, flags) {
+  return !entry.flag || Boolean(flags[entry.flag]);
 }
 
-function visible(item, flags) {
-  return !item.flag || Boolean(flags[item.flag]);
-}
-
-function strip(item) {
+function strip(entry) {
   // eslint-disable-next-line no-unused-vars
-  const { flag, ...rest } = item;
+  const { flag, ...rest } = entry;
   return rest;
 }
 
@@ -274,29 +92,45 @@ export function accountFlags(apiUser) {
   };
 }
 
-/**
- * Sidebar items for the current flags. A group that loses children to flags and is left
- * with a single item is replaced by that item (e.g. Trainer -> Subtitle Designer).
- */
+/** Sidebar items for the current flags. A section with nothing left to show disappears. */
 export function buildSidebarItems(flags = {}) {
   const out = [];
-  for (const item of items) {
-    if (!visible(item, flags)) continue;
-    if (!item.children) {
-      out.push(strip(item));
+  for (const entry of items) {
+    if (!visible(entry, flags)) continue;
+    if (!entry.children) {
+      out.push(strip(entry));
       continue;
     }
-    const children = item.children.filter((child) => visible(child, flags)).map(strip);
+    const children = entry.children.filter((child) => visible(child, flags)).map(strip);
     if (children.length === 0) continue;
-    if (children.length === 1 && children.length < item.children.length) {
-      out.push(children[0]);
-      continue;
-    }
-    const group = { ...strip(item), children };
-    if (item.key === STORE_KEY) group.icon = storeIcon(flags);
-    out.push(group);
+    out.push({ ...strip(entry), children });
   }
   return out;
+}
+
+/** Every navigable key in a built menu, in order. */
+export function sidebarKeys(built) {
+  return built.flatMap((entry) => (entry.children ? entry.children.map((c) => c.key) : [entry.key]));
+}
+
+/**
+ * The menu key that matches the current URL: an exact match (including the query string) wins,
+ * otherwise the longest path that the URL sits under.
+ */
+export function selectedSidebarKey(built, pathname, search = "") {
+  const keys = sidebarKeys(built);
+  const full = pathname + search;
+  if (keys.includes(full)) return full;
+  let best = null;
+  for (const key of keys) {
+    const path = key.split("?")[0];
+    // /models?show=trainable only matches on its query; plain /models is the fallback.
+    if (key.includes("?")) continue;
+    const under = pathname === path || pathname.startsWith(path + "/");
+    if (under && (!best || path.length > best.split("?")[0].length)) best = key;
+  }
+  if (pathname === "/") return "/dashboard";
+  return best;
 }
 
 export default items;
