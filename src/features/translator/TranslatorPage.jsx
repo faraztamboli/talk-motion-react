@@ -43,14 +43,17 @@ function useServerLanguages() {
 }
 
 /** With the model catalogue hidden (legacy_models_visible off): pick the first usable model. */
-function AutoVocabulary({ value, onChange }) {
+function AutoVocabulary({ value, onChange, onResolve }) {
   const { t } = useTranslation();
   const { data, isLoading } = useListModelsQuery({ scope: "usable", search: "", offset: 0, limit: 50, sort: "recent" });
   const rows = data?.rows || [];
   const selected = rows.find((m) => m.id === value);
   useEffect(() => {
+    onResolve?.(selected || null);
+  }, [onResolve, selected]);
+  useEffect(() => {
     if (isLoading || selected) return;
-    const first = rows.find((m) => m.trained !== false);
+    const first = rows.find((m) => m.trained !== false) || rows[0];
     if (first) onChange(first.id);
   }, [isLoading, onChange, rows, selected]);
   if (isLoading) return <Spin size="small" />;
@@ -64,7 +67,7 @@ function AutoVocabulary({ value, onChange }) {
   );
 }
 
-AutoVocabulary.propTypes = { value: PropTypes.string, onChange: PropTypes.func.isRequired };
+AutoVocabulary.propTypes = { value: PropTypes.string, onChange: PropTypes.func.isRequired, onResolve: PropTypes.func };
 
 function HowItWorks() {
   const { t } = useTranslation();
@@ -92,6 +95,9 @@ export default function TranslatorPage() {
     if (fromLink) writePref("model", fromLink);
     return fromLink || readPref("model", null);
   });
+  // The chosen model's row, once the picker has loaded it. An untrained model can still show signs
+  // (speech to sign) but cannot recognize them (sign to speech).
+  const [modelInfo, setModelInfo] = useState(null);
   const languages = useServerLanguages();
   const speech = useSpeechOutput({ lang: languages[0] || "en-US" });
   const speakDraft = useConfirmToSpeak(speech.speak);
@@ -123,9 +129,9 @@ export default function TranslatorPage() {
             <label className="tm-tr-field" htmlFor="tm-tr-model">
               <span>{t("translator.model", "Model")}</span>
               {catalogueVisible ? (
-                <ModelPicker id="tm-tr-model" scope="usable" value={modelId} onChange={setModelId} />
+                <ModelPicker id="tm-tr-model" scope="usable" allowUntrained value={modelId} onChange={setModelId} onResolve={setModelInfo} />
               ) : (
-                <AutoVocabulary value={modelId} onChange={setModelId} />
+                <AutoVocabulary value={modelId} onChange={setModelId} onResolve={setModelInfo} />
               )}
             </label>
             <Popover content={<HowItWorks />} title={t("translator.howTitle", "How the Translator works")} trigger="click" placement="bottomRight">
@@ -136,7 +142,7 @@ export default function TranslatorPage() {
 
         <div className="tm-tr-grid">
           <ErrorBoundary compact title={t("translator.panelFailed", "This panel stopped working.")}>
-            <SignToSpeechPanel modelId={modelId} speech={speech} speakDraft={speakDraft} onSentence={onSentence} />
+            <SignToSpeechPanel modelId={modelId} untrained={modelInfo?.trained === false} speech={speech} speakDraft={speakDraft} onSentence={onSentence} />
           </ErrorBoundary>
           <ErrorBoundary compact title={t("translator.panelFailed", "This panel stopped working.")}>
             <SpeechToSignPanel modelId={modelId} languages={languages} onTranscript={onTranscript} suspended={speech.speaking} />

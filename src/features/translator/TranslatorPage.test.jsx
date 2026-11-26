@@ -14,8 +14,14 @@ vi.mock("../../api/rpc", () => ({
 }));
 vi.mock("../../hooks/useFlag", () => ({ useFlag: () => true }));
 vi.mock("../models/ModelPicker", () => ({
-  default: ({ value, onChange }) => (
-    <button type="button" onClick={() => onChange("5")}>
+  default: ({ value, onChange, onResolve }) => (
+    <button
+      type="button"
+      onClick={() => {
+        onChange("5");
+        onResolve?.({ id: "5", trained: globalThis.__modelTrained !== false });
+      }}
+    >
       {value ? `model ${value}` : "pick a model"}
     </button>
   ),
@@ -70,6 +76,16 @@ describe("TranslatorPage", () => {
     expect(screen.getByRole("button", { name: /start camera/i })).toBeEnabled();
     expect(screen.getByRole("button", { name: /^speak$/i })).toBeEnabled();
     expect(localStorage.getItem("tm_translator_model")).toBe("5");
+  });
+
+  it("an untrained model keeps speech to sign but not the camera", () => {
+    globalThis.__modelTrained = false;
+    renderPage();
+    fireEvent.click(screen.getByRole("button", { name: "pick a model" }));
+    delete globalThis.__modelTrained;
+    expect(screen.getByRole("button", { name: /start camera/i })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /^speak$/i })).toBeEnabled();
+    expect(screen.getByText(/hasn't been trained yet/)).toBeInTheDocument();
   });
 
   it("remembers the model and keeps the speak-only-when-asked switch", () => {

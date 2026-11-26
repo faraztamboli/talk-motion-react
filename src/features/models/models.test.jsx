@@ -74,6 +74,17 @@ describe("ModelPicker", () => {
     expect(onChange).toHaveBeenCalledWith("2", expect.objectContaining({ title: "Ready" }));
   });
 
+  it("falls back to an untrained model when untrained ones are allowed", () => {
+    query.result = {
+      data: { rows: [normalizeModel({ id: 1, title: "Starter", role: "purchaser", trained: false })] },
+      isLoading: false,
+      isFetching: false,
+    };
+    const onChange = vi.fn();
+    renderPicker({ scope: "usable", allowUntrained: true, onChange });
+    expect(onChange).toHaveBeenCalledWith("1", expect.objectContaining({ title: "Starter" }));
+  });
+
   it("keeps a valid selection", () => {
     query.result = {
       data: { rows: [normalizeModel({ id: 1, title: "A", role: "owner" }), normalizeModel({ id: 2, title: "B", role: "owner" })] },
