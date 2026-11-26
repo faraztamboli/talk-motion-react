@@ -23,7 +23,7 @@ function useDebounced(value, ms = 300) {
  * "trainable" (Collect / Train) lists models you own or train. With no models it says why and
  * links to the models page instead of showing an empty dropdown.
  */
-export default function ModelPicker({ scope = "usable", value, onChange, disabled, autoSelect = true, size, style, id }) {
+export default function ModelPicker({ scope = "usable", value, onChange, onResolve, allowUntrained = false, disabled, autoSelect = true, size, style, id }) {
   const [search, setSearch] = useState("");
   const debounced = useDebounced(search);
   const { data, error, isFetching, isLoading, refetch } = useListModelsQuery({
@@ -35,14 +35,17 @@ export default function ModelPicker({ scope = "usable", value, onChange, disable
   });
   const rows = useMemo(() => data?.rows || [], [data]);
   const selected = rows.find((m) => m.id === String(value));
+  useEffect(() => {
+    onResolve?.(selected || null);
+  }, [onResolve, selected]);
 
   // Pick the first usable model when nothing (or something gone) is selected.
   useEffect(() => {
     if (!autoSelect || isFetching || debounced || !rows.length) return;
     if (value && rows.some((m) => m.id === String(value))) return;
-    const first = rows.find((m) => scope !== "usable" || m.trained !== false);
+    const first = rows.find((m) => scope !== "usable" || m.trained !== false) || (allowUntrained ? rows[0] : null);
     if (first) onChange?.(first.id, first);
-  }, [autoSelect, debounced, isFetching, onChange, rows, scope, value]);
+  }, [allowUntrained, autoSelect, debounced, isFetching, onChange, rows, scope, value]);
 
   if (error) {
     return (
@@ -78,7 +81,7 @@ export default function ModelPicker({ scope = "usable", value, onChange, disable
     const untrained = scope === "usable" && m.trained === false;
     return {
       value: m.id,
-      disabled: untrained,
+      disabled: untrained && !allowUntrained,
       label: (
         <span className="tm-model-option">
           <span className="tm-model-option-title">{m.title}</span>
@@ -114,6 +117,8 @@ ModelPicker.propTypes = {
   scope: PropTypes.oneOf(["usable", "trainable", "mine", "public"]),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func,
+  onResolve: PropTypes.func,
+  allowUntrained: PropTypes.bool,
   disabled: PropTypes.bool,
   autoSelect: PropTypes.bool,
   size: PropTypes.string,

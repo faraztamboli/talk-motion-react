@@ -31,7 +31,7 @@ RecognitionTag.propTypes = { mode: PropTypes.string };
  * `speech` is the page's useSpeechOutput, `speakDraft` its useConfirmToSpeak (nothing is spoken
  * for the signer until they tap Speak, unless they turned on "Speak automatically").
  */
-export default function SignToSpeechPanel({ modelId, speech, speakDraft, onSentence }) {
+export default function SignToSpeechPanel({ modelId, untrained = false, speech, speakDraft, onSentence }) {
   const { t } = useTranslation();
   const [autoSend, setAutoSendState] = useState(() => readPref("autoSend", true));
   const [idleMs, setIdleMsState] = useState(() => readPref("idleMs", 1500));
@@ -116,11 +116,13 @@ export default function SignToSpeechPanel({ modelId, speech, speakDraft, onSente
         lm={lm}
         idleTitle={t("translator.cameraOffTitle", "Camera is off")}
         idleHint={
-          modelId
+          untrained
+            ? t("translator.untrainedHint", "This model hasn't been trained yet, so it can't recognize signs. Speech to sign still works, or choose a trained model.")
+            : modelId
             ? t("translator.cameraOffHint", "Turn the camera on and start signing.")
             : t("translator.chooseModelFirst", "Choose a model above first.")
         }
-        showStartButton={Boolean(modelId)}
+        showStartButton={Boolean(modelId) && !untrained}
         overlay={
           rec.signing ? (
             <span className="tm-tr-live-badge" role="status">
@@ -136,7 +138,7 @@ export default function SignToSpeechPanel({ modelId, speech, speakDraft, onSente
             {t("translator.stopCamera", "Stop camera")}
           </Button>
         ) : (
-          <Button type="primary" onClick={() => lm.start()} disabled={!modelId} icon={<MdVideocam aria-hidden />}>
+          <Button type="primary" onClick={() => lm.start()} disabled={!modelId || untrained} icon={<MdVideocam aria-hidden />}>
             {t("translator.startCamera", "Start camera")}
           </Button>
         )}
@@ -220,6 +222,7 @@ export default function SignToSpeechPanel({ modelId, speech, speakDraft, onSente
 
 SignToSpeechPanel.propTypes = {
   modelId: PropTypes.string,
+  untrained: PropTypes.bool,
   speech: PropTypes.object.isRequired,
   speakDraft: PropTypes.object.isRequired,
   onSentence: PropTypes.func,
