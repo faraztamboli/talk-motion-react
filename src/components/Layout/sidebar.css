@@ -1,0 +1,24 @@
+/* Sidebar menu (Sidebar.jsx): flat list with section names, big targets. */
+
+.tm-sidebar-menu {
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-inline-end: 0 !important;
+}
+.tm-sidebar-menu .ant-menu-item {
+  height: 44px;
+  line-height: 44px;
+  font-size: 15px;
+}
+.tm-sidebar-menu .ant-menu-item-group-title {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding-top: 14px;
+  color: rgba(255, 255, 255, 0.55);
+}
+.tm-sidebar-menu .ant-menu-item-divider {
+  margin: 8px 12px;
+  border-color: rgba(255, 255, 255, 0.15);
+}
