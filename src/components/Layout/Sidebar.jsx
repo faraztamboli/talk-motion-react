@@ -2,10 +2,11 @@ import React, { useMemo } from "react";
 import { Layout, Menu } from "antd";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { buildSidebarItems, accountFlags, selectedSidebarKey } from "../../data/sidebarNav";
+import { buildSidebarItems, accountFlags, collapsedSidebarItems, selectedSidebarKey } from "../../data/sidebarNav";
 import { useFlags } from "../../hooks/useFlag";
 import logoImg from "../../media/images/logo.png";
 import logoSmall from "../../media/images/logo-small.png";
+import "./sidebar.css";
 
 const { Sider } = Layout;
 
@@ -38,7 +39,7 @@ const Sidebar = (props) => {
         mode="inline"
         className="tm-sidebar-menu"
         selectedKeys={selected ? [selected] : []}
-        items={items}
+        items={props.collapsed ? collapsedSidebarItems(items) : items}
         onClick={({ key }) => navigate(key)}
       />
     </Sider>

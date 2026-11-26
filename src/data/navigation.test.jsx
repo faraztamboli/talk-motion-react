@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { accountFlags, buildSidebarItems, selectedSidebarKey, sidebarKeys } from "./sidebarNav";
+import { accountFlags, buildSidebarItems, collapsedSidebarItems, selectedSidebarKey, sidebarKeys } from "./sidebarNav";
 import { buildUserMenu } from "./userMenuList";
 
 const MODEL_KEYS = ["/models", "/models?show=trainable", "/store/models"];
@@ -29,7 +29,7 @@ describe("sidebar", () => {
         "/video-subtitles/designer",
         "/classrooms",
         "/courses",
-        "/staff-rooms",
+        "/classrooms/find",
         "/video-subtitles/library",
       ])
     );
@@ -60,6 +60,15 @@ describe("sidebar", () => {
   });
 });
 
+describe("collapsed sidebar", () => {
+  it("swaps section names for dividers and keeps every link", () => {
+    const built = buildSidebarItems({ legacy_models_visible: true, conversation_v2: true });
+    const flat = collapsedSidebarItems(built);
+    expect(flat.some((e) => e.type === "group")).toBe(false);
+    expect(flat.filter((e) => e.type !== "divider").map((e) => e.key)).toEqual(sidebarKeys(built));
+  });
+});
+
 describe("selectedSidebarKey", () => {
   const built = buildSidebarItems({ legacy_models_visible: true, conversation_v2: true });
 
@@ -78,6 +87,13 @@ describe("selectedSidebarKey", () => {
   it("tells the two model lists apart by their query", () => {
     expect(selectedSidebarKey(built, "/models", "?show=trainable")).toBe("/models?show=trainable");
     expect(selectedSidebarKey(built, "/models", "")).toBe("/models");
+  });
+
+  it("keeps My classrooms lit inside a classroom and on its sub-pages", () => {
+    expect(selectedSidebarKey(built, "/classroom/12")).toBe("/classrooms");
+    expect(selectedSidebarKey(built, "/classrooms/new")).toBe("/classrooms");
+    expect(selectedSidebarKey(built, "/classrooms/find")).toBe("/classrooms/find");
+    expect(selectedSidebarKey(built, "/courses/4")).toBe("/courses");
   });
 
   it("selects nothing for an unknown page", () => {

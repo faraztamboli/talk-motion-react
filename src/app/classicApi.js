@@ -29,6 +29,11 @@ export const TAG_TYPES = [
   "Cart",
   "Purchase",
   "Trainer",
+  "Classroom",
+  "ClassroomList",
+  "ClassroomRequest",
+  "Course",
+  "CourseList",
 ];
 
 export async function rpcBaseQuery({ fn, args = [], withToken = true, raw = false, timeoutMs }) {

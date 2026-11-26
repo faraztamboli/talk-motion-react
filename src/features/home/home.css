@@ -1,23 +1,4 @@
-/* Home screen and sidebar. Prefix tm- ; keep new styles here, not in index.css. */
-
-.tm-sidebar-menu {
-  height: calc(100vh - 80px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  border-inline-end: 0 !important;
-}
-.tm-sidebar-menu .ant-menu-item {
-  height: 44px;
-  line-height: 44px;
-  font-size: 15px;
-}
-.tm-sidebar-menu .ant-menu-item-group-title {
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding-top: 14px;
-  color: rgba(255, 255, 255, 0.55);
-}
+/* Home screen. Prefix tm- ; keep new styles here, not in index.css. */
 
 .tm-home {
   max-width: 1100px;
@@ -100,4 +81,12 @@
 @media (prefers-reduced-motion: reduce) {
   .tm-task { transition: none; }
   .tm-task:hover, .tm-task:focus-visible { transform: none; }
+}
+.tm-home__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 24px;
+  font-size: 16px;
 }

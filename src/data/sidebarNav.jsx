@@ -12,7 +12,7 @@ import {
   TranslationOutlined,
   VideoCameraAddOutlined,
   ExperimentOutlined,
-  SolutionOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 
 /**
@@ -34,18 +34,18 @@ const items = [
   group("Talk", "g-talk", [
     item("Talk with someone", "/conversation", <MessageOutlined />, "conversation_v2"),
     item("Past conversations", "/conversation/history", <HistoryOutlined />, "conversation_v2"),
-    item("Translate signs and speech", "/converter", <TranslationOutlined />),
+    item("Translate", "/converter", <TranslationOutlined />),
   ]),
 
   group("Videos", "g-videos", [
     item("My videos", "/video-subtitles/mylibrary", <PlayCircleOutlined />),
-    item("Make a captioned video", "/video-subtitles/designer", <VideoCameraAddOutlined />),
+    item("Make a video", "/video-subtitles/designer", <VideoCameraAddOutlined />),
   ]),
 
   group("Teach and learn", "g-teach", [
     item("My classrooms", "/classrooms", <TeamOutlined />),
     item("My courses", "/courses", <BookOutlined />),
-    item("Staff rooms", "/staff-rooms", <SolutionOutlined />),
+    item("Join a classroom", "/classrooms/find", <UsergroupAddOutlined />),
   ]),
 
   group(
@@ -58,10 +58,8 @@ const items = [
     LEGACY
   ),
 
-  group("Find more", "g-find", [
+  group("Explore", "g-find", [
     item("Find videos", "/video-subtitles/library", <CompassOutlined />),
-    item("Find classrooms", "/store/classrooms", <CompassOutlined />),
-    item("Find courses", "/video-subtitles/folder-manager", <CompassOutlined />),
     item("Find sign models", "/store/models", <CompassOutlined />, LEGACY),
   ]),
 
@@ -108,6 +106,23 @@ export function buildSidebarItems(flags = {}) {
   return out;
 }
 
+/**
+ * The icon-only (collapsed) sidebar can't show section names, which get cut off, so sections
+ * become thin dividers. Labels stay for the hover tooltips.
+ */
+export function collapsedSidebarItems(built) {
+  const out = [];
+  built.forEach((entry) => {
+    if (!entry.children) {
+      out.push(entry);
+      return;
+    }
+    out.push({ type: "divider", key: `${entry.key}-divider` });
+    out.push(...entry.children);
+  });
+  return out;
+}
+
 /** Every navigable key in a built menu, in order. */
 export function sidebarKeys(built) {
   return built.flatMap((entry) => (entry.children ? entry.children.map((c) => c.key) : [entry.key]));
@@ -117,8 +132,14 @@ export function sidebarKeys(built) {
  * The menu key that matches the current URL: an exact match (including the query string) wins,
  * otherwise the longest path that the URL sits under.
  */
+// Pages that belong to a menu item without sitting under its URL.
+const ALIASES = [[/^\/classroom\//, "/classrooms"]];
+
 export function selectedSidebarKey(built, pathname, search = "") {
   const keys = sidebarKeys(built);
+  for (const [pattern, key] of ALIASES) {
+    if (pattern.test(pathname) && keys.includes(key)) return key;
+  }
   const full = pathname + search;
   if (keys.includes(full)) return full;
   let best = null;

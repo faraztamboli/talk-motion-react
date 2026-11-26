@@ -9,13 +9,15 @@ import {
   TranslationOutlined,
   VideoCameraAddOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useProfile from "../../hooks/useProfile";
 import { useFlags } from "../../hooks/useFlag";
 import ErrorBoundary from "../../components/ErrorBoundary";
 import NotificationsPanel from "../../components/ui/NotificationsPanel";
 import RecentVideosWidget from "../../components/ui/RecentVideosWidget";
-import ActiveClassroomsWidget from "../../components/ui/ActiveClassroomsWidget";
+import GettingStarted, { markTried } from "./GettingStarted";
+import { ClassroomCard } from "../teach/ClassroomsPage";
+import { useListMyClassroomsQuery } from "../teach/teachApi";
 import MetaDecorator from "../../components/MetaDecorator";
 import { visibleTasks } from "./tasks";
 import "./home.css";
@@ -57,6 +59,25 @@ export function TaskCard({ task, onOpen }) {
   );
 }
 
+/** Up to four of the person's classrooms; nothing when they have none or the server can't say. */
+function YourClassrooms() {
+  const { data, error } = useListMyClassroomsQuery({ limit: 4 });
+  if (error || !data?.rows?.length) return null;
+  return (
+    <>
+      <div className="tm-home__row">
+        <Title level={2} className="tm-home__section">Your classrooms</Title>
+        <Link to="/classrooms">See all</Link>
+      </div>
+      <div className="tm-card-grid">
+        {data.rows.slice(0, 4).map((c) => (
+          <ClassroomCard key={c.id} classroom={c} />
+        ))}
+      </div>
+    </>
+  );
+}
+
 /** Home: one question, "What would you like to do?", answered with big plain-language cards. */
 export default function HomePage({ sm }) {
   const navigate = useNavigate();
@@ -76,6 +97,10 @@ export default function HomePage({ sm }) {
   }, []);
 
   const tasks = visibleTasks(flags);
+  const open = (path) => {
+    if (path === "/converter") markTried("translate");
+    navigate(path);
+  };
 
   return (
     <>
@@ -92,9 +117,13 @@ export default function HomePage({ sm }) {
             <NotificationsPanel />
           </header>
 
+          <ErrorBoundary compact>
+            <GettingStarted />
+          </ErrorBoundary>
+
           <nav aria-label="Things you can do" className="tm-tasks">
             {tasks.map((task) => (
-              <TaskCard key={task.key} task={task} onOpen={navigate} />
+              <TaskCard key={task.key} task={task} onOpen={open} />
             ))}
           </nav>
 
@@ -102,9 +131,8 @@ export default function HomePage({ sm }) {
           <ErrorBoundary compact>
             <RecentVideosWidget type="created" limit={4} sm={sm} />
           </ErrorBoundary>
-          <div style={{ height: 16 }} />
           <ErrorBoundary compact>
-            <ActiveClassroomsWidget limit={4} sm={sm} />
+            <YourClassrooms />
           </ErrorBoundary>
         </div>
       </div>
