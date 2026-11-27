@@ -22,8 +22,10 @@ npm ci
 npm run test:e2e:subtitles
 ```
 
-The run takes a minute or two; Vite's first page load is slow. It exits with 0 when every
-check passes. Screenshots, `results.json`, the mock server's call log (`data/calls.jsonl`) and
+The checks take about a minute. Before them, the runner waits for Vite to pre-bundle the app's
+dependencies, which can take several minutes on a fresh install or a busy machine. It waits up
+to 15 minutes; set `E2E_VITE_WARMUP_MS` to change that. The run exits with 0 when every check
+passes. Screenshots, `results.json`, the mock server's call log (`data/calls.jsonl`) and
 both servers' logs go to `e2e/subtitle-designer/.output/current/`. That folder is gitignored.
 
 The test needs:

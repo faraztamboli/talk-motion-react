@@ -63,6 +63,18 @@ try {
     { VITE_WS_SERVER_URL: `ws://localhost:${MOCK_PORT}` });
   if (!(await waitForHttp(WEB, 120000, vite))) throw new Error(`Vite didn't start on port ${WEB_PORT} (is the port free?)`);
 
+  // Vite pre-bundles the app's dependencies on the first page load, which can take several
+  // minutes on a busy machine. Do that here, without the browser's page-load timeout:
+  // transforming the entry waits for the dependency scan, and fetching one pre-bundled
+  // dependency waits for the bundling itself.
+  const warmupMs = Number(process.env.E2E_VITE_WARMUP_MS || 900000);
+  const t0 = Date.now();
+  process.stdout.write("warming up Vite (pre-bundling dependencies)... ");
+  const entry = await fetch(`${WEB}/src/main.jsx`, { signal: AbortSignal.timeout(warmupMs) }).then((r) => r.text());
+  const dep = (entry.match(/["'](\/node_modules\/\.vite\/deps\/[^"']+)["']/) || [])[1];
+  if (dep) await fetch(`${WEB}${dep}`, { signal: AbortSignal.timeout(Math.max(1000, warmupMs - (Date.now() - t0))) });
+  console.log(`${Math.round((Date.now() - t0) / 1000)} s`);
+
   console.log(`mock server ${MOCK}${LEGACY ? " (legacy owner check)" : ""}, web ${WEB}\n`);
   const checks = spawn(process.execPath, [path.join(HERE, "checks.mjs"), WEB, MOCK, OUT, DATA], { cwd: ROOT, stdio: "inherit" });
   code = await new Promise((resolve) => checks.on("exit", (c) => resolve(c ?? 1)));
