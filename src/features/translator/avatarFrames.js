@@ -3,14 +3,34 @@
  * normalized image coordinates.
  *
  * Viewer orientation: the avatar signs *to* the viewer, so it should look like the signer on
- * camera, not like a mirror image. Samples recorded in the app use the legacy selfie-mode
- * convention (x mirrored), so they are flipped back; poses extracted from dictionary videos are
- * already in image coordinates. getConceptPoses says which (`mirrored`).
+ * camera, not like a mirror image: x grows to the viewer's right, "left" means the signer's own
+ * left, and x is on the same scale as y (0.5 is the middle of the picture).
+ *
+ * Poses extracted from dictionary videos are stored that way already. Samples recorded in the app
+ * use the legacy selfie-mode convention (landmarkMath.js): x mirrored, left and right swapped,
+ * and x as a share of the picture's width. They are converted here: flipped back, sides swapped
+ * back, and widened by the camera's shape. getConceptPoses says which kind (`mirrored`).
  */
+
+/** Width / height of the camera pictures the recorded samples came from (most were 4:3). */
+export const RECORDED_ASPECT = 4 / 3;
 
 export const TRANSITION_FRAMES = 6;
 
-const flipBlock = (block) => (Array.isArray(block) ? block.map((p) => (isZero(p) ? p : [1 - p[0], p[1], p[2]])) : block);
+const flipBlock = (block) =>
+  Array.isArray(block) ? block.map((p) => (isZero(p) ? p : [0.5 + (0.5 - p[0]) * RECORDED_ASPECT, p[1], p[2] * RECORDED_ASPECT])) : block;
+
+/** Pose points that are a left/right pair: eyes, ears, mouth corners, then every limb joint. */
+const POSE_PAIRS = [[1, 4], [2, 5], [3, 6], [7, 8], [9, 10], ...Array.from({ length: 11 }, (_, i) => [11 + 2 * i, 12 + 2 * i])];
+
+function swapSides(pose) {
+  if (!Array.isArray(pose)) return pose;
+  const out = pose.slice();
+  for (const [a, b] of POSE_PAIRS) {
+    if (b < out.length) [out[a], out[b]] = [out[b], out[a]];
+  }
+  return out;
+}
 
 export function isZero(p) {
   return !p || (p[0] === 0 && p[1] === 0 && p[2] === 0);
@@ -23,7 +43,7 @@ export function present(block) {
 /** A frame in viewer orientation. Zero points (not tracked) stay zero. */
 export function toViewer(frame, mirrored) {
   if (!frame || !mirrored) return frame;
-  return { lh: flipBlock(frame.lh), rh: flipBlock(frame.rh), pose: flipBlock(frame.pose) };
+  return { lh: flipBlock(frame.rh), rh: flipBlock(frame.lh), pose: swapSides(flipBlock(frame.pose)) };
 }
 
 function lerpPoint(a, b, w) {

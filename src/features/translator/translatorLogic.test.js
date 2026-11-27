@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createSegmenter } from "./segmenter";
 import { glossOf, initialSentence, sentenceReducer } from "./sentence";
 import { buildPlaylist, currentItem, initialQueue, queueReducer, resolveKey } from "./playlist";
-import { framesForItem, lerpFrame, TRANSITION_FRAMES, toViewer } from "./avatarFrames";
+import { framesForItem, lerpFrame, RECORDED_ASPECT, TRANSITION_FRAMES, toViewer } from "./avatarFrames";
 import { describeWebSpeechError, describeWhisperError, micErrorCode } from "./speechErrors";
 import { pickVoice } from "./useSpeechOutput";
 import { legacyInputOf, topPredictions } from "./useBrowserModel";
@@ -196,8 +196,24 @@ describe("avatar frames", () => {
   const frame = (x) => ({ lh: [[x, 0.5, 0]], rh: [[0, 0, 0]], pose: [[x, 0.2, 0]] });
 
   it("unmirrors recorded samples but not dictionary poses, leaving untracked points at zero", () => {
-    expect(toViewer(frame(0.3), true)).toEqual({ lh: [[0.7, 0.5, 0]], rh: [[0, 0, 0]], pose: [[0.7, 0.2, 0]] });
+    // flipped back about the middle and widened to the camera's shape; the hands change sides
+    const x = 0.5 + 0.2 * RECORDED_ASPECT;
+    const seen = toViewer(frame(0.3), true);
+    expect(seen.lh).toEqual([[0, 0, 0]]);
+    expect(seen.rh[0][0]).toBeCloseTo(x);
+    expect(seen.pose[0][0]).toBeCloseTo(x);
     expect(toViewer(frame(0.3), false)).toEqual(frame(0.3));
+  });
+
+  it("gives recorded samples their own left and right back", () => {
+    const pose = Array.from({ length: 33 }, (_, i) => [0.4, 0.5, i]);
+    pose[11] = [0.7, 0.5, 11]; // stored as "left shoulder", but mirrored: it is the right one
+    pose[12] = [0.3, 0.5, 12];
+    const seen = toViewer({ lh: [], rh: [], pose }, true).pose;
+    expect(seen[12][0]).toBeLessThan(0.5); // right shoulder on the viewer's left, as on camera
+    expect(seen[11][0]).toBeGreaterThan(0.5);
+    expect(seen[0][2]).toBe(0); // the nose has no pair
+    expect(seen[7][2]).toBeCloseTo(8 * RECORDED_ASPECT); // ears swapped
   });
 
   it("blends from the previous frame into the next sign", () => {

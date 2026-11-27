@@ -17,7 +17,7 @@ export default function AvatarPlayer({ avatar, onReplay, canReplay, placeholder 
   const { t } = useTranslation();
   const stageRef = useRef(null);
   const fs = useFullscreen(stageRef);
-  const { character, look, chooseCharacter, setPart, resetLook } = useAvatarLook();
+  const { character, look, skeleton, chooseCharacter, setPart, resetLook, setSkeleton } = useAvatarLook();
   const wireframe = character.kind === "wireframe";
   return (
     <div className="tm-tr-player">
@@ -31,6 +31,11 @@ export default function AvatarPlayer({ avatar, onReplay, canReplay, placeholder 
             }
           >
             {wireframe ? <AvatarStage frame={avatar.frame} /> : <CharacterStage frame={avatar.frame} character={character} look={look} />}
+            {!wireframe && skeleton && (
+              <div className="tm-tr-skeleton-inset" aria-hidden="true">
+                <AvatarStage frame={avatar.frame} />
+              </div>
+            )}
           </Suspense>
         </ErrorBoundary>
         {!avatar.playing && !avatar.frame && <div className="tm-tr-stage-placeholder tm-tr-stage-placeholder-soft">{placeholder}</div>}
@@ -58,7 +63,15 @@ export default function AvatarPlayer({ avatar, onReplay, canReplay, placeholder 
           </Tooltip>
         )}
       </div>
-      <CharacterPicker character={character} look={look} onCharacter={chooseCharacter} onPart={setPart} onReset={resetLook} />
+      <CharacterPicker
+        character={character}
+        look={look}
+        skeleton={skeleton}
+        onCharacter={chooseCharacter}
+        onPart={setPart}
+        onReset={resetLook}
+        onSkeleton={setSkeleton}
+      />
       {avatar.label && (
         <p className="tm-tr-muted" aria-live="polite">
           {t("translator.nowSigning", "Signing")}: <strong>{avatar.label}</strong>
