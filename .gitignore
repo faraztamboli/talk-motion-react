@@ -28,3 +28,6 @@ dist - Copy/
 *.njsproj
 *.sln
 *.sw?
+
+# End-to-end test output (screenshots, mock server data, logs)
+e2e/**/.output/
