@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e:subtitles": "node e2e/subtitle-designer/run.mjs",
     "lint": "eslint src --ext .js,.jsx",
     "deploy": "node scripts/deploy.mjs"
   },
@@ -46,7 +47,9 @@
     "eslint": "^8.29.0",
     "eslint-plugin-react": "^7.31.11",
     "jsdom": "^22.1.0",
+    "playwright-core": "^1.65.1",
     "vite": "3.2.3",
-    "vitest": "^0.34.6"
+    "vitest": "^0.34.6",
+    "ws": "^8.23.1"
   }
 }

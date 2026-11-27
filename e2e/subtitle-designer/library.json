@@ -1,0 +1,1458 @@
+{
+ "getPythonFunctionLibrary": [
+  "self"
+ ],
+ "getPythonFunctionLibraryHelp": [
+  "self"
+ ],
+ "SessionServer.startSessionIfNotStarted": [
+  "self",
+  "sessionid"
+ ],
+ "SessionServer.validateLogin": [
+  "self",
+  "sessionid",
+  "username",
+  "password",
+  "remember",
+  "currentUrl",
+  "afterLoginUrl"
+ ],
+ "SessionServer.checkIfUsernameExists": [
+  "self",
+  "username"
+ ],
+ "SessionServer.forgotPassword": [
+  "self",
+  "sessionid",
+  "email"
+ ],
+ "SessionServer.resetPassword": [
+  "self",
+  "sessionid",
+  "reset_password_request_code",
+  "new_password",
+  "repeat_password"
+ ],
+ "SessionServer.getUserProfile": [
+  "self",
+  "sessionid"
+ ],
+ "SessionServer.updateUserProfile": [
+  "self",
+  "sessionid",
+  "first",
+  "middle",
+  "last",
+  "email",
+  "street",
+  "city",
+  "country",
+  "zip",
+  "line2",
+  "sm_img",
+  "lg_img"
+ ],
+ "SessionServer.registerLogin": [
+  "self",
+  "sessionid",
+  "username",
+  "password",
+  "first",
+  "middle",
+  "last",
+  "email",
+  "street",
+  "city",
+  "country"
+ ],
+ "SessionServer.registerLoginShort": [
+  "self",
+  "sessionid",
+  "username",
+  "password",
+  "email"
+ ],
+ "SessionServer.getSessionId": [
+  "self"
+ ],
+ "SessionServer.getNewSessionId": [
+  "self"
+ ],
+ "SessionServer.isLoggedIn": [
+  "self",
+  "sessionid"
+ ],
+ "SessionServer.logOut": [
+  "self"
+ ],
+ "TalkMotionServer.submitGestureSample": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept",
+  "frames"
+ ],
+ "TalkMotionServer.getConceptSampleCount": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept"
+ ],
+ "TalkMotionServer.listModels": [
+  "self",
+  "sessionid",
+  "scope",
+  "search_text",
+  "offset",
+  "limit",
+  "sort"
+ ],
+ "TalkMotionServer.getModelDetails": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.addModelTrainer": [
+  "self",
+  "sessionid",
+  "model_id",
+  "trainer_username"
+ ],
+ "TalkMotionServer.removeModelTrainer": [
+  "self",
+  "sessionid",
+  "model_id",
+  "trainer_username"
+ ],
+ "TalkMotionServer.listConcepts": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.createConcept": [
+  "self",
+  "sessionid",
+  "model_id",
+  "text",
+  "target_samples"
+ ],
+ "TalkMotionServer.updateConcept": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept",
+  "target_samples",
+  "display_name"
+ ],
+ "TalkMotionServer.renameConcept": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept",
+  "new_text"
+ ],
+ "TalkMotionServer.deleteConcept": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept"
+ ],
+ "TalkMotionServer.getConceptSamples": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept"
+ ],
+ "TalkMotionServer.getSampleFrames": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept",
+  "sample_id"
+ ],
+ "TalkMotionServer.deleteSamples": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept",
+  "sample_ids"
+ ],
+ "TalkMotionServer.deleteCapture": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept",
+  "capture_id"
+ ],
+ "TalkMotionServer.getTrainingReadiness": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.cancelTrainingJob": [
+  "self",
+  "sessionid",
+  "job_id"
+ ],
+ "TalkMotionServer.initConceptVideoUpload": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept",
+  "content_type",
+  "total_size"
+ ],
+ "TalkMotionServer.uploadConceptVideoChunk": [
+  "self",
+  "sessionid",
+  "upload_id",
+  "byte_offset",
+  "chunk_base64"
+ ],
+ "TalkMotionServer.finalizeConceptVideoUpload": [
+  "self",
+  "sessionid",
+  "upload_id"
+ ],
+ "TalkMotionServer.abortConceptVideoUpload": [
+  "self",
+  "sessionid",
+  "upload_id"
+ ],
+ "TalkMotionServer.setConceptVideoUrl": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept",
+  "url"
+ ],
+ "TalkMotionServer.removeConceptVideo": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept"
+ ],
+ "TalkMotionServer.translateGestureSample": [
+  "self",
+  "sessionid",
+  "model_id",
+  "frames"
+ ],
+ "TalkMotionServer.getModelInferenceInfo": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.getConceptPose": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept"
+ ],
+ "TalkMotionServer.getSpeechCapabilities": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.transcribeAudio": [
+  "self",
+  "sessionid",
+  "audio_base64",
+  "mime_type",
+  "language"
+ ],
+ "TalkMotionServer.englishToGloss": [
+  "self",
+  "sessionid",
+  "text"
+ ],
+ "TalkMotionServer.smoothGlossToEnglish": [
+  "self",
+  "sessionid",
+  "gloss"
+ ],
+ "TalkMotionServer.getConceptPoses": [
+  "self",
+  "sessionid",
+  "model_id",
+  "words"
+ ],
+ "TalkMotionServer.collectGestureAndConcept2": [
+  "self",
+  "sessionid",
+  "model_id",
+  "gesture_data",
+  "current_time",
+  "concept",
+  "sequence_length"
+ ],
+ "TalkMotionServer.languagesSupported": [
+  "self"
+ ],
+ "TalkMotionServer.wordSeparator": [
+  "self",
+  "language"
+ ],
+ "TalkMotionServer.translateWordsToGestures": [
+  "self",
+  "session_id",
+  "model_id",
+  "words",
+  "language"
+ ],
+ "TalkMotionServer.loadModel2": [
+  "self",
+  "session_id",
+  "model_id"
+ ],
+ "TalkMotionServer.translateGestureToWords2": [
+  "self",
+  "sessionid",
+  "gesture_data",
+  "current_time",
+  "model_id",
+  "sequence_length"
+ ],
+ "TalkMotionServer.getTotalNumberOfLogMessages": [
+  "self"
+ ],
+ "TalkMotionServer.train": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.train2": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.trainModelAsync": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.getTrainingJobStatus": [
+  "self",
+  "sessionid",
+  "job_id",
+  "after_seq"
+ ],
+ "TalkMotionServer.getModelTrainingJobs": [
+  "self",
+  "sessionid",
+  "model_id",
+  "limit"
+ ],
+ "TalkMotionServer.createModel": [
+  "self",
+  "sessionid",
+  "title",
+  "description",
+  "is_public"
+ ],
+ "TalkMotionServer.addTrainerToModel": [
+  "self",
+  "model_id",
+  "trainer_username"
+ ],
+ "TalkMotionServer.deleteModel": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.getModel": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.getModelsUserCanTrain": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getModelsUserCanUse": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getUsersProducts": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getStaffsClassrooms": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getStudentsClassrooms": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getUsersModels": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getPublicModels": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.purchaseProduct": [
+  "self",
+  "sessionid",
+  "product_id"
+ ],
+ "TalkMotionServer.getProductForFree": [
+  "self",
+  "sessionid",
+  "product_id"
+ ],
+ "TalkMotionServer.cancelProductSubscription": [
+  "self",
+  "sessionid",
+  "product_id"
+ ],
+ "TalkMotionServer.cancelSubscription": [
+  "self",
+  "sessionid",
+  "subscription_id"
+ ],
+ "TalkMotionServer.cancelSubscriptionItem": [
+  "self",
+  "sessionid",
+  "subscription_item_id"
+ ],
+ "TalkMotionServer.cloneModel": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.addMemberModel": [
+  "self",
+  "sessionid",
+  "parent_model_id",
+  "member_model_ids"
+ ],
+ "TalkMotionServer.addWordToVideoURLMapping": [
+  "self",
+  "sessionid",
+  "model_id",
+  "word",
+  "remote_video_url"
+ ],
+ "TalkMotionServer.uploadGestureVideo": [
+  "self",
+  "sessionid",
+  "model_id",
+  "word",
+  "video_file_name",
+  "video_stream"
+ ],
+ "TalkMotionServer.updateUserProfileWithImages": [
+  "self",
+  "sessionid",
+  "first",
+  "middle",
+  "last",
+  "email",
+  "street",
+  "city",
+  "country",
+  "zip",
+  "line2",
+  "sm_img",
+  "lg_img"
+ ],
+ "TalkMotionServer.uploadProfilePicture": [
+  "self",
+  "sessionid",
+  "img",
+  "is_small"
+ ],
+ "TalkMotionServer.updateModel": [
+  "self",
+  "sessionid",
+  "model_id",
+  "title",
+  "description",
+  "is_public"
+ ],
+ "TalkMotionServer.setModelPrice": [
+  "self",
+  "sessionid",
+  "model_id",
+  "unit_amount",
+  "tiers",
+  "currency",
+  "recurring"
+ ],
+ "TalkMotionServer.setProductPrice": [
+  "self",
+  "sessionid",
+  "product_id",
+  "unit_amount",
+  "tiers",
+  "currency",
+  "recurring"
+ ],
+ "TalkMotionServer.getPaymentConfig": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.getMyCart": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.setCartItem": [
+  "self",
+  "sessionid",
+  "product_id",
+  "quantity"
+ ],
+ "TalkMotionServer.clearMyCart": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.checkoutCart": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.confirmCheckout": [
+  "self",
+  "sessionid",
+  "stripe_subscription_id"
+ ],
+ "TalkMotionServer.listMyPurchases": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.cancelPurchase": [
+  "self",
+  "sessionid",
+  "product_id"
+ ],
+ "TalkMotionServer.setModelSale": [
+  "self",
+  "sessionid",
+  "model_id",
+  "price_cents",
+  "currency"
+ ],
+ "TalkMotionServer.stopModelSale": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.addOrRemoveCartProduct": [
+  "self",
+  "sessionid",
+  "product_id",
+  "quantity"
+ ],
+ "TalkMotionServer.setCartProductQuantity": [
+  "self",
+  "sessionid",
+  "product_id",
+  "quantity"
+ ],
+ "TalkMotionServer.getCart": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.purchaseCartOld": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.clearCart": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.purchaseCart": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.confirmPurchase": [
+  "self",
+  "sessionid",
+  "payment_intent",
+  "payment_intent_client_secret",
+  "redirect_status"
+ ],
+ "TalkMotionServer.getPurchaseList": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.getPurchaseDetail": [
+  "self",
+  "sessionid",
+  "invoice_id"
+ ],
+ "TalkMotionServer.getSupportedPaymentCurrencies": [
+  "self"
+ ],
+ "TalkMotionServer.getModelFiles": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.getModelFeatures": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.addContactUsMessage": [
+  "self",
+  "sessionid",
+  "first_name",
+  "last_name",
+  "email",
+  "message"
+ ],
+ "TalkMotionServer.saveModelFeatureWeight": [
+  "self",
+  "sessionid",
+  "model_id",
+  "feature_name",
+  "weight"
+ ],
+ "TalkMotionServer.getModelConcepts": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.deleteModelConcepts": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept"
+ ],
+ "TalkMotionServer.deleteModelConceptSample": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept",
+  "sample_ids"
+ ],
+ "TalkMotionServer.getConceptDetails": [
+  "self",
+  "sessionid",
+  "model_id",
+  "concept"
+ ],
+ "TalkMotionServer.getModelStats": [
+  "self",
+  "sessionid",
+  "model_id"
+ ],
+ "TalkMotionServer.getModelVideos": [
+  "self",
+  "sessionid",
+  "model_id",
+  "search_text",
+  "return_dictionary",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.createVideoRecording": [
+  "self",
+  "sessionid",
+  "title",
+  "description",
+  "original_video_url"
+ ],
+ "TalkMotionServer.updateVideoRecording": [
+  "self",
+  "sessionid",
+  "video_recording_id",
+  "original_video_title",
+  "original_video_author",
+  "original_video_quality",
+  "original_video_duration",
+  "original_video_currentTimeLastUpdated_",
+  "original_video_playbackRate",
+  "original_video_playbackQuality"
+ ],
+ "TalkMotionServer.updateVideoRecordingPrivacy": [
+  "self",
+  "sessionid",
+  "video_recording_id",
+  "is_public"
+ ],
+ "TalkMotionServer.openVideoRecordingShot": [
+  "self",
+  "sessionid",
+  "video_recording_id",
+  "original_video_start",
+  "recording_start",
+  "js_start"
+ ],
+ "TalkMotionServer.initVideoRecordingShotUpload": [
+  "self",
+  "sessionid",
+  "video_recording_shot_id",
+  "content_type",
+  "total_size_bytes",
+  "checksum_sha256"
+ ],
+ "TalkMotionServer.uploadVideoRecordingShotChunk": [
+  "self",
+  "sessionid",
+  "upload_id",
+  "part_index",
+  "byte_offset",
+  "chunk_base64",
+  "chunk_size"
+ ],
+ "TalkMotionServer.finalizeVideoRecordingShotUpload": [
+  "self",
+  "sessionid",
+  "upload_id",
+  "chunk_size",
+  "original_video_end",
+  "recording_end",
+  "js_end"
+ ],
+ "TalkMotionServer.abortVideoRecordingShotUpload": [
+  "self",
+  "sessionid",
+  "upload_id",
+  "reason"
+ ],
+ "TalkMotionServer.getVideoRecordingShotUploadStatus": [
+  "self",
+  "sessionid",
+  "video_recording_shot_id"
+ ],
+ "TalkMotionServer.closeVideoRecordingShotWithVideo": [
+  "self",
+  "sessionid",
+  "video_recording_shot_id",
+  "chunk_size",
+  "original_video_end",
+  "recording_end",
+  "js_end",
+  "shot",
+  "active_parts"
+ ],
+ "TalkMotionServer.getVideoRecordingDetails": [
+  "self",
+  "sessionid",
+  "recording_id"
+ ],
+ "TalkMotionServer.listVideoRecordings": [
+  "self",
+  "sessionid",
+  "scope",
+  "search_text",
+  "offset",
+  "limit"
+ ],
+ "TalkMotionServer.setVideoRecordingDetails": [
+  "self",
+  "sessionid",
+  "video_recording_id",
+  "title",
+  "description"
+ ],
+ "TalkMotionServer.deleteVideoRecordingShot": [
+  "self",
+  "sessionid",
+  "video_recording_shot_id"
+ ],
+ "TalkMotionServer.getRecordingCaptions": [
+  "self",
+  "sessionid",
+  "recording_id"
+ ],
+ "TalkMotionServer.saveRecordingCaptions": [
+  "self",
+  "sessionid",
+  "recording_id",
+  "language",
+  "label",
+  "cues"
+ ],
+ "TalkMotionServer.deleteRecordingCaptions": [
+  "self",
+  "sessionid",
+  "recording_id",
+  "language"
+ ],
+ "TalkMotionServer.getYouTubeMetadata": [
+  "self",
+  "sessionid",
+  "url"
+ ],
+ "TalkMotionServer.deleteVideoRecording": [
+  "self",
+  "sessionid",
+  "video_recording_id"
+ ],
+ "TalkMotionServer.getPublicVideoRecordings": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getUsersVideoRecordings": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getVideoRecordingsICanUse": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getVideoRecordings": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getVideoRecording": [
+  "self",
+  "sessionid",
+  "recording_id",
+  "with_shots"
+ ],
+ "TalkMotionServer.getUserProfileNew": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.saveFolder": [
+  "self",
+  "sessionid",
+  "name",
+  "description",
+  "parent_id",
+  "image",
+  "is_public"
+ ],
+ "TalkMotionServer.updateFolder": [
+  "self",
+  "sessionid",
+  "folder_id",
+  "name",
+  "description",
+  "image",
+  "is_public"
+ ],
+ "TalkMotionServer.getChildFolders": [
+  "self",
+  "sessionid",
+  "parent_id"
+ ],
+ "TalkMotionServer.saveFolderContent": [
+  "self",
+  "sessionid",
+  "folder_id",
+  "content_id",
+  "type",
+  "name"
+ ],
+ "TalkMotionServer.getFolderContent": [
+  "self",
+  "sessionid",
+  "folder_id"
+ ],
+ "TalkMotionServer.copyFolder": [
+  "self",
+  "sessionid",
+  "src_folder_id",
+  "dest_folder_id"
+ ],
+ "TalkMotionServer.moveFolder": [
+  "self",
+  "sessionid",
+  "src_folder_id",
+  "dest_folder_id"
+ ],
+ "TalkMotionServer.getFolderAndContentsAndPermissions": [
+  "self",
+  "sessionid",
+  "folder_id"
+ ],
+ "TalkMotionServer.createFolderPermission": [
+  "self",
+  "sessionid",
+  "folder_id",
+  "entity_id",
+  "entity_type",
+  "permission"
+ ],
+ "TalkMotionServer.getFolderPermissions": [
+  "self",
+  "sessionid",
+  "folder_id"
+ ],
+ "TalkMotionServer.deleteFolderPermission": [
+  "self",
+  "sessionid",
+  "folder_permission_id"
+ ],
+ "TalkMotionServer.removeFolderContent": [
+  "self",
+  "sessionid",
+  "folder_content_id"
+ ],
+ "TalkMotionServer.deleteFolder": [
+  "self",
+  "sessionid",
+  "folder_id"
+ ],
+ "TalkMotionServer.getSubscriptions": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.getUserInfo": [
+  "self",
+  "sessionid",
+  "user_name"
+ ],
+ "TalkMotionServer.createClassroom": [
+  "self",
+  "sessionid",
+  "name",
+  "description",
+  "image",
+  "is_public"
+ ],
+ "TalkMotionServer.updateClassroom": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "name",
+  "description",
+  "image",
+  "is_public",
+  "notes"
+ ],
+ "TalkMotionServer.addStudentToClass": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "user_id"
+ ],
+ "TalkMotionServer.addTeacherToClass": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "user_id"
+ ],
+ "TalkMotionServer.requestClassroomAccessAsStudent": [
+  "self",
+  "sessionid",
+  "classroom_id"
+ ],
+ "TalkMotionServer.requestClassroomAccessAsTeacher": [
+  "self",
+  "sessionid",
+  "classroom_id"
+ ],
+ "TalkMotionServer.approveStudentRequestToClass": [
+  "self",
+  "sessionid",
+  "request_id"
+ ],
+ "TalkMotionServer.approveTeacherRequestToClass": [
+  "self",
+  "sessionid",
+  "request_id"
+ ],
+ "TalkMotionServer.removeStudentFromClass": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "user_id"
+ ],
+ "TalkMotionServer.removeTeacherFromClass": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "user_id"
+ ],
+ "TalkMotionServer.getClassStudents": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "is_approved"
+ ],
+ "TalkMotionServer.getClassTeachers": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "is_approved"
+ ],
+ "TalkMotionServer.listMyClassrooms": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "limit",
+  "show"
+ ],
+ "TalkMotionServer.browseClassrooms": [
+  "self",
+  "sessionid",
+  "search_text",
+  "offset",
+  "limit"
+ ],
+ "TalkMotionServer.getClassroomDetails": [
+  "self",
+  "sessionid",
+  "classroom_id"
+ ],
+ "TalkMotionServer.createClassroomSimple": [
+  "self",
+  "sessionid",
+  "name",
+  "description",
+  "is_public"
+ ],
+ "TalkMotionServer.updateClassroomDetails": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "name",
+  "description",
+  "is_public",
+  "note"
+ ],
+ "TalkMotionServer.archiveClassroom": [
+  "self",
+  "sessionid",
+  "classroom_id"
+ ],
+ "TalkMotionServer.findPeople": [
+  "self",
+  "sessionid",
+  "search_text",
+  "limit"
+ ],
+ "TalkMotionServer.addClassroomMember": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "user_id",
+  "role"
+ ],
+ "TalkMotionServer.requestToJoinClassroom": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "role"
+ ],
+ "TalkMotionServer.answerClassroomRequest": [
+  "self",
+  "sessionid",
+  "request_id",
+  "role",
+  "approve"
+ ],
+ "TalkMotionServer.removeClassroomMember": [
+  "self",
+  "sessionid",
+  "classroom_id",
+  "user_id",
+  "role"
+ ],
+ "TalkMotionServer.getMyClassroomRequests": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.listCourses": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.getCourse": [
+  "self",
+  "sessionid",
+  "folder_id"
+ ],
+ "TalkMotionServer.createCourse": [
+  "self",
+  "sessionid",
+  "name",
+  "description",
+  "parent_id"
+ ],
+ "TalkMotionServer.addLessonToCourse": [
+  "self",
+  "sessionid",
+  "folder_id",
+  "content_type",
+  "content_id",
+  "title"
+ ],
+ "TalkMotionServer.removeLessonFromCourse": [
+  "self",
+  "sessionid",
+  "folder_content_id"
+ ],
+ "TalkMotionServer.shareCourse": [
+  "self",
+  "sessionid",
+  "folder_id",
+  "entity_type",
+  "entity_id",
+  "can_edit"
+ ],
+ "TalkMotionServer.unshareCourse": [
+  "self",
+  "sessionid",
+  "folder_id",
+  "entity_type",
+  "entity_id"
+ ],
+ "TalkMotionServer.addUserToVideoRecording": [
+  "self",
+  "sessionid",
+  "video_recording_id",
+  "user_id"
+ ],
+ "TalkMotionServer.requestVideoRecordingAccess": [
+  "self",
+  "sessionid",
+  "video_recording_id",
+  "notes"
+ ],
+ "TalkMotionServer.approveVideoRecordingAccess": [
+  "self",
+  "sessionid",
+  "request_id"
+ ],
+ "TalkMotionServer.getVideoRecordingAccessRequests": [
+  "self",
+  "sessionid",
+  "video_recording_id",
+  "is_approved"
+ ],
+ "TalkMotionServer.removeVideoRecordingAccess": [
+  "self",
+  "sessionid",
+  "video_recording_id",
+  "user_id"
+ ],
+ "TalkMotionServer.getUsersModelsByUserName": [
+  "self",
+  "sessionid",
+  "username",
+  "search_text",
+  "offset",
+  "end"
+ ],
+ "TalkMotionServer.getUserDashboardStats": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.getUserActivityFeed": [
+  "self",
+  "sessionid",
+  "limit",
+  "offset"
+ ],
+ "TalkMotionServer.markActivityAsRead": [
+  "self",
+  "sessionid",
+  "activityId"
+ ],
+ "TalkMotionServer.getUserNotifications": [
+  "self",
+  "sessionid",
+  "unreadOnly",
+  "limit"
+ ],
+ "TalkMotionServer.markNotificationAsRead": [
+  "self",
+  "sessionid",
+  "notificationId"
+ ],
+ "TalkMotionServer.markAllNotificationsAsRead": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.getUserLearningProgress": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.getUserActiveClassrooms": [
+  "self",
+  "sessionid",
+  "limit"
+ ],
+ "TalkMotionServer.getUserRecentVideos": [
+  "self",
+  "sessionid",
+  "type",
+  "limit"
+ ],
+ "TalkMotionServer.getCommunityActivityFeed": [
+  "self",
+  "sessionid",
+  "limit",
+  "offset"
+ ],
+ "TalkMotionServer.getClassroomActivity": [
+  "self",
+  "sessionid",
+  "classroomId",
+  "limit"
+ ],
+ "TalkMotionServer.getFeaturedClassrooms": [
+  "self",
+  "sessionid",
+  "limit"
+ ],
+ "TalkMotionServer.getPopularVideos": [
+  "self",
+  "sessionid",
+  "period",
+  "limit"
+ ],
+ "TalkMotionServer.getNewPublicClassrooms": [
+  "self",
+  "sessionid",
+  "limit"
+ ],
+ "TalkMotionServer.getCommunityStats": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.getOpenCollaborationProjects": [
+  "self",
+  "sessionid",
+  "status",
+  "limit"
+ ],
+ "TalkMotionServer.createCollaborationProject": [
+  "self",
+  "sessionid",
+  "title",
+  "description",
+  "skillsNeeded",
+  "maxContributors",
+  "deadline"
+ ],
+ "TalkMotionServer.requestCollaboration": [
+  "self",
+  "sessionid",
+  "projectId",
+  "message"
+ ],
+ "TalkMotionServer.getUserCollaborationRequests": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.acceptCollaborationRequest": [
+  "self",
+  "sessionid",
+  "requestId"
+ ],
+ "TalkMotionServer.declineCollaborationRequest": [
+  "self",
+  "sessionid",
+  "requestId"
+ ],
+ "TalkMotionServer.globalSearch": [
+  "self",
+  "sessionid",
+  "query",
+  "filters",
+  "limit"
+ ],
+ "TalkMotionServer.getUserAccessibilityPreferences": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.saveUserAccessibilityPreferences": [
+  "self",
+  "sessionid",
+  "preferences"
+ ],
+ "TalkMotionServer.getDashboardLayout": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.saveDashboardLayout": [
+  "self",
+  "sessionid",
+  "layoutConfig"
+ ],
+ "TalkMotionServer.generateVideoDescription": [
+  "self",
+  "sessionid",
+  "videoId",
+  "options"
+ ],
+ "TalkMotionServer.generateVideoSummary": [
+  "self",
+  "sessionid",
+  "videoId",
+  "options"
+ ],
+ "TalkMotionServer.generateCourseDescription": [
+  "self",
+  "sessionid",
+  "folderId",
+  "options"
+ ],
+ "TalkMotionServer.generateCourseOutline": [
+  "self",
+  "sessionid",
+  "folderId",
+  "options"
+ ],
+ "TalkMotionServer.enhanceSubtitles": [
+  "self",
+  "sessionid",
+  "videoId",
+  "subtitleId",
+  "options"
+ ],
+ "TalkMotionServer.approveAIGeneratedContent": [
+  "self",
+  "sessionid",
+  "contentId"
+ ],
+ "TalkMotionServer.rejectAIGeneratedContent": [
+  "self",
+  "sessionid",
+  "contentId",
+  "reason"
+ ],
+ "TalkMotionServer.getAIGeneratedContent": [
+  "self",
+  "sessionid",
+  "targetType",
+  "targetId",
+  "contentType"
+ ],
+ "TalkMotionServer.getLLMUsageStats": [
+  "self",
+  "sessionid",
+  "startDate",
+  "endDate"
+ ],
+ "TalkMotionServer.getLLMUsageHistory": [
+  "self",
+  "sessionid",
+  "limit",
+  "offset"
+ ],
+ "TalkMotionServer.startAIConversation": [
+  "self",
+  "sessionid",
+  "conversationType",
+  "contextType",
+  "contextId"
+ ],
+ "TalkMotionServer.sendAIConversationMessage": [
+  "self",
+  "sessionid",
+  "conversationId",
+  "message"
+ ],
+ "TalkMotionServer.getAIConversations": [
+  "self",
+  "sessionid",
+  "conversationType",
+  "limit",
+  "offset"
+ ],
+ "TalkMotionServer.getAIConversationMessages": [
+  "self",
+  "sessionid",
+  "conversationId"
+ ],
+ "TalkMotionServer.deleteAIConversation": [
+  "self",
+  "sessionid",
+  "conversationId"
+ ],
+ "TalkMotionServer.generateRecommendations": [
+  "self",
+  "sessionid",
+  "recommendationType",
+  "limit"
+ ],
+ "TalkMotionServer.getRecommendations": [
+  "self",
+  "sessionid",
+  "recommendationType",
+  "limit"
+ ],
+ "TalkMotionServer.trackRecommendationInteraction": [
+  "self",
+  "sessionid",
+  "recommendationId",
+  "action"
+ ],
+ "TalkMotionServer.generateLearningInsights": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.getLearningInsights": [
+  "self",
+  "sessionid",
+  "unacknowledgedOnly",
+  "limit"
+ ],
+ "TalkMotionServer.acknowledgeLearningInsight": [
+  "self",
+  "sessionid",
+  "insightId"
+ ],
+ "TalkMotionServer.getUserAIPreferences": [
+  "self",
+  "sessionid"
+ ],
+ "TalkMotionServer.updateUserAIPreferences": [
+  "self",
+  "sessionid",
+  "preferences"
+ ],
+ "TalkMotionServer.submitAIFeedback": [
+  "self",
+  "sessionid",
+  "contentId",
+  "feedbackType",
+  "rating",
+  "feedbackText",
+  "correctedContent"
+ ],
+ "TalkMotionServer.getAIFeedback": [
+  "self",
+  "sessionid",
+  "contentId"
+ ],
+ "TalkMotionServer.loginWithApiToken": [
+  "self",
+  "sessionid",
+  "access_token"
+ ]
+}
