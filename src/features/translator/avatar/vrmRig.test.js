@@ -94,15 +94,64 @@ describe("createRigDriver", () => {
     expect(r.x).toBeLessThan(0);
   });
 
-  it("aims the arm bones at the landmarks", () => {
+  it("aims the arm along the picture when only one shoulder is known", () => {
     const nodes = buildRig();
     const driver = createRigDriver((n) => nodes[n]);
     const shoulder = new Vector3(0.2, 1.4, 0);
-    const elbow = new Vector3(0.2, 1.7, 0.1); // upper arm straight up (and a little forward)
-    const wrist = new Vector3(0.2, 1.7, 0.5); // forearm straight forward
+    const elbow = new Vector3(0.2, 1.7, 0); // upper arm straight up
+    const wrist = new Vector3(0.5, 1.7, 0); // forearm straight out
     settle(driver, { pose: poseWith({ 11: shoulder, 13: elbow, 15: wrist }) });
-    near(worldDir(nodes.leftUpperArm, nodes.leftLowerArm), elbow.clone().sub(shoulder).normalize());
-    near(worldDir(nodes.leftLowerArm, nodes.leftHand), wrist.clone().sub(elbow).normalize());
+    near(worldDir(nodes.leftUpperArm, nodes.leftLowerArm), new Vector3(0, 1, 0));
+    near(worldDir(nodes.leftLowerArm, nodes.leftHand), new Vector3(1, 0, 0));
+  });
+
+  it("puts the wrist where the signer's wrist is on the body", () => {
+    const nodes = buildRig();
+    const driver = createRigDriver((n) => nodes[n]);
+    // a signer the size of the model: the wrist is in front of the chest, a little left of centre
+    const pose = poseWith({
+      11: new Vector3(0.2, 1.4, 0),
+      12: new Vector3(-0.2, 1.4, 0),
+      13: new Vector3(0.2, 1.12, 0),
+      15: new Vector3(0.05, 1.3, 0),
+    });
+    settle(driver, { pose });
+    const hand = worldPos(nodes.leftHand);
+    expect(hand.x).toBeCloseTo(0.05, 2);
+    expect(hand.y).toBeCloseTo(1.3, 2);
+    expect(hand.z).toBeGreaterThan(0.15); // in front of the body: the picture shows shortened arms
+    // the elbow bends the way the signer's does: below the shoulder, not above the wrist
+    expect(worldPos(nodes.leftLowerArm).y).toBeLessThan(1.3);
+  });
+
+  it("ignores MediaPipe's exaggerated pose depth", () => {
+    const run = (wristDepth) => {
+      const nodes = buildRig();
+      const driver = createRigDriver((n) => nodes[n]);
+      const pose = poseWith({
+        11: new Vector3(0.2, 1.4, 0),
+        12: new Vector3(-0.2, 1.4, 0),
+        13: new Vector3(0.2, 1.12, 0.1),
+        15: new Vector3(0.05, 1.3, wristDepth),
+      });
+      settle(driver, { pose });
+      return worldPos(nodes.leftHand);
+    };
+    near(run(0.3), run(3), 1e-6);
+  });
+
+  it("lets an arm hang when it leaves the picture and no hand was found", () => {
+    const nodes = buildRig();
+    const driver = createRigDriver((n) => nodes[n]);
+    // landmark y > 1 is below the bottom edge: world y < -1
+    const pose = poseWith({
+      11: new Vector3(0.2, -0.5, 0),
+      12: new Vector3(-0.2, -0.5, 0),
+      13: new Vector3(0.6, -0.8, 0),
+      15: new Vector3(0.9, -1.2, 0),
+    });
+    settle(driver, { pose });
+    expect(worldDir(nodes.leftUpperArm, nodes.leftLowerArm).y).toBeLessThan(-0.9);
   });
 
   it("an arm that is not tracked relaxes while the other keeps signing", () => {
@@ -150,7 +199,34 @@ describe("createRigDriver", () => {
     hand[7] = lm(mcp.clone().add(new Vector3(0.03, -0.03, 0)));
     hand[8] = lm(mcp.clone().add(new Vector3(0.03, -0.06, 0)));
     settle(driver, { pose, lh: hand });
-    near(worldDir(nodes.leftIndexIntermediate, nodes.leftIndexDistal), new Vector3(0, -1, 0));
+    near(worldDir(nodes.leftIndexIntermediate, nodes.leftIndexDistal), new Vector3(0, -1, 0), 0.08);
+  });
+
+  it("finger joints only curl toward the palm, whatever the depth noise says", () => {
+    const nodes = buildRig();
+    const driver = createRigDriver((n) => nodes[n]);
+    const pose = poseWith({ 11: new Vector3(0.2, 1.4, 0), 13: new Vector3(0.5, 1.4, 0), 15: new Vector3(0.75, 1.4, 0) });
+    const hand = leftHand(new Quaternion(), new Vector3(0.75, 1.4, 0));
+    // the landmarks say the fingertip went sideways (z), which a finger joint can't do
+    const mcp = new Vector3(...hand[5]).multiply(new Vector3(1, -1, -1));
+    hand[6] = lm(mcp.clone().add(new Vector3(0.03, 0, 0)));
+    hand[7] = lm(mcp.clone().add(new Vector3(0.03, 0, 0.03)));
+    hand[8] = lm(mcp.clone().add(new Vector3(0.03, 0, 0.06)));
+    settle(driver, { pose, lh: hand });
+    const d = worldDir(nodes.leftIndexIntermediate, nodes.leftIndexDistal);
+    expect(Math.abs(d.z)).toBeLessThan(0.1);
+    expect(d.y).toBeLessThan(-0.9); // bent, but toward the palm (down in the rest pose)
+  });
+
+  it("fingers follow the hand without twisting against it", () => {
+    const nodes = buildRig();
+    const driver = createRigDriver((n) => nodes[n]);
+    const turn = new Quaternion().setFromEuler(new Euler(Math.PI, 0, 0)); // palm turned up
+    const pose = poseWith({ 11: new Vector3(0.2, 1.4, 0), 13: new Vector3(0.5, 1.4, 0), 15: new Vector3(0.75, 1.4, 0) });
+    settle(driver, { pose, lh: leftHand(turn, new Vector3(0.75, 1.4, 0)) });
+    const handQ = nodes.leftHand.getWorldQuaternion(new Quaternion());
+    const fingerQ = nodes.leftIndexProximal.getWorldQuaternion(new Quaternion());
+    expect(fingerQ.angleTo(handQ)).toBeLessThan(0.05); // same turn as the hand, no extra roll
   });
 
   it("smooths: one short step does not reach the target", () => {
@@ -165,7 +241,7 @@ describe("createRigDriver", () => {
     expect(worldDir(nodes.leftUpperArm, nodes.leftLowerArm).y).toBeGreaterThan(0.99);
   });
 
-  it("an untracked hand keeps its fingers rigid with the hand", () => {
+  it("an untracked hand follows the forearm, loosely curled", () => {
     const nodes = buildRig();
     const driver = createRigDriver((n) => nodes[n]);
     const pose = poseWith({ 11: new Vector3(0.2, 1.4, 0), 13: new Vector3(0.2, 1.1, 0), 15: new Vector3(0.2, 0.8, 0) });

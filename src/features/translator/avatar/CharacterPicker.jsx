@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Popover, Select } from "antd";
+import { Button, Checkbox, Popover, Select } from "antd";
 import { BgColorsOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { CHARACTERS, MODELS, PALETTES, editableParts } from "./characters";
@@ -41,7 +41,7 @@ function Swatches({ part, value, onChange }) {
 Swatches.propTypes = { part: PropTypes.string.isRequired, value: PropTypes.string, onChange: PropTypes.func.isRequired };
 
 /** Choose the avatar's character and, for characters that allow it, their colours. */
-export default function CharacterPicker({ character, look, onCharacter, onPart, onReset }) {
+export default function CharacterPicker({ character, look, skeleton, onCharacter, onPart, onReset, onSkeleton }) {
   const { t } = useTranslation();
   const parts = editableParts(character);
   const credit = MODELS[character.model]?.credit;
@@ -76,6 +76,11 @@ export default function CharacterPicker({ character, look, onCharacter, onPart, 
           </Button>
         </Popover>
       )}
+      {character.kind !== "wireframe" && onSkeleton && (
+        <Checkbox checked={Boolean(skeleton)} onChange={(e) => onSkeleton(e.target.checked)}>
+          {t("translator.avatarShowSkeleton", "Show the skeleton too")}
+        </Checkbox>
+      )}
       {credit && <span className="tm-tr-credit">{credit}</span>}
     </div>
   );
@@ -87,4 +92,6 @@ CharacterPicker.propTypes = {
   onCharacter: PropTypes.func.isRequired,
   onPart: PropTypes.func.isRequired,
   onReset: PropTypes.func.isRequired,
+  skeleton: PropTypes.bool,
+  onSkeleton: PropTypes.func,
 };

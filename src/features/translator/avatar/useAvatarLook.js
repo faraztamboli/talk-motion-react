@@ -18,6 +18,7 @@ function readLooks() {
 export default function useAvatarLook() {
   const [id, setId] = useState(() => findCharacter(readPref("avatarCharacter", DEFAULT_CHARACTER)).id);
   const [looks, setLooks] = useState(readLooks);
+  const [skeleton, setSkeletonState] = useState(() => readPref("avatarSkeleton", "") === "1");
   const character = findCharacter(id);
   const look = useMemo(() => resolveLook(character, looks[character.id]), [character, looks]);
 
@@ -47,5 +48,11 @@ export default function useAvatarLook() {
     });
   }, [character]);
 
-  return { character, look, chooseCharacter, setPart, resetLook };
+  /** Draw the skeleton (the raw tracking) in a corner of the character's picture. */
+  const setSkeleton = useCallback((on) => {
+    setSkeletonState(Boolean(on));
+    writePref("avatarSkeleton", on ? "1" : "");
+  }, []);
+
+  return { character, look, skeleton, chooseCharacter, setPart, resetLook, setSkeleton };
 }

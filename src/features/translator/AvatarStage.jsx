@@ -2,12 +2,39 @@ import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import * as THREE from "three";
 import { HAND_CONNECTIONS, POSE_CONNECTIONS } from "../../utils/landmarkConnections";
-import { present } from "./avatarFrames";
+import { isZero, present } from "./avatarFrames";
 
 // Loaded with React.lazy: three.js is only downloaded when someone switches to the avatar.
 
-const toScene = (p) => new THREE.Vector3((p[0] - 0.5) * 2.2, -(p[1] - 0.5) * 2.2, -p[2] * 1.5);
 const NOSE = 0;
+const LEFT_SHOULDER = 11;
+const RIGHT_SHOULDER = 12;
+const SHOULDERS_WIDE = 0.8; // scene units the shoulders are drawn across
+const SHOULDERS_AT = 0.2; // scene height of the shoulder line
+const HEAD_SIZE = 0.3; // head radius, in shoulder widths
+const DEFAULT_FIT = { cx: 0.5, cy: 0.5, k: 2.2 };
+
+/**
+ * How to place a frame in the scene so the signer always fills it the same way: shoulders centred
+ * and a fixed width, whatever the camera distance was. Follows the body smoothly (`previous`).
+ */
+export function fitFrame(pose, previous) {
+  const l = pose?.[LEFT_SHOULDER];
+  const r = pose?.[RIGHT_SHOULDER];
+  if (isZero(l) || isZero(r)) return previous || DEFAULT_FIT;
+  const width = Math.hypot(l[0] - r[0], l[1] - r[1]);
+  if (width < 0.02) return previous || DEFAULT_FIT;
+  const now = { cx: (l[0] + r[0]) / 2, cy: (l[1] + r[1]) / 2, k: SHOULDERS_WIDE / width, shoulders: true };
+  if (!previous?.shoulders) return now;
+  const mix = (a, b, w) => a + (b - a) * w;
+  return { cx: mix(previous.cx, now.cx, 0.2), cy: mix(previous.cy, now.cy, 0.2), k: mix(previous.k, now.k, 0.1), shoulders: true };
+}
+
+/** Scene position of a landmark. Body depth is left out: MediaPipe's is too wild to draw. */
+export function toScene(p, fit, depth = 0) {
+  const up = fit.shoulders ? SHOULDERS_AT : 0;
+  return new THREE.Vector3((p[0] - fit.cx) * fit.k, -(p[1] - fit.cy) * fit.k + up, -p[2] * fit.k * depth);
+}
 
 /**
  * Signing avatar: a 3D skeleton driven directly by pose frames (viewer orientation, see
@@ -112,19 +139,23 @@ export default function AvatarStage({ frame }) {
   useEffect(() => {
     const o = sceneRef.current;
     if (!o) return;
-    const setJoints = (meshes, points, visible) => {
+    const fit = frame ? fitFrame(frame.pose, o.fit) : null;
+    o.fit = fit;
+    const setJoints = (meshes, points, visible, depth) => {
       meshes.forEach((mesh, i) => {
-        mesh.visible = Boolean(visible && points?.[i]);
-        if (mesh.visible) mesh.position.copy(toScene(points[i]));
+        mesh.visible = Boolean(visible && points?.[i] && !isZero(points[i]));
+        if (mesh.visible) mesh.position.copy(toScene(points[i], fit, depth));
       });
     };
-    const setBones = (lines, connections, points, visible) => {
+    const setBones = (lines, connections, points, visible, depth) => {
       lines.visible = visible;
       if (!visible) return;
       const attr = lines.geometry.getAttribute("position");
       connections.forEach(([a, b], k) => {
-        const pa = toScene(points[a] || [0, 0, 0]);
-        const pb = toScene(points[b] || [0, 0, 0]);
+        // A bone with an untracked end is drawn with no length
+        const ends = isZero(points[a]) || isZero(points[b]) ? [points[a] || points[b] || [0, 0, 0]] : [points[a], points[b]];
+        const pa = toScene(ends[0], fit, depth);
+        const pb = toScene(ends[ends.length - 1], fit, depth);
         attr.setXYZ(k * 2, pa.x, pa.y, pa.z);
         attr.setXYZ(k * 2 + 1, pb.x, pb.y, pb.z);
       });
@@ -133,14 +164,18 @@ export default function AvatarStage({ frame }) {
     const lh = present(frame?.lh);
     const rh = present(frame?.rh);
     const pose = present(frame?.pose);
-    setJoints(o.leftJoints, frame?.lh, lh);
-    setJoints(o.rightJoints, frame?.rh, rh);
-    setJoints(o.poseJoints, frame?.pose, pose);
-    setBones(o.leftBones, HAND_CONNECTIONS, frame?.lh, lh);
-    setBones(o.rightBones, HAND_CONNECTIONS, frame?.rh, rh);
-    setBones(o.poseBones, POSE_CONNECTIONS, frame?.pose, pose);
-    o.head.visible = Boolean(pose && frame.pose[NOSE]);
-    if (o.head.visible) o.head.position.copy(toScene(frame.pose[NOSE]));
+    setJoints(o.leftJoints, frame?.lh, lh, 1);
+    setJoints(o.rightJoints, frame?.rh, rh, 1);
+    setJoints(o.poseJoints, frame?.pose, pose, 0);
+    setBones(o.leftBones, HAND_CONNECTIONS, frame?.lh, lh, 1);
+    setBones(o.rightBones, HAND_CONNECTIONS, frame?.rh, rh, 1);
+    setBones(o.poseBones, POSE_CONNECTIONS, frame?.pose, pose, 0);
+    o.head.visible = Boolean(pose && !isZero(frame.pose[NOSE]));
+    if (o.head.visible) {
+      o.head.position.copy(toScene(frame.pose[NOSE], fit, 0));
+      o.head.position.z = -0.3; // behind the hands, so a hand at the face stays visible
+      o.head.scale.setScalar(fit.shoulders ? (HEAD_SIZE * SHOULDERS_WIDE) / 0.14 : 1);
+    }
     o.renderer.render(o.scene, o.camera);
   }, [frame]);
 

@@ -24,6 +24,18 @@ describe("CharacterPicker", () => {
     expect(screen.queryByRole("button", { name: /look/i })).toBeNull();
   });
 
+  it("offers the skeleton beside a character, but not beside the skeleton itself", () => {
+    const mika = findCharacter("mika");
+    const onSkeleton = vi.fn();
+    const props = { look: {}, onCharacter: vi.fn(), onPart: vi.fn(), onReset: vi.fn(), onSkeleton };
+    const { unmount } = render(<CharacterPicker character={mika} {...props} />);
+    fireEvent.click(screen.getByRole("checkbox", { name: /skeleton/i }));
+    expect(onSkeleton).toHaveBeenCalledWith(true);
+    unmount();
+    render(<CharacterPicker character={findCharacter("wireframe")} {...props} />);
+    expect(screen.queryByRole("checkbox", { name: /skeleton/i })).toBeNull();
+  });
+
   it("changes a colour part from the swatches", () => {
     const mika = findCharacter("mika");
     const onPart = vi.fn();

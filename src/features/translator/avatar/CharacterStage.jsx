@@ -155,11 +155,11 @@ export default function CharacterStage({ frame, character, look, onStatus }) {
         s.rig = createRigDriver((name) => vrm.humanoid.getNormalizedBoneNode(name));
         s.rig.apply(null, 10); // start relaxed, not in a T-pose
         vrm.expressionManager?.setValue("happy", 0.15);
-        // Frame the upper body: head to waist, hands in front
+        // Frame the signing space: above the head to the waist
         const head = vrm.humanoid.getNormalizedBoneNode("head");
         const headY = head ? head.getWorldPosition(new Vector3()).y : 1.45;
-        stage.camera.position.set(0, headY - 0.05, 2.35);
-        stage.camera.lookAt(0, headY - 0.32, 0);
+        stage.camera.position.set(0, headY - 0.02, 2.0);
+        stage.camera.lookAt(0, headY - 0.26, 0);
         applyLook(vrm.scene, character, look);
         reportRef.current("ready");
       },
