@@ -1,8 +1,8 @@
 import { shallowEqual, useSelector } from "react-redux";
 
-/** Current value of one feature flag (see src/config/flags.js). */
+/** Current value of one feature flag (see src/config/flags.js). Off when no flags are loaded. */
 export function useFlag(name) {
-  return useSelector((state) => Boolean(state.flags.values[name]));
+  return useSelector((state) => Boolean(state.flags?.values?.[name]));
 }
 
 /** All feature flag values. */

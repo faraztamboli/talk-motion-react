@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createSegmenter } from "./segmenter";
-import { glossOf, initialSentence, sentenceReducer } from "./sentence";
+import { createSegmenter } from "../signInput/segmenter";
+import { glossOf, initialSentence, sentenceReducer } from "../signInput/sentence";
 import { buildPlaylist, currentItem, initialQueue, queueReducer, resolveKey } from "./playlist";
 import {
   bodyScale,
@@ -17,7 +17,7 @@ import {
 } from "./avatarFrames";
 import { describeWebSpeechError, describeWhisperError, micErrorCode } from "./speechErrors";
 import { pickVoice } from "./useSpeechOutput";
-import { legacyInputOf, topPredictions } from "./useBrowserModel";
+import { legacyInputOf, topPredictions } from "../signInput/useBrowserModel";
 
 const hand = (x, y = 0.5) => ({ rightHandLandmarks: [{ x, y, z: 0 }] });
 const noHands = { poseLandmarks: [] };

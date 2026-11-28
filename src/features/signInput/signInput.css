@@ -1,0 +1,128 @@
+/* Sign input pieces shared by the Translator and Conversation Mode (features/signInput).
+   Class names keep the tm-tr- prefix they had in the Translator. */
+
+.tm-tr-sentence .tm-tr-muted,
+.tm-tr-word-pop .tm-tr-muted {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #4b5563; /* 7.5:1 on white */
+}
+
+.tm-tr-sentence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px;
+  border: 1px dashed var(--color-neutral-300, #d1d5db);
+  border-radius: 10px;
+  background: var(--color-neutral-50, #f9fafb);
+}
+.tm-tr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border: 1px solid #0b57d0;
+  border-radius: 999px;
+  background: #e8f0fe;
+  color: #0b3d91;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.tm-tr-chip:focus-visible {
+  outline: 3px solid #0b57d0;
+  outline-offset: 2px;
+}
+.tm-tr-chip-tentative {
+  border-style: dashed;
+  background: #fff;
+  color: #374151;
+  font-style: italic;
+}
+.tm-tr-chip-pending {
+  border-color: #9ca3af;
+  background: #fff;
+  color: #374151;
+  font-weight: 400;
+  cursor: default;
+}
+.tm-tr-word-pop {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 280px;
+}
+.tm-tr-pop-title {
+  margin: 0;
+  font-weight: 600;
+}
+.tm-tr-pop-actions {
+  margin-top: 4px;
+}
+
+.tm-tr-live-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #b42318;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+
+/* ---- Conversation Mode sign tray (SignDraftTray) ---- */
+.tm-si-tray {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--color-neutral-300, #d1d5db);
+  border-radius: 12px;
+  background: #fff;
+}
+.tm-si-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tm-si-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.tm-si-camera {
+  max-width: 480px;
+}
+.tm-si-draft:empty {
+  display: none;
+}
+.tm-si-draft {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #0b57d0;
+  background: #f5f8ff;
+}
+.tm-si-draft-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.tm-si-draft-text {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #111827;
+}

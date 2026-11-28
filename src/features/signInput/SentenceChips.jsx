@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button, Popover, Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
+import "./signInput.css";
 
 const pct = (c) => `${Math.round(c * 100)}%`;
 

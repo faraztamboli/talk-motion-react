@@ -18,6 +18,7 @@ export const FLAG_NAMES = [
   "voice_clone",
   "assemblyai_asr",
   "fingerspelling",
+  "sign_input",
 ];
 
 export const OVERRIDES_STORAGE_KEY = "tm_flags";
@@ -35,6 +36,7 @@ export function envDefaults(env = import.meta.env) {
     voice_clone: envBool(env.VITE_FLAG_VOICE_CLONE, false),
     assemblyai_asr: envBool(env.VITE_FLAG_ASSEMBLYAI_ASR, false),
     fingerspelling: envBool(env.VITE_FLAG_FINGERSPELLING, false),
+    sign_input: envBool(env.VITE_FLAG_SIGN_INPUT, false),
   };
 }
 

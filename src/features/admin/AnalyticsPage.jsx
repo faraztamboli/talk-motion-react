@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Alert, Card, Segmented, Skeleton, Space, Table, Typography } from "antd";
 import { LineChartOutlined } from "@ant-design/icons";
 import { apiFetch } from "../../api/http";
+import DraftsReport from "./DraftsReport";
 import "../locations/locations.css";
 import "./admin.css";
 
@@ -142,6 +143,7 @@ export default function AnalyticsPage() {
           </Space>
         )}
       </Card>
+      <DraftsReport days={days} />
     </div>
   );
 }
