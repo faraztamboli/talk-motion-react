@@ -365,3 +365,113 @@ describe("UploadManager", () => {
     await expect(m.upload({ token: "t", shotId: "1", blob: huge })).rejects.toThrow(/200 MB/);
   });
 });
+
+describe("UploadManager after a lost reply", () => {
+  function api(overrides = {}) {
+    return {
+      status: vi.fn(async () => ({ status: "initialized" })),
+      init: vi.fn(async () => ({ upload_id: "up-1" })),
+      chunk: vi.fn(async (t, id, part, offset, b64, size) => ({ next_expected_offset: offset + size })),
+      finalize: vi.fn(async () => ({ ok: true, status: "processing", video_url: null })),
+      abort: vi.fn(async () => ({})),
+      ...overrides,
+    };
+  }
+  const manager = (a) => {
+    const m = new UploadManager({ api: a });
+    m.retryDelayMs = 1;
+    return m;
+  };
+
+  it("reports a segment the server is still preparing", async () => {
+    const res = await manager(api()).upload({ token: "t", shotId: "5", blob: new Blob(["x"]) });
+    expect(res).toMatchObject({ status: "processing", video_url: null });
+  });
+
+  it("asks again when the status check times out instead of starting over blindly", async () => {
+    const a = api({
+      status: vi.fn().mockRejectedValueOnce(new Error("timeout")).mockResolvedValueOnce({ status: "complete", video_url: "https://v/5.mp4" }),
+    });
+    const res = await manager(a).upload({ token: "t", shotId: "5", blob: new Blob(["x"]) });
+    expect(res).toMatchObject({ status: "complete", video_url: "https://v/5.mp4", alreadyComplete: true });
+    expect(a.init).not.toHaveBeenCalled();
+  });
+
+  it("stops when init says the segment is already uploaded", async () => {
+    const a = api({ init: vi.fn(async () => ({ ok: true, already_uploaded: true, status: "processing" })) });
+    const res = await manager(a).upload({ token: "t", shotId: "5", blob: new Blob(["x"]) });
+    expect(res.status).toBe("processing");
+    expect(a.chunk).not.toHaveBeenCalled();
+  });
+
+  it("treats an old server's 'already complete' refusal as done", async () => {
+    const status = vi.fn().mockResolvedValueOnce({ status: "initialized" }).mockResolvedValue({ status: "complete", video_url: "https://v/5.mp4" });
+    const a = api({ status, init: vi.fn().mockRejectedValue(new Error("Cannot initialize upload: shot is in 'complete' status")) });
+    const res = await manager(a).upload({ token: "t", shotId: "5", blob: new Blob(["x"]) });
+    expect(res).toMatchObject({ status: "complete", video_url: "https://v/5.mp4" });
+  });
+
+  it("checks with the server when the finalize reply is lost", async () => {
+    const status = vi.fn().mockResolvedValueOnce({ status: "initialized" }).mockResolvedValue({ status: "processing" });
+    const a = api({ status, finalize: vi.fn().mockRejectedValue(new Error("The server didn't answer in time")) });
+    const res = await manager(a).upload({ token: "t", shotId: "5", blob: new Blob(["x"]) });
+    expect(res.status).toBe("processing");
+  });
+
+  it("still fails when the server really doesn't have it", async () => {
+    const a = api({ finalize: vi.fn().mockRejectedValue(new Error("disk full")) });
+    await expect(manager(a).upload({ token: "t", shotId: "5", blob: new Blob(["x"]) })).rejects.toThrow("disk full");
+  });
+
+  it("follows the preparation until the video is ready, or reports why it failed", async () => {
+    const ok = api({ status: vi.fn().mockResolvedValueOnce({ status: "processing" }).mockRejectedValueOnce(new Error("blip")).mockResolvedValue({ status: "complete", video_url: "https://v/5.mp4" }) });
+    await expect(manager(ok).waitUntilProcessed("t", "5", { intervalMs: 1 })).resolves.toEqual({ status: "complete", video_url: "https://v/5.mp4" });
+    const bad = api({ status: vi.fn(async () => ({ status: "failed", error_message: "The video couldn't be prepared for playback: bad file" })) });
+    await expect(manager(bad).waitUntilProcessed("t", "5", { intervalMs: 1 })).rejects.toThrow(/bad file/);
+    const slow = api({ status: vi.fn(async () => ({ status: "processing" })) });
+    await expect(manager(slow).waitUntilProcessed("t", "5", { intervalMs: 1, timeoutMs: 5 })).rejects.toThrow(/longer than usual/);
+  });
+});
+
+describe("RecordingEngine while the server prepares a take", () => {
+  it("shows Preparing, frees the local copy, then Saved with the file", async () => {
+    const gate = deferred();
+    const uploader = {
+      upload: vi.fn(async () => ({ status: "processing", video_url: null })),
+      waitUntilProcessed: vi.fn(() => gate.promise),
+    };
+    const { engine, store } = makeEngine({ uploader });
+    engine.arm();
+    await engine.startSegment(0);
+    await engine.stopSegment(3);
+    await flush();
+    expect(engine.segments[0].status).toBe("processing");
+    expect(store.rows.size).toBe(0); // the server has it
+    expect(engine.hasPendingWork()).toBe(false);
+    expect(uploader.waitUntilProcessed).toHaveBeenCalledWith("tok", "100", expect.any(Object));
+    gate.resolve({ status: "complete", video_url: "https://v/100.mp4" });
+    await flush();
+    expect(engine.segments[0]).toMatchObject({ status: "saved", videoUrl: "https://v/100.mp4" });
+  });
+
+  it("lets a take whose preparation failed be retried", async () => {
+    const uploader = {
+      upload: vi.fn(async () => ({ status: "processing" })),
+      waitUntilProcessed: vi.fn().mockRejectedValueOnce(new Error("bad file")).mockResolvedValue({ status: "complete", video_url: "https://v/100.mp4" }),
+    };
+    const { engine } = makeEngine({ uploader });
+    const errors = [];
+    engine.addEventListener("error", (e) => errors.push(e.detail.code));
+    engine.arm();
+    await engine.startSegment(0);
+    await engine.stopSegment(3);
+    await flush();
+    await flush();
+    expect(engine.segments[0]).toMatchObject({ status: "failed", error: "bad file" });
+    expect(errors).toContain("processing-failed");
+    expect(engine.retry(engine.segments[0].localId)).toBe(true);
+    await flush();
+    await flush();
+    expect(engine.segments[0].status).toBe("saved");
+  });
+});

@@ -4,6 +4,9 @@
 //   npm run test:e2e:subtitles               # the real check; exits 0 when every check passes
 //   npm run test:e2e:subtitles -- --legacy   # the mock refuses owners like the pre-0.0.6 server;
 //                                            # the run should fail with "doesn't belong to you"
+//   npm run test:e2e:subtitles -- --lost-reply  # the reply to the first finalize never arrives
+//                                            # (the socket drops, as in production on 2026-11-27);
+//                                            # every check should still pass
 //
 // Needs Google Chrome and ffmpeg/ffprobe (see README.md). Results and screenshots go to
 // e2e/subtitle-designer/.output/.
@@ -15,9 +18,10 @@ import { fileURLToPath } from "node:url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..", "..");
 const LEGACY = process.argv.includes("--legacy");
+const LOST_REPLY = process.argv.includes("--lost-reply");
 const MOCK_PORT = Number(process.env.E2E_MOCK_PORT || 8792);
 const WEB_PORT = Number(process.env.E2E_WEB_PORT || 5181);
-const OUTPUT = path.join(HERE, ".output", LEGACY ? "legacy" : "current");
+const OUTPUT = path.join(HERE, ".output", LEGACY ? "legacy" : LOST_REPLY ? "lost-reply" : "current");
 const OUT = path.join(OUTPUT, "out");
 const DATA = path.join(OUTPUT, "data");
 const MOCK = `http://localhost:${MOCK_PORT}`;
@@ -56,7 +60,10 @@ async function waitForHttp(url, timeoutMs, child) {
 
 let code = 1;
 try {
-  const mock = start("mock-server", [path.join(HERE, "mock-server.mjs"), String(MOCK_PORT), DATA], LEGACY ? { LEGACY_OWNER_CHECK: "1" } : {});
+  const mock = start("mock-server", [path.join(HERE, "mock-server.mjs"), String(MOCK_PORT), DATA], {
+    ...(LEGACY ? { LEGACY_OWNER_CHECK: "1" } : {}),
+    ...(LOST_REPLY ? { DROP_FIRST_FINALIZE_REPLY: "1" } : {}),
+  });
   if (!(await waitForHttp(`${MOCK}/state`, 15000, mock))) throw new Error(`mock server didn't start on port ${MOCK_PORT}`);
 
   const vite = start("vite", [path.join(ROOT, "node_modules", "vite", "bin", "vite.js"), "--port", String(WEB_PORT), "--strictPort", "--host", "localhost"],
@@ -75,7 +82,7 @@ try {
   if (dep) await fetch(`${WEB}${dep}`, { signal: AbortSignal.timeout(Math.max(1000, warmupMs - (Date.now() - t0))) });
   console.log(`${Math.round((Date.now() - t0) / 1000)} s`);
 
-  console.log(`mock server ${MOCK}${LEGACY ? " (legacy owner check)" : ""}, web ${WEB}\n`);
+  console.log(`mock server ${MOCK}${LEGACY ? " (legacy owner check)" : ""}${LOST_REPLY ? " (drops the first finalize reply)" : ""}, web ${WEB}\n`);
   const checks = spawn(process.execPath, [path.join(HERE, "checks.mjs"), WEB, MOCK, OUT, DATA], { cwd: ROOT, stdio: "inherit" });
   code = await new Promise((resolve) => checks.on("exit", (c) => resolve(c ?? 1)));
   console.log(`\nScreenshots and results.json: ${OUT}\nServer calls: ${path.join(DATA, "calls.jsonl")}`);

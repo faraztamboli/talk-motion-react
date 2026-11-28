@@ -11,14 +11,18 @@ import { segmentStore as defaultStore } from "../../utils/indexedDBStorage";
  * States: idle (no camera) | ready (camera, not recording) | armed (play to record) |
  *         recording (a segment is being captured)
  *
- * Segment statuses: recording -> stopping -> queued -> uploading -> saved
+ * Segment statuses: recording -> stopping -> queued -> uploading -> processing -> saved
  *                                                   \-> failed (retry) | discarded (empty)
+ *   processing: the server has the video and is converting it for playback. The local copy
+ *   is no longer needed for safety (it stays in memory for the preview and a retry).
  *
  * Guarantees:
  *  - A segment's server row is registered when it starts; if that fails, the upload step
  *    registers it again, so no recording is lost to a hiccup.
  *  - Each finished segment is written to IndexedDB before uploading and removed only after
  *    the upload is finalized. restorePending() re-queues what a reload left behind.
+ *  - An upload whose reply was lost (timeout, dropped connection) is checked with the server
+ *    before it counts as failed (UploadManager).
  *  - Uploads run one at a time, in order (the server matches replies by function name).
  *  - A new segment never starts while the previous recorder is still stopping, and disarm()
  *    waits only for the recorder, not for uploads.
@@ -324,12 +328,32 @@ export class RecordingEngine extends EventTarget {
         onProgress: (p) => this._patch(segment, { progress: p }),
       });
       await this.store.delete(segment.key);
+      if (result?.status === "processing" && typeof this.uploader.waitUntilProcessed === "function") {
+        this._patch(segment, { status: "processing", progress: 1 });
+        this._watchProcessing(segment, shotId);
+        return;
+      }
       segment.blob = null;
       this._patch(segment, { status: "saved", progress: 1, videoUrl: result?.video_url || segment.videoUrl || null });
     } catch (err) {
       const message = err?.message || "Upload failed";
       this._patch(segment, { status: "failed", error: message });
       this._emitError("upload-failed", `A segment couldn't be uploaded: ${message}`);
+    }
+  }
+
+  /** Follow the server's conversion of an uploaded segment (runs beside the upload queue). */
+  async _watchProcessing(segment, shotId) {
+    try {
+      const done = await this.uploader.waitUntilProcessed(this.token, shotId, { isCancelled: () => this._destroyed });
+      if (!this.segments.includes(segment)) return;
+      segment.blob = null;
+      this._patch(segment, { status: "saved", videoUrl: done?.video_url || segment.videoUrl || null });
+    } catch (err) {
+      if (this._destroyed || !this.segments.includes(segment)) return;
+      const message = err?.message || "The video couldn't be prepared";
+      this._patch(segment, { status: "failed", error: message });
+      this._emitError("processing-failed", `A segment couldn't be prepared for playback: ${message}`);
     }
   }
 
@@ -356,7 +380,7 @@ export class RecordingEngine extends EventTarget {
       this._emitError("busy", "Wait for this segment to finish before deleting it.");
       return false;
     }
-    if (segment.status === "saved" && segment.shotId && this.deleteShotOnServer) {
+    if ((segment.status === "saved" || segment.status === "processing") && segment.shotId && this.deleteShotOnServer) {
       try {
         await this.deleteShotOnServer(segment.shotId);
       } catch (err) {
