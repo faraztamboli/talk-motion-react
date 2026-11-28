@@ -38,7 +38,8 @@ export default function AvatarPlayer({ avatar, onReplay, canReplay, placeholder 
             )}
           </Suspense>
         </ErrorBoundary>
-        {!avatar.playing && !avatar.frame && <div className="tm-tr-stage-placeholder tm-tr-stage-placeholder-soft">{placeholder}</div>}
+        {/* At the bottom, like the word captions: centred, it was drawn across the character */}
+        {!avatar.playing && !avatar.frame && placeholder && <div className="tm-tr-stage-hint">{placeholder}</div>}
         {avatar.label && (
           <div className="tm-tr-stage-caption" aria-hidden>
             {avatar.label}

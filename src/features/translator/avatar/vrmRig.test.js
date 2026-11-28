@@ -92,6 +92,9 @@ describe("createRigDriver", () => {
     expect(d.x).toBeGreaterThan(0); // still on the left side
     const r = worldDir(nodes.rightUpperArm, nodes.rightLowerArm);
     expect(r.x).toBeLessThan(0);
+    // out from the body far enough to clear a shirt and hips, not straight down inside them
+    expect(d.x).toBeGreaterThan(0.3);
+    expect(r.x).toBeLessThan(-0.3);
   });
 
   it("aims the arm along the picture when only one shoulder is known", () => {

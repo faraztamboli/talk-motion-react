@@ -44,10 +44,13 @@ const FINGERS = [
 
 const POSE = { nose: 0, eyeLeft: 2, eyeRight: 5, earLeft: 7, earRight: 8, shoulder: { left: 11, right: 12 }, elbow: { left: 13, right: 14 }, wrist: { left: 15, right: 16 } };
 
-/** Relaxed arms for when nothing is tracked: hanging, forearms a little forward. */
+/**
+ * Relaxed arms for when nothing is tracked: hanging about 22 degrees out from the body, forearms
+ * a little forward. Hanging straighter put the arms inside the characters' shirts and hips.
+ */
 const RELAXED = {
-  left: { upper: new Vector3(0.1, -1, 0.05).normalize(), lower: new Vector3(0.05, -1, 0.35).normalize() },
-  right: { upper: new Vector3(-0.1, -1, 0.05).normalize(), lower: new Vector3(-0.05, -1, 0.35).normalize() },
+  left: { upper: new Vector3(0.4, -1, 0.06).normalize(), lower: new Vector3(0.15, -1, 0.4).normalize() },
+  right: { upper: new Vector3(-0.4, -1, 0.06).normalize(), lower: new Vector3(-0.15, -1, 0.4).normalize() },
 };
 
 const point = (block, i) => {
