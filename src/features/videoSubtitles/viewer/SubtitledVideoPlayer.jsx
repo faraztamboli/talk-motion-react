@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
-import { Alert, Button, Select, Space, Tooltip } from "antd";
+import { Alert, Button, Segmented, Select, Space, Tooltip } from "antd";
 import {
   BorderOuterOutlined,
   CompressOutlined,
@@ -16,11 +16,13 @@ import { findCueIndexAt } from "../captions/cueOps";
 const LAYOUT_KEY = "tm_signer_layout";
 const SIZES = { s: 22, m: 32, l: 44 }; // % of the video's width
 const CORNERS = ["br", "bl", "tl", "tr"];
+const MODES = ["pip", "side"];
 
 function loadLayout() {
   try {
     const saved = JSON.parse(localStorage.getItem(LAYOUT_KEY) || "{}");
     return {
+      mode: MODES.includes(saved.mode) ? saved.mode : "pip",
       visible: saved.visible !== false,
       size: SIZES[saved.size] ? saved.size : "m",
       corner: CORNERS.includes(saved.corner) ? saved.corner : "br",
@@ -28,7 +30,7 @@ function loadLayout() {
       captions: saved.captions !== false,
     };
   } catch {
-    return { visible: true, size: "m", corner: "br", pos: null, captions: true };
+    return { mode: "pip", visible: true, size: "m", corner: "br", pos: null, captions: true };
   }
 }
 
@@ -41,11 +43,15 @@ function saveLayout(layout) {
 }
 
 /**
- * YouTube video with the recorded signer picture-in-picture and text captions on top.
- * The signer can be hidden, resized, dragged or snapped to a corner; captions can be turned off
- * or switched to another language. Fullscreen covers the whole player, overlays included.
+ * YouTube video with the recorded signer and text captions.
+ * The signer shows picture-in-picture (hide, resize, drag, or snap to a corner) or side by side
+ * with the video; captions can be turned off or switched to another language. Fullscreen
+ * covers the whole player, overlays included.
+ *
+ * preparing: segments still being prepared on the server (shown as a notice, not as "no signing").
+ * emptyAction: a button to offer when there is no signing yet (the owner's "Record signing").
  */
-export default function SubtitledVideoPlayer({ videoId, shots, captions }) {
+export default function SubtitledVideoPlayer({ videoId, shots, captions, preparing = 0, emptyAction = null }) {
   const { t } = useTranslation();
   const wrapRef = useRef(null);
   const sync = useSignerSync({ videoId, shots });
@@ -76,14 +82,17 @@ export default function SubtitledVideoPlayer({ videoId, shots, captions }) {
   const cue = cueIndex >= 0 ? track.cues[cueIndex] : null;
 
   // Drag the signer anywhere over the video (pointer events: mouse, touch and pen).
+  const side = layout.mode === "side";
+
   const onPointerDown = useCallback((event) => {
+    if (side) return;
     if (event.button !== undefined && event.button !== 0) return;
     const box = wrapRef.current?.getBoundingClientRect();
     const el = event.currentTarget.getBoundingClientRect();
     if (!box) return;
     drag.current = { dx: event.clientX - el.left, dy: event.clientY - el.top, box, w: el.width, h: el.height, moved: false };
     event.currentTarget.setPointerCapture?.(event.pointerId);
-  }, []);
+  }, [side]);
 
   const onPointerMove = useCallback((event) => {
     const d = drag.current;
@@ -98,16 +107,18 @@ export default function SubtitledVideoPlayer({ videoId, shots, captions }) {
     drag.current = null;
   }, []);
 
-  const signerStyle = layout.pos
-    ? { width: `${SIZES[layout.size]}%`, left: `${layout.pos.x}%`, top: `${layout.pos.y}%` }
-    : { width: `${SIZES[layout.size]}%` };
+  const signerStyle = side
+    ? undefined
+    : layout.pos
+      ? { width: `${SIZES[layout.size]}%`, left: `${layout.pos.x}%`, top: `${layout.pos.y}%` }
+      : { width: `${SIZES[layout.size]}%` };
 
   if (!videoId) {
     return <Alert type="error" showIcon message={t("subtitles.viewer.noVideo", "This recording has no YouTube video.")} />;
   }
 
   return (
-    <div className={`tm-viewer ${fullscreen ? "is-fullscreen" : ""}`} ref={wrapRef}>
+    <div className={`tm-viewer ${fullscreen ? "is-fullscreen" : ""} ${side && shots.length > 0 && layout.visible ? "is-side" : ""}`} ref={wrapRef}>
       <div className="tm-viewer-stage">
         <div className="tm-viewer-player" ref={sync.containerRef} />
         {sync.error && (
@@ -119,7 +130,7 @@ export default function SubtitledVideoPlayer({ videoId, shots, captions }) {
 
         {shots.length > 0 && (
           <div
-            className={`tm-viewer-signer ${layout.pos ? "" : `is-${layout.corner}`} ${layout.visible && sync.activeShotId ? "" : "is-hidden"}`}
+            className={`tm-viewer-signer ${layout.pos || side ? "" : `is-${layout.corner}`} ${layout.visible && sync.activeShotId ? "" : "is-hidden"} ${side && layout.visible ? "is-side-slot" : ""}`}
             style={signerStyle}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
@@ -149,6 +160,16 @@ export default function SubtitledVideoPlayer({ videoId, shots, captions }) {
         <Space wrap size={4}>
           {shots.length > 0 && (
             <>
+              <Segmented
+                size="small"
+                value={layout.mode}
+                onChange={(mode) => setLayout((l) => ({ ...l, mode, visible: true }))}
+                options={[
+                  { value: "pip", label: t("subtitles.viewer.pip", "Picture in picture") },
+                  { value: "side", label: t("subtitles.viewer.side", "Side by side") },
+                ]}
+                aria-label={t("subtitles.viewer.layout", "Where the signer shows")}
+              />
               <Tooltip title={layout.visible ? t("subtitles.viewer.hideSigner", "Hide the signer") : t("subtitles.viewer.showSigner", "Show the signer")}>
                 <Button
                   size="small"
@@ -159,6 +180,7 @@ export default function SubtitledVideoPlayer({ videoId, shots, captions }) {
                   {t("subtitles.viewer.signerBtn", "Signer")}
                 </Button>
               </Tooltip>
+              {!side && (
               <Select
                 size="small"
                 value={layout.size}
@@ -171,6 +193,8 @@ export default function SubtitledVideoPlayer({ videoId, shots, captions }) {
                 aria-label={t("subtitles.viewer.size", "Signer size")}
                 className="tm-viewer-select"
               />
+              )}
+              {!side && (
               <Tooltip title={t("subtitles.viewer.corner", "Move the signer to the next corner")}>
                 <Button
                   size="small"
@@ -181,6 +205,7 @@ export default function SubtitledVideoPlayer({ videoId, shots, captions }) {
                   aria-label={t("subtitles.viewer.corner", "Move the signer to the next corner")}
                 />
               </Tooltip>
+              )}
             </>
           )}
           {captions?.length > 0 && (
@@ -217,13 +242,22 @@ export default function SubtitledVideoPlayer({ videoId, shots, captions }) {
       </div>
 
       {sync.signerError && <Alert className="tm-sub-gap" type="warning" showIcon message={t("subtitles.viewer.signerError", sync.signerError)} />}
-      {shots.length === 0 && (
+      {preparing > 0 && (
+        <Alert
+          className="tm-sub-gap"
+          type="info"
+          showIcon
+          message={t("subtitles.viewer.preparing", "New signing is being prepared. It appears here in a minute or two.")}
+        />
+      )}
+      {shots.length === 0 && preparing === 0 && (
         <Alert
           className="tm-sub-gap"
           type="info"
           showIcon
           message={t("subtitles.viewer.noSegments", "There's no signing in this recording yet.")}
           description={captions?.length ? t("subtitles.viewer.captionsOnly", "Text captions are shown.") : undefined}
+          action={emptyAction}
         />
       )}
     </div>
@@ -234,4 +268,6 @@ SubtitledVideoPlayer.propTypes = {
   videoId: PropTypes.string,
   shots: PropTypes.array.isRequired,
   captions: PropTypes.array,
+  preparing: PropTypes.number,
+  emptyAction: PropTypes.node,
 };

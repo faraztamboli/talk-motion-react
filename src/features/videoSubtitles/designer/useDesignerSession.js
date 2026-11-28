@@ -21,7 +21,16 @@ const POLL_MS = 500;
  */
 export default function useDesignerSession({ existingRecordingId, stream, dispatch }) {
   const token = sessionToken();
-  const playerContainerRef = useRef(null);
+  // The player's element, as a callback ref: the player is created when the element exists,
+  // however late it mounts (edit mode renders it only after the recording has loaded).
+  const containerEl = useRef(null);
+  const containerWaiters = useRef([]);
+  const playerContainerRef = useCallback((el) => {
+    containerEl.current = el;
+    if (el) {
+      containerWaiters.current.splice(0).forEach((resolve) => resolve(el));
+    }
+  }, []);
   const playerRef = useRef(null);
   const engineRef = useRef(null);
   const sampleRef = useRef(null);
@@ -35,6 +44,8 @@ export default function useDesignerSession({ existingRecordingId, stream, dispat
   const [player, setPlayer] = useState({ ready: false, error: null, time: 0, duration: 0, playing: false });
   const [notice, setNotice] = useState(null); // { type, message } shown until dismissed
   const [loadingExisting, setLoadingExisting] = useState(Boolean(existingRecordingId));
+  const [loadError, setLoadError] = useState(null);
+  const [loadAttempt, setLoadAttempt] = useState(0);
 
   const [checkMetadata] = useLazyGetYouTubeMetadataQuery();
   const [createRecording, createState] = useCreateRecordingMutation();
@@ -144,8 +155,15 @@ export default function useDesignerSession({ existingRecordingId, stream, dispat
   }, []);
 
   const getPlayer = useCallback(() => {
-    if (!playerRef.current && playerContainerRef.current) {
-      playerRef.current = new YouTubePlayerController(playerContainerRef.current, {
+    // The stage unmounts when the author starts over with another video; a player whose
+    // element left the page can't be reused.
+    const stale = playerRef.current && playerRef.current.containerEl !== containerEl.current;
+    if (stale) {
+      playerRef.current.destroy();
+      playerRef.current = null;
+    }
+    if (!playerRef.current && containerEl.current) {
+      playerRef.current = new YouTubePlayerController(containerEl.current, {
         onStateChange: handleStateChange,
         onError: handlePlayerError,
         onPlaybackRateChange: handleRateChange,
@@ -156,9 +174,15 @@ export default function useDesignerSession({ existingRecordingId, stream, dispat
 
   const showInPlayer = useCallback(
     async (videoId) => {
-      // The container mounts with the candidate; wait a frame for it.
-      for (let i = 0; i < 10 && !playerContainerRef.current; i += 1) {
-        await new Promise((r) => setTimeout(r, 30));
+      // The container mounts with the candidate, sometimes a few renders later.
+      if (!containerEl.current) {
+        await new Promise((resolve, reject) => {
+          const timer = setTimeout(() => reject(new Error("The video player couldn't be shown. Reload the page.")), 10000);
+          containerWaiters.current.push((el) => {
+            clearTimeout(timer);
+            resolve(el);
+          });
+        });
       }
       const p = getPlayer();
       if (!p) throw new Error("The player area isn't ready");
@@ -266,14 +290,20 @@ export default function useDesignerSession({ existingRecordingId, stream, dispat
     let cancelled = false;
     (async () => {
       setLoadingExisting(true);
-      const subscription = dispatch(recordingsApi.endpoints.getRecordingDetails.initiate(String(existingRecordingId)));
+      setLoadError(null);
+      const subscription = dispatch(
+        recordingsApi.endpoints.getRecordingDetails.initiate(String(existingRecordingId), { forceRefetch: loadAttempt > 0 })
+      );
       const result = await subscription;
       subscription.unsubscribe?.();
       const details = result?.data;
       if (cancelled) return;
       if (!details) {
         setLoadingExisting(false);
-        say("error", result?.error?.message || "This recording couldn't be opened.");
+        setLoadError({
+          notFound: result?.error?.code === "not_found",
+          message: result?.error?.message || "This recording couldn't be opened.",
+        });
         return;
       }
       if (!details.canEdit) {
@@ -285,6 +315,9 @@ export default function useDesignerSession({ existingRecordingId, stream, dispat
       engineRef.current.setRecordingId(details.recording.id);
       setRecording({ id: details.recording.id, videoId: details.recording.videoId });
       const meta = { title: details.recording.youtubeTitle, author: details.recording.youtubeAuthor };
+      // Show the page now; the player fills its place once YouTube is ready.
+      setLoadingExisting(false);
+      const restoring = engineRef.current.restorePending(details.recording.id);
       if (details.recording.videoId) {
         setCandidate({ videoId: details.recording.videoId, status: "loading", meta, error: null });
         try {
@@ -294,14 +327,13 @@ export default function useDesignerSession({ existingRecordingId, stream, dispat
           if (!cancelled) setCandidate({ videoId: details.recording.videoId, status: "error", meta, error: err.message });
         }
       }
-      const restored = await engineRef.current.restorePending(details.recording.id);
-      if (restored && !cancelled) say("info", `Uploading ${restored} segment${restored === 1 ? "" : "s"} that hadn't finished before.`);
-      if (!cancelled) setLoadingExisting(false);
+      const restored = await restoring;
+      if (restored && !cancelled) say("info", `Saving ${restored === 1 ? "a take" : `${restored} takes`} from your last visit.`);
     })();
     return () => {
       cancelled = true;
     };
-  }, [existingRecordingId]);
+  }, [existingRecordingId, loadAttempt]);
 
   // ------------------------------------------------------------------ actions
 
@@ -319,7 +351,24 @@ export default function useDesignerSession({ existingRecordingId, stream, dispat
     await engineRef.current.disarm(playerRef.current?.getCurrentTime() || 0);
   }, []);
 
-  const seekTo = useCallback((seconds) => playerRef.current?.seekTo(seconds), []);
+  /** Record from where the video is now: arm, then play (or start at once if it is playing). */
+  const startRecording = useCallback(async () => {
+    const p = playerRef.current;
+    const e = engineRef.current;
+    if (!p || !e.arm()) return false;
+    p.setPlaybackRate(1);
+    if (p.getState() === YT_STATE.PLAYING) await e.startSegment(p.getCurrentTime());
+    else p.play();
+    return true;
+  }, []);
+
+  const currentPlayer = useCallback(() => playerRef.current, []);
+
+  const seekTo = useCallback((seconds) => {
+    const t = Math.max(0, Number(seconds) || 0);
+    playerRef.current?.seekTo(t);
+    setPlayer((prev) => ({ ...prev, time: t }));
+  }, []);
   const currentTimeMs = useCallback(() => Math.round((playerRef.current?.getCurrentTime() || 0) * 1000), []);
   const play = useCallback(() => playerRef.current?.play(), []);
   const pause = useCallback(() => playerRef.current?.pause(), []);
@@ -352,6 +401,10 @@ export default function useDesignerSession({ existingRecordingId, stream, dispat
     notice,
     dismissNotice: () => setNotice(null),
     loadingExisting,
+    loadError,
+    reload: () => setLoadAttempt((n) => n + 1),
+    getPlayer: currentPlayer,
+    startRecording,
     creating: createState.isLoading,
     checkVideo,
     commitVideo,

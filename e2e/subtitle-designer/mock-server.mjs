@@ -4,8 +4,12 @@
 // return|error} out), offers the live server's exact function library (library.json, taken from
 // the 0.0.6-classic startup log; see README.md to refresh it), and mirrors TalkMotionServer.py for the recording functions:
 // create does not set the YouTube title, owner checks, shot registration, resumable chunked
-// upload, EBML/MP4 header check, ffmpeg conversion to <shot>_sl_webm.mp4 (same arguments as
-// production), details/list shapes. Converted files are served over HTTP with Range support.
+// upload, EBML/MP4 header check, details/list shapes, captions. Like 0.0.7-classic, finalize
+// returns at once with status "processing" and the conversion to <shot>_sl_webm.mp4 (same
+// ffmpeg arguments as production) runs in the background; init/finalize/status report an
+// already-uploaded segment instead of failing. Converted files are served over HTTP with
+// Range support. CONVERSION_DELAY_MS (default 1500) holds each conversion back so the
+// "Preparing video" state is visible.
 //
 // LEGACY_OWNER_CHECK=1 reproduces the pre-fix bug: a recording only counts as yours when its
 // original_video_title or original_video_author is not NULL.
@@ -15,7 +19,7 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { execFileSync } from "node:child_process";
+import { execFile } from "node:child_process";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
@@ -24,6 +28,11 @@ const { WebSocketServer } = require("ws");
 const PORT = Number(process.argv[2] || 8792);
 const DATA = path.resolve(process.argv[3] || "./data");
 const LEGACY = process.env.LEGACY_OWNER_CHECK === "1";
+const CONVERSION_DELAY_MS = Number(process.env.CONVERSION_DELAY_MS ?? 1500);
+// Production on 2026-11-27: the reply to finalize never arrived (the server froze, the socket
+// dropped). DROP_FIRST_FINALIZE_REPLY=1 does the work, then drops the connection instead of
+// replying, once; the page must still end up showing the take as saved.
+let dropFinalizeReply = process.env.DROP_FIRST_FINALIZE_REPLY === "1";
 const LIBRARY = JSON.parse(fs.readFileSync(new URL("./library.json", import.meta.url)));
 const UPLOADS = path.join(DATA, "uploads");
 const MEDIA = path.join(DATA, "media", "subtitles");
@@ -36,7 +45,7 @@ const USERS = {
   "tok-signer": { username: "signer", first: "Sam", fullname: "Sam Signer" },
   "tok-other": { username: "other", first: "Olu", fullname: "Olu Other" },
 };
-const db = { recordings: new Map(), shots: new Map(), nextRec: 500, nextShot: 9000 };
+const db = { recordings: new Map(), shots: new Map(), captions: new Map(), nextRec: 500, nextShot: 9000 };
 const now = () => new Date().toISOString().slice(0, 19).replace("T", " ");
 const userOf = (sid) => USERS[sid] || null;
 
@@ -117,7 +126,7 @@ const H = {
     const u = Object.values(USERS).find((x) => x.username === rec.create_user);
     return { ok: true, recording: { ...rec, is_public: Boolean(rec.is_public) }, video_id: videoId(rec.original_video_url),
       access: acc, can_edit: acc === "owner", creator: { username: rec.create_user, fullname: u?.fullname ?? null, sm_img: null },
-      shots, captions: [], captions_available: true };
+      shots, captions: captionTracks(rec.id), captions_available: true };
   },
 
   "TalkMotionServer.listVideoRecordings": ({ sessionid, scope, offset = 0, limit = 24 }) => {
@@ -161,13 +170,17 @@ const H = {
     const s = db.shots.get(Number(video_recording_shot_id));
     if (!s || s.create_user !== userOf(sessionid)?.username) return { ok: false, error: "Video recording shot not found" };
     return { ok: true, shot_id: s.id, status: s.status, upload_id: s.upload_id, upload_parts: s.upload_parts,
-      size_bytes: s.size_bytes, content_type: s.content_type, storage_key: s.storage_key ?? null };
+      size_bytes: s.size_bytes, content_type: s.content_type, storage_key: s.storage_key ?? null,
+      video_url: s.status === "complete" ? s.video_url : null, error_message: s.error_message };
   },
 
   "TalkMotionServer.initVideoRecordingShotUpload": (a) => {
     const s = db.shots.get(Number(a.video_recording_shot_id));
     if (!s || s.create_user !== userOf(a.sessionid)?.username) return { ok: false, error: "Video recording shot does not belong to current user" };
-    if (!["initialized", "uploading", "failed"].includes(s.status)) return { ok: false, error: `Cannot initialize upload: shot is in '${s.status}' status` };
+    if (s.status === "complete" || s.status === "processing") {
+      return { ok: true, shot_id: s.id, status: s.status, upload_id: s.upload_id, already_uploaded: true,
+        video_url: s.status === "complete" ? s.video_url : null };
+    }
     Object.assign(s, { status: "uploading", upload_id: crypto.randomUUID(), content_type: a.content_type,
       size_bytes: a.total_size_bytes, checksum: a.checksum_sha256, upload_parts: { parts: [], bytes_received: 0 } });
     return { upload_id: s.upload_id, shot_id: s.id, status: "uploading", content_type: a.content_type, total_size_bytes: a.total_size_bytes };
@@ -176,6 +189,7 @@ const H = {
   "TalkMotionServer.uploadVideoRecordingShotChunk": (a) => {
     const s = [...db.shots.values()].find((x) => x.upload_id === a.upload_id);
     if (!s) return { ok: false, error: `Upload ${a.upload_id} not found` };
+    if (s.status === "processing") return { ok: false, error: "This segment is already uploaded" };
     if (s.status !== "uploading") return { ok: false, error: `Upload is not in 'uploading' status (current: ${s.status})` };
     const bytes = Buffer.from(a.chunk_base64, "base64");
     if (bytes.length !== a.chunk_size) return { ok: false, error: `Chunk size mismatch: expected ${a.chunk_size}, got ${bytes.length}` };
@@ -194,6 +208,9 @@ const H = {
   "TalkMotionServer.finalizeVideoRecordingShotUpload": (a) => {
     const s = [...db.shots.values()].find((x) => x.upload_id === a.upload_id);
     if (!s) return { ok: false, error: `Upload ${a.upload_id} not found` };
+    if (s.status === "processing" || s.status === "complete") {
+      return { ok: true, upload_id: a.upload_id, shot_id: s.id, status: s.status, video_url: s.status === "complete" ? s.video_url : null };
+    }
     const part = path.join(UPLOADS, `${s.id}.part`);
     const buf = fs.readFileSync(part);
     if (s.size_bytes && buf.length !== s.size_bytes) return { ok: false, error: `File size mismatch: expected ${s.size_bytes}, got ${buf.length}` };
@@ -203,20 +220,32 @@ const H = {
     if (s.checksum && sha !== s.checksum) { s.status = "failed"; return { ok: false, error: "Checksum mismatch" }; }
     const source = path.join(UPLOADS, `${s.id}.${container}`);
     fs.renameSync(part, source);
-    const out = path.join(MEDIA, `${s.id}_sl_webm.mp4`);
-    try {
-      // Same as production: fps=25 (round up), +faststart, yuv420p, no audio.
-      execFileSync(process.env.FFMPEG || "ffmpeg", ["-y", "-loglevel", "error", ...(container === "webm" ? ["-f", "webm"] : []), "-i", source,
-        "-filter:v", "fps=fps=25:round=up", "-movflags", "+faststart", "-pix_fmt", "yuv420p", "-an", out]);
-    } catch (ex) {
-      s.status = "failed";
-      return { ok: false, error: "The segment couldn't be converted for playback" };
-    }
-    Object.assign(s, { status: "complete", storage_key: `uploads/${s.create_user}/${s.video_recording_id}/${s.id}.${container}`,
+    Object.assign(s, { status: "processing", storage_key: `uploads/${s.create_user}/${s.video_recording_id}/${s.id}.${container}`,
       size_bytes: buf.length, original_video_end: a.original_video_end ?? s.original_video_end,
-      recording_end: a.recording_end, js_end: a.js_end, video_url: `http://localhost:${PORT}/subtitles/${s.id}_sl_webm.mp4` });
-    return { ok: true, upload_id: a.upload_id, shot_id: s.id, video_url: s.video_url, storage_key: s.storage_key,
+      recording_end: a.recording_end, js_end: a.js_end, video_url: null, error_message: null });
+    setTimeout(() => convert(s, source, container), CONVERSION_DELAY_MS);
+    return { ok: true, upload_id: a.upload_id, shot_id: s.id, status: "processing", video_url: null, storage_key: s.storage_key,
       size_bytes: buf.length, checksum_sha256: sha };
+  },
+
+  "TalkMotionServer.saveRecordingCaptions": ({ sessionid, recording_id, language, label, cues }) => {
+    const rec = db.recordings.get(Number(recording_id));
+    if (!rec) return { ok: false, code: "not_found", error: "Recording not found" };
+    if (rec.create_user !== userOf(sessionid)?.username) return { ok: false, code: "forbidden", error: "Only the recording's owner can edit its captions" };
+    const kept = (cues || []).filter((c) => String(c.text || "").trim()).sort((x, y) => x.start_ms - y.start_ms);
+    const tracks = db.captions.get(rec.id) || {};
+    tracks[language] = { id: `${rec.id}-${language}`, video_recording_id: rec.id, language, label: label || language, cues: kept,
+      update_user: rec.create_user, update_time: now() };
+    db.captions.set(rec.id, tracks);
+    return { ok: true, recording_id: rec.id, track: tracks[language], adjusted: (cues || []).length - kept.length };
+  },
+
+  "TalkMotionServer.deleteRecordingCaptions": ({ sessionid, recording_id, language }) => {
+    const rec = db.recordings.get(Number(recording_id));
+    if (!rec || rec.create_user !== userOf(sessionid)?.username) return { ok: false, code: "forbidden", error: "Only the owner can delete captions" };
+    const tracks = db.captions.get(rec.id) || {};
+    delete tracks[language];
+    return { ok: true };
   },
 
   "TalkMotionServer.deleteVideoRecordingShot": ({ sessionid, video_recording_shot_id }) => {
@@ -229,6 +258,29 @@ const H = {
 
   "TalkMotionServer.getRecordingCaptions": () => ({ ok: true, tracks: [], available: true }),
 };
+
+function captionTracks(recordingId) {
+  return Object.values(db.captions.get(recordingId) || {});
+}
+
+/** Background conversion, as in TalkMotionServer._run_segment_conversion (no `nice` on Windows). */
+function convert(s, source, container) {
+  const out = path.join(MEDIA, `${s.id}_sl_webm.mp4`);
+  const partial = `${out}.part.mp4`;
+  const args = ["-y", "-loglevel", "error", "-nostdin", ...(container === "webm" ? ["-f", "webm"] : []), "-i", source,
+    "-vf", "fps=fps=25:round=up,scale=-2:'trunc(min(720,ih)/2)*2'", "-c:v", "libx264", "-preset", "veryfast", "-crf", "26",
+    "-threads", "2", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", partial];
+  execFile(process.env.FFMPEG || "ffmpeg", args, (err) => {
+    if (!db.shots.has(s.id)) return; // deleted meanwhile
+    if (err) {
+      Object.assign(s, { status: "failed", error_message: `The video couldn't be prepared for playback: ${String(err.message).slice(0, 200)}` });
+      return;
+    }
+    fs.renameSync(partial, out);
+    Object.assign(s, { status: "complete", video_url: `http://localhost:${PORT}/subtitles/${s.id}_sl_webm.mp4` });
+    log({ converted: s.id });
+  });
+}
 
 function log(entry) {
   fs.appendFileSync(CALLS, JSON.stringify({ t: Date.now(), ...entry }) + "\n");
@@ -243,7 +295,8 @@ const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   if (url.pathname === "/state") {
     res.setHeader("content-type", "application/json");
-    res.end(JSON.stringify({ recordings: [...db.recordings.values()], shots: [...db.shots.values()].map(({ upload_parts, ...s }) => s) }));
+    res.end(JSON.stringify({ recordings: [...db.recordings.values()], shots: [...db.shots.values()].map(({ upload_parts, ...s }) => s),
+      captions: Object.fromEntries([...db.captions.entries()].map(([id, tracks]) => [id, tracks])) }));
     return;
   }
   const m = url.pathname.match(/^\/subtitles\/([\w.-]+\.mp4)$/);
@@ -282,6 +335,12 @@ wss.on("connection", (socket) => {
     if (shown.chunk_base64) shown.chunk_base64 = `<${shown.chunk_base64.length} b64 chars>`;
     log({ fn: funcName, handled: Boolean(H[funcName]) || funcName === "getPythonFunctionLibrary", args: shown,
       ret: funcName === "getPythonFunctionLibrary" ? "<library>" : brief(reply.return ?? reply.error) });
+    if (dropFinalizeReply && funcName === "TalkMotionServer.finalizeVideoRecordingShotUpload") {
+      dropFinalizeReply = false;
+      log({ dropped: funcName });
+      socket.terminate();
+      return;
+    }
     socket.send(JSON.stringify(reply));
   });
 });

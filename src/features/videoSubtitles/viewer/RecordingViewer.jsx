@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Avatar, Button, Popconfirm, Result, Skeleton, Space, Switch, Tag, Typography, message } from "antd";
-import { EditOutlined, UserOutlined } from "@ant-design/icons";
+import { EditOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import SubtitledVideoPlayer from "./SubtitledVideoPlayer";
 import { useGetRecordingDetailsQuery, useSetRecordingPrivacyMutation } from "../recordingsApi";
 import { rpcErrorMessage } from "../../../api/rpc";
 import ErrorBoundary from "../../../components/ErrorBoundary";
 import "../videoSubtitles.css";
+import "../studio.css";
 
 /** /video-subtitles/library/:recordingId — watch a recording with its signer and captions. */
 export default function RecordingViewer() {
@@ -15,7 +16,11 @@ export default function RecordingViewer() {
   const { recordingId } = useParams();
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
-  const { data, error, isLoading, refetch } = useGetRecordingDetailsQuery(recordingId, { skip: !recordingId });
+  const [pollMs, setPollMs] = useState(0);
+  const { data, error, isLoading, refetch } = useGetRecordingDetailsQuery(recordingId, { skip: !recordingId, pollingInterval: pollMs });
+  // Signing that is still being prepared appears by itself when it is ready.
+  const preparing = (data?.shots || []).filter((s) => s.status === "processing").length;
+  useEffect(() => setPollMs(preparing ? 5000 : 0), [preparing]);
   const [setPrivacy, privacyState] = useSetRecordingPrivacyMutation();
 
   if (isLoading) {
@@ -97,7 +102,19 @@ export default function RecordingViewer() {
       </header>
 
       <ErrorBoundary>
-        <SubtitledVideoPlayer videoId={recording.videoId} shots={playable} captions={captions} />
+        <SubtitledVideoPlayer
+          videoId={recording.videoId}
+          shots={playable}
+          captions={captions}
+          preparing={preparing}
+          emptyAction={
+            canEdit ? (
+              <Button type="primary" icon={<VideoCameraOutlined />} onClick={() => navigate(`/video-subtitles/designer/${recording.id}`)}>
+                {t("subtitles.viewer.recordSigning", "Record signing")}
+              </Button>
+            ) : null
+          }
+        />
       </ErrorBoundary>
 
       {recording.description && (

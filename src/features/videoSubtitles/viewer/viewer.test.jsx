@@ -179,6 +179,27 @@ describe("SubtitledVideoPlayer", () => {
     expect(screen.queryByRole("button", { name: /signer/i })).not.toBeInTheDocument();
   });
 
+  it("puts the signer side by side with the video, and remembers it", () => {
+    vi.useRealTimers();
+    localStorage.removeItem("tm_signer_layout");
+    const { container } = render(<SubtitledVideoPlayer videoId="dQw4w9WgXcQ" shots={SHOTS} captions={[]} />);
+    expect(container.querySelector(".tm-viewer.is-side")).toBeNull();
+    fireEvent.click(screen.getByText(/side by side/i));
+    expect(container.querySelector(".tm-viewer.is-side")).not.toBeNull();
+    expect(container.querySelector(".tm-viewer-signer.is-side-slot")).not.toBeNull();
+    expect(screen.queryByRole("combobox", { name: /signer size/i })).not.toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem("tm_signer_layout"))).toMatchObject({ mode: "side" });
+    fireEvent.click(screen.getByText(/picture in picture/i));
+    expect(container.querySelector(".tm-viewer.is-side")).toBeNull();
+  });
+
+  it("says signing is being prepared instead of 'no signing'", () => {
+    vi.useRealTimers();
+    render(<SubtitledVideoPlayer videoId="dQw4w9WgXcQ" shots={[]} captions={[]} preparing={1} />);
+    expect(screen.getByText(/being prepared/i)).toBeInTheDocument();
+    expect(screen.queryByText(/no signing in this recording yet/i)).not.toBeInTheDocument();
+  });
+
   it("explains a recording without a YouTube video", () => {
     vi.useRealTimers();
     render(<SubtitledVideoPlayer videoId={null} shots={[]} captions={[]} />);
@@ -233,6 +254,22 @@ describe("RecordingViewer", () => {
     expect(screen.getByRole("heading", { name: "Storytime in ASL" })).toBeInTheDocument();
     expect(screen.getByRole("switch")).toBeChecked();
     expect(screen.getByRole("button", { name: /edit/i })).toBeInTheDocument();
+  });
+
+  it("offers the owner a way to record signing when there is none", () => {
+    details.result = { data: { recording: recording(), playable: [], shots: [], captions: [], canEdit: true }, isLoading: false };
+    renderViewer();
+    expect(screen.getByText(/no signing in this recording yet/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /record signing/i })).toBeInTheDocument();
+  });
+
+  it("tells viewers when signing is still being prepared", () => {
+    details.result = {
+      data: { recording: recording(), playable: [], shots: [{ id: "9", startTime: 0, endTime: 52, status: "processing", videoUrl: null }], captions: [], canEdit: true },
+      isLoading: false,
+    };
+    renderViewer();
+    expect(screen.getByText(/being prepared/i)).toBeInTheDocument();
   });
 
   it("hides owner controls from everyone else", () => {
