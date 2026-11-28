@@ -26,6 +26,8 @@ import useSignRecognizer from "./useSignRecognizer";
 import useSpeechInput from "./useSpeechInput";
 import useSignVideoQueue from "./useSignVideoQueue";
 import useSpeechOutput from "./useSpeechOutput";
+import useAvatarQueue, { HOLD_MS } from "./useAvatarQueue";
+import { fetchPoses } from "./avatarPoses";
 
 const hand = (x, y = 0.5) => ({ rightHandLandmarks: [{ x, y, z: 0 }] });
 const noHands = { poseLandmarks: [] };
@@ -405,5 +407,59 @@ describe("useSpeechOutput", () => {
     const { result } = renderHook(() => useSpeechOutput());
     expect(result.current.supported).toBe(false);
     expect(result.current.speak("x")).toBe(false);
+  });
+});
+
+describe("useAvatarQueue", () => {
+  const frame = (x) => ({ lh: [[x, 0.5, 0]], rh: [[0, 0, 0]], pose: [[x, 0.2, 0]] });
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it("blends between clip frames on every refresh, holds the last one, then lets go", () => {
+    vi.useFakeTimers();
+    let now = 1000;
+    vi.spyOn(performance, "now").mockImplementation(() => now);
+    const { result } = renderHook(() => useAvatarQueue());
+    act(() => result.current.enqueue([{ label: "go", fps: 10, mirrored: false, frames: [frame(0.2), frame(0.4)] }]));
+    expect(result.current.sample(now).lh[0][0]).toBeCloseTo(0.2);
+    expect(result.current.sample(now + 50).lh[0][0]).toBeCloseTo(0.3); // halfway to the next frame
+    now += 100;
+    act(() => vi.advanceTimersByTime(100));
+    expect(result.current.frame.lh[0][0]).toBeCloseTo(0.4);
+    now += 100;
+    act(() => vi.advanceTimersByTime(100));
+    expect(result.current.playing).toBe(false);
+    expect(result.current.sample(now + 100).lh[0][0]).toBeCloseTo(0.4);
+    expect(result.current.sample(now + HOLD_MS + 1)).toBeNull();
+    act(() => result.current.stop());
+    expect(result.current.sample(now)).toBeNull();
+  });
+});
+
+describe("fetchPoses", () => {
+  afterEach(() => rpcMock.rpc.mockReset());
+
+  it("asks for every batch at once and hands them over in order", async () => {
+    const first = deferred();
+    const rest = deferred();
+    rpcMock.rpc.mockImplementation((name, [, , words]) => (words.length === 1 ? first.promise : rest.promise));
+    const got = [];
+    const done = fetchPoses(121, ["hello", "you", "fine"], (items) => got.push(items.map((i) => i.word)));
+    expect(rpcMock.rpc).toHaveBeenCalledTimes(2); // both requests are out before either answers
+    rest.resolve({ items: [{ word: "you" }, { word: "fine" }], missing: [] });
+    await Promise.resolve();
+    expect(got).toEqual([]); // the rest waits for the first word
+    first.resolve({ items: [{ word: "hello" }], missing: [] });
+    await done;
+    expect(got).toEqual([["hello"], ["you", "fine"]]);
+  });
+
+  it("stops handing over when cancelled", async () => {
+    rpcMock.rpc.mockResolvedValue({ items: [{ word: "x" }], missing: [] });
+    const got = [];
+    await fetchPoses(121, ["a", "b"], (items) => got.push(items), () => true);
+    expect(got).toEqual([]);
   });
 });

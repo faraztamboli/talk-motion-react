@@ -249,4 +249,53 @@ describe("createRigDriver", () => {
     // forearm points down, so the fingers (rest: along the arm) point down too
     expect(worldDir(nodes.leftIndexProximal, nodes.leftIndexIntermediate).y).toBeLessThan(-0.9);
   });
+
+  it("scales each sign by its own clip, not by the sign before it", () => {
+    const nodes = buildRig();
+    const driver = createRigDriver((n) => nodes[n]);
+    // a sign filmed close up (shoulders twice as wide in the picture) ...
+    const wide = poseWith({ 11: new Vector3(0.4, 1.4, 0), 12: new Vector3(-0.4, 1.4, 0), 13: new Vector3(0.4, 0.9, 0), 15: new Vector3(0.1, 1.2, 0) });
+    settle(driver, { pose: wide, body: { shoulderWidth: 0.8, eyeHeight: 0 } });
+    // ... then one filmed at the model's size: its hand goes where the clip says, at once
+    const pose = poseWith({ 11: new Vector3(0.2, 1.4, 0), 12: new Vector3(-0.2, 1.4, 0), 13: new Vector3(0.2, 1.12, 0), 15: new Vector3(0.05, 1.3, 0) });
+    settle(driver, { pose, body: { shoulderWidth: 0.4, eyeHeight: 0 } });
+    expect(worldPos(nodes.leftHand).x).toBeCloseTo(0.05, 2);
+    expect(worldPos(nodes.leftHand).y).toBeCloseTo(1.3, 2);
+  });
+
+  it("does not flip the forearm when the wrist turns past half a turn", () => {
+    const nodes = buildRig();
+    const driver = createRigDriver((n) => nodes[n]);
+    // arm straight out to the side; the hand rolls about the forearm from 170 to 190 degrees
+    const pose = poseWith({ 11: new Vector3(0.2, 1.4, 0), 12: new Vector3(-0.2, 1.4, 0), 13: new Vector3(0.5, 1.4, 0), 15: new Vector3(0.75, 1.4, 0) });
+    const rolled = (deg) => ({ pose, lh: leftHand(new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), (deg * Math.PI) / 180), new Vector3(0.75, 1.4, 0)), rh: zeros(21) });
+    settle(driver, rolled(170));
+    const before = nodes.leftLowerArm.getWorldQuaternion(new Quaternion());
+    settle(driver, rolled(190));
+    const after = nodes.leftLowerArm.getWorldQuaternion(new Quaternion());
+    // the forearm takes half of the 20 degrees, not a half turn the other way
+    expect((before.angleTo(after) * 180) / Math.PI).toBeLessThan(15);
+  });
+
+  it("never turns a bone faster than a signer could", () => {
+    const nodes = buildRig();
+    const driver = createRigDriver((n) => nodes[n]);
+    const up = { pose: poseWith({ 11: new Vector3(0.2, 1.4, 0), 13: new Vector3(0.2, 1.7, 0), 15: new Vector3(0.2, 2.0, 0) }) };
+    const out = { pose: poseWith({ 11: new Vector3(0.2, 1.4, 0), 13: new Vector3(0.5, 1.4, 0), 15: new Vector3(0.8, 1.4, 0) }) };
+    settle(driver, up);
+    settle(driver, up);
+    const before = nodes.leftUpperArm.quaternion.clone();
+    driver.apply(out, 1 / 60); // a tracking glitch: the arm "jumps" 90 degrees in one frame
+    expect((before.angleTo(nodes.leftUpperArm.quaternion) * 180) / Math.PI).toBeLessThan(12.5);
+  });
+
+  it("relaxes gently when signing stops", () => {
+    const nodes = buildRig();
+    const driver = createRigDriver((n) => nodes[n]);
+    const frame = { pose: poseWith({ 11: new Vector3(0.2, 1.4, 0), 13: new Vector3(0.2, 1.7, 0), 15: new Vector3(0.5, 1.7, 0) }) };
+    settle(driver, frame);
+    driver.apply(null, 1 / 60);
+    // one screen refresh later the raised arm has barely started to come down
+    expect(worldDir(nodes.leftUpperArm, nodes.leftLowerArm).y).toBeGreaterThan(0.8);
+  });
 });

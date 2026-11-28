@@ -15,7 +15,7 @@ const BLINK_EVERY = [2.5, 5.5]; // seconds
  * A skinned character (VRM) signing from pose frames. `character` is an entry of CHARACTERS and
  * `look` its colours. Everything created on the GPU is released on unmount or when the model changes.
  */
-export default function CharacterStage({ frame, character, look, onStatus }) {
+export default function CharacterStage({ frame, sample, character, look, onStatus }) {
   const mountRef = useRef(null);
   const stateRef = useRef({ frame: null, frameAt: 0, vrm: null, rig: null });
   const [status, setStatus] = useState("loading"); // loading | ready | error | nowebgl
@@ -30,6 +30,7 @@ export default function CharacterStage({ frame, character, look, onStatus }) {
   reportRef.current = report;
 
   // New frame from the queue
+  stateRef.current.sample = sample || null;
   stateRef.current.frame = frame;
   if (frame) stateRef.current.frameAt = performance.now();
 
@@ -73,7 +74,8 @@ export default function CharacterStage({ frame, character, look, onStatus }) {
       const dt = Math.min(clock.getDelta(), 0.1);
       const s = stateRef.current;
       if (s.vrm) {
-        const live = s.frame && performance.now() - s.frameAt < STALE_MS ? s.frame : null;
+        // Blended between clip frames on every refresh when the queue offers it (useAvatarQueue.sample)
+        const live = s.sample ? s.sample(performance.now()) : s.frame && performance.now() - s.frameAt < STALE_MS ? s.frame : null;
         s.rig?.apply(live, dt);
         const expr = s.vrm.expressionManager;
         if (expr) {
@@ -206,6 +208,8 @@ export default function CharacterStage({ frame, character, look, onStatus }) {
 
 CharacterStage.propTypes = {
   frame: PropTypes.object,
+  /** (now) => frame to draw now, blended between clip frames (useAvatarQueue.sample) */
+  sample: PropTypes.func,
   character: PropTypes.object.isRequired,
   look: PropTypes.object,
   onStatus: PropTypes.func,

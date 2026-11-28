@@ -30,7 +30,7 @@ export default function AvatarPlayer({ avatar, onReplay, canReplay, placeholder 
               </div>
             }
           >
-            {wireframe ? <AvatarStage frame={avatar.frame} /> : <CharacterStage frame={avatar.frame} character={character} look={look} />}
+            {wireframe ? <AvatarStage frame={avatar.frame} /> : <CharacterStage frame={avatar.frame} sample={avatar.sample} character={character} look={look} />}
             {!wireframe && skeleton && (
               <div className="tm-tr-skeleton-inset" aria-hidden="true">
                 <AvatarStage frame={avatar.frame} />

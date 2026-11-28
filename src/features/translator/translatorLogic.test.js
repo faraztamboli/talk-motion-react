@@ -2,7 +2,19 @@ import { describe, expect, it } from "vitest";
 import { createSegmenter } from "./segmenter";
 import { glossOf, initialSentence, sentenceReducer } from "./sentence";
 import { buildPlaylist, currentItem, initialQueue, queueReducer, resolveKey } from "./playlist";
-import { framesForItem, lerpFrame, RECORDED_ASPECT, TRANSITION_FRAMES, toViewer } from "./avatarFrames";
+import {
+  bodyScale,
+  fillHandGaps,
+  framesForItem,
+  lerpFrame,
+  prepareFrames,
+  present,
+  RECORDED_ASPECT,
+  smoothFrames,
+  TRANSITION_FRAMES,
+  toViewer,
+  trimRest,
+} from "./avatarFrames";
 import { describeWebSpeechError, describeWhisperError, micErrorCode } from "./speechErrors";
 import { pickVoice } from "./useSpeechOutput";
 import { legacyInputOf, topPredictions } from "./useBrowserModel";
@@ -222,6 +234,74 @@ describe("avatar frames", () => {
     expect(frames[0].lh[0][0]).toBeGreaterThan(0.2);
     expect(frames[0].lh[0][0]).toBeLessThan(0.6);
     expect(lerpFrame(frame(0.2), frame(0.6), 0.5).lh[0][0]).toBeCloseTo(0.4);
+  });
+});
+
+describe("avatar frame clean-up", () => {
+  const Z = [0, 0, 0];
+  const handAt = (x, y = 0.5) => Array.from({ length: 21 }, (_, i) => [x + i * 0.001, y, 0]);
+  const poseAt = (wristX, wristY = 0.5) => {
+    const pose = Array.from({ length: 33 }, () => [0.5, 0.5, 0]);
+    pose[11] = [0.7, 0.4, 0];
+    pose[12] = [0.3, 0.4, 0];
+    pose[2] = [0.52, 0.2, 0];
+    pose[5] = [0.48, 0.2, 0];
+    pose[15] = [wristX, wristY, 0];
+    pose[16] = [0.3, 0.8, 0];
+    return pose;
+  };
+  const f = (x, { hand = true, wristY = 0.5 } = {}) => ({ lh: hand ? handAt(x) : handAt(0).map(() => Z), rh: handAt(0).map(() => Z), pose: poseAt(x, wristY) });
+
+  it("fills a hand the tracker lost for a few frames, following the body's wrist", () => {
+    const frames = [f(0.2), f(0.3, { hand: false }), f(0.5, { hand: false }), f(0.5)];
+    const out = fillHandGaps(frames, 5);
+    expect(present(out[1].lh)).toBe(true);
+    expect(present(out[2].lh)).toBe(true);
+    // the shape is blended, the position follows the pose wrist (0.3 then 0.5)
+    expect(out[1].lh[0][0]).toBeCloseTo(0.3);
+    expect(out[2].lh[0][0]).toBeCloseTo(0.5);
+    expect(out[0]).toBe(frames[0]);
+  });
+
+  it("leaves a hand out that really left: trailing, too long, or wrist outside the picture", () => {
+    expect(present(fillHandGaps([f(0.2), f(0.3, { hand: false })], 5)[1].lh)).toBe(false);
+    const long = [f(0.2), ...Array.from({ length: 6 }, () => f(0.3, { hand: false })), f(0.4)];
+    expect(present(fillHandGaps(long, 5)[3].lh)).toBe(false);
+    const dropped = [f(0.2), f(0.3, { hand: false, wristY: 1.2 }), f(0.4)];
+    expect(present(fillHandGaps(dropped, 5)[1].lh)).toBe(false);
+    // a hand that has not come in yet stays out too
+    expect(present(fillHandGaps([f(0.2, { hand: false }), f(0.3)], 5)[0].lh)).toBe(false);
+  });
+
+  it("removes a one-frame tracking spike and keeps untracked points at zero", () => {
+    const frames = [f(0.3), f(0.3), f(0.9), f(0.3), f(0.3)];
+    frames[1].rh = handAt(0.6);
+    const out = smoothFrames(frames);
+    expect(out[2].lh[0][0]).toBeCloseTo(0.3);
+    expect(out[2].rh[0]).toEqual(Z);
+    expect(out[1].rh[0][0]).toBeCloseTo(0.6); // tracked once: nothing to mix with
+  });
+
+  it("trims the arms-at-rest frames at a clip's edges, the start only after another sign", () => {
+    const rest = f(0.3, { hand: false, wristY: 1.2 });
+    const frames = [rest, f(0.3), f(0.4), rest, rest];
+    expect(trimRest(frames)).toHaveLength(3); // rises from rest, but doesn't drop again
+    expect(trimRest(frames, { trimStart: true })).toHaveLength(2);
+    expect(trimRest([rest, rest])).toHaveLength(2); // nothing to keep: left alone
+    // in a sentence, the second sign starts where its hands are, not from rest
+    const second = framesForItem({ frames, mirrored: false, fps: 25 }, f(0.2));
+    expect(second).toHaveLength(TRANSITION_FRAMES + 2);
+    expect(present(second[TRANSITION_FRAMES].lh)).toBe(true);
+  });
+
+  it("gives every frame its clip's body scale, and blends it between signs", () => {
+    const frames = prepareFrames({ frames: [f(0.3), f(0.3), f(0.3)], mirrored: false, fps: 25 });
+    expect(frames[0].body.shoulderWidth).toBeCloseTo(0.4);
+    expect(frames[0].body.eyeHeight).toBeCloseTo(0.2);
+    const a = { ...f(0.3), body: { shoulderWidth: 0.4, eyeHeight: 0.2 } };
+    const b = { ...f(0.3), body: { shoulderWidth: 0.6, eyeHeight: 0.3 } };
+    expect(lerpFrame(a, b, 0.5).body.shoulderWidth).toBeCloseTo(0.5);
+    expect(bodyScale([{ pose: [] }])).toBeNull();
   });
 });
 

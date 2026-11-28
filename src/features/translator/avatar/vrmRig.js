@@ -17,11 +17,19 @@ import { isZero } from "../avatarFrames";
  */
 
 const SMOOTHING_RATE = 28; // 1/s; higher follows the frames more tightly
+const RELAX_RATE = 6; // 1/s; how gently the arms come down when signing stops
+const SETTLE_RATE = 9; // 1/s; an arm switching between following the signer and resting
+const SETTLE_SECONDS = 0.35; // how long that easing lasts
+// Fastest a bone may turn (radians/s): above what signers do, so only tracking glitches are cut
+const MAX_ARM_SPEED = (720 * Math.PI) / 180;
+const MAX_HAND_SPEED = (1080 * Math.PI) / 180;
+const BODY_RATE = 12; // 1/s; chest and head: bodies turn slowly, the tracker's shoulders jitter
 const MAX_BODY_TURN = 0.5; // radians the chest may follow the shoulders
 const MAX_HEAD_TURN = 0.7;
 const MAX_JOINT_CURL = 1.9; // radians a finger joint may bend
 const LOOSE_CURL = 0.3; // radians each joint of an untracked hand is curled
 const FOREARM_TWIST_SHARE = 0.5; // how much of the wrist's turn the forearm takes
+const MAX_FOREARM_TWIST = 1.4 * Math.PI; // radians the wrist's turn may wind on before it wraps
 const BODY_DEPTH = 0.35; // how far the shoulders' depth values are believed
 const BODY_CLEARANCE = 0.75; // shoulder widths a wrist stays in front of the chest and face
 /** Arm lengths as a share of the shoulder width (joint to joint), for an average adult. */
@@ -148,18 +156,23 @@ export function createRigDriver(getBone) {
 
   const parentWorld = new Quaternion();
   const local = new Quaternion();
-  const setBone = (name, desiredWorld, alpha) => {
+  /** Turn a bone `alpha` of the way to its target, but never faster than `maxStep` radians. */
+  const turnToward = (q, target, alpha, maxStep) => {
+    const angle = q.angleTo(target);
+    q.slerp(target, maxStep && angle * alpha > maxStep ? maxStep / angle : alpha);
+  };
+  const setBone = (name, desiredWorld, alpha, maxStep) => {
     const b = bones[name];
     if (!b || !desiredWorld) return;
     if (b.node.parent) {
       b.node.parent.getWorldQuaternion(parentWorld);
       local.copy(parentWorld).invert().multiply(desiredWorld);
     } else local.copy(desiredWorld);
-    b.node.quaternion.slerp(local, alpha);
+    turnToward(b.node.quaternion, local, alpha, maxStep);
   };
-  const setRest = (name, alpha) => {
+  const setRest = (name, alpha, maxStep) => {
     const b = bones[name];
-    if (b) b.node.quaternion.slerp(b.rest, alpha);
+    if (b) turnToward(b.node.quaternion, b.rest, alpha, maxStep);
   };
 
   // Which way each palm faces relative to its hand basis (rest pose: T-pose, palms down)
@@ -281,6 +294,16 @@ export function createRigDriver(getBone) {
 
   const angleBetween = (a, b) => Math.acos(Math.max(-1, Math.min(1, a.dot(b))));
 
+  const lastTwist = { left: null, right: null }; // radians the wrist turned last time (see below)
+  // Whether each arm follows the frame or rests, and how long it still eases after switching
+  const armMode = { left: "rest", right: "rest" };
+  const lastArmMode = { left: "rest", right: "rest" };
+  const settling = { left: 0, right: 0 };
+  const handMode = { left: "loose", right: "loose" };
+  const lastHandMode = { left: "loose", right: "loose" };
+  const handSettling = { left: 0, right: 0 };
+  const HAND_PART = /(Hand|Thumb|Index|Middle|Ring|Little)/;
+
   function targetsFor(frame) {
     const t = new Map();
     const pose = frame?.pose;
@@ -288,7 +311,11 @@ export function createRigDriver(getBone) {
     // Body: chest follows the shoulder line, head follows the ears and nose
     const ls = point(pose, POSE.shoulder.left);
     const rs = point(pose, POSE.shoulder.right);
-    if (ls && rs) {
+    if (frame?.body?.shoulderWidth > 0) {
+      // The clip's own scale (avatarFrames.bodyScale): signs come from clips filmed at different
+      // distances, so a running estimate would place one sign's hands by the previous clip.
+      body.shoulderWidth = frame.body.shoulderWidth;
+    } else if (ls && rs) {
       const width = Math.hypot(ls.x - rs.x, ls.y - rs.y);
       // Quick to grow, slow to shrink: a turned body shows narrower shoulders than it has
       body.shoulderWidth = width > body.shoulderWidth ? width : body.shoulderWidth * 0.98 + width * 0.02;
@@ -302,7 +329,8 @@ export function createRigDriver(getBone) {
     const shoulderMid = ls && rs ? ls.clone().add(rs).multiplyScalar(0.5) : null;
     const eyeL = point(pose, POSE.eyeLeft);
     const eyeR = point(pose, POSE.eyeRight);
-    if (shoulderMid && eyeL && eyeR) {
+    if (frame?.body?.eyeHeight > 0) body.eyeHeight = frame.body.eyeHeight;
+    else if (shoulderMid && eyeL && eyeR) {
       const height = (eyeL.y + eyeR.y) / 2 - shoulderMid.y;
       if (height > 0) body.eyeHeight = body.eyeHeight ? body.eyeHeight * 0.9 + height * 0.1 : height;
     }
@@ -334,6 +362,8 @@ export function createRigDriver(getBone) {
       const upperVec = guessed ? null : limbVector(shoulder, elbow, "upper", elbowForward);
       const lowerVec = guessed ? null : limbVector(elbow, wrist, "lower", wristForward);
       const placed = armToWrist(side, upperVec, lowerVec, shoulderMid, wrist, chestDelta);
+      armMode[side] = placed || upperVec || lowerVec ? "tracked" : "rest";
+      handMode[side] = hand ? "tracked" : "loose";
       const upperDir = placed?.upper || upperVec?.clone().normalize() || RELAXED[side].upper;
       const lowerDir = placed?.lower || lowerVec?.clone().normalize() || RELAXED[side].lower;
       const upperWorld = aimFrom(`${side}UpperArm`, null, upperDir);
@@ -366,9 +396,22 @@ export function createRigDriver(getBone) {
         const lowerDelta = deltaOf(`${side}LowerArm`, lowerWorld);
         const extra = deltaOf(`${side}Hand`, handWorld).multiply(lowerDelta.clone().invert());
         const twist = twistAround(extra, lowerDir);
-        if (twist.w < 0) twist.set(-twist.x, -twist.y, -twist.z, -twist.w);
-        const half = new Quaternion().slerp(twist, FOREARM_TWIST_SHARE);
-        lowerWorld = half.multiply(lowerWorld);
+        // The turn's angle, kept continuous with the last one: a wrist turning past half a turn
+        // used to flip the forearm's share from +90 to -90 degrees in one frame.
+        const axis = lowerDir.clone().normalize();
+        let angle = 2 * Math.atan2(twist.x * axis.x + twist.y * axis.y + twist.z * axis.z, twist.w);
+        angle = Math.atan2(Math.sin(angle), Math.cos(angle)); // -pi..pi
+        const before = lastTwist[side];
+        if (before !== null) {
+          for (const k of [-1, 1]) {
+            const other = angle + k * 2 * Math.PI;
+            if (Math.abs(other - before) < Math.abs(angle - before) && Math.abs(other) <= MAX_FOREARM_TWIST) angle = other;
+          }
+        }
+        lastTwist[side] = angle;
+        lowerWorld = new Quaternion().setFromAxisAngle(axis, angle * FOREARM_TWIST_SHARE).multiply(lowerWorld);
+      } else {
+        lastTwist[side] = null;
       }
       t.set(`${side}LowerArm`, lowerWorld);
       if (!handWorld && handB) {
@@ -427,12 +470,37 @@ export function createRigDriver(getBone) {
     bones: Object.keys(bones),
     /** Pose the rig for `frame` (null = relaxed). dt is seconds since the last call. */
     apply(frame, dt = 1 / 60) {
-      const alpha = 1 - Math.exp(-SMOOTHING_RATE * Math.max(0, dt));
+      const step = Math.max(0, dt);
+      const alphaAt = (rate) => 1 - Math.exp(-rate * step);
+      if (!frame) {
+        armMode.left = armMode.right = "rest";
+        handMode.left = handMode.right = "loose";
+      }
       const targets = targetsFor(frame);
+      // An arm that starts or stops following the signer (the first sign of a sentence, a hand
+      // at the edge of the picture) eases over a moment instead of snapping across.
+      for (const side of ["left", "right"]) {
+        if (armMode[side] !== lastArmMode[side]) settling[side] = SETTLE_SECONDS;
+        else settling[side] = Math.max(0, settling[side] - step);
+        lastArmMode[side] = armMode[side];
+        if (handMode[side] !== lastHandMode[side]) handSettling[side] = SETTLE_SECONDS;
+        else handSettling[side] = Math.max(0, handSettling[side] - step);
+        lastHandMode[side] = handMode[side];
+      }
+      const rateFor = (name) => {
+        if (!frame) return RELAX_RATE;
+        const side = name.startsWith("left") ? "left" : name.startsWith("right") ? "right" : null;
+        if (!side) return BODY_RATE;
+        if (settling[side] > 0) return SETTLE_RATE;
+        if (handSettling[side] > 0 && HAND_PART.test(name)) return SETTLE_RATE;
+        return SMOOTHING_RATE;
+      };
       for (const name of ORDER) {
         const desired = targets.get(name);
-        if (desired) setBone(name, desired, alpha);
-        else setRest(name, alpha);
+        const alpha = alphaAt(rateFor(name));
+        const maxStep = (HAND_PART.test(name) ? MAX_HAND_SPEED : MAX_ARM_SPEED) * step;
+        if (desired) setBone(name, desired, alpha, maxStep);
+        else setRest(name, alpha, maxStep);
       }
       top.updateMatrixWorld(true);
     },
