@@ -22,3 +22,36 @@
   margin: 8px 12px;
   border-color: rgba(255, 255, 255, 0.15);
 }
+
+/* A count of things waiting (people asking to join), next to the item's name. */
+.tm-sidebar-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+.tm-sidebar-count .ant-badge-count {
+  box-shadow: none;
+}
+.ant-menu-inline-collapsed .tm-sidebar-alert {
+  position: relative;
+}
+.ant-menu-inline-collapsed .tm-sidebar-alert::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 18px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff4d4f;
+}
+.tm-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

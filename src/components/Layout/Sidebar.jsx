@@ -2,7 +2,8 @@ import React, { useMemo } from "react";
 import { Layout, Menu } from "antd";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { buildSidebarItems, accountFlags, collapsedSidebarItems, selectedSidebarKey } from "../../data/sidebarNav";
+import { buildSidebarItems, accountFlags, collapsedSidebarItems, selectedSidebarKey, withCounts } from "../../data/sidebarNav";
+import useWaitingRequests from "../../features/teach/useWaitingRequests";
 import { useFlags } from "../../hooks/useFlag";
 import logoImg from "../../media/images/logo.png";
 import logoSmall from "../../media/images/logo-small.png";
@@ -15,7 +16,11 @@ const Sidebar = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const apiUser = useSelector((state) => state.apiAuth?.user);
-  const items = useMemo(() => buildSidebarItems({ ...flags, ...accountFlags(apiUser) }), [flags, apiUser]);
+  const waiting = useWaitingRequests().length;
+  const items = useMemo(
+    () => withCounts(buildSidebarItems({ ...flags, ...accountFlags(apiUser) }), { "/classrooms": waiting }),
+    [flags, apiUser, waiting]
+  );
   const selected = selectedSidebarKey(items, location.pathname, location.search);
 
   return (

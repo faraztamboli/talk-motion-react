@@ -16,7 +16,7 @@ import ErrorBoundary from "../../components/ErrorBoundary";
 import NotificationsPanel from "../../components/ui/NotificationsPanel";
 import RecentVideosWidget from "../../components/ui/RecentVideosWidget";
 import GettingStarted, { markTried } from "./GettingStarted";
-import { ClassroomCard } from "../teach/ClassroomsPage";
+import { ClassroomCard, WaitingBanner } from "../teach/ClassroomsPage";
 import { useListMyClassroomsQuery } from "../teach/teachApi";
 import MetaDecorator from "../../components/MetaDecorator";
 import { visibleTasks } from "./tasks";
@@ -116,6 +116,10 @@ export default function HomePage({ sm }) {
             </div>
             <NotificationsPanel />
           </header>
+
+          <ErrorBoundary compact>
+            <WaitingBanner />
+          </ErrorBoundary>
 
           <ErrorBoundary compact>
             <GettingStarted />

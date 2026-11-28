@@ -1,4 +1,5 @@
 import React from "react";
+import { Badge } from "antd";
 import {
   BookOutlined,
   CompassOutlined,
@@ -121,6 +122,32 @@ export function collapsedSidebarItems(built) {
     out.push(...entry.children);
   });
   return out;
+}
+
+/**
+ * Puts a count next to items that have something waiting, e.g. `{ "/classrooms": 3 }` for three
+ * people asking to join. A zero count leaves the item as it was. The count is part of the
+ * label, so screen readers and the collapsed tooltip say it too; collapsed, the icon gets a dot.
+ */
+export function withCounts(built, counts = {}) {
+  const mark = (entry) => {
+    const count = Number(counts[entry.key] || 0);
+    if (count <= 0) return entry;
+    return {
+      ...entry,
+      className: "tm-sidebar-alert",
+      label: (
+        <span className="tm-sidebar-count">
+          <span>{entry.label}</span>
+          <span aria-hidden="true">
+            <Badge count={count} overflowCount={99} title={`${count} waiting`} />
+          </span>
+          <span className="tm-visually-hidden">{`, ${count} waiting`}</span>
+        </span>
+      ),
+    };
+  };
+  return built.map((entry) => (entry.children ? { ...entry, children: entry.children.map(mark) } : mark(entry)));
 }
 
 /** Every navigable key in a built menu, in order. */

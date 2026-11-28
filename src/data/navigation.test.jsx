@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { accountFlags, buildSidebarItems, collapsedSidebarItems, selectedSidebarKey, sidebarKeys } from "./sidebarNav";
+import { render, screen } from "@testing-library/react";
+import { accountFlags, buildSidebarItems, collapsedSidebarItems, selectedSidebarKey, sidebarKeys, withCounts } from "./sidebarNav";
 import { buildUserMenu } from "./userMenuList";
 
 const MODEL_KEYS = ["/models", "/models?show=trainable", "/store/models"];
@@ -98,6 +99,28 @@ describe("selectedSidebarKey", () => {
 
   it("selects nothing for an unknown page", () => {
     expect(selectedSidebarKey(built, "/profile")).toBeNull();
+  });
+});
+
+describe("sidebar counts", () => {
+  const built = buildSidebarItems({});
+  const find = (items, key) => items.flatMap((e) => e.children || [e]).find((e) => e.key === key);
+
+  it("shows how many people are waiting next to My classrooms", () => {
+    const marked = withCounts(built, { "/classrooms": 3 });
+    const entry = find(marked, "/classrooms");
+    expect(entry.className).toBe("tm-sidebar-alert");
+    render(<div>{entry.label}</div>);
+    expect(screen.getByText("My classrooms")).toBeInTheDocument();
+    expect(screen.getByText(", 3 waiting")).toBeInTheDocument();
+    // the rest of the menu, and its keys, stay the same
+    expect(sidebarKeys(marked)).toEqual(sidebarKeys(built));
+    expect(find(marked, "/courses")).toEqual(find(built, "/courses"));
+  });
+
+  it("leaves the item alone when nobody is waiting", () => {
+    expect(withCounts(built, { "/classrooms": 0 })).toEqual(built);
+    expect(withCounts(built)).toEqual(built);
   });
 });
 

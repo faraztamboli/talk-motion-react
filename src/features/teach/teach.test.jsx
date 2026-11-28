@@ -123,7 +123,7 @@ vi.mock("./teachApi", async (orig) => {
   };
 });
 
-import ClassroomsPage, { filterClassrooms } from "./ClassroomsPage";
+import ClassroomsPage, { WaitingBanner, filterClassrooms } from "./ClassroomsPage";
 import ClassroomPage, { canRemove } from "./ClassroomPage";
 import NewClassroomPage from "./NewClassroomPage";
 import CoursesPage from "./CoursesPage";
@@ -224,6 +224,22 @@ describe("ClassroomsPage", () => {
     expect(screen.getByText(/2 people are asking to join/)).toBeInTheDocument();
     // both kinds exist, so the filter shows
     expect(screen.getByText("I teach (1)")).toBeInTheDocument();
+  });
+});
+
+describe("WaitingBanner", () => {
+  it("says one person in the singular and opens the requests", () => {
+    api.requests = { data: [{ requestId: "1" }] };
+    renderAt("/", "/", <WaitingBanner />);
+    expect(screen.getByText(/1 person is asking to join your classrooms/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Review requests" }));
+    expect(screen.getByText("other page")).toBeInTheDocument();
+  });
+
+  it("shows nothing when nobody is waiting", () => {
+    api.requests = { data: [] };
+    const { container } = renderAt("/", "/", <WaitingBanner />);
+    expect(container).toBeEmptyDOMElement();
   });
 });
 

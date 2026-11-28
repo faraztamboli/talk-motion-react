@@ -4,7 +4,8 @@ import { Button, Input, Segmented, Skeleton, Tag, Typography } from "antd";
 import { BellOutlined, PlusOutlined, SearchOutlined, TeamOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import MetaDecorator from "../../components/MetaDecorator";
-import { useGetMyClassroomRequestsQuery, useListMyClassroomsQuery } from "./teachApi";
+import { useListMyClassroomsQuery } from "./teachApi";
+import useWaitingRequests, { waitingText } from "./useWaitingRequests";
 import {
   ActionCard,
   LoadError,
@@ -58,13 +59,13 @@ export function ClassroomCard({ classroom, footer }) {
 export function WaitingBanner() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: requests = [] } = useGetMyClassroomRequestsQuery();
+  const requests = useWaitingRequests();
   if (!requests.length) return null;
   return (
     <div className="tm-waiting" role="status">
       <span>
         <BellOutlined />{" "}
-        {t("teach.waiting.text", "{{count}} people are asking to join your classrooms.", { count: requests.length })}
+        {waitingText(t, requests.length)}
       </span>
       <Button type="primary" onClick={() => navigate("/classrooms/requests")}>
         {t("teach.waiting.review", "Review requests")}
