@@ -15,8 +15,12 @@ export async function fetchPoses(modelId, words, onItems, isCancelled = () => fa
   if (hasRpc("getConceptPoses")) {
     const batches = [clean.slice(0, 1)];
     for (let i = 1; i < clean.length; i += MAX_WORDS_PER_CALL) batches.push(clean.slice(i, i + MAX_WORDS_PER_CALL));
-    for (const batch of batches) {
-      const res = await rpc("getConceptPoses", [sessionToken(), modelId, batch]);
+    // All requests go out at once and are handed over in order: asking for the rest only after
+    // the first word arrived left a pause (and a relaxed avatar) whenever that word was short.
+    const pending = batches.map((batch) => rpc("getConceptPoses", [sessionToken(), modelId, batch]));
+    pending.forEach((p) => p.catch(() => {})); // a later failure is reported when its turn comes
+    for (const request of pending) {
+      const res = await request;
       if (isCancelled()) return;
       onItems(Array.isArray(res?.items) ? res.items : [], Array.isArray(res?.missing) ? res.missing : []);
     }
