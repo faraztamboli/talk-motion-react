@@ -26,7 +26,7 @@ vi.mock("../models/ModelPicker", () => ({
     </button>
   ),
 }));
-vi.mock("./useBrowserModel", () => ({ default: () => ({ status: "server", ready: false, predict: vi.fn() }) }));
+vi.mock("../signInput/useBrowserModel", () => ({ default: () => ({ status: "server", ready: false, predict: vi.fn() }) }));
 
 import TranslatorPage from "./TranslatorPage";
 

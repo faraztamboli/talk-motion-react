@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Alert, Button, Result, Segmented, Space, Switch, Typography, message } from "antd";
 import { AudioMutedOutlined, AudioOutlined, DownloadOutlined, ShareAltOutlined, StopOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ import useBrowserASR from "../hooks/useBrowserASR";
 import useMicStream, { micStreamSupported } from "../hooks/useMicStream";
 import useTTSPlayer from "../hooks/useTTSPlayer";
 import useVoices from "../hooks/useVoices";
+import { useFlag } from "../../../hooks/useFlag";
 import { dispatchEnvelope, newId } from "../protocol";
 import { endConversation, fetchTranscript, listUtterances, shareConversation, transcriptToText } from "../api";
 import {
@@ -46,6 +47,33 @@ function readTextSize() {
   }
 }
 
+// Only downloaded when someone opens it (the sign_input flag is off by default).
+const SignDraftTray = lazy(() => import("../../signInput/SignDraftTray"));
+
+// How long to wait for the language layer to turn signs into English before using the signs.
+const GLOSS_TO_ENGLISH_TIMEOUT_MS = 8000;
+
+/** A draft's client-side latency, as speak.confirm / speak.reject `timings` (doc 13, M0). */
+export function draftTimings(draft, now = Date.now()) {
+  if (!draft || draft.modality !== "sign") return undefined;
+  const out = {};
+  if (Number.isFinite(draft.recognizeMs)) out.recognize_ms = Math.round(draft.recognizeMs);
+  if (Number.isFinite(draft.englishMs)) out.english_ms = Math.round(draft.englishMs);
+  if (Number.isFinite(draft.shownAt)) out.decide_ms = Math.max(0, Math.round(now - draft.shownAt));
+  return Object.keys(out).length ? out : undefined;
+}
+
+/** The draft fields speak.confirm and speak.reject carry. */
+function draftFields(draft) {
+  if (!draft) return {};
+  return {
+    draft_id: draft.draftId || undefined,
+    ...(draft.modelVersion ? { model_version: draft.modelVersion } : {}),
+    ...(typeof draft.confidence === "number" ? { confidence: draft.confidence } : {}),
+    ...(draftTimings(draft) ? { timings: draftTimings(draft) } : {}),
+  };
+}
+
 function speechLang(spoken) {
   const nav = typeof navigator !== "undefined" ? navigator.language : "";
   if (!spoken) return nav || "en-US";
@@ -71,9 +99,16 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   const [serverAsrFailed, setServerAsrFailed] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
   const [prefill, setPrefill] = useState(null);
+  const [signOpen, setSignOpen] = useState(false);
+  const signFlag = useFlag("sign_input");
+  const classicSignedIn = useSelector((state) => Boolean(state.login?.isLoggedIn));
   const sendRef = useRef(() => false);
   const lastIdRef = useRef(0);
   const partialIdRef = useRef(newId());
+  const signCapRef = useRef(false);
+  const statusRef = useRef("connecting");
+  // gloss_to_english requests waiting for their draft.suggestions, by request_id
+  const englishWaitersRef = useRef(new Map());
 
   useEffect(() => {
     dispatch(conversationOpened(conversationId));
@@ -102,7 +137,13 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       else if (msg.type === "speak.done") player.end(msg.payload);
       else if (msg.type === "speak.fallback") player.speakText(msg.payload);
       else if (msg.type === "audio.ready") setAudioReady(true);
-      else {
+      else if (msg.type === "draft.suggestions" && msg.payload?.kind === "gloss_to_english") {
+        // English for signs goes to the sign tray, never to the suggestion chips. A reply that
+        // comes after its request gave up (and used the signs as they are) is dropped.
+        const resolve = englishWaitersRef.current.get(msg.payload.request_id);
+        englishWaitersRef.current.delete(msg.payload.request_id);
+        resolve?.(msg.payload);
+      } else {
         if (msg.type === "error" && SERVER_ASR_FALLBACK_CODES.has(msg.payload?.code)) {
           setServerAsrFailed(true);
           setAudioReady(false);
@@ -119,6 +160,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       caps: {
         browser_asr: Boolean(window.SpeechRecognition || window.webkitSpeechRecognition),
         mic_stream: micStreamSupported(),
+        sign_input: signCapRef.current,
       },
     });
     // Catch up on anything said while we were disconnected.
@@ -138,6 +180,7 @@ export default function ConversationView({ conversationId, getToken, guest = fal
     onOpen,
   });
   sendRef.current = send;
+  statusRef.current = status;
 
   // Server-side recognition (e.g. self-hosted Kyutai): stream the microphone as PCM16 frames.
   // If the server can't recognise speech, fall back to the browser's own recognition.
@@ -177,18 +220,59 @@ export default function ConversationView({ conversationId, getToken, guest = fal
     player.unlock(); // inside the tap, so mobile browsers allow the audio that follows
     send("speak.confirm", {
       text,
-      modality: draft ? "llm_suggestion" : "typed",
+      modality: draft?.modality || (draft ? "llm_suggestion" : "typed"),
       draft_text: draft?.text,
-      draft_id: draft?.draftId,
+      ...draftFields(draft),
       ...(voices.voiceId ? { voice: { provider_voice_id: voices.voiceId } } : {}),
     });
-    dispatch(suggestionsCleared());
+    if (draft?.modality !== "sign") dispatch(suggestionsCleared());
   };
 
-  const onReject = ({ text, draftId }) => {
-    send("speak.reject", { draft_text: text, modality: "llm_suggestion", draft_id: draftId });
-    dispatch(suggestionsCleared());
+  const onReject = (draft) => {
+    send("speak.reject", {
+      draft_text: draft.text,
+      modality: draft.modality || "llm_suggestion",
+      ...draftFields(draft),
+    });
+    if (draft.modality !== "sign") dispatch(suggestionsCleared());
   };
+
+  /** Recognized signs -> English from the conversation's language layer, or null (use the signs). */
+  const toEnglish = useCallback(
+    (gloss) =>
+      new Promise((resolve) => {
+        // While reconnecting, don't queue it: the signer is waiting now, so use the signs.
+        if (statusRef.current !== "open") {
+          resolve(null);
+          return;
+        }
+        const requestId = newId();
+        const timer = setTimeout(() => {
+          englishWaitersRef.current.delete(requestId);
+          resolve(null);
+        }, GLOSS_TO_ENGLISH_TIMEOUT_MS);
+        englishWaitersRef.current.set(requestId, (payload) => {
+          clearTimeout(timer);
+          const text = payload?.items?.[0]?.text;
+          resolve(text ? { text, draftId: payload.draft_id || null, modelVersion: payload.model_version || null } : null);
+        });
+        if (!sendRef.current("draft.request", { kind: "gloss_to_english", gloss, request_id: requestId })) {
+          clearTimeout(timer);
+          englishWaitersRef.current.delete(requestId);
+          resolve(null);
+        }
+      }),
+    []
+  );
+
+  // Pending English requests resolve to the raw signs if the view goes away.
+  useEffect(
+    () => () => {
+      englishWaitersRef.current.forEach((resolve) => resolve(null));
+      englishWaitersRef.current.clear();
+    },
+    []
+  );
 
   const onShare = async () => {
     try {
@@ -249,6 +333,9 @@ export default function ConversationView({ conversationId, getToken, guest = fal
   // Students read from a distance: larger captions unless they chose otherwise.
   const textSize = chosenSize || (isStudent ? "l" : "m");
   const showPlain = plainChoice ?? Boolean(settings.plain_language);
+  // Signing needs the person's own classic sign models, so not for guests or lessons.
+  const signAvailable = Boolean(signFlag) && !guest && !isLesson;
+  signCapRef.current = signAvailable;
 
   if (conv.ended) {
     return (
@@ -441,6 +528,20 @@ export default function ConversationView({ conversationId, getToken, guest = fal
       </div>
       )}
 
+      {signAvailable && signOpen && (
+        <Suspense fallback={null}>
+        <SignDraftTray
+          toEnglish={toEnglish}
+          signedIn={classicSignedIn}
+          disabled={status !== "open"}
+          onSpeak={onSpeak}
+          onReject={onReject}
+          onEdit={(draft) => setPrefill({ text: draft.text, nonce: Date.now(), draft })}
+          onClose={() => setSignOpen(false)}
+        />
+        </Suspense>
+      )}
+
       {!isLesson && (
       <ComposeTray
         onSpeak={onSpeak}
@@ -456,6 +557,9 @@ export default function ConversationView({ conversationId, getToken, guest = fal
         voices={voices.voices}
         voiceId={voices.voiceId}
         onVoiceChange={voices.setVoiceId}
+        signAvailable={signAvailable}
+        signOpen={signOpen}
+        onToggleSign={() => setSignOpen((open) => !open)}
       />
       )}
 

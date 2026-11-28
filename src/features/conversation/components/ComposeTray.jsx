@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Input, Select, Tooltip } from "antd";
 import { BulbOutlined, CloseOutlined, SoundOutlined } from "@ant-design/icons";
+import { FaSignLanguage } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 const TYPING_IDLE_MS = 2000;
@@ -19,10 +20,13 @@ export default function ComposeTray({
   suggestions,
   llmAvailable,
   disabled,
-  prefill = null, // { text, nonce }: fills the box (never speaks); a new nonce refills
+  prefill = null, // { text, nonce, draft? }: fills the box (never speaks); a new nonce refills
   voices = [], // [{ id, name, description }] the person can choose from
   voiceId = null,
   onVoiceChange,
+  signAvailable = false, // show the Sign button (sign_input flag)
+  signOpen = false,
+  onToggleSign,
 }) {
   const { t } = useTranslation();
   const [text, setText] = useState("");
@@ -42,7 +46,8 @@ export default function ComposeTray({
   useEffect(() => {
     if (!prefill?.text) return;
     setText(prefill.text);
-    setDraft(null);
+    // A sign draft moved here to be edited keeps its draft, so the edit is counted as one.
+    setDraft(prefill.draft || null);
     inputRef.current?.focus();
   }, [prefill?.nonce]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -125,6 +130,18 @@ export default function ComposeTray({
         >
           {t("conversation.speak", "Speak")}
         </Button>
+        {signAvailable && onToggleSign && (
+          <Button
+            size="large"
+            icon={<FaSignLanguage aria-hidden />}
+            onClick={onToggleSign}
+            aria-pressed={signOpen}
+            type={signOpen ? "primary" : "default"}
+            ghost={signOpen}
+          >
+            {t("conversation.sign", "Sign")}
+          </Button>
+        )}
         {llmAvailable && (
           <Tooltip title={t("conversation.suggestHint", "Suggestions are never spoken until you press Speak")}>
             <Button size="large" icon={<BulbOutlined />} onClick={onRequestSuggestions} disabled={disabled}>
@@ -149,7 +166,11 @@ export default function ComposeTray({
           </span>
         )}
         {draft && (
-          <span className="conv-draft-note">{t("conversation.fromSuggestion", "Edited from a suggestion")}</span>
+          <span className="conv-draft-note">
+            {draft.modality === "sign"
+              ? t("conversation.fromSigning", "From your signing")
+              : t("conversation.fromSuggestion", "Edited from a suggestion")}
+          </span>
         )}
       </div>
     </div>

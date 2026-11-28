@@ -9,7 +9,7 @@ vi.mock("../../api/rpc", () => ({
   rpcErrorMessage: (err, fallback) => err?.message || fallback,
 }));
 const browserMock = vi.hoisted(() => ({ legacyInput: null }));
-vi.mock("./useBrowserModel", () => ({
+vi.mock("../signInput/useBrowserModel", () => ({
   default: () => ({ status: "server", ready: false, predict: vi.fn(), legacyInput: browserMock.legacyInput }),
 }));
 
@@ -22,7 +22,7 @@ vi.mock("./useWhisperCapture", () => ({
   whisperSupported: () => whisperMock.supported,
 }));
 
-import useSignRecognizer from "./useSignRecognizer";
+import useSignRecognizer from "../signInput/useSignRecognizer";
 import useSpeechInput from "./useSpeechInput";
 import useSignVideoQueue from "./useSignVideoQueue";
 import useSpeechOutput from "./useSpeechOutput";
@@ -104,7 +104,7 @@ describe("useSignRecognizer", () => {
     await waitFor(() => expect(result.current.words.map((w) => w.word)).toEqual(["hello"]));
     expect(rpcMock.rpc).toHaveBeenCalledWith("translateGestureSample", ["tok", "7", expect.any(Array)]);
     t = handsDown(result, t, 600);
-    await waitFor(() => expect(onSentence).toHaveBeenCalledWith("Hello!", ["hello"]));
+    await waitFor(() => expect(onSentence).toHaveBeenCalledWith("Hello!", ["hello"], expect.any(Object)));
     expect(result.current.words).toEqual([]);
   });
 
@@ -119,7 +119,7 @@ describe("useSignRecognizer", () => {
     handsDown(result, t, 800);
     expect(onSentence).not.toHaveBeenCalled();
     act(() => result.current.send());
-    await waitFor(() => expect(onSentence).toHaveBeenCalledWith("Yes.", ["yes"]));
+    await waitFor(() => expect(onSentence).toHaveBeenCalledWith("Yes.", ["yes"], expect.any(Object)));
   });
 
   it("Send waits for a prediction still in flight and includes it", async () => {
@@ -134,7 +134,7 @@ describe("useSignRecognizer", () => {
     act(() => result.current.send());
     expect(onSentence).not.toHaveBeenCalled();
     await act(async () => pending.resolve({ predictions: [{ word: "thank-you", confidence: 0.8 }] }));
-    await waitFor(() => expect(onSentence).toHaveBeenCalledWith("Thank you.", ["thank-you"]));
+    await waitFor(() => expect(onSentence).toHaveBeenCalledWith("Thank you.", ["thank-you"], expect.any(Object)));
   });
 
   it("Clear drops a late answer instead of adding it to the next sentence", async () => {
@@ -165,7 +165,38 @@ describe("useSignRecognizer", () => {
     signOnce(result);
     await waitFor(() => expect(result.current.words).toHaveLength(1));
     act(() => result.current.send());
-    await waitFor(() => expect(onSentence).toHaveBeenCalledWith("good", ["good"]));
+    await waitFor(() => expect(onSentence).toHaveBeenCalledWith("good", ["good"], expect.any(Object)));
+  });
+
+  it("uses the toEnglish it is given and reports the draft's measurements", async () => {
+    rpcMock.rpc.mockResolvedValue({ predictions: [{ word: "bag", confidence: 0.8 }, { word: "bad", confidence: 0.1 }] });
+    const toEnglish = vi.fn(async () => ({ text: "A bag, please.", draftId: "d1", modelVersion: "llm@1" }));
+    const onSentence = vi.fn();
+    const { result } = renderHook(() => useSignRecognizer({ modelId: "7", autoSend: false, onSentence, toEnglish }));
+    signOnce(result);
+    await waitFor(() => expect(result.current.words).toHaveLength(1));
+    act(() => result.current.send());
+    await waitFor(() => expect(onSentence).toHaveBeenCalled());
+    expect(toEnglish).toHaveBeenCalledWith(["bag"]);
+    expect(rpcMock.rpc).not.toHaveBeenCalledWith("smoothGlossToEnglish", expect.anything(), expect.anything());
+    const [text, gloss, meta] = onSentence.mock.calls[0];
+    expect([text, gloss]).toEqual(["A bag, please.", ["bag"]]);
+    expect(meta).toMatchObject({ modelVersion: "legacy:7", confidence: 0.8, draftId: "d1", englishModelVersion: "llm@1" });
+    expect(meta.recognizeMs).toBeGreaterThanOrEqual(0);
+    expect(meta.englishMs).toBeGreaterThanOrEqual(0);
+  });
+
+  it("falls back to the signs when toEnglish fails or gives nothing", async () => {
+    rpcMock.rpc.mockResolvedValue({ predictions: [{ word: "good", confidence: 0.9 }] });
+    for (const toEnglish of [vi.fn(async () => null), vi.fn(async () => { throw new Error("offline"); }), vi.fn(async () => "  ")]) {
+      const onSentence = vi.fn();
+      const { result, unmount } = renderHook(() => useSignRecognizer({ modelId: "7", autoSend: false, onSentence, toEnglish }));
+      signOnce(result);
+      await waitFor(() => expect(result.current.words).toHaveLength(1));
+      act(() => result.current.send());
+      await waitFor(() => expect(onSentence).toHaveBeenCalledWith("good", ["good"], expect.objectContaining({ draftId: null })));
+      unmount();
+    }
   });
 
   it("a different model starts the sentence over", async () => {
